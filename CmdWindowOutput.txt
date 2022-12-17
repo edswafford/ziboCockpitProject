@@ -1,0 +1,604 @@
+ Using: 8.8.8.8 Local IP address is: 192.168.0.143
+Client running
+Receive heartbeat RX port 50295
+Confirmation sim/aircraft/view/acf_tailnum id Websocket Failed
+Connection State 3
+Local Close Code 1006
+Local Close Reason Timer Expired
+0
+Remove Close Code 1006
+Remote Close Reason
+Error code websocketpp.transport:9, Error message Timer Expired
+Receive heartbeat RX port 50295
+Receive heartbeat RX port 50295
+Receive heartbeat RX port 50295
+Receive heartbeat RX port 50295
+Confirmation sim/aircraft/view/acf_tailnum id 0
+id = 1 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/at_fms_disconnect2 id 1
+id = 2 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/engine1_ovht id 2
+id = 3 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/spar2_valve_closed id 3
+id = 4 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/gps id 4
+id = 5 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/engine2_ovht id 5
+id = 6 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/tr_unit id 6
+id = 7 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/equip_door id 7
+id = 8 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/window_heat_ovht_rs id 8
+id = 9 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/engine2_fire id 9
+id = 10 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/cabin_alt id 10
+id = 11 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/feel_diff_press id 11
+id = 12 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/engine1_fire id 12
+id = 13 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/elec id 13
+id = 14 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/airstair id 14
+id = 15 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/fwd_service id 15
+id = 16 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/at_fms_warn2 id 16
+id = 17 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/hyd_A_rud id 17
+id = 18 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/cowl_ice_on_0 id 18
+id = 19 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/hyd_B_rud id 19
+id = 20 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/hyd_stdby_rud id 20
+id = 21 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/manual_press id 21
+id = 22 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/stab_out_of_trim id 22
+id = 23 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/extinguisher_circuit_annun_apu id 23
+id = 24 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/auto_slat_fail id 24
+id = 25 Confirmation Bool data = 1 ::
+Confirmation laminar/B738/annunciator/window_heat_l_fwd id 25
+id = 26 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/apu_low_oil id 26
+id = 27 Confirmation Bool data = 1 ::
+Confirmation laminar/B738/annunciator/ram_door_open1 id 27
+id = 28 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/six_pack_overhead id 28
+id = 29 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/wing_body_ovht_right id 29
+id = 30 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/pack_right id 30
+id = 31 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/wing_body_ovht_left id 31
+id = 32 Confirmation Bool data = 1 ::
+Confirmation laminar/B738/annunciator/ram_door_open2 id 32
+id = 33 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/pack_left id 33
+id = 34 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/ap_disconnect1 id 34
+id = 35 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/autofail id 35
+id = 36 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/master_caution_light id 36
+id = 37 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/spd_brk_not_arm id 37
+id = 38 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/anti_skid_inop id 38
+id = 39 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/drive1 id 39
+id = 40 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/apu_bottle_discharge id 40
+id = 41 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/speedbrake_armed id 41
+id = 42 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/cargo_fault_detector id 42
+id = 43 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/drive2 id 43
+id = 44 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/six_pack_flt_cont id 44
+id = 45 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/door_auto_unlk id 45
+id = 46 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/door_lock_fail id 46
+id = 47 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/off_sched_descent id 47
+id = 48 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/pax_oxy id 48
+id = 49 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/altn_press id 49
+id = 50 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/spar1_valve_closed id 50
+id = 51 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/wing_ice_on_R id 51
+id = 52 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/at_fms_warn1 id 52
+id = 53 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/fo_pitot_off id 53
+id = 54 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/irs_align_left id 54
+id = 55 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/indicators/fms_exec_light_copilot id 55
+id = 56 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/ap_warn1 id 56
+id = 57 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/dual_bleed id 57
+id = 58 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/window_heat_ovht_lf id 58
+id = 59 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/ap_warn2 id 59
+id = 60 Confirmation Bool data = 1 ::
+Confirmation laminar/B738/annunciator/window_heat_r_side id 60
+id = 61 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/right_aft_overwing id 61
+id = 62 Confirmation Bool data = 1 ::
+Confirmation laminar/B738/annunciator/parking_brake id 62
+id = 63 Confirmation Bool data = 1 ::
+Confirmation laminar/B738/annunciator/window_heat_l_side id 63
+id = 64 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/bat_discharge id 64
+id = 65 Confirmation Bool data = 1 ::
+Confirmation laminar/B738/annunciator/window_heat_r_fwd id 65
+id = 66 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/six_pack_apu id 66
+id = 67 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/apu_fault id 67
+id = 68 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/fadec_fail_0 id 68
+id = 69 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/fadec_fail_1 id 69
+id = 70 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/reverser_fail_0 id 70
+id = 71 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/hyd_press_a id 71
+id = 72 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/reverser_fail_1 id 72
+DataRef laminar/B738/switches/landing_gear type mismatch expected int but received int array
+id = 74 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/capt_pitot_off id 74
+id = 75 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/speedbrake_extend id 75
+id = 76 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/cowl_ice_0 id 76
+id = 77 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/window_heat_ovht_ls id 77
+id = 78 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/bypass_filter_1 id 78
+id = 79 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/cowl_ice_1 id 79
+id = 80 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/cowl_ice_on_1 id 80
+id = 81 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/wing_ice_on_L id 81
+id = 82 Confirmation Bool data = 1 ::
+Confirmation laminar/B738/annunciator/nose_gear_safe id 82
+id = 83 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/left_gear_transit id 83
+id = 84 Confirmation Bool data = 1 ::
+Confirmation laminar/B738/annunciator/left_gear_safe id 84
+id = 85 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/right_gear_transit id 85
+id = 86 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/below_gs id 86
+id = 87 Confirmation Bool data = 1 ::
+Confirmation laminar/B738/annunciator/right_gear_safe id 87
+id = 88 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/eng2_valve_closed id 88
+id = 89 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/low_fuel_press_l1 id 89
+id = 90 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/low_fuel_press_l2 id 90
+id = 91 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/low_fuel_press_c1 id 91
+id = 92 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/low_fuel_press_c2 id 92
+id = 93 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/low_fuel_press_r1 id 93
+id = 94 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/six_pack_ice id 94
+id = 95 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/low_fuel_press_r2 id 95
+id = 96 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/eng1_valve_closed id 96
+id = 97 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/six_pack_fire id 97
+id = 98 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/standby_pwr_off id 98
+id = 99 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/bypass_filter_2 id 99
+id = 100 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/hyd_press_b id 100
+id = 101 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/irs_align_right id 101
+id = 102 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/hyd_el_press_a id 102
+id = 103 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/six_pack_doors id 103
+id = 104 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/hyd_el_press_b id 104
+id = 105 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/apu_gen_off_bus id 105
+id = 106 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/gen_off_bus1 id 106
+id = 107 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/gen_off_bus2 id 107
+id = 108 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/source_off1 id 108
+id = 109 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/source_off2 id 109
+id = 110 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/trans_bus_off1 id 110
+id = 111 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/trans_bus_off2 id 111
+id = 112 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/fwd_entry id 112
+id = 113 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/cargo_fire id 113
+id = 114 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/left_fwd_overwing id 114
+id = 115 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/irs_on_dc_right id 115
+id = 116 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/left_aft_overwing id 116
+id = 117 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/aft_entry id 117
+id = 118 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/right_fwd_overwing id 118
+id = 119 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/aft_service id 119
+id = 120 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/fwd_cargo id 120
+id = 121 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/aft_cargo id 121
+id = 122 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/bleed_trip_1 id 122
+id = 123 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/bleed_trip_2 id 123
+id = 124 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/ground_power_avail id 124
+id = 125 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/yaw_damp id 125
+id = 126 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/emer_exit id 126
+id = 127 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/gpws id 127
+id = 128 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/slats_transit id 128
+id = 129 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/slats_extend id 129
+id = 130 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/fire_fault_inop id 130
+id = 131 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/wheel_well_fire id 131
+id = 132 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/transponder/indicators/xpond_fail id 132
+id = 133 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/six_pack_fuel id 133
+id = 134 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/six_pack_elec id 134
+id = 135 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/takeoff_config id 135
+id = 136 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/six_pack_irs id 136
+id = 137 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/six_pack_eng id 137
+id = 138 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/six_pack_hyd id 138
+id = 139 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/six_pack_air_cond id 139
+id = 140 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/auto_brake_disarm id 140
+id = 141 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/irs_align_fail_right id 141
+id = 142 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/irs_dc_fail_left id 142
+id = 143 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/irs_on_dc_left id 143
+id = 144 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/irs_dc_fail_right id 144
+id = 145 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/crossfeed id 145
+id = 146 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/at_fms_disconnect1 id 146
+id = 147 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/ap_disconnect2 id 147
+id = 148 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/indicators/fms_exec_light_pilot id 148
+id = 149 Confirmation Bool data = 1 ::
+Confirmation laminar/B738/electric/battery_pos id 149
+Receive heartbeat RX port 50295
+Receive heartbeat RX port 50295
+Receive heartbeat RX port 50295
+Receive heartbeat RX port 50295
+Receive heartbeat RX port 50295
+
+id = 150 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/nose_gear_transit id 150
+id = 151 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/window_heat_ovht_rf id 151
+id = 152 Confirmation Bool data = 0 ::
+Confirmation laminar/B738/annunciator/irs_align_fail_left id 152
+Confirmation sim/aircraft/view/acf_tailnum id 0
+simconnect_send_event_data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
