@@ -55,34 +55,35 @@ namespace zcockpit::cockpit::hardware
 	void UsbWorker::runStop()
 	{
 		// create and lock
-		std::unique_lock<std::mutex> lk(usb_mutex);
-		run = !run;
-		lk.unlock();
+		{
+			std::lock_guard<std::mutex> guard(usb_mutex);
+			run = !run;
+		}
 		condition.notify_one();
 	}
 
 	int UsbWorker::is_running()
 	{
-		if(!usb_mutex.try_lock())
+		std::unique_lock<std::mutex> lock(usb_mutex, std::defer_lock);
+		if (!lock.try_lock())
 		{
 			// cannot get lock
 			return -1;
 		}
 		if(run)
 		{
-			usb_mutex.unlock();
 			return 1;
 		}
-		usb_mutex.unlock();
 		return 0;
 	}
 
 	void UsbWorker::abort()
 	{
 		// create and lock
-		std::unique_lock<std::mutex> lk(usb_mutex);
-		_abort = true;
-		lk.unlock();
+		{
+			std::lock_guard<std::mutex> guard(usb_mutex);
+			_abort = true;
+		}
 		condition.notify_one();
 	}
 
@@ -93,33 +94,39 @@ namespace zcockpit::cockpit::hardware
 		if(usbDev != nullptr && handle != nullptr)
 		{
 			// create and lock
-			std::unique_lock<std::mutex> lk(usb_mutex);
-			if(!run && !_abort)
-			{
-				condition.wait(lk, [this]
-				               {
-					               return (this->run || this->_abort);
-				               });
-			}
-			if(!_abort)
-			{
-				lk.unlock();
-				while(true)
+			{	bool abort = false;
 				{
-					lk.lock();
-					bool abort = _abort;
-					lk.unlock();
-					if(abort)
+					std::unique_lock<std::mutex> lk(usb_mutex);
+					if (!run && !_abort)
 					{
-						break;
+						condition.wait(lk, [this]
+							{
+								return (this->run || this->_abort);
+							});
 					}
-					libusb_handle_events(ctx);
+					abort = _abort;
+				}
+				if (!abort)
+				{
+					while (true)
+					{
+						{
+							std::lock_guard<std::mutex> guard(usb_mutex);
+							bool abort = _abort;
+						}
+						if (abort)
+						{
+							break;
+						}
+						libusb_handle_events(ctx);
+					}
 				}
 			}
 		}
-		usb_mutex.lock();
-		run = false;
-		usb_mutex.unlock();
+		{
+			std::lock_guard<std::mutex> guard(usb_mutex);
+			run = false;
+		}
 	}
 
 	void UsbWorker::initDevice()
@@ -224,7 +231,7 @@ namespace zcockpit::cockpit::hardware
 			if(inBufferSize > 0)
 			{
 				{
-					readMutex.lock();
+					std::lock_guard<std::mutex> guard(readMutex);
 					if((readLeft + inBufferSize) <= READ_BUFFER_SIZE)
 					{
 						memcpy(readBuffer, inBuffer, inBufferSize);
@@ -235,7 +242,6 @@ namespace zcockpit::cockpit::hardware
 					{
 						LOG() << "IOCards read buffer full";
 					}
-					readMutex.unlock();
 				}
 			}
 
@@ -272,16 +278,17 @@ namespace zcockpit::cockpit::hardware
 
 			/* resubmit write call if there is new data in write buffer */
 			{
-				writeMutex.lock();
+				std::lock_guard<std::mutex> guard(writeMutex);
 				if(writeLeft > 0)
 				{
-					usb_mutex.lock();
-					/* decrease write buffer position and count */
-					writeLeft -= outBufferSize;
-					writeBuffer -= outBufferSize;
-					/* copy rightmost write buffer to output buffer */
-					memcpy(outBuffer, writeBuffer, outBufferSize);
-					usb_mutex.unlock();
+					{
+						std::lock_guard<std::mutex> guard(usb_mutex);
+						/* decrease write buffer position and count */
+						writeLeft -= outBufferSize;
+						writeBuffer -= outBufferSize;
+						/* copy rightmost write buffer to output buffer */
+						memcpy(outBuffer, writeBuffer, outBufferSize);
+					}
 
 					if(libusb_submit_transfer(writeTransfer) < 0)
 					{
@@ -293,7 +300,6 @@ namespace zcockpit::cockpit::hardware
 					/* reset write flag so that new write submission can be done */
 					iswriting = 0;
 				}
-				writeMutex.unlock();
 			}
 		}
 		return;
@@ -318,8 +324,9 @@ namespace zcockpit::cockpit::hardware
 			return result;
 		}
 
+		bool can_submit = false;
 		{
-			writeMutex.lock();
+			std::lock_guard<std::mutex> guard(writeMutex);
 			if((writeLeft + outBufferSize) <= WRITE_BUFFER_SIZE)
 			{
 				/* shift existing write buffer to the right */
@@ -346,12 +353,16 @@ namespace zcockpit::cockpit::hardware
 
 						/* submit first asynchronous write call */
 						iswriting = 1;
-						if(libusb_submit_transfer(writeTransfer) < 0) thread_exit_code = 1;
+						can_submit = true;
 					}
 					result = outBufferSize;
 				}
 			}
-			writeMutex.unlock();
+		}
+		if (can_submit) {
+			if (libusb_submit_transfer(writeTransfer) < 0) {
+				thread_exit_code = 1;
+			}
 		}
 		return result;
 	}
@@ -374,7 +385,7 @@ namespace zcockpit::cockpit::hardware
 			return result;
 		}
 		{
-			readMutex.lock();
+			std::lock_guard<std::mutex> guard(readMutex);
 			if(readLeft > 0)
 			{
 				/* read from start of read buffer */
@@ -391,7 +402,6 @@ namespace zcockpit::cockpit::hardware
 				readBuffer -= inBufferSize;
 				result = inBufferSize;
 			}
-			readMutex.unlock();
 		}
 		return result;
 	}

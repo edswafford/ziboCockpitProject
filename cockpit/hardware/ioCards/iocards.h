@@ -101,7 +101,7 @@ namespace zcockpit::cockpit::hardware
 
 
 	public:
-		UsbWorker* worker;
+
 
 		bool IsInitialized() const
 		{

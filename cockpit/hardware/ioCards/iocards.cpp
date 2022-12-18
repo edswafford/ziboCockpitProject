@@ -34,7 +34,6 @@ namespace zcockpit::cockpit::hardware
 		handle = nullptr;
 		isOpen = false;
 		isInitialized = false;
-		worker = nullptr;
 		sentWakeupMsg = false;
 
 		openDevice(deviceBusAddr);
@@ -293,13 +292,13 @@ namespace zcockpit::cockpit::hardware
 
 	void IOCards::mainThread()
 	{
+		worker = new UsbWorker(dev, handle, ctx, name);
 		worker->process();
 		LOG() << "Worker thread ended for " << worker->name;
 	}
 
 	void IOCards::startThread(void)
 	{
-		worker = new UsbWorker(dev, handle, ctx, name);
 		// start the thread
 		iocards_thread = std::thread(&IOCards::mainThread, this);
 	}
