@@ -83,6 +83,12 @@ class MainWindow : public frameMain
 		}
 	}
 
+	void set_iocard_status(std::string message)
+	{
+		auto msg = wxArrayString(1, message.c_str());
+		m_listBoxIocard->Insert(msg, 0);
+	}
+
 	void set_iocard_mip_status(bool active)
 	{
 		const wxString text = m_staticTextIocardMipStatus->GetLabelText();
@@ -132,10 +138,27 @@ class MainWindow : public frameMain
 		}
 	}
 
-	void set_iocard_status(std::string message)
+	void set_iocard_mip_addr(std::string message)
 	{
 		auto msg = wxArrayString(1, message.c_str());
-		m_listBoxIocard->Insert(msg, 0);
+		std::ostream stream(m_textCtrlIocardMip);
+		stream << message;
+		stream.flush();
+	}
+
+	void set_iocard_fwd_overhead_addr(std::string message)
+	{
+		auto msg = wxArrayString(1, message.c_str());
+		std::ostream stream(m_textCtrIocardFwdOverhead);
+		stream << message;
+		stream.flush();
+	}
+	void set_iocard_rear_overhead_addr(std::string message)
+	{
+		auto msg = wxArrayString(1, message.c_str());
+		std::ostream stream(m_textCtrIocardRearOverhead);
+		stream << message;
+		stream.flush();
 	}
 
 

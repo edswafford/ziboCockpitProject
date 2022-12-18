@@ -19,7 +19,7 @@
         <property name="internationalize">0</property>
         <property name="name">MainFrame</property>
         <property name="namespace"></property>
-        <property name="path">F:\xplane_11_sim\zboCockpitProject\cockpit\gui\wxfb</property>
+        <property name="path">F:\xplane_11_sim\ziboCockpitProject\cockpit\gui\wxfb</property>
         <property name="precompiled_header"></property>
         <property name="relative_path">1</property>
         <property name="skip_lua_events">1</property>
@@ -47,7 +47,7 @@
             <property name="minimum_size"></property>
             <property name="name">frameMain</property>
             <property name="pos"></property>
-            <property name="size">798,542</property>
+            <property name="size">810,582</property>
             <property name="style">wxDEFAULT_FRAME_STYLE</property>
             <property name="subclass">; ; forward_declare</property>
             <property name="title">Zcockpit </property>

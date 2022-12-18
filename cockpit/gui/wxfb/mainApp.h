@@ -78,7 +78,7 @@ class frameMain : public wxFrame
 
 	public:
 
-		frameMain( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Zcockpit "), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 798,542 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		frameMain( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Zcockpit "), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 810,582 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 
 		~frameMain();
 

@@ -68,6 +68,7 @@ namespace zcockpit::cockpit::hardware
 		static IOCards::IOCard_Device identify_iocards_usb(unsigned short bus, unsigned short address);
 		static std::string find_iocard_devices();
 
+
 		void closeDown();
 
 		void mainThread();
