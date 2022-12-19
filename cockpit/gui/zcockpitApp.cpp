@@ -472,6 +472,7 @@ namespace zcockpit::cockpit::gui
 
 			// start worker task and wait for run/abort
 			ovrheadIOCards->startThread();
+			ovrheadIOCards->worker->initDevice();
 
 			if(ovrheadIOCards->initializeIOCards())
 			{

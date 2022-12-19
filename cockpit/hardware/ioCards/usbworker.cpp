@@ -35,7 +35,7 @@ namespace zcockpit::cockpit::hardware
 		iswriting = 0;
 		thread_exit_code = 0;
 
-		initDevice();
+		//initDevice();
 	}
 
 	UsbWorker::~UsbWorker()

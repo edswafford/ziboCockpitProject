@@ -20,6 +20,8 @@ namespace zcockpit::cockpit::hardware
 
 		UsbWorker(libusb_device* usbDev, libusb_device_handle* handle, struct libusb_context* ctx, std::string name);
 		~UsbWorker();
+		void initDevice();
+
 		int releaseAndCloseUsb();
 		void abort();
 		void runStop();
@@ -37,7 +39,6 @@ namespace zcockpit::cockpit::hardware
 		{
 		};
 
-		void initDevice();
 
 
 		libusb_device* usbDev;

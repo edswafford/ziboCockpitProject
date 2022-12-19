@@ -75,7 +75,7 @@ namespace zcockpit::cockpit::hardware
 
 		this->ctx = local_ctx;
 
-		int cnt = libusb_get_device_list(ctx, &devs);
+		int cnt = libusb_get_device_list(local_ctx, &devs);
 		if (cnt < 0)
 		{
 			return;
@@ -114,6 +114,7 @@ namespace zcockpit::cockpit::hardware
 		{
 			LOG() << "Failed to find device:  Bus " << bus << " addr " << addr;
 		}
+		//  Free list and unreference all the devices by setting unref_devices: to 1
 		libusb_free_device_list(devs, 1);
 
 	}
@@ -132,6 +133,7 @@ namespace zcockpit::cockpit::hardware
 		if (usb_device->isOpen)
 		{
 			usb_device->startThread();
+			usb_device->worker->initDevice();
 
 			// initialize 4 axis
 			if (usb_device->initializeIOCards(4))
@@ -277,6 +279,7 @@ namespace zcockpit::cockpit::hardware
 				devices = "NO IOCARDS DEVICES";
 			}
 
+			//  Free list and unreference all the devices by setting unref_devices: to 1
 			libusb_free_device_list(devs, 1);
 
 			return devices;
