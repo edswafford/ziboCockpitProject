@@ -120,11 +120,6 @@ namespace zcockpit::cockpit::hardware
 
 	IOCards::~IOCards()
 	{
-		if (worker != nullptr)
-		{
-			delete worker;
-			worker = nullptr;
-		}
 	}
 
 	IOCards::IOCard_Device IOCards::identify_iocards_usb(unsigned short bus, unsigned short addr)
@@ -133,7 +128,7 @@ namespace zcockpit::cockpit::hardware
 
 		IOCard_Device found_device = UNKNOWN;
 		std::string deviceBusAddr = std::to_string(bus) + "_" + std::to_string(addr);
-		IOCards* usb_device = new IOCards(deviceBusAddr, "unknown");
+		auto usb_device = std::make_unique<IOCards>(deviceBusAddr, "unknown");
 		if (usb_device->isOpen)
 		{
 			usb_device->startThread();
@@ -231,7 +226,6 @@ namespace zcockpit::cockpit::hardware
 			}
 			usb_device->closeDown();
 		}
-		delete usb_device;
 
 		return found_device;
 	}
@@ -292,13 +286,13 @@ namespace zcockpit::cockpit::hardware
 
 	void IOCards::mainThread()
 	{
-		worker = new UsbWorker(dev, handle, ctx, name);
 		worker->process();
 		LOG() << "Worker thread ended for " << worker->name;
 	}
 
 	void IOCards::startThread(void)
 	{
+		worker = std::make_unique<UsbWorker>(dev, handle, ctx, name);
 		// start the thread
 		iocards_thread = std::thread(&IOCards::mainThread, this);
 	}
@@ -307,7 +301,7 @@ namespace zcockpit::cockpit::hardware
 	bool IOCards::initializeIOCards(unsigned char number_of_axes)
 	{
 		isInitialized = false;
-		if (worker != nullptr)
+		if (worker)
 		{
 			int buffersize = 8;
 			unsigned char send_data[] = { 0x3d,0x00,0x3a,0x01,0x39,0x00,0xff,0xff };
@@ -345,7 +339,7 @@ namespace zcockpit::cockpit::hardware
 	{
 		if (isOpen)
 		{
-			if (worker != nullptr)
+			if (worker)
 			{
 				worker->abort();
 				// give the worker some time to quit
@@ -439,7 +433,7 @@ namespace zcockpit::cockpit::hardware
 
 
 		/* check if we have a connected USB expander card */
-		if (isOpen && isInitialized && worker != nullptr && worker->is_running() == 1)
+		if (isOpen && isInitialized && worker && worker->is_running() == 1)
 		{
 			/* check whether there is new data on the read buffer */
 			recv_status = worker->read_usb(recv_data, buffersize);
@@ -649,7 +643,7 @@ namespace zcockpit::cockpit::hardware
 		int power;
 
 		/* check if we have a connected and initialized mastercard */
-		if (isOpen && isInitialized && worker != nullptr && worker->is_running() == 1)
+		if (isOpen && isInitialized && worker && worker->is_running() == 1)
 		{
 			/* TODO: check if outputs and displays work with multiple cards */
 
@@ -752,7 +746,7 @@ namespace zcockpit::cockpit::hardware
 	int IOCards::mastercard_send_display(unsigned char value, int pos, int card)
 	{
 		int ret = 0;
-		if (worker != nullptr && worker->is_running() == 1)
+		if (worker && worker->is_running() == 1)
 		{
 			unsigned char send_data[] = { 0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff };
 			displays[pos][card] = value;

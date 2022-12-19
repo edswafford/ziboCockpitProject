@@ -102,6 +102,7 @@ namespace zcockpit::cockpit::hardware
 
 	public:
 
+		std::unique_ptr<UsbWorker> worker;
 
 		bool IsInitialized() const
 		{

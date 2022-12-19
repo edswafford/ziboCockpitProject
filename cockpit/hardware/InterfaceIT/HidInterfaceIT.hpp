@@ -233,19 +233,7 @@ int pSwitch_Get_Item(unsigned long session, int* switch_num, int* direction);
 int pSwitch_Get_State(unsigned long session, int switch_num, int* state);
 int pEnable_Device_Change_CallBack(bool enable, INTERFACEIT_DEVICE_CHANGE_NOTIFY_PROC proc);
 
-//static HidInterfaceIT* instance()
-//{
-//	static std::mutex mutex;
-//	if (!hidInterfaceITInstance)
-//	{
-//		std::lock_guard<std::mutex> lock(mutex);
-//		if (!hidInterfaceITInstance)
-//		{
-//			hidInterfaceITInstance = new HidInterfaceIT;
-//		}
-//	}
-//	return hidInterfaceITInstance;
-//}
+
 
 void drop();
 
