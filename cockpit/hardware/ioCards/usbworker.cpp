@@ -31,7 +31,6 @@ namespace zcockpit::cockpit::hardware
 		writeBuffer_loc = nullptr;
 		readLeft = 0;
 		writeLeft = 0;
-		number = 0;
 		iswriting = 0;
 		thread_exit_code = 0;
 
@@ -94,7 +93,8 @@ namespace zcockpit::cockpit::hardware
 		if(usbDev != nullptr && handle != nullptr)
 		{
 			// create and lock
-			{	bool abort = false;
+			{
+				bool abort = false;
 				{
 					std::unique_lock<std::mutex> lk(usb_mutex);
 					if (!run && !_abort)
@@ -103,8 +103,8 @@ namespace zcockpit::cockpit::hardware
 							{
 								return (this->run || this->_abort);
 							});
+						abort = _abort;
 					}
-					abort = _abort;
 				}
 				if (!abort)
 				{
@@ -112,11 +112,10 @@ namespace zcockpit::cockpit::hardware
 					{
 						{
 							std::lock_guard<std::mutex> guard(usb_mutex);
-							bool abort = _abort;
-						}
-						if (abort)
-						{
-							break;
+							if (_abort)
+							{
+								break;
+							}
 						}
 						libusb_handle_events(ctx);
 					}
@@ -179,7 +178,7 @@ namespace zcockpit::cockpit::hardware
 						}
 						inBuffer_loc = inBuffer = new unsigned char[inBufferSize];
 						readBuffer_loc = readBuffer = new unsigned char[READ_BUFFER_SIZE];
-						libusb_fill_interrupt_transfer(readTransfer, handle, epIn, inBuffer, inBufferSize, read_callback, &number, 0);
+						libusb_fill_interrupt_transfer(readTransfer, handle, epIn, inBuffer, inBufferSize, read_callback, this, 0);
 						if(libusb_submit_transfer(readTransfer) < 0)
 						{
 							result = -7;
@@ -198,7 +197,7 @@ namespace zcockpit::cockpit::hardware
 						}
 						outBuffer_loc = outBuffer = new unsigned char[outBufferSize];
 						writeBuffer_loc = writeBuffer = new unsigned char[WRITE_BUFFER_SIZE];
-						libusb_fill_interrupt_transfer(writeTransfer, handle, epOut, outBuffer, outBufferSize, write_callback, &number, 0);
+						libusb_fill_interrupt_transfer(writeTransfer, handle, epOut, outBuffer, outBufferSize, write_callback, this, 0);
 					}
 				}
 			}
@@ -209,7 +208,7 @@ namespace zcockpit::cockpit::hardware
 	void LIBUSB_CALL UsbWorker::read_callback(struct libusb_transfer* transfer)
 	{
 		// explicitly cast to a pointer to TClassA
-		UsbWorker* mySelf = (UsbWorker*)transfer->callback;
+		UsbWorker* mySelf = reinterpret_cast<UsbWorker*>(transfer->user_data);
 		mySelf->read_callback_cpp(transfer);
 	}
 
@@ -256,7 +255,7 @@ namespace zcockpit::cockpit::hardware
 	void LIBUSB_CALL UsbWorker::write_callback(struct libusb_transfer* transfer)
 	{
 		// explicitly cast to a pointer to TClassA
-		UsbWorker* mySelf = (UsbWorker*)transfer->callback;
+		UsbWorker* mySelf = reinterpret_cast<UsbWorker*>(transfer->user_data);
 		mySelf->write_callback_cpp(transfer);
 	}
 

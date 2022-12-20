@@ -48,7 +48,6 @@ namespace zcockpit::cockpit::hardware
 		unsigned char epIn; /* input endpoint */
 		unsigned char epOut; /* output endpoint */
 		int iocardStatus; /* device status (-1: not present, 0: present and ready) */
-		int number; /* device number (0 ... MAXDEVICES-1)*/
 
 		std::mutex usb_mutex;
 		std::mutex readMutex;
