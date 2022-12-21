@@ -30,7 +30,7 @@ logger LOG("ZiboCockpit Client.log");
 #include "../hardware/usb/libusb_interface.hpp"
 
 //#include "../hardware/ioCards/mipiocards.h"
-#include "../hardware/ioCards/ovrheadiocards.h"
+//#include "../hardware/ioCards/ovrheadiocards.h"
 //#include "../hardware/ioCards/rearovrheadiocards.h"
 
 using namespace std::chrono_literals;
@@ -420,8 +420,9 @@ namespace zcockpit::cockpit::gui
 
 
 	void ZcockpitApp::identify_iocard_devices()
-			{
-			// IOCards Expansion USB see if we can identify it
+	{
+/*
+		// IOCards Expansion USB see if we can identify it
 			int number_of_cards_found = 0;
 			for(auto& i : IOCards::iocards_device_list) {
 				if(i.bus != -1)
@@ -456,10 +457,12 @@ namespace zcockpit::cockpit::gui
 					}
 				}
 			}
-		}
+*/
+	}
 
 	void ZcockpitApp::initFwdOverheadCards()
 	{
+/*
 	//	iocards_fwd_overhead_status = FAILED_STATUS;
 		LOG() << "IOCards: creating fwd overhead";
 		ovrheadIOCards = std::make_unique<OvrheadIOCards>(IOCards::fwdOvrheadIOCardDevice);
@@ -504,6 +507,7 @@ namespace zcockpit::cockpit::gui
 			LOG() << "IOCards: fwd overhead is not Open [isOpen] = " << ovrheadIOCards->isOpen;
 	//		iocards_fwd_overhead_status = FAILED_STATUS;
 		}
+*/
 	}
 
 //

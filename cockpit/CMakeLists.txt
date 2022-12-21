@@ -40,16 +40,16 @@ add_executable (client WIN32
   
   "hardware/util.cpp"
 
-  "hardware/ioCards/usbworker.cpp" 
-  "hardware/ioCards/usbworker.h" 
+ # "hardware/ioCards/usbworker.cpp" 
+ # "hardware/ioCards/usbworker.h" 
   "hardware/ioCards/iocards.cpp" 
   "hardware/ioCards/iocards.h"	
-  "hardware/ioCards/mipiocards.cpp" 
-  "hardware/ioCards/mipiocards.h"
-  "hardware/ioCards/ovrheadiocards.cpp"
-  "hardware/ioCards/ovrheadiocards.h"
-  "hardware/ioCards/rearovrheadiocards.cpp"
-  "hardware/ioCards/rearovrheadiocards.h"
+ # "hardware/ioCards/mipiocards.cpp" 
+ # "hardware/ioCards/mipiocards.h"
+ # "hardware/ioCards/ovrheadiocards.cpp"
+ # "hardware/ioCards/ovrheadiocards.h"
+ # "hardware/ioCards/rearovrheadiocards.cpp"
+ # "hardware/ioCards/rearovrheadiocards.h"
 
  "hardware/usb/libusb_interface.cpp")
 

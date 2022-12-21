@@ -53,7 +53,7 @@ namespace zcockpit::cockpit::gui
 		CSimpleIniA ini;
 		MainWindow* main_window{nullptr};
 
-		std::unique_ptr<zcockpit::cockpit::hardware::OvrheadIOCards> ovrheadIOCards;
+//		std::unique_ptr<zcockpit::cockpit::hardware::OvrheadIOCards> ovrheadIOCards;
 
 		std::mutex sim737_timer_mutex;
 		std::mutex timer_done_mutex;
