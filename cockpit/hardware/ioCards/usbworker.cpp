@@ -39,24 +39,45 @@ namespace zcockpit::cockpit::hardware
 
 	UsbWorker::~UsbWorker()
 	{
+
+	}
+
+	void UsbWorker::drop() 
+	{
+		while (is_running()) {
+			std::chrono::milliseconds dura(100);
+			std::this_thread::sleep_for(dura);
+		}
+
+		if (readTransfer) {
+			libusb_free_transfer(readTransfer);
+			readTransfer = nullptr;
+		}
+		if (writeTransfer) {
+			libusb_free_transfer(writeTransfer);
+			writeTransfer = nullptr;
+		}
 		int ret = libusb_release_interface(handle, 0);
-		if(ret != 0)
+		if (ret != 0)
 		{
 			LOG() << "Can't release interface";
 		}
-		libusb_close(handle); // This wakes up libusb_handle_events()
-		if(inBuffer_loc != nullptr) delete inBuffer_loc;
-		if(outBuffer_loc != nullptr) delete outBuffer_loc;
-		if(readBuffer_loc != nullptr) delete readBuffer_loc;
-		if(writeBuffer_loc != nullptr) delete writeBuffer_loc;
-	}
+	//	libusb_close(handle);
 
-	void UsbWorker::runStop()
+
+		if (inBuffer_loc != nullptr) delete inBuffer_loc;
+		if (outBuffer_loc != nullptr) delete outBuffer_loc;
+		if (readBuffer_loc != nullptr) delete readBuffer_loc;
+		if (writeBuffer_loc != nullptr) delete writeBuffer_loc;
+
+		isDropped = true;
+	}
+	void UsbWorker::runStop(bool state)
 	{
 		// create and lock
 		{
 			std::lock_guard<std::mutex> guard(usb_mutex);
-			run = !run;
+			run = state;
 		}
 		condition.notify_one();
 	}
@@ -78,12 +99,11 @@ namespace zcockpit::cockpit::hardware
 
 	void UsbWorker::abort()
 	{
-		// create and lock
 		{
 			std::lock_guard<std::mutex> guard(usb_mutex);
 			_abort = true;
 		}
-		condition.notify_one();
+		//condition.notify_one();
 	}
 
 	// --- PROCESS ---
@@ -117,7 +137,10 @@ namespace zcockpit::cockpit::hardware
 								break;
 							}
 						}
-						libusb_handle_events(ctx);
+						auto ret = libusb_handle_events(ctx);
+						if (ret < 0) {
+							break;
+						}
 					}
 				}
 			}
@@ -176,9 +199,9 @@ namespace zcockpit::cockpit::hardware
 						{
 							result = -6;
 						}
-						inBuffer_loc = inBuffer = new unsigned char[inBufferSize];
+						inBuffer_loc = inBuffer = new unsigned char[inBufferSize*2];
 						readBuffer_loc = readBuffer = new unsigned char[READ_BUFFER_SIZE];
-						libusb_fill_interrupt_transfer(readTransfer, handle, epIn, inBuffer, inBufferSize, read_callback, this, 0);
+						libusb_fill_interrupt_transfer(readTransfer, handle, epIn, inBuffer, sizeof(inBuffer), read_callback, this, 0);
 						if(libusb_submit_transfer(readTransfer) < 0)
 						{
 							result = -7;
@@ -195,7 +218,7 @@ namespace zcockpit::cockpit::hardware
 						{
 							result = -8;
 						}
-						outBuffer_loc = outBuffer = new unsigned char[outBufferSize];
+						outBuffer_loc = outBuffer = new unsigned char[outBufferSize*2];
 						writeBuffer_loc = writeBuffer = new unsigned char[WRITE_BUFFER_SIZE];
 						libusb_fill_interrupt_transfer(writeTransfer, handle, epOut, outBuffer, outBufferSize, write_callback, this, 0);
 					}
@@ -233,7 +256,7 @@ namespace zcockpit::cockpit::hardware
 					std::lock_guard<std::mutex> guard(readMutex);
 					if((readLeft + inBufferSize) <= READ_BUFFER_SIZE)
 					{
-						memcpy(readBuffer, inBuffer, inBufferSize);
+						memcpy(readBuffer, inBuffer, sizeof(inBuffer));
 						readLeft += inBufferSize;
 						readBuffer += inBufferSize;
 					}

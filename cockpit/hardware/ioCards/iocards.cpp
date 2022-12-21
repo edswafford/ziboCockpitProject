@@ -37,7 +37,9 @@ namespace zcockpit::cockpit::hardware
 		sentWakeupMsg = false;
 
 		openDevice(deviceBusAddr);
-
+		if (dev != nullptr && handle != nullptr) {
+			worker = std::make_unique<UsbWorker>(dev, handle, ctx, name);
+		}
 	}
 
 	void IOCards::openDevice(std::string deviceBusAddr)
@@ -121,6 +123,9 @@ namespace zcockpit::cockpit::hardware
 
 	IOCards::~IOCards()
 	{
+		if (!worker->is_dropped()) {
+			worker->drop();
+		}
 	}
 
 	IOCards::IOCard_Device IOCards::identify_iocards_usb(unsigned short bus, unsigned short addr)
@@ -227,6 +232,7 @@ namespace zcockpit::cockpit::hardware
 				}
 			}
 			usb_device->closeDown();
+			usb_device->worker->drop();
 		}
 
 		return found_device;
@@ -295,7 +301,6 @@ namespace zcockpit::cockpit::hardware
 
 	void IOCards::startThread(void)
 	{
-		worker = std::make_unique<UsbWorker>(dev, handle, ctx, name);
 		// start the thread
 		iocards_thread = std::thread(&IOCards::mainThread, this);
 	}
@@ -318,7 +323,7 @@ namespace zcockpit::cockpit::hardware
 			if (send_status == buffersize)
 			{
 				isInitialized = true;
-				worker->runStop();
+				worker->runStop(true);
 			}
 		}
 		return isInitialized;
@@ -345,54 +350,57 @@ namespace zcockpit::cockpit::hardware
 			if (worker)
 			{
 				worker->abort();
-				// give the worker some time to quit
-				std::chrono::milliseconds dura(100);
-				std::this_thread::sleep_for(dura);
+				while (worker->is_running()) {
+					// give the worker some time to quit
+					std::chrono::milliseconds dura(100);
+					std::this_thread::sleep_for(dura);
+				}
+				//if (handle != nullptr)
+				//{
+				//	int is_running = worker->is_running();
+				//	if (is_running != 0)
+				//	{
+				//		do
+				//		{
+				//			if (is_running == 1)
+				//			{
+				//				// still running send request to wake up libusb_handle_events()
+				//				// THE PROBLEM: the worker is conditional wait which could last forever --
+				//				// we need the iocard to send data to the usb to wake it up and worker task continue
+				//				// it will then see the abort and return -- ending the task
+				//				LOG() << "IOCARDS Closing Down worker is still running: " << worker->name;
+				//				int buffersize = 8;
+				//				unsigned char send_data[] = { 0x3d,0x00,0x3a,0x01,0x39,0x00,0xff,0xff };
+				//				if (!sentWakeupMsg)
+				//				{
+				//					sentWakeupMsg = true;
+				//					worker->write_usb(send_data, buffersize);
+				//				}
+				//				std::this_thread::sleep_for(std::chrono::milliseconds(200));
+				//				is_running = worker->is_running();
+				//				LOG() << "IOCARDS Closing Down for: " << worker->name << " is_running = " << is_running;
+				//			}
+				//			else if (is_running == -1)
+				//			{ // cannot get the lock
+				//				std::this_thread::sleep_for(std::chrono::milliseconds(200));
+				//				is_running = worker->is_running();
+				//				LOG() << "IOCARDS Closing Down can't get mutex (trying again ) for: " << worker->name << " is_running = " << is_running;
+				//			}
+				//		} while (is_running != 0);
+				//	}
+				//	else
+				//	{
+				//		LOG() << "IOCARDS ClosingDown -- Deleting thread for: " << worker->name;
+				//	}
 
-				if (handle != nullptr)
-				{
-					int is_running = worker->is_running();
-					if (is_running != 0)
-					{
-						do
-						{
-							if (is_running == 1)
-							{
-								// still running send request to wake up libusb_handle_events()
-								// THE PROBLEM: the worker is conditional wait which could last forever --
-								// we need the iocard to send data to the usb to wake it up and worker task continue
-								// it will then see the abort and return -- ending the task
-								LOG() << "IOCARDS Closing Down worker is still running: " << worker->name;
-								int buffersize = 8;
-								unsigned char send_data[] = { 0x3d,0x00,0x3a,0x01,0x39,0x00,0xff,0xff };
-								if (!sentWakeupMsg)
-								{
-									sentWakeupMsg = true;
-									worker->write_usb(send_data, buffersize);
-								}
-								std::this_thread::sleep_for(std::chrono::milliseconds(200));
-								is_running = worker->is_running();
-								LOG() << "IOCARDS Closing Down for: " << worker->name << " is_running = " << is_running;
-							}
-							else if (is_running == -1)
-							{ // cannot get the lock
-								std::this_thread::sleep_for(std::chrono::milliseconds(200));
-								is_running = worker->is_running();
-								LOG() << "IOCARDS Closing Down can't get mutex (trying again ) for: " << worker->name << " is_running = " << is_running;
-							}
-						} while (is_running != 0);
-					}
-					else
-					{
-						LOG() << "IOCARDS ClosingDown -- Deleting thread for: " << worker->name;
-					}
+
 
 					if (iocards_thread.joinable())
 					{
 						iocards_thread.join();
 					}
 					LOG() << "IOCARDS ClosingDown -- Deleting worker for: " << worker->name;
-				}
+				//}
 			}
 		}
 	}

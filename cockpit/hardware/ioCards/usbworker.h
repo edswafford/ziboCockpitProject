@@ -24,8 +24,10 @@ namespace zcockpit::cockpit::hardware
 
 		int releaseAndCloseUsb();
 		void abort();
-		void runStop();
+		void drop();
+		void runStop(bool state);
 		int is_running();
+		bool is_dropped() { return isDropped; }
 
 		int write_usb(unsigned char* bytes, int size);
 		int read_usb(unsigned char* bytes, int size);
@@ -56,7 +58,7 @@ namespace zcockpit::cockpit::hardware
 
 		bool run;
 		bool _abort;
-
+		bool isDropped{ false };
 
 		uint16_t inBufferSize; /* input endpoint buffer size */
 		uint16_t outBufferSize; /* output endpoint buffer size */
