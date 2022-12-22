@@ -189,53 +189,27 @@ namespace zcockpit::cockpit::hardware
 		IOCards usb_device(deviceBusAddr, "unknown");
 		if (usb_device.isOpen)
 		{
-			// initialize 4 axis
-			//if (usb_device.initializeIOCards(4))
-			//{
-				usb_device.initialize_iocardsdata();
-
+			//initialize 4 axis
+			if (usb_device.initializeIOCards(4))
+			{
 				int attempts = 0;
 				while (found_device == UNKNOWN && attempts < 3)
 				{
 					attempts++;
-					//int buffersize = 8;
-					//unsigned char send_data[] = { 0x3d,0x00,0x3a,0x01,0x39,0x04,0xff,0xff };
-					//
-					// Put message in send queue
-					//int send_status = usb_device->worker->write_usb(send_data, buffersize);
-
 					usb_device.initializeIOCards(4);
+					int axis_read_status = 0;
 
-					//// if USB is busy status  is zero
-					//// othrwise, status equal number of bytes sent
-					//if (send_status < 0)
-					//{
-					//	if (send_status == -1)
-					//	{
-					//		LOG() << "Error IOCards: USB device is not ready or not connected.";
-					//	}
-					//	else if (send_status == -2)
-					//	{
-					//		LOG() << "Error IOCards: USB device has write buffer size mismatch";
-					//	}
-					//	else
-					//	{
-					//		LOG() << "Error IOCards:USB device has unknow error";
-					//	}
-					//}
-
-
-
+					for (int tries = 0; tries < 20; tries++)
+					{
 						if (usb_device.receive_mastercard_synchronous() == 0)
 						{
 							const int axis_index = usb_device.axis - 1;
 							if (axis_index >= 0 && axis_index <= 3)
 							{
-								int axis_read_status = 0;
 								axis_read_status |= 1 << axis_index;
 								usb_device.axes_old[axis_index] = usb_device.axes[axis_index];
 
-								// when all axes have been read -- look for a match
+								// after all axes have been read -- look for a match
 								if (axis_read_status >= 0X0F)
 								{
 									if (usb_device.axes_old[0] > 200 && usb_device.axes_old[1] < 50 && usb_device.axes_old[2] > 200 && usb_device.axes_old[3] < 50)
@@ -266,17 +240,19 @@ namespace zcockpit::cockpit::hardware
 								}
 							}
 						}
+
 						if (found_device != UNKNOWN)
 						{
 							LOG() << "IOCards Device is connected.  Closing USB connection.";
 							break;
 						}
+					}
 				} //while
 				if (found_device == UNKNOWN)
 				{
 					LOG() << "Error locating IOCards:  USB re-initializing.  Number of Attempts: " << attempts;
 				}
-
+			}
 		} // isOpen
 
 		return found_device;
@@ -515,14 +491,24 @@ namespace zcockpit::cockpit::hardware
 			int i = 0;
 			int iocards_cnt = 0;
 			memset(iocards_device_list, -1, sizeof(IOCards_bus_and_addr) * MAX_IOCARDS);
-			while((dev = devs[i++]) != nullptr)
+			while ((dev = devs[i++]) != nullptr)
 			{
 				libusb_device_descriptor desc{};
 				const int ret = libusb_get_device_descriptor(dev, &desc);
-				if(ret < 0)
+				if (ret < 0)
 				{
 					LOG() << "Libusb get device descriptor Error: " << cnt;;
 					return "Libusb get device descriptor Error: " + std::to_string(cnt);
+				}
+				libusb_device_handle* handle_{ nullptr };	
+				libusb_open(dev, &handle_);
+				if (handle_) {
+					unsigned char string[256];
+					libusb_get_string_descriptor_ascii(handle_, desc.iManufacturer, string, sizeof(string));
+					if (ret > 0) {
+						LOG() << "Manufacturer: " << string << " Vendor id " << desc.idVendor << " Product id " << desc.idProduct;
+					}
+					libusb_close(handle_);
 				}
 
 				if(desc.idVendor == 0 && desc.idProduct == 0)
