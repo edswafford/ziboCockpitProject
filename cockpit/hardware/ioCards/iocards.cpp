@@ -31,215 +31,474 @@ namespace zcockpit::cockpit::hardware
 	#define DBL_MISS -2000000000.0
 
 
-//	IOCards::IOCards(std::string deviceBusAddr, std::string name) : iocards_thread(), name(name)
-//	{
-//		handle = nullptr;
-//		isOpen = false;
-//		isInitialized = false;
-//		sentWakeupMsg = false;
-//
-//		openDevice(deviceBusAddr);
+	IOCards::IOCards(const std::string deviceBusAddr, const std::string name) : name(name) //, iocards_thread() 
+	{
+		openDevice(deviceBusAddr);
+		if(handle != nullptr){
+			auto ret = libusb_claim_interface(handle, 0);
+			if(ret < 0) {
+				LOG() << "Cannot claim libusb device: error " << ret;
+			}
+			else {
+				isClaimed = true;
+			}
+		}
 //		if (dev != nullptr && handle != nullptr) {
 //			worker = std::make_unique<UsbWorker>(dev, handle, ctx, name);
 //		}
-//	}
-//
-//	void IOCards::openDevice(std::string deviceBusAddr)
-//	{
-//		libusb_device** devs;
-//		isOpen = false;
-//		isInitialized = false;
-//
-//		struct libusb_context* local_ctx = nullptr;
-//
-//		memset(time_enc, 0, sizeof(time_enc));
-//
-//
-//		if (deviceBusAddr.empty())
-//		{
-//			return;
-//		}
-//
-//		auto idList = Util::split(deviceBusAddr, '_');
-//		if (idList.size() < 2)
-//		{
-//			return;
-//		}
-//		std::string str = idList[0];
-//		bus = (unsigned short)std::strtoul(str.c_str(), nullptr, 10);//  toUShort();
-//		str = idList[1];
-//		addr = (unsigned short)std::strtoul(str.c_str(), nullptr, 10);
-//
-//		if (!LibUsbInterface::is_initialized())
-//		{
-//			if(!LibUsbInterface::initialize()) {
-//				return;
-//			}
-//		}
-//
-//		this->ctx = local_ctx;
-//
-//		int cnt = libusb_get_device_list(local_ctx, &devs);
-//		if (cnt < 0)
-//		{
-//			return;
-//		}
-//
-//		int i = 0;
-//		while ((dev = devs[i++]) != nullptr)
-//		{
-//			unsigned short devBus = libusb_get_bus_number(dev);
-//			unsigned short devAddr = libusb_get_device_address(dev);
-//			if (devBus == bus && devAddr == addr)
-//			{
-//				struct libusb_device_descriptor desc;
-//				int ret = libusb_get_device_descriptor(dev, &desc);
-//				if (ret >= 0)
-//				{
-//					/* open device */
-//					ret = libusb_open(dev, &handle);
-//					if (ret < 0)
-//					{
-//						// there was an error
-//						LOG() << "IOCARDS:  libsub_open failed Bus " << devBus << " addr " << devAddr;
-//						handle = nullptr;
-//						break;
-//					}
-//					else
-//					{
-//						isOpen = true;
-//						LOG() << "IOCARDS:  libsub_open passed for Bus  " << devBus << " addr " << devAddr;
-//						break;
-//					}
-//				}
-//			}
-//		}
-//		if (!isOpen)
-//		{
-//			LOG() << "Failed to find device:  Bus " << bus << " addr " << addr;
-//		}
-//		//  Free list and unreference all the devices by setting unref_devices: to 1
-//		libusb_free_device_list(devs, 1);
-//
-//	}
-//
-//	IOCards::~IOCards()
-//	{
+	}
+
+	IOCards::~IOCards()
+	{
+		if(isClaimed) {
+			auto ret = libusb_release_interface(handle, 0);
+			if(ret < 0) {
+				LOG() << "Cannot release libusb device: error " << ret;
+			}
+		}
+		if(isOpen && handle != nullptr) {
+			libusb_close(handle);
+			isOpen= false;
+		}
+
+
 //		if (!worker->is_dropped()) {
 //			worker->drop();
 //		}
-//	}
-//
-//	IOCards::IOCard_Device IOCards::identify_iocards_usb(unsigned short bus, unsigned short addr)
-//	{
-//		LOG() << "Attempting to identify IOCards device, Bus: " << bus << " address: " << addr;
-//
-//		IOCard_Device found_device = UNKNOWN;
-//		std::string deviceBusAddr = std::to_string(bus) + "_" + std::to_string(addr);
-//		auto usb_device = std::make_unique<IOCards>(deviceBusAddr, "unknown");
-//		if (usb_device->isOpen)
-//		{
-//			usb_device->startThread();
-//			usb_device->worker->initDevice();
-//
-//			// initialize 4 axis
-//			if (usb_device->initializeIOCards(4))
-//			{
-//				usb_device->initialize_iocardsdata();
-//
-//				int attempts = 0;
-//				while (found_device == UNKNOWN && attempts < 3)
-//				{
-//					attempts++;
-//					int buffersize = 8;
-//					unsigned char send_data[] = { 0x3d,0x00,0x3a,0x01,0x39,0x04,0xff,0xff };
-//					//
-//					// Put message in send queue
-//					int send_status = usb_device->worker->write_usb(send_data, buffersize);
-//
-//					// if USB is busy status  is zero
-//					// othrwise, status equal number of bytes sent
-//					if (send_status < 0)
-//					{
-//						if (send_status == -1)
-//						{
-//							LOG() << "Error IOCards: USB device is not ready or not connected.";
-//						}
-//						else if (send_status == -2)
-//						{
-//							LOG() << "Error IOCards: USB device has write buffer size mismatch";
-//						}
-//						else
-//						{
-//							LOG() << "Error IOCards:USB device has unknow error";
-//						}
-//					}
-//					int axis_read_status = 0;
-//					// Need to wait for reply
-//					// 200 ms before reinititializating
-//					for (int tries = 0; tries < 20; tries++)
-//					{
-//						// axis update every 10ms
-//						std::this_thread::sleep_for(std::chrono::milliseconds(10));
-//
-//						if (usb_device->receive_mastercard() >= 0)
-//						{
-//							int axis_index = usb_device->axis - 1;
-//							if (axis_index >= 0 && axis_index <= 3)
-//							{
-//								axis_read_status |= 1 << axis_index;
-//								usb_device->axes_old[axis_index] = usb_device->axes[axis_index];
-//
-//								// when all axes have been read -- look for a match
-//								if (axis_read_status >= 0X0F)
-//								{
-//									if (usb_device->axes_old[0] > 200 && usb_device->axes_old[1] < 50 && usb_device->axes_old[2] > 200 && usb_device->axes_old[3] < 50)
-//									{
-//										found_device = MIP;
-//										LOG() << "Found IOCards Device: MIP,  Number of Attempts: " << attempts << " Delta Time: " << (tries + 1) * 10 << " milliseconds";
-//										break;
-//									}
-//									else if (usb_device->axes_old[0] < 50 && usb_device->axes_old[1] > 200 && usb_device->axes_old[2] < 50 && usb_device->axes_old[3] > 200)
-//									{
-//										LOG() << "Found IOCards Device: Rear Overhead,  Number of Attempts: " << attempts << " Delta Time: " << (tries + 1) * 10 << " milliseconds";
-//										found_device = REAR_OVERHEAD;
-//										break;
-//									}
-//									else if (usb_device->axes_old[0] < 50 && usb_device->axes_old[1] < 50 && usb_device->axes_old[2] > 200 && usb_device->axes_old[3] > 200)
-//									{
-//										LOG() << "Found IOCards Device: Forward Overhead,  Number of Attempts: " << attempts << " Delta Time: " << (tries + 1) * 10 << " milliseconds";
-//										found_device = FWD_OVERHEAD;
-//										break;
-//									}
-//
-//									// reset for next cycle
-//									axis_read_status = 0;
-//									for (int count = 0; count < TAXES; count++)
-//									{
-//										usb_device->axes_old[count] = 0;
-//									}
-//								}
-//							}
-//						}
-//						if (found_device != UNKNOWN)
-//						{
-//							LOG() << "IOCards Device is connected.  Closing USB connection.";
-//							break;
-//						}
-//					}
-//					if (found_device == UNKNOWN)
-//					{
-//						LOG() << "Error locating IOCards:  USB re-initializing.  Number of Attempts: " << attempts;
-//					}
-//				}
-//			}
-//			usb_device->closeDown();
-//			usb_device->worker->drop();
-//		}
-//
-//		return found_device;
-//	}
-//
+	}
+
+	void IOCards::openDevice(const std::string device_bus_addr)
+	{
+		libusb_device** devs;
+		isOpen = false;
+		isInitialized = false;
+
+		struct libusb_context* local_ctx = nullptr;
+
+		memset(time_enc, 0, sizeof(time_enc));
+
+
+		if (device_bus_addr.empty())
+		{
+			return;
+		}
+
+		const auto idList = Util::split(device_bus_addr, '_');
+		if (idList.size() < 2)
+		{
+			return;
+		}
+		std::string str = idList[0];
+		bus = static_cast<unsigned short>(std::strtoul(str.c_str(), nullptr, 10));//  toUShort();
+		str = idList[1];
+		addr = static_cast<unsigned short>(std::strtoul(str.c_str(), nullptr, 10));
+
+		if (!LibUsbInterface::is_initialized())
+		{
+			if(!LibUsbInterface::initialize()) {
+				return;
+			}
+		}
+
+		libusb_device* dev =nullptr;
+		struct libusb_context* ctx = nullptr;
+		const int cnt = libusb_get_device_list(local_ctx, &devs);
+		if (cnt < 0)
+		{
+			return;
+		}
+
+		int i = 0;
+		while ((dev = devs[i++]) != nullptr)
+		{
+			const unsigned short devBus = libusb_get_bus_number(dev);
+			const unsigned short devAddr = libusb_get_device_address(dev);
+			if (devBus == bus && devAddr == addr)
+			{
+				libusb_device_descriptor desc{};
+				int ret = libusb_get_device_descriptor(dev, &desc);
+				if (ret >= 0)
+				{
+					/* open device */
+					ret = libusb_open(dev, &handle);
+					if (ret < 0)
+					{
+						// there was an error
+						LOG() << "IOCARDS:  libsub_open failed Bus " << devBus << " addr " << devAddr;
+						handle = nullptr;
+						break;
+					}
+					else
+					{
+						isOpen = true;
+						LOG() << "IOCARDS:  libsub_open passed for Bus  " << devBus << " addr " << devAddr;
+
+						struct libusb_config_descriptor* config;
+
+						// retrieve device information 
+						ret = libusb_get_config_descriptor(dev, 0, &config);
+						if(ret < 0)
+						{
+							LOG() << "LIBUSB_INTERFACE: Failed to get config descriptor  error code " << ret;
+						}
+						else
+						{
+							const struct libusb_interface* iface = &config->interface[0];
+							const struct libusb_interface_descriptor* altsetting = &iface->altsetting[0];
+
+							for(int ep_idx = 0; ep_idx < altsetting->bNumEndpoints; ep_idx++)
+							{
+								const struct libusb_endpoint_descriptor* ep = &altsetting->endpoint[ep_idx];
+
+								/* cycle through endpoints and set up asynchronous transfers */
+								if(ep->bEndpointAddress >= 0x80)
+								{
+									/* input endpoint, usually 0x81 */
+									epIn = ep->bEndpointAddress;
+									inBufferSize = ep->wMaxPacketSize;
+								}
+								else
+								{
+									/* output endpoint, usually: 0x01 */
+									epOut = ep->bEndpointAddress;
+									outBufferSize = ep->wMaxPacketSize;
+								}
+							}
+						}
+						libusb_free_config_descriptor(config);
+						break;
+					}
+				}
+			}
+		}
+		if (!isOpen)
+		{
+			LOG() << "Failed to find device:  Bus " << bus << " addr " << addr;
+		}
+		//  Free list and unreference all the devices by setting unref_devices: to 1
+		libusb_free_device_list(devs, 1);
+
+	}
+
+
+	IOCards::IOCard_Device IOCards::identify_iocards_usb(unsigned short bus, unsigned short addr)
+	{
+		LOG() << "Attempting to identify IOCards device, Bus: " << bus << " address: " << addr;
+
+		IOCard_Device found_device = UNKNOWN;
+		const std::string deviceBusAddr = std::to_string(bus) + "_" + std::to_string(addr);
+		IOCards usb_device(deviceBusAddr, "unknown");
+		if (usb_device.isOpen)
+		{
+			// initialize 4 axis
+			//if (usb_device.initializeIOCards(4))
+			//{
+				usb_device.initialize_iocardsdata();
+
+				int attempts = 0;
+				while (found_device == UNKNOWN && attempts < 3)
+				{
+					attempts++;
+					//int buffersize = 8;
+					//unsigned char send_data[] = { 0x3d,0x00,0x3a,0x01,0x39,0x04,0xff,0xff };
+					//
+					// Put message in send queue
+					//int send_status = usb_device->worker->write_usb(send_data, buffersize);
+
+					usb_device.initializeIOCards(4);
+
+					//// if USB is busy status  is zero
+					//// othrwise, status equal number of bytes sent
+					//if (send_status < 0)
+					//{
+					//	if (send_status == -1)
+					//	{
+					//		LOG() << "Error IOCards: USB device is not ready or not connected.";
+					//	}
+					//	else if (send_status == -2)
+					//	{
+					//		LOG() << "Error IOCards: USB device has write buffer size mismatch";
+					//	}
+					//	else
+					//	{
+					//		LOG() << "Error IOCards:USB device has unknow error";
+					//	}
+					//}
+
+
+
+						if (usb_device.receive_mastercard_synchronous() == 0)
+						{
+							const int axis_index = usb_device.axis - 1;
+							if (axis_index >= 0 && axis_index <= 3)
+							{
+								int axis_read_status = 0;
+								axis_read_status |= 1 << axis_index;
+								usb_device.axes_old[axis_index] = usb_device.axes[axis_index];
+
+								// when all axes have been read -- look for a match
+								if (axis_read_status >= 0X0F)
+								{
+									if (usb_device.axes_old[0] > 200 && usb_device.axes_old[1] < 50 && usb_device.axes_old[2] > 200 && usb_device.axes_old[3] < 50)
+									{
+										found_device = MIP;
+										LOG() << "Found IOCards Device: MIP,  Number of Attempts: " << attempts;
+										break;
+									}
+									else if (usb_device.axes_old[0] < 50 && usb_device.axes_old[1] > 200 && usb_device.axes_old[2] < 50 && usb_device.axes_old[3] > 200)
+									{
+										LOG() << "Found IOCards Device: Rear Overhead,  Number of Attempts: " << attempts;
+										found_device = REAR_OVERHEAD;
+										break;
+									}
+									else if (usb_device.axes_old[0] < 50 && usb_device.axes_old[1] < 50 && usb_device.axes_old[2] > 200 && usb_device.axes_old[3] > 200)
+									{
+										LOG() << "Found IOCards Device: Forward Overhead,  Number of Attempts: " << attempts;
+										found_device = FWD_OVERHEAD;
+										break;
+									}
+
+									// reset for next cycle
+									axis_read_status = 0;
+									for (int count = 0; count < TAXES; count++)
+									{
+										usb_device.axes_old[count] = 0;
+									}
+								}
+							}
+						}
+						if (found_device != UNKNOWN)
+						{
+							LOG() << "IOCards Device is connected.  Closing USB connection.";
+							break;
+						}
+				} //while
+				if (found_device == UNKNOWN)
+				{
+					LOG() << "Error locating IOCards:  USB re-initializing.  Number of Attempts: " << attempts;
+				}
+
+		} // isOpen
+
+		return found_device;
+	}
+
+	int IOCards::receive_mastercard_synchronous(void)
+	{
+		int recv_status = -1;
+
+		/* PROTOCOL */
+		/* Each Mastercard has 72 Inputs, distributed over 8 slots with 9 inputs
+		The first 8 inputs of each slot are read first, followed by an optional vector of the 9th input for each slot
+		The Mastercard No. is given in the first byte (input 0-3)
+		If any slots have inputs set to 1, these slots are set to 1 in byte 1
+		The data of the present slots will then follow in the next bytes (bytes 2-7)
+		If there are more slots than fit into a single message, a followup message must be read; such a message is
+		identified by bit 7 of byte 0 being set.
+		Note: if any A/D converters are turned on, by a "naxes" item in the usbiocards.ini file, this is reflected
+		in the bits 4-6 of the first byte (1x, 2x, 3x or 4x giving the number of the currently reporting converter).
+		In this case, the byte 1 is the output of the A/D converter, and the slot bits are moved to byte 2.
+		Data of the present slots will then follow in bytes 3-7.
+		Note also that the A/D converters will report continually, every 10msec or so, not only on value change!
+		*/
+
+
+		// check if we have a connected USB expander card
+		if (isOpen && isInitialized)
+		{
+			constexpr int buffersize = 8;
+			unsigned char recv_data[buffersize];
+			int transfered;
+			recv_status = libusb_interrupt_transfer(handle, epIn, recv_data, sizeof(recv_data), &transfered, 1000);
+
+			if (recv_status == 0)
+			{
+				int byteCnt;
+				int slot;
+				int card;
+				int index;
+				int input[8][8];
+				/* fill the input array by bitshifting the first eight bytes */
+				for (byteCnt = 0; byteCnt < 8; byteCnt++)
+				{
+					int x = recv_data[byteCnt];
+					for (int bitCnt = 0; bitCnt < 8; bitCnt++)
+					{
+						if (x & 01)
+						{
+							input[byteCnt][bitCnt] = 1;
+						}
+						else
+						{
+							input[byteCnt][bitCnt] = 0;
+						}
+						x = x >> 1;
+					}
+					//LOG() << "LIBIOCARDS: Received " << input[byteCnt][7] << input[byteCnt][6] << input[byteCnt][5] << input[byteCnt][4]
+					//	<< input[byteCnt][3] << input[byteCnt][2] << input[byteCnt][1] << input[byteCnt][0];
+				}
+
+				/* examine first byte: bits 0-3: Mastercard, 4-6: A/D, 7: continuation */
+
+				/* determine whether an A/D converter is active and read its value */
+				axis = (recv_data[0] >> 4) & 7; /* extract the A/D number from bits 6-4 */
+
+				if (axis > 0)
+				{
+					int axisval = recv_data[1];
+					axes[axis - 1] = axisval;
+				}
+
+				if (axis == 0)
+				{
+					/* no analog axis value: start slot indicator at second byte */
+					byteCnt = 1;
+				}
+				else
+				{
+					/* axis value present in second byte: start slot indicator at third byte */
+					byteCnt = 2;
+				}
+
+
+				if (input[0][7] == 0)
+				{
+					/* OPTION #1 */
+					/* new transmission (first 8 byte packet) */
+
+					/* clean slot index data */
+					for (card = 0; card < MASTERCARDS; card++)
+					{
+						for (slot = 0; slot < 8; slot++)
+						{
+							slotdata[slot][card] = 0;
+						}
+					}
+
+					/* fill slot index data with slot indices of first transmission */
+					int sumslots = 0;
+					int sumcards = 0;
+					for (card = 0; card < MASTERCARDS; card++)
+					{
+						if (input[0][card] == 1)
+						{
+							for (slot = 0; slot < 8; slot++)
+							{
+								if (input[byteCnt + sumcards][slot] == 1)
+								{
+									slotdata[slot][card] = 1;
+									sumslots++;
+								}
+							}
+							sumcards++;
+						}
+					}
+
+					//LOG() << "LIBIOCARDS: new transmission with " << sumcards << " cards and " << sumslots << " slots present.";
+
+					card = 0; //for (card = 0; card < MASTERCARDS; card++)
+					{
+						//LOG() << "card " << card << " slots: " <<
+						//    slotdata[7][card] << " " <<
+						//    slotdata[6][card] << " " <<
+						//    slotdata[5][card] << " " <<
+						//    slotdata[4][card] << " " <<
+						//    slotdata[3][card] << " " <<
+						//    slotdata[2][card] << " " <<
+						//    slotdata[1][card] << " " <<
+						//    slotdata[0][card];
+					}
+
+
+					/* augment byte count to position of first data packet */
+					byteCnt += sumcards;
+				}
+				else
+				{
+					/* OPTION #2 */
+					/* continuation of previous transmission (another 8 byte packet) */
+					LOG() << "option 2";
+				}
+
+				while ((byteCnt < 8) && (byteCnt >= 0))
+				{
+					/* read slotwise input data for first 8 bits of each slot */
+					int found = 0;
+					int readleft = 0;
+					for (card = 0; card < MASTERCARDS; card++)
+					{
+						for (slot = 0; slot < 8; slot++)
+						{
+							if (slotdata[slot][card] == 1)
+							{
+								readleft++;
+								if (!found)
+								{
+									found = 1;
+									slotdata[slot][card] = 2;
+									if (card < NCARDS)
+									{
+										for (int bit = 0; bit < 8; bit++)
+										{
+											index = 9 * slot + bit;
+											if (inputs[index][card] != input[byteCnt][bit])
+											{
+											//	LOG() << "index=" << index << " slot=" << slot << " bit=" << bit << " bytecnt=" << byteCnt << " old=" 
+											//		<< inputs[index][card] << " new="  <<input[byteCnt][bit];
+											}
+											inputs[index][card] = input[byteCnt][bit];
+										}
+									}
+									else
+									{
+										// "LIBIOCARDS: card x sent input but is not defined
+									}
+								}
+							}
+						}
+					} // for cards (0-3)
+
+					/* read slotwise input data for last 9th bit of each slot */
+					if (readleft == 0)
+					{
+						int readnine = 0;
+						int sumnine = 0;
+						for (card = 0; card < MASTERCARDS; card++)
+						{
+							for (slot = 0; slot < 8; slot++)
+							{
+								if (slotdata[slot][card] == 3)
+								{
+									sumnine++;
+								}
+								if (slotdata[slot][card] == 2)
+								{
+									if (readnine < 8)
+									{
+										slotdata[slot][card] = 3;
+										if (card < NCARDS)
+										{
+											int bit = (sumnine + readnine) % 8; /* present slots fill up subsequent bytes with their 9th bit data */
+											index = 9 * slot + 8;
+											inputs[index][card] = input[byteCnt][bit];
+										}
+									}
+									readnine++;
+								}
+							}
+						}
+					}
+					/* next byte */
+					byteCnt++;
+				} // end while
+			}
+		} // if open & init
+
+		return recv_status;
+	}
+
+
+
 	std::string IOCards::find_iocard_devices()
 	{
 		libusb_device** devs;
@@ -308,28 +567,32 @@ namespace zcockpit::cockpit::hardware
 //	}
 //
 //
-//	bool IOCards::initializeIOCards(unsigned char number_of_axes)
-//	{
-//		isInitialized = false;
-//		if (worker)
-//		{
-//			int buffersize = 8;
-//			unsigned char send_data[] = { 0x3d,0x00,0x3a,0x01,0x39,0x00,0xff,0xff };
-//
-//			// card 1
-//			send_data[3] = 0x01;
-//			// set number of analog axes ZERO of USB expansion card
-//			send_data[5] = number_of_axes;
-//
-//			int send_status = worker->write_usb(send_data, buffersize);
-//			if (send_status == buffersize)
-//			{
-//				isInitialized = true;
-//				worker->runStop(true);
-//			}
-//		}
-//		return isInitialized;
-//	}
+	// sends initialization string to the MASTERCARD
+	// MASTERCARD is connected to USB EXPANSION CARD
+	bool IOCards::initializeIOCards(unsigned char number_of_axes)
+	{
+		isInitialized = false;
+
+			int buffersize = 8;
+			unsigned char send_data[] = { 0x3d,0x00,0x3a,0x01,0x39,0x00,0xff,0xff };
+
+			// card 1
+			send_data[3] = 0x01;
+			// set number of analog axes ZERO of USB expansion card
+			send_data[5] = number_of_axes;
+			int transfered;
+		const auto ret = libusb_interrupt_transfer(handle, epOut, send_data, sizeof(send_data), &transfered, 1000);
+		if(ret < 0){
+			LOG() << "Failed to transmit IOCards initialization message.  libusb error " << ret;
+		}
+		if(transfered != sizeof(send_data)) {
+			LOG() << "Failed to transmit all data.  Expected " << sizeof(send_data) << " bytes, but only " << transfered << " was sent";
+		}
+		if(ret == 0 && transfered == sizeof(send_data)) {
+			isInitialized = true;
+		}
+		return isInitialized;
+	}
 //
 //
 //	/* saves a copy of all IOCARDS I/O states */
@@ -1320,49 +1583,45 @@ namespace zcockpit::cockpit::hardware
 //		return (retval);
 //	}
 //
-//	/* initialize data arrays with default values */
-//	/* flight data for  USB and TCP/IP communication */
-//	int IOCards::initialize_iocardsdata(void)
-//	{
-//		int count;
-//		int card;
-//		auto time_new = std::chrono::high_resolution_clock::now();
-//
-//		LOG() << "LIBIOCARDS: Initialization started \n";
-//
-//		/* get new time */
-//		//    update.start();
-//
-//		/* reset all inputs, axes, outputs and displays */
-//		for (card = 0; card < MASTERCARDS; card++)
-//		{
-//			for (count = 0; count < NUM_INPUTS; count++)
-//			{
-//				inputs[count][card] = -1;
-//				inputs_old[count][card] = -1;
-//				time_enc[count][card] = time_new;
-//			}
-//			for (count = 0; count < TAXES; count++)
-//			{
-//				axes[count] = 0;
-//				axes_old[count] = 0;
-//			}
-//			for (count = 0; count < NUM_OUTPUTS; count++)
-//			{
-//				outputs[count][card] = 0;
-//				outputs_old[count][card] = -1;
-//			}
-//			for (count = 0; count < NUM_DISPLAYS; count++)
-//			{
-//				displays[count][card] = 0;
-//				displays_old[count][card] = -1;
-//			}
-//		}
-//
-//
-//		return 0;
-//	}
-//
+	// initialize data arrays with default values
+	// flight data for  USB and TCP/IP communication
+	int IOCards::initialize_iocardsdata(void)
+	{
+		const auto time_new = std::chrono::high_resolution_clock::now();
+
+		LOG() << "LIBIOCARDS: Initialization started \n";
+
+
+		/* reset all inputs, axes, outputs and displays */
+		for (int card = 0; card < MASTERCARDS; card++)
+		{
+			for (int count = 0; count < NUM_INPUTS; count++)
+			{
+				inputs[count][card] = -1;
+				inputs_old[count][card] = -1;
+				time_enc[count][card] = time_new;
+			}
+			for (int count = 0; count < TAXES; count++)
+			{
+				axes[count] = 0;
+				axes_old[count] = 0;
+			}
+			for (int count = 0; count < NUM_OUTPUTS; count++)
+			{
+				outputs[count][card] = 0;
+				outputs_old[count][card] = -1;
+			}
+			for (int count = 0; count < NUM_DISPLAYS; count++)
+			{
+				displays[count][card] = 0;
+				displays_old[count][card] = -1;
+			}
+		}
+
+
+		return 0;
+	}
+
 //	/* this routine calculates the acceleration of rotary encoders based on last rotation time */
 //	int IOCards::get_acceleration(int card, int input, double accelerator)
 //	{

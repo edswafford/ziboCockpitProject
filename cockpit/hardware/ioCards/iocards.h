@@ -7,6 +7,8 @@
 #include <thread>
 #include <string>
 
+#include "libusb.h"
+
 //#include "usbworker.h"
 
 //#include "../DeleteMeHotkey.h"
@@ -58,14 +60,14 @@ namespace zcockpit::cockpit::hardware
 
 		static constexpr int NCARDS = 1; /* number of cards on USB connection (only for Mastercard) */
 
+		IOCards() = delete;
+		explicit IOCards(std::string deviceBusAddr, std::string name);
 
-//		IOCards(std::string deviceBusAddr, std::string name);
+		void openDevice(std::string device_bus_addr);
 
-	//	void openDevice(std::string deviceBusAddr);
+		~IOCards();
 
-//		~IOCards();
-
-	//	static IOCards::IOCard_Device identify_iocards_usb(unsigned short bus, unsigned short address);
+		static IOCards::IOCard_Device identify_iocards_usb(unsigned short bus, unsigned short address);
 		static std::string find_iocard_devices();
 
 
@@ -73,12 +75,14 @@ namespace zcockpit::cockpit::hardware
 
 		//void mainThread();
 		//void startThread(void);
-		//bool initializeIOCards(unsigned char number_of_axes = 0);
-		//int initialize_iocardsdata(void);
+		bool initializeIOCards(unsigned char number_of_axes = 0);
+		int initialize_iocardsdata(void);
 		//int copyIOCardsData(void);
 
+		int receive_mastercard_synchronous();
 		//int receive_mastercard(void);
 		//int send_mastercard(void);
+
 		//int mastercard_input(int input, int* value, int card = 0);
 		//void process_master_card_inputs(const OnOffKeyCommand keycmd[], int numberOfCmds, int card = 0);
 
@@ -109,49 +113,48 @@ namespace zcockpit::cockpit::hardware
 		//	return isInitialized;
 		//}
 
-		//bool isOpen;
+		bool isOpen{false};
+		bool isClaimed{false};
 		//std::mutex iocards_mutex;
 	private:
-
-		//IOCards()
-		//{
-		//}
 
 
 	//	int get_acceleration(int card, int input, double accelerator);
 
 	//	std::thread iocards_thread;
 
-	//	std::string name;
-	//	unsigned short bus;
-	//	unsigned short addr;
-	//	libusb_device* dev;
-	//	struct libusb_context* ctx;
+		std::string name;
+		unsigned short bus{0};
+		unsigned short addr{0};
 
-	//	libusb_device_handle* handle;
+		libusb_device_handle* handle{nullptr};
+		unsigned char epIn; // input endpoint 
+		unsigned char epOut; // output endpoint
+		uint16_t inBufferSize; // input endpoint buffer size
+		uint16_t outBufferSize; // output endpoint buffer size
 
-	//	bool isInitialized;
+		bool isInitialized{false};
 	//	bool sentWakeupMsg;
 
-	//	/* variables holding current and previous Mastercard states */
-	//	int inputs[NUM_INPUTS][MASTERCARDS];
-	//	int inputs_old[NUM_INPUTS][MASTERCARDS];
+	//	variables holding current and previous Mastercard states
+		int inputs[NUM_INPUTS][MASTERCARDS];
+		int inputs_old[NUM_INPUTS][MASTERCARDS];
 
-	//	int axes[TAXES];
-	//	int axes_old[TAXES];
-	//	int axis; /* number of active A/D converter */
+		int axes[TAXES];
+		int axes_old[TAXES];
+		int axis; /* number of active A/D converter */
 
-	//	//    QElapsedTimer update;
-	//	std::chrono::high_resolution_clock::time_point time_enc[NUM_INPUTS][MASTERCARDS];
+	//    QElapsedTimer update;
+		std::chrono::high_resolution_clock::time_point time_enc[NUM_INPUTS][MASTERCARDS];
 
-	//	int slotdata[8][MASTERCARDS]; /* stores slots present in mastercard USB read */
+		int slotdata[8][MASTERCARDS]; /* stores slots present in mastercard USB read */
 
-	//	int outputs[NUM_OUTPUTS][MASTERCARDS];
-	//	int outputs_old[NUM_OUTPUTS][MASTERCARDS];
+		int outputs[NUM_OUTPUTS][MASTERCARDS];
+		int outputs_old[NUM_OUTPUTS][MASTERCARDS];
 
-	//protected:
-	//	int displays[NUM_DISPLAYS][MASTERCARDS];
-	//	int displays_old[NUM_DISPLAYS][MASTERCARDS];
+	protected:
+		int displays[NUM_DISPLAYS][MASTERCARDS];
+		int displays_old[NUM_DISPLAYS][MASTERCARDS];
 	};
 }
 #endif // IOCARDS_H

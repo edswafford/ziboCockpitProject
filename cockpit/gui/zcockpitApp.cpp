@@ -421,7 +421,7 @@ namespace zcockpit::cockpit::gui
 
 	void ZcockpitApp::identify_iocard_devices()
 	{
-/*
+
 		// IOCards Expansion USB see if we can identify it
 			int number_of_cards_found = 0;
 			for(auto& i : IOCards::iocards_device_list) {
@@ -457,7 +457,6 @@ namespace zcockpit::cockpit::gui
 					}
 				}
 			}
-*/
 	}
 
 	void ZcockpitApp::initFwdOverheadCards()
