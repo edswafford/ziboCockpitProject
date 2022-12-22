@@ -71,7 +71,6 @@ namespace zcockpit::cockpit::hardware
 	{
 		libusb_device** devs;
 		isOpen = false;
-		isInitialized = false;
 
 		struct libusb_context* local_ctx = nullptr;
 
@@ -306,7 +305,7 @@ namespace zcockpit::cockpit::hardware
 		// check if we have a connected USB expander card
 		if (isOpen && isInitialized)
 		{
-			constexpr int buffersize = 8;
+			constexpr int buffersize = 9;
 			unsigned char recv_data[buffersize];
 			int transfered;
 			recv_status = libusb_interrupt_transfer(handle, epIn, recv_data, sizeof(recv_data), &transfered, 1000);
@@ -585,10 +584,10 @@ namespace zcockpit::cockpit::hardware
 		if(ret < 0){
 			LOG() << "Failed to transmit IOCards initialization message.  libusb error " << ret;
 		}
-		if(transfered != sizeof(send_data)) {
+		if(sizeof(send_data) <= transfered) {
 			LOG() << "Failed to transmit all data.  Expected " << sizeof(send_data) << " bytes, but only " << transfered << " was sent";
 		}
-		if(ret == 0 && transfered == sizeof(send_data)) {
+		if(ret == 0 && sizeof(send_data) <= transfered) {
 			isInitialized = true;
 		}
 		return isInitialized;
