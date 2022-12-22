@@ -46,8 +46,8 @@ add_executable (client WIN32
   "hardware/ioCards/iocards.h"	
  # "hardware/ioCards/mipiocards.cpp" 
  # "hardware/ioCards/mipiocards.h"
- # "hardware/ioCards/ovrheadiocards.cpp"
- # "hardware/ioCards/ovrheadiocards.h"
+  "hardware/ioCards/ovrheadiocards.cpp"
+  "hardware/ioCards/ovrheadiocards.h"
  # "hardware/ioCards/rearovrheadiocards.cpp"
  # "hardware/ioCards/rearovrheadiocards.h"
 

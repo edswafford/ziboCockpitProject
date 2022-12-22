@@ -461,7 +461,7 @@ namespace zcockpit::cockpit::gui
 
 	void ZcockpitApp::initFwdOverheadCards()
 	{
-/*
+
 	//	iocards_fwd_overhead_status = FAILED_STATUS;
 		LOG() << "IOCards: creating fwd overhead";
 		ovrheadIOCards = std::make_unique<OvrheadIOCards>(IOCards::fwdOvrheadIOCardDevice);
@@ -506,7 +506,7 @@ namespace zcockpit::cockpit::gui
 			LOG() << "IOCards: fwd overhead is not Open [isOpen] = " << ovrheadIOCards->isOpen;
 	//		iocards_fwd_overhead_status = FAILED_STATUS;
 		}
-*/
+
 	}
 
 //
