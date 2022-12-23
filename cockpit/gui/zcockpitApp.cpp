@@ -455,12 +455,12 @@ namespace zcockpit::cockpit::gui
 		}
 	}
 
-	void ZcockpitApp::initFwdOverheadCards()
+	void ZcockpitApp::initFwdOverheadCards(std::string bus_address)
 	{
 
 	//	iocards_fwd_overhead_status = FAILED_STATUS;
 		LOG() << "IOCards: creating fwd overhead";
-//		ovrheadIOCards = std::make_unique<OvrheadIOCards>(IOCards::fwdOvrheadIOCardDevice);
+		ovrheadIOCards = std::make_unique<OvrheadIOCards>(bus_address);
 		if(ovrheadIOCards->is_open)
 		{
 			// Did we find the fwd overhead device and manage to open usb connection 
@@ -470,9 +470,12 @@ namespace zcockpit::cockpit::gui
 
 			// start worker task and wait for run/abort
 //			ovrheadIOCards->startThread();
-//			ovrheadIOCards->worker->initDevice();
 
-			if(ovrheadIOCards->initializeIOCards())
+			ovrheadIOCards->initForAsync();
+
+			// Axes are not used
+			constexpr unsigned char number_of_axes = 0;
+			if(ovrheadIOCards->initializeIOCards(number_of_axes))
 			{
 
 				// set run to true -- thread is running

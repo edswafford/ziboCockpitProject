@@ -33,6 +33,7 @@ namespace zcockpit::cockpit::hardware
 		void update_landing_alt_display();
 
 		void update_flight_alt_display();
+
 		static bool is_display_blank(std::array<unsigned char, NUMBER_OF_ALTITUDE_DIGITS> digits);
 
 

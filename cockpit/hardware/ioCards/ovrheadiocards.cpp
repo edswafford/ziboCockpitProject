@@ -178,11 +178,11 @@ namespace zcockpit::cockpit::hardware
 		//mastercard_send_display(ifly737->landing_altitude[1], LAND_ALT_10);
 		//mastercard_send_display(ifly737->landing_altitude[2], LAND_ALT_100);
 		//mastercard_send_display(ifly737->landing_altitude[3], LAND_ALT_1000);
-		unsigned char land_alt;// = ifly737->landing_altitude[4];
-		if(land_alt == 11)
-		{
-			land_alt = 0xf8;
-		}
+		//unsigned char land_alt;// = ifly737->landing_altitude[4];
+		//if(land_alt == 11)
+		//{
+		//	land_alt = 0xf8;
+		//}
 	//	mastercard_send_display(land_alt, LAND_ALT_10_000);
 	}
 
@@ -200,11 +200,11 @@ namespace zcockpit::cockpit::hardware
 		//mastercard_send_display(ifly737->flight_altitude[1], FLT_ALT_10);
 		//mastercard_send_display(ifly737->flight_altitude[2], FLT_ALT_100);
 		//mastercard_send_display(ifly737->flight_altitude[3], FLT_ALT_1000);
-		unsigned char land_alt;// = ifly737->flight_altitude[4];
-		if(land_alt == 11)
-		{
-			land_alt = 0xf8;
-		}
+		//unsigned char land_alt;// = ifly737->flight_altitude[4];
+		//if(land_alt == 11)
+		//{
+		//	land_alt = 0xf8;
+		//}
 		//mastercard_send_display(land_alt, FLT_ALT_10_000);
 	}
 
@@ -286,7 +286,7 @@ namespace zcockpit::cockpit::hardware
 
 	void OvrheadIOCards::fastProcessOvrHead()
 	{
-		unsigned char pwr;// = ifly737->electrical_power_state;
+	//	unsigned char pwr;// = ifly737->electrical_power_state;
 
 
 		update_displays();
@@ -318,40 +318,40 @@ namespace zcockpit::cockpit::hardware
 		//
 		if(eng1_start_gnd.has_changed || eng1_start_cont.has_changed || eng1_start_flt.has_changed)
 		{
-			eng1_start_debounce = ENG_START_DEBOUNCE_COUNT;
-			if(eng1_start_gnd.value == 1 && eng1_start_cont.value == 1 && eng1_start_flt.value == 1)
-			{
-				// GND
-				mag_eng1_start = pwr != 0 ? 1 : 0;
-				engine1_state = GND;
-			}
-			else if(eng1_start_gnd.value == 0 && eng1_start_cont.value == 0 && eng1_start_flt.value == 0)
-			{
-				// OFF
-				mag_eng1_start = 0;
-				engine1_state = OFF;
-			}
-			else if(eng1_start_gnd.value == 0 && eng1_start_cont.value == 1 && eng1_start_flt.value == 0)
-			{
-				// CONT
-				mag_eng1_start = 0;
-				engine1_state = CONT;
-			}
-			else if(eng1_start_gnd.value == 0 && eng1_start_flt.value == 1)
-			{
-				// FLT
-				mag_eng1_start = 0;
-				engine1_state = FLT;
-			}
-			else
-			{
-				LOG() << "Invalid engine start";
-			}
+			//eng1_start_debounce = ENG_START_DEBOUNCE_COUNT;
+			//if(eng1_start_gnd.value == 1 && eng1_start_cont.value == 1 && eng1_start_flt.value == 1)
+			//{
+			//	// GND
+			//	mag_eng1_start = pwr != 0 ? 1 : 0;
+			//	engine1_state = GND;
+			//}
+			//else if(eng1_start_gnd.value == 0 && eng1_start_cont.value == 0 && eng1_start_flt.value == 0)
+			//{
+			//	// OFF
+			//	mag_eng1_start = 0;
+			//	engine1_state = OFF;
+			//}
+			//else if(eng1_start_gnd.value == 0 && eng1_start_cont.value == 1 && eng1_start_flt.value == 0)
+			//{
+			//	// CONT
+			//	mag_eng1_start = 0;
+			//	engine1_state = CONT;
+			//}
+			//else if(eng1_start_gnd.value == 0 && eng1_start_flt.value == 1)
+			//{
+			//	// FLT
+			//	mag_eng1_start = 0;
+			//	engine1_state = FLT;
+			//}
+			//else
+			//{
+			//	LOG() << "Invalid engine start";
+			//}
 
-			// clear states
-			eng1_start_gnd.has_changed = false;
-			eng1_start_cont.has_changed = false;
-			eng1_start_flt.has_changed = false;
+			//// clear states
+			//eng1_start_gnd.has_changed = false;
+			//eng1_start_cont.has_changed = false;
+			//eng1_start_flt.has_changed = false;
 		}
 		else
 		{
@@ -398,40 +398,40 @@ namespace zcockpit::cockpit::hardware
 		//
 		if(eng2_start_gnd.has_changed || eng2_start_cont.has_changed || eng2_start_flt.has_changed)
 		{
-			eng2_start_debounce = ENG_START_DEBOUNCE_COUNT;
-			if(eng2_start_gnd.value == 1 && eng2_start_flt.value == 1)
-			{
-				// GND
-				mag_eng2_start = pwr != 0 ? 1 : 0;
-				engine2_state = GND;
-			}
-			else if(eng2_start_gnd.value == 0 && eng2_start_cont.value == 0 && eng2_start_flt.value == 0)
-			{
-				// OFF
-				mag_eng2_start = 0;
-				engine2_state = OFF;
-			}
-			else if(eng2_start_gnd.value == 0 && eng2_start_cont.value == 1 && eng2_start_flt.value == 0)
-			{
-				// CONT
-				mag_eng2_start = 0;
-				engine2_state = CONT;
-			}
-			else if(eng2_start_gnd.value == 0 && eng2_start_flt.value == 1)
-			{
-				// FLT
-				mag_eng2_start = 0;
-				engine2_state = FLT;
-			}
-			else
-			{
-				LOG() << "Invalid engine start";
-			}
+			//eng2_start_debounce = ENG_START_DEBOUNCE_COUNT;
+			//if(eng2_start_gnd.value == 1 && eng2_start_flt.value == 1)
+			//{
+			//	// GND
+			//	mag_eng2_start = pwr != 0 ? 1 : 0;
+			//	engine2_state = GND;
+			//}
+			//else if(eng2_start_gnd.value == 0 && eng2_start_cont.value == 0 && eng2_start_flt.value == 0)
+			//{
+			//	// OFF
+			//	mag_eng2_start = 0;
+			//	engine2_state = OFF;
+			//}
+			//else if(eng2_start_gnd.value == 0 && eng2_start_cont.value == 1 && eng2_start_flt.value == 0)
+			//{
+			//	// CONT
+			//	mag_eng2_start = 0;
+			//	engine2_state = CONT;
+			//}
+			//else if(eng2_start_gnd.value == 0 && eng2_start_flt.value == 1)
+			//{
+			//	// FLT
+			//	mag_eng2_start = 0;
+			//	engine2_state = FLT;
+			//}
+			//else
+			//{
+			//	LOG() << "Invalid engine start";
+			//}
 
-			// clear states
-			eng2_start_gnd.has_changed = false;
-			eng2_start_cont.has_changed = false;
-			eng2_start_flt.has_changed = false;
+			//// clear states
+			//eng2_start_gnd.has_changed = false;
+			//eng2_start_cont.has_changed = false;
+			//eng2_start_flt.has_changed = false;
 		}
 		else
 		{

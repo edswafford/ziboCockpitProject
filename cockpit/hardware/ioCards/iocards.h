@@ -72,8 +72,9 @@ namespace zcockpit::cockpit::hardware
 
 		//void mainThread();
 		//void startThread(void);
-		bool initializeIOCards(unsigned char number_of_axes = 0);
-		int initialize_iocardsdata(void);
+		[[nodiscard]] bool initializeIOCards(unsigned char number_of_axes);
+		[[nodiscard]] bool initForAsync();
+		[[nodiscard]] int initialize_iocardsdata(void);
 		//int copyIOCardsData(void);
 
 		int receive_mastercard_synchronous();
@@ -137,6 +138,12 @@ namespace zcockpit::cockpit::hardware
 		unsigned char epOut; // output endpoint
 		uint16_t inBufferSize; // input endpoint buffer size
 		uint16_t outBufferSize; // output endpoint buffer size
+
+		// Used for Async operations
+		libusb_transfer* readTransfer;
+		libusb_transfer* writeTransfer;
+
+
 
 		bool isInitialized{false};
 	//	bool sentWakeupMsg;

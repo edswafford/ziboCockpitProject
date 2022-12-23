@@ -67,7 +67,7 @@ namespace zcockpit::cockpit::gui
 		bool interfaceit_overhead_status{false};
 		void timer();
 		void initialize_iocard_devices();
-		void initFwdOverheadCards();
+		void initFwdOverheadCards(std::string bus_address);
 
 		// Cycle Counters
 		int ONE_SECOND;
@@ -84,7 +84,7 @@ namespace zcockpit::cockpit::gui
 		int five_second_counter;
 
 		std::chrono::high_resolution_clock::time_point start;
-		std::chrono::duration<double, std::milli> elapsed;
+		std::chrono::duration<double, std::milli> elapsed{0};
 	};
 }
 #endif

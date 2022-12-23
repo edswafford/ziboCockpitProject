@@ -97,7 +97,7 @@ namespace zcockpit::cockpit::hardware
 
 		libusb_device* dev =nullptr;
 		struct libusb_context* ctx = nullptr;
-		const int cnt = libusb_get_device_list(local_ctx, &devs);
+		const int cnt = static_cast<int>(libusb_get_device_list(local_ctx, &devs));
 		if (cnt < 0)
 		{
 			return;
@@ -186,14 +186,12 @@ namespace zcockpit::cockpit::hardware
 		IOCards usb_device(bus_address, "unknown");
 		if (usb_device.is_open)
 		{
-			//initialize 4 axis
-			if (usb_device.initializeIOCards(4))
+			int attempts = 0;
+			while (found_device == UNKNOWN && attempts < 3)
 			{
-				int attempts = 0;
-				while (found_device == UNKNOWN && attempts < 3)
-				{
-					attempts++;
-					usb_device.initializeIOCards(4);
+				attempts++;
+				//initialize 4 axis
+				if(usb_device.initializeIOCards(4)){
 					int axis_read_status = 0;
 
 					for (int tries = 0; tries < 20; tries++)
@@ -243,13 +241,14 @@ namespace zcockpit::cockpit::hardware
 							LOG() << "IOCards Device is connected.  Closing USB connection.";
 							break;
 						}
-					} // tries
-				} //while
-				if (found_device == UNKNOWN)
-				{
-					LOG() << "Error locating IOCards:  USB re-initializing.  Number of Attempts: " << attempts;
+					} // for tries
 				}
+			} //while
+			if (found_device == UNKNOWN)
+			{
+				LOG() << "Error locating IOCards:  USB re-initializing.  Number of Attempts: " << attempts;
 			}
+			
 		} // isOpen
 
 		return found_device;
@@ -289,7 +288,7 @@ namespace zcockpit::cockpit::hardware
 				int slot;
 				int card;
 				int index;
-				int input[8][8];
+				int input[8][8]{{0}};
 				/* fill the input array by bitshifting the first eight bytes */
 				for (byteCnt = 0; byteCnt < 8; byteCnt++)
 				{
@@ -318,7 +317,9 @@ namespace zcockpit::cockpit::hardware
 				if (axis > 0)
 				{
 					int axisval = recv_data[1];
-					axes[axis - 1] = axisval;
+					if((axis-1) < TAXES){
+						axes[axis - 1] = axisval;
+					}
 				}
 
 				if (axis == 0)
@@ -477,7 +478,7 @@ namespace zcockpit::cockpit::hardware
 		std::string devices;
 
 		if(LibUsbInterface::is_initialized()){
-			const int cnt = libusb_get_device_list(nullptr, &devs);
+			const int cnt = static_cast<int>(libusb_get_device_list(nullptr, &devs));
 			if(cnt < 0)
 			{
 				LOG() << "Libusb get device list Error: " << cnt;;
@@ -530,9 +531,8 @@ namespace zcockpit::cockpit::hardware
 
 			//  Free list and unreference all the devices by setting unref_devices: to 1
 			libusb_free_device_list(devs, 1);
-
-			return devices;
 		}
+		return devices;
 	}
 //
 //
@@ -575,7 +575,18 @@ namespace zcockpit::cockpit::hardware
 		}
 		return isInitialized;
 	}
-//
+
+	bool IOCards::initForAsync()
+	{
+		readTransfer = libusb_alloc_transfer(0);
+		if(!readTransfer)
+		{
+			return false;
+		}
+		return false;
+	}
+
+	//
 //
 //	/* saves a copy of all IOCARDS I/O states */
 //	/* this is needed because, at each step, only the modified values */
