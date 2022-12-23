@@ -471,32 +471,33 @@ namespace zcockpit::cockpit::gui
 			// start worker task and wait for run/abort
 //			ovrheadIOCards->startThread();
 
-			ovrheadIOCards->initForAsync();
+			if(ovrheadIOCards->initForAsync()) {
 
-			// Axes are not used
-			constexpr unsigned char number_of_axes = 0;
-			if(ovrheadIOCards->initializeIOCards(number_of_axes))
-			{
-
-				// set run to true -- thread is running
-//				LOG() << "fwd overhead is initialized and thread is running";
-
-				ovrheadIOCards->initialize_iocardsdata();
-
-//				if(ovrheadIOCards->receive_mastercard() < 0)
+				// Axes are not used
+				constexpr unsigned char number_of_axes = 0;
+				if(ovrheadIOCards->initializeIOCards(number_of_axes) && ovrheadIOCards->initialize_iocardsdata())
 				{
-					LOG() << "IOCards: closing down fwd overhead receive < 0";
-//					ovrheadIOCards->closeDown();
-	//				iocards_fwd_overhead_status = FAILED_STATUS;
-				}
 
-	//			LOG() << "fwd Done First Pass status =" << iocards_fwd_overhead_status;
-	//			PostMessage(mainHwnd, WM_IOCARDS_FWD_OVERHEAD_HEALTH, iocards_fwd_overhead_status, NULL);
-			}
-//		else
-			{
-				LOG() << "IOCards: fwd overhead failed init";
-	//			iocards_fwd_overhead_status = FAILED_STATUS;
+					// set run to true -- thread is running
+	//				LOG() << "fwd overhead is initialized and thread is running";
+
+					;
+
+	//				if(ovrheadIOCards->receive_mastercard() < 0)
+					{
+						LOG() << "IOCards: closing down fwd overhead receive < 0";
+	//					ovrheadIOCards->closeDown();
+		//				iocards_fwd_overhead_status = FAILED_STATUS;
+					}
+
+		//			LOG() << "fwd Done First Pass status =" << iocards_fwd_overhead_status;
+		//			PostMessage(mainHwnd, WM_IOCARDS_FWD_OVERHEAD_HEALTH, iocards_fwd_overhead_status, NULL);
+				}
+				else
+					{
+						LOG() << "IOCards: fwd overhead failed init";
+			//			iocards_fwd_overhead_status = FAILED_STATUS;
+					}
 			}
 		}
 		else

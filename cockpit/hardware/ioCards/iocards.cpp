@@ -187,13 +187,12 @@ namespace zcockpit::cockpit::hardware
 		if (usb_device.is_open)
 		{
 			int attempts = 0;
-			while (found_device == UNKNOWN && attempts < 3)
-			{
-				attempts++;
-				//initialize 4 axis
-				if(usb_device.initializeIOCards(4)){
+			//initialize 4 axis
+			if(usb_device.initializeIOCards(4)){
+				while (found_device == UNKNOWN && attempts < 3)
+				{
+					attempts++;
 					int axis_read_status = 0;
-
 					for (int tries = 0; tries < 20; tries++)
 					{
 						if (usb_device.receive_mastercard_synchronous() == 0)
@@ -242,8 +241,8 @@ namespace zcockpit::cockpit::hardware
 							break;
 						}
 					} // for tries
-				}
-			} //while
+				} //while
+			}
 			if (found_device == UNKNOWN)
 			{
 				LOG() << "Error locating IOCards:  USB re-initializing.  Number of Attempts: " << attempts;
