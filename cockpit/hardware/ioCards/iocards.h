@@ -37,9 +37,9 @@ namespace zcockpit::cockpit::hardware
 	class IOCards
 	{
 	public:
-		static std::string mipIOCardDevice;
-		static std::string fwdOvrheadIOCardDevice;
-		static std::string rearOvrheadIOCardDevice;
+		//static std::string mipIOCardDevice;
+		//static std::string fwdOvrheadIOCardDevice;
+		//static std::string rearOvrheadIOCardDevice;
 
 		static constexpr int MAX_IOCARDS = 10;
 		static IOCards_bus_and_addr iocards_device_list[MAX_IOCARDS];
@@ -67,7 +67,7 @@ namespace zcockpit::cockpit::hardware
 
 		~IOCards();
 
-		static IOCards::IOCard_Device identify_iocards_usb(unsigned short bus, unsigned short address);
+		static IOCards::IOCard_Device identify_iocards_usb(const std::string& bus_address);
 		static std::string find_iocard_devices();
 
 
@@ -83,7 +83,7 @@ namespace zcockpit::cockpit::hardware
 		//int receive_mastercard(void);
 		//int send_mastercard(void);
 
-		//int mastercard_input(int input, int* value, int card = 0);
+		int mastercard_input(int input, int* value, int card = 0);
 		//void process_master_card_inputs(const OnOffKeyCommand keycmd[], int numberOfCmds, int card = 0);
 
 		//void process_master_card_inputs(masterCard_input_state* switch_states[], int numberOfCmds, int card = 0);
@@ -113,8 +113,15 @@ namespace zcockpit::cockpit::hardware
 		//	return isInitialized;
 		//}
 
-		bool isOpen{false};
-		bool isClaimed{false};
+		bool is_open{false};
+		bool is_Claimed{false};
+
+		void set_iocard_device(IOCard_Device device) {io_card_device = device;}
+		[[nodiscard]] IOCard_Device get_io_card_device() const {return io_card_device;}
+
+		void set_name(std::string name) {name = name;}
+		[[nodiscard]] std::string get_name() const {return device_name;}
+
 		//std::mutex iocards_mutex;
 	private:
 
@@ -123,7 +130,8 @@ namespace zcockpit::cockpit::hardware
 
 	//	std::thread iocards_thread;
 
-		std::string name;
+		std::string device_name;
+		IOCard_Device io_card_device{UNKNOWN};
 		unsigned short bus{0};
 		unsigned short addr{0};
 

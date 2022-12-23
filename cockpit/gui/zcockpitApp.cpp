@@ -30,7 +30,7 @@ logger LOG("ZiboCockpit Client.log");
 #include "../hardware/usb/libusb_interface.hpp"
 
 //#include "../hardware/ioCards/mipiocards.h"
-//#include "../hardware/ioCards/ovrheadiocards.h"
+#include "../hardware/ioCards/ovrheadiocards.h"
 //#include "../hardware/ioCards/rearovrheadiocards.h"
 
 using namespace std::chrono_literals;
@@ -83,9 +83,9 @@ namespace zcockpit::cockpit::gui
 		}
 		if(ini_error == SI_OK)
 		{
-			IOCards::mipIOCardDevice = ini.GetValue("iocards", "mip", "default");
-			IOCards::fwdOvrheadIOCardDevice = ini.GetValue("iocards", "fwd_overhead", "default");
-			IOCards::rearOvrheadIOCardDevice = ini.GetValue("iocards", "rear_overhead", "default");
+			//IOCards::mipIOCardDevice = ini.GetValue("iocards", "mip", "default");
+			//IOCards::fwdOvrheadIOCardDevice = ini.GetValue("iocards", "fwd_overhead", "default");
+			//IOCards::rearOvrheadIOCardDevice = ini.GetValue("iocards", "rear_overhead", "default");
 		}
 		main_window->set_iocard_mip_status(false);
 		main_window->set_iocard_fwd_overhead_status(false);
@@ -100,12 +100,12 @@ namespace zcockpit::cockpit::gui
 
 			// Update IOCards GUI Text Ctrls 
 			identify_iocard_devices();
+			initFwdOverheadCards();
 
 		}
 		else {
 			main_window->set_iocard_status(std::string("Failed to Initialize LibUsb"));
 		}
-		initFwdOverheadCards();
 
 		timer_thread = std::thread([this]
 		{
@@ -427,28 +427,26 @@ namespace zcockpit::cockpit::gui
 			for(auto& i : IOCards::iocards_device_list) {
 				if(i.bus != -1)
 				{
-					const IOCards::IOCard_Device device_name = IOCards::identify_iocards_usb(i.bus, i.address);
+					auto bus_address = std::to_string(i.bus) + "_" + std::to_string(i.address);
+					const IOCards::IOCard_Device device_name = IOCards::identify_iocards_usb(bus_address);
 					if(device_name == IOCards::MIP)
 					{
 						// initialize MIP
-						IOCards::mipIOCardDevice = std::to_string(i.bus) + "_" + std::to_string(i.address);
-						LOG() << "Identified MIP bus _ addr " << IOCards::mipIOCardDevice;
-						main_window->set_iocard_mip_addr(IOCards::mipIOCardDevice);
+						LOG() << "Identified MIP bus _ addr " << bus_address;
+						main_window->set_iocard_mip_addr(bus_address);
 						number_of_cards_found += 1;
 					}
 					else if(device_name == IOCards::REAR_OVERHEAD)
 					{
 						// initialize Rear Overhead
-						IOCards::rearOvrheadIOCardDevice = std::to_string(i.bus) + "_" + std::to_string(i.address);
-						LOG() << "Identified REAR bus _ addr " << IOCards::rearOvrheadIOCardDevice;
-						main_window->set_iocard_rear_overhead_addr(IOCards::rearOvrheadIOCardDevice);
+						LOG() << "Identified REAR bus _ addr " << bus_address;
+						main_window->set_iocard_rear_overhead_addr(bus_address);
 						number_of_cards_found += 1;
 					}
 					else if(device_name == IOCards::FWD_OVERHEAD)
 					{
-						IOCards::fwdOvrheadIOCardDevice = std::to_string(i.bus) + "_" + std::to_string(i.address);
-						LOG() << "Identified FWD bus _ addr " << IOCards::fwdOvrheadIOCardDevice;
-						main_window->set_iocard_fwd_overhead_addr(IOCards::fwdOvrheadIOCardDevice);
+						LOG() << "Identified FWD bus _ addr " << bus_address;
+						main_window->set_iocard_fwd_overhead_addr(bus_address);
 						number_of_cards_found += 1;
 					}
 					if(number_of_cards_found >= 3)
@@ -464,8 +462,8 @@ namespace zcockpit::cockpit::gui
 
 	//	iocards_fwd_overhead_status = FAILED_STATUS;
 		LOG() << "IOCards: creating fwd overhead";
-		ovrheadIOCards = std::make_unique<OvrheadIOCards>(IOCards::fwdOvrheadIOCardDevice);
-		if(ovrheadIOCards->isOpen)
+//		ovrheadIOCards = std::make_unique<OvrheadIOCards>(IOCards::fwdOvrheadIOCardDevice);
+		if(ovrheadIOCards->is_open)
 		{
 			// Did we find the fwd overhead device and manage to open usb connection 
 			LOG() << "fwd overhead is Open";
@@ -473,29 +471,28 @@ namespace zcockpit::cockpit::gui
 		//	LOG() << "fwd overhead status = " << iocards_fwd_overhead_status;
 
 			// start worker task and wait for run/abort
-			ovrheadIOCards->startThread();
-			ovrheadIOCards->worker->initDevice();
+//			ovrheadIOCards->startThread();
+//			ovrheadIOCards->worker->initDevice();
 
 			if(ovrheadIOCards->initializeIOCards())
 			{
-				ovrheadIOCards->worker->update_name("Forward Overhead");
 
 				// set run to true -- thread is running
-				LOG() << "fwd overhead is initialized and thread is running";
+//				LOG() << "fwd overhead is initialized and thread is running";
 
 				ovrheadIOCards->initialize_iocardsdata();
 
-				if(ovrheadIOCards->receive_mastercard() < 0)
+//				if(ovrheadIOCards->receive_mastercard() < 0)
 				{
 					LOG() << "IOCards: closing down fwd overhead receive < 0";
-					ovrheadIOCards->closeDown();
+//					ovrheadIOCards->closeDown();
 	//				iocards_fwd_overhead_status = FAILED_STATUS;
 				}
 
 	//			LOG() << "fwd Done First Pass status =" << iocards_fwd_overhead_status;
 	//			PostMessage(mainHwnd, WM_IOCARDS_FWD_OVERHEAD_HEALTH, iocards_fwd_overhead_status, NULL);
 			}
-			else
+//		else
 			{
 				LOG() << "IOCards: fwd overhead failed init";
 	//			iocards_fwd_overhead_status = FAILED_STATUS;
@@ -503,7 +500,7 @@ namespace zcockpit::cockpit::gui
 		}
 		else
 		{
-			LOG() << "IOCards: fwd overhead is not Open [isOpen] = " << ovrheadIOCards->isOpen;
+			LOG() << "IOCards: fwd overhead is not Open [isOpen] = " << ovrheadIOCards->is_open;
 	//		iocards_fwd_overhead_status = FAILED_STATUS;
 		}
 

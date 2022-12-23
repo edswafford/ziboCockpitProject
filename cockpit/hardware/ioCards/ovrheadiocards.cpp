@@ -183,7 +183,7 @@ namespace zcockpit::cockpit::hardware
 		{
 			land_alt = 0xf8;
 		}
-		mastercard_send_display(land_alt, LAND_ALT_10_000);
+	//	mastercard_send_display(land_alt, LAND_ALT_10_000);
 	}
 
 
@@ -205,7 +205,7 @@ namespace zcockpit::cockpit::hardware
 		{
 			land_alt = 0xf8;
 		}
-		mastercard_send_display(land_alt, FLT_ALT_10_000);
+		//mastercard_send_display(land_alt, FLT_ALT_10_000);
 	}
 
 	bool OvrheadIOCards::is_display_blank(std::array<unsigned char, NUMBER_OF_ALTITUDE_DIGITS> digits)
@@ -247,30 +247,30 @@ namespace zcockpit::cockpit::hardware
 		// Encoders
 
 		double value = 0.0;
-		if(mastercard_encoder(0, &value, 1.0, 1.0) > 0)
-		{
-			if(value > 0)
-			{
-				sendMessageInt(KEY_COMMAND_AIRSYSTEM_FLT_ALT_INC, 0);
-			}
-			else
-			{
-				sendMessageInt(KEY_COMMAND_AIRSYSTEM_FLT_ALT_DEC, 0);
-			}
-		}
+		//if(mastercard_encoder(0, &value, 1.0, 1.0) > 0)
+		//{
+		//	if(value > 0)
+		//	{
+		//		sendMessageInt(KEY_COMMAND_AIRSYSTEM_FLT_ALT_INC, 0);
+		//	}
+		//	else
+		//	{
+		//		sendMessageInt(KEY_COMMAND_AIRSYSTEM_FLT_ALT_DEC, 0);
+		//	}
+		//}
 
-		value = 0.0;
-		if(mastercard_encoder(2, &value, 1.0, 1.0) > 0)
-		{
-			if(value > 0)
-			{
-				sendMessageInt(KEY_COMMAND_AIRSYSTEM_LDG_ALT_INC, 0);
-			}
-			else
-			{
-				sendMessageInt(KEY_COMMAND_AIRSYSTEM_LDG_ALT_DEC, 0);
-			}
-		}
+		//value = 0.0;
+		//if(mastercard_encoder(2, &value, 1.0, 1.0) > 0)
+		//{
+		//	if(value > 0)
+		//	{
+		//		sendMessageInt(KEY_COMMAND_AIRSYSTEM_LDG_ALT_INC, 0);
+		//	}
+		//	else
+		//	{
+		//		sendMessageInt(KEY_COMMAND_AIRSYSTEM_LDG_ALT_DEC, 0);
+		//	}
+		//}
 
 		//if(Ifly737::FltAltDisplayChanged())
 		//{
@@ -295,10 +295,10 @@ namespace zcockpit::cockpit::hardware
 		// Process Switches
 		//
 		LOG() << "Calling Forward";
-		process_master_card_inputs(constants::fwd_ovrHead_to_keycmd, constants::fwd_ovrhead_keycmd_size);
+//		process_master_card_inputs(constants::fwd_ovrHead_to_keycmd, constants::fwd_ovrhead_keycmd_size);
 
 		LOG() << "Calling Engine Start";
-		process_master_card_inputs(engine_start_switches, NUMBER_OF_ENGINE_SWITCH_STATES);
+//		process_master_card_inputs(engine_start_switches, NUMBER_OF_ENGINE_SWITCH_STATES);
 		LOG() << "Done forward";
 
 		processOvrHead();
@@ -359,24 +359,24 @@ namespace zcockpit::cockpit::hardware
 			{
 	//			if(Ifly737::shareMemSDK->Engine_1_Start_Switch_Status != engine1_state)
 				{
-					switch(engine1_state)
-					{
-						case GND:
-						sendMessageInt(KEY_COMMAND_ENGAPU_ENG_1_START_POS1, 0);
-							break;
+					//switch(engine1_state)
+					//{
+					//	case GND:
+					//	sendMessageInt(KEY_COMMAND_ENGAPU_ENG_1_START_POS1, 0);
+					//		break;
 
-						case OFF:
-						sendMessageInt(KEY_COMMAND_ENGAPU_ENG_1_START_POS2, 0);
-							break;
+					//	case OFF:
+					//	sendMessageInt(KEY_COMMAND_ENGAPU_ENG_1_START_POS2, 0);
+					//		break;
 
-						case CONT:
-						sendMessageInt(KEY_COMMAND_ENGAPU_ENG_1_START_POS3, 0);
-							break;
+					//	case CONT:
+					//	sendMessageInt(KEY_COMMAND_ENGAPU_ENG_1_START_POS3, 0);
+					//		break;
 
-						case FLT:
-						sendMessageInt(KEY_COMMAND_ENGAPU_ENG_1_START_POS4, 0);
-							break;
-					}
+					//	case FLT:
+					//	sendMessageInt(KEY_COMMAND_ENGAPU_ENG_1_START_POS4, 0);
+					//		break;
+					//}
 				}
 			}
 			else
@@ -439,24 +439,24 @@ namespace zcockpit::cockpit::hardware
 			{
 	//			if(Ifly737::shareMemSDK->Engine_2_Start_Switch_Status != engine2_state)
 				{
-					switch(engine2_state)
-					{
-						case GND:
-						sendMessageInt(KEY_COMMAND_ENGAPU_ENG_2_START_POS1, 0);
-							break;
+					//switch(engine2_state)
+					//{
+					//	case GND:
+					//	sendMessageInt(KEY_COMMAND_ENGAPU_ENG_2_START_POS1, 0);
+					//		break;
 
-						case OFF:
-						sendMessageInt(KEY_COMMAND_ENGAPU_ENG_2_START_POS2, 0);
-							break;
+					//	case OFF:
+					//	sendMessageInt(KEY_COMMAND_ENGAPU_ENG_2_START_POS2, 0);
+					//		break;
 
-						case CONT:
-						sendMessageInt(KEY_COMMAND_ENGAPU_ENG_2_START_POS3, 0);
-							break;
+					//	case CONT:
+					//	sendMessageInt(KEY_COMMAND_ENGAPU_ENG_2_START_POS3, 0);
+					//		break;
 
-						case FLT:
-						sendMessageInt(KEY_COMMAND_ENGAPU_ENG_2_START_POS4, 0);
-							break;
-					}
+					//	case FLT:
+					//	sendMessageInt(KEY_COMMAND_ENGAPU_ENG_2_START_POS4, 0);
+					//		break;
+					//}
 				}
 			}
 			else
@@ -568,32 +568,32 @@ namespace zcockpit::cockpit::hardware
 		// Flaps Master ARM switch position
 		if(mastercard_input(53, &flap_Arm))
 		{
-			if(flap_Arm == 1)
-			{
-				sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_MASTER, 1);
-				sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_MASTER_ARM, 1);
-				//flapDelay = DELAY 1 100
-			}
-			else
-			{
-				sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_MASTER_OFF, 0);
-			}
+			//if(flap_Arm == 1)
+			//{
+			//	sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_MASTER, 1);
+			//	sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_MASTER_ARM, 1);
+			//	//flapDelay = DELAY 1 100
+			//}
+			//else
+			//{
+			//	sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_MASTER_OFF, 0);
+			//}
 		}
 
 		// flight control B ON switch position
 		if(mastercard_input(54, &fltctrl_b_on))
 		{
-			if(fltctrl_b_on == 1)
-			{
-				sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_B_ON, 0);
-			}
-			else
-			{
-				if(fltctrl_b_stby != 1)
-				{
-					sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_B_OFF, 0);
-				}
-			}
+			//if(fltctrl_b_on == 1)
+			//{
+			//	sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_B_ON, 0);
+			//}
+			//else
+			//{
+			//	if(fltctrl_b_stby != 1)
+			//	{
+			//		sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_B_OFF, 0);
+			//	}
+			//}
 		}
 
 
@@ -603,17 +603,17 @@ namespace zcockpit::cockpit::hardware
 		// flight control B STBY switch position
 		if(mastercard_input(55, &fltctrl_b_stby))
 		{
-			if(fltctrl_b_stby == 1)
-			{
-				sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_B_STBYRUD, 0);
-			}
-			else
-			{
-				if(fltctrl_b_on != 1)
-				{
-					sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_B_OFF, 0);
-				}
-			}
+			//if(fltctrl_b_stby == 1)
+			//{
+			//	sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_B_STBYRUD, 0);
+			//}
+			//else
+			//{
+			//	if(fltctrl_b_on != 1)
+			//	{
+			//		sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_B_OFF, 0);
+			//	}
+			//}
 		}
 
 
@@ -621,70 +621,70 @@ namespace zcockpit::cockpit::hardware
 		// KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_A_OFF     568
 		//	KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_A_ON      569
 		// flight control A STBY switch position
-		if(mastercard_input(56, &fltctrl_a_stby))
-		{
-			if(fltctrl_a_stby == 1)
-			{
-				sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_A_STBYRUD, 0);
-			}
-			else
-			{
-				if(fltctrl_a_on != 1)
-				{
-					sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_A_OFF, 0);
-				}
-			}
-		}
+		//if(mastercard_input(56, &fltctrl_a_stby))
+		//{
+		//	if(fltctrl_a_stby == 1)
+		//	{
+		//		sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_A_STBYRUD, 0);
+		//	}
+		//	else
+		//	{
+		//		if(fltctrl_a_on != 1)
+		//		{
+		//			sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_A_OFF, 0);
+		//		}
+		//	}
+		//}
 
-		// flight control A ON switch position
-		if(mastercard_input(57, &fltctrl_a_on))
-		{
-			if(fltctrl_a_on == 1)
-			{
-				sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_A_ON, 0);
-			}
-			else
-			{
-				if(fltctrl_a_stby != 1)
-				{
-					sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_A_OFF, 0);
-				}
-			}
-		}
+		//// flight control A ON switch position
+		//if(mastercard_input(57, &fltctrl_a_on))
+		//{
+		//	if(fltctrl_a_on == 1)
+		//	{
+		//		sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_A_ON, 0);
+		//	}
+		//	else
+		//	{
+		//		if(fltctrl_a_stby != 1)
+		//		{
+		//			sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_A_OFF, 0);
+		//		}
+		//	}
+		//}
 		//  KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_POS1  589
 		//  KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_POS2  590
 		//  KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_POS3  591
 		// Alternate Flaps UP switch position
 
 		// Alternate Flaps DOWN switch position
-		if(mastercard_input(58, &altFlapDn))
-		{
-			if(altFlapDn == 1)
-			{
-				sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_POS3, 0);
-			}
-			else
-			{
-				if(altFlapUp != 1)
-				{
-					sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_POS2, 0);
-				}
-			}
-		}
-		if(mastercard_input(59, &altFlapUp))
-		{
-			if(altFlapUp == 1)
-			{
-				sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_POS1, 0);
-			}
-			else
-			{
-				if(altFlapDn != 1)
-				{
-					sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_POS2, 0);
-				}
-			}
-		}
+		//if(mastercard_input(58, &altFlapDn))
+		//{
+		//	if(altFlapDn == 1)
+		//	{
+		//		sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_POS3, 0);
+		//	}
+		//	else
+		//	{
+		//		if(altFlapUp != 1)
+		//		{
+		//			sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_POS2, 0);
+		//		}
+		//	}
+		//}
+		//if(mastercard_input(59, &altFlapUp))
+		//{
+		//	if(altFlapUp == 1)
+		//	{
+		//		sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_POS1, 0);
+		//	}
+		//	else
+		//	{
+		//		if(altFlapDn != 1)
+		//		{
+		//			sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_POS2, 0);
+		//		}
+		//	}
+		//}
 
 
 		// KEY_COMMAND_ANTIICE_RIGHT_WINDSHIELD_WIPER_PARK 180
@@ -697,177 +697,177 @@ namespace zcockpit::cockpit::hardware
 		//
 		// ONLY WORKS IN VC
 		//
-		if(mastercard_input(60, &wiper_r_pk))
-		{
-			if(wiper_r_pk == 1)
-			{
-				sendMessageInt(KEY_COMMAND_ANTIICE_RIGHT_WINDSHIELD_WIPER_PARK, 0);
-			}
-		}
-		//// Right Wiper Intermittent switch position
-		if(mastercard_input(61, &wiper_r_int))
-		{
-			if(wiper_r_int == 1)
-			{
-				sendMessageInt(KEY_COMMAND_ANTIICE_RIGHT_WINDSHIELD_WIPER_INT, 0);
-			}
-		}
-		//// Right Wiper Low switch position
-		if(mastercard_input(62, &wiper_r_low))
-		{
-			if(wiper_r_low == 1 && wiper_r_int == 0 && wiper_r_pk == 0)
-			{
-				sendMessageInt(KEY_COMMAND_ANTIICE_RIGHT_WINDSHIELD_WIPER_LOW, 0);
-			}
-			else
-			{
-				if(wiper_r_low == 0 && wiper_r_int == 0 && wiper_r_pk == 0)
-				{
-					sendMessageInt(KEY_COMMAND_ANTIICE_RIGHT_WINDSHIELD_WIPER_HIGH, 0);
-				}
-			}
-		}
+		//if(mastercard_input(60, &wiper_r_pk))
+		//{
+		//	if(wiper_r_pk == 1)
+		//	{
+		//		sendMessageInt(KEY_COMMAND_ANTIICE_RIGHT_WINDSHIELD_WIPER_PARK, 0);
+		//	}
+		//}
+		////// Right Wiper Intermittent switch position
+		//if(mastercard_input(61, &wiper_r_int))
+		//{
+		//	if(wiper_r_int == 1)
+		//	{
+		//		sendMessageInt(KEY_COMMAND_ANTIICE_RIGHT_WINDSHIELD_WIPER_INT, 0);
+		//	}
+		//}
+		////// Right Wiper Low switch position
+		//if(mastercard_input(62, &wiper_r_low))
+		//{
+		//	if(wiper_r_low == 1 && wiper_r_int == 0 && wiper_r_pk == 0)
+		//	{
+		//		sendMessageInt(KEY_COMMAND_ANTIICE_RIGHT_WINDSHIELD_WIPER_LOW, 0);
+		//	}
+		//	else
+		//	{
+		//		if(wiper_r_low == 0 && wiper_r_int == 0 && wiper_r_pk == 0)
+		//		{
+		//			sendMessageInt(KEY_COMMAND_ANTIICE_RIGHT_WINDSHIELD_WIPER_HIGH, 0);
+		//		}
+		//	}
+		//}
 
 
 		//	KEY_COMMAND_INSTRUMENT_DISPLAYS_SOURCE_1    713
 		// KEY_COMMAND_INSTRUMENT_DISPLAYS_SOURCE_AUTO 714
 		// KEY_COMMAND_INSTRUMENT_DISPLAYS_SOURCE_2    715
 		// Display Source 1 switch position
-		if(mastercard_input(63, &displaySrc1))
-		{
-			if(displaySrc1 == 1)
-			{
-				sendMessageInt(KEY_COMMAND_INSTRUMENT_DISPLAYS_SOURCE_1, 0);
-			}
-			else
-			{
-				if(displaySrcAuto != 1)
-				{
-					sendMessageInt(KEY_COMMAND_INSTRUMENT_DISPLAYS_SOURCE_2, 0);
-				}
-			}
-		}
+		//if(mastercard_input(63, &displaySrc1))
+		//{
+		//	if(displaySrc1 == 1)
+		//	{
+		//		sendMessageInt(KEY_COMMAND_INSTRUMENT_DISPLAYS_SOURCE_1, 0);
+		//	}
+		//	else
+		//	{
+		//		if(displaySrcAuto != 1)
+		//		{
+		//			sendMessageInt(KEY_COMMAND_INSTRUMENT_DISPLAYS_SOURCE_2, 0);
+		//		}
+		//	}
+		//}
 
-		// Display Source Auto switch position
-		if(mastercard_input(64, &displaySrcAuto))
-		{
-			if(displaySrcAuto == 1)
-			{
-				sendMessageInt(KEY_COMMAND_INSTRUMENT_DISPLAYS_SOURCE_AUTO, 0);
-			}
-			else
-			{
-				if(displaySrc1 != 1)
-				{
-					sendMessageInt(KEY_COMMAND_INSTRUMENT_DISPLAYS_SOURCE_2, 0);
-				}
-			}
-		}
-		// IRS Both on Right switch position
-		if(mastercard_input(65, &irsBothRight))
-		{
-			if(irsBothRight == 1)
-			{
-				sendMessageInt(KEY_COMMAND_FMS_IRS_TFR_R, 0);
-			}
-			else
-			{
-				if(irsBothLeft != 1)
-				{
-					sendMessageInt(KEY_COMMAND_FMS_IRS_TFR_NORMAL, 0);
-				}
-			}
-		}
+		//// Display Source Auto switch position
+		//if(mastercard_input(64, &displaySrcAuto))
+		//{
+		//	if(displaySrcAuto == 1)
+		//	{
+		//		sendMessageInt(KEY_COMMAND_INSTRUMENT_DISPLAYS_SOURCE_AUTO, 0);
+		//	}
+		//	else
+		//	{
+		//		if(displaySrc1 != 1)
+		//		{
+		//			sendMessageInt(KEY_COMMAND_INSTRUMENT_DISPLAYS_SOURCE_2, 0);
+		//		}
+		//	}
+		//}
+		//// IRS Both on Right switch position
+		//if(mastercard_input(65, &irsBothRight))
+		//{
+		//	if(irsBothRight == 1)
+		//	{
+		//		sendMessageInt(KEY_COMMAND_FMS_IRS_TFR_R, 0);
+		//	}
+		//	else
+		//	{
+		//		if(irsBothLeft != 1)
+		//		{
+		//			sendMessageInt(KEY_COMMAND_FMS_IRS_TFR_NORMAL, 0);
+		//		}
+		//	}
+		//}
 
-		// IRS Both on Left switch position
-		if(mastercard_input(66, &irsBothLeft))
-		{
-			if(irsBothLeft == 1)
-			{
-				sendMessageInt(KEY_COMMAND_FMS_IRS_TFR_L, 0);
-			}
-			else
-			{
-				if(irsBothRight != 1)
-				{
-					sendMessageInt(KEY_COMMAND_FMS_IRS_TFR_NORMAL, 0);
-				}
-			}
-		}
+		//// IRS Both on Left switch position
+		//if(mastercard_input(66, &irsBothLeft))
+		//{
+		//	if(irsBothLeft == 1)
+		//	{
+		//		sendMessageInt(KEY_COMMAND_FMS_IRS_TFR_L, 0);
+		//	}
+		//	else
+		//	{
+		//		if(irsBothRight != 1)
+		//		{
+		//			sendMessageInt(KEY_COMMAND_FMS_IRS_TFR_NORMAL, 0);
+		//		}
+		//	}
+		//}
 
-		// KEY_COMMAND_FMS_VHF_NAV_1       949
-		// KEY_COMMAND_FMS_VHF_NAV_NORMAL  950
-		// KEY_COMMAND_FMS_VHF_NAV_2       951
-		// VHF NAV Both on 1 switch position
-		if(mastercard_input(67, &vhfNavBoth1))
-		{
-			if(vhfNavBoth1 == 1)
-			{
-				sendMessageInt(KEY_COMMAND_FMS_VHF_NAV_1, 0);
-			}
-			else
-			{
-				if(vhfNavBoth2 != 1)
-				{
-					sendMessageInt(KEY_COMMAND_FMS_VHF_NAV_NORMAL, 0);
-				}
-			}
-		}
-		// VHF NAV Both on 2 switch position
-		if(mastercard_input(68, &vhfNavBoth2))
-		{
-			if(vhfNavBoth2 == 1)
-			{
-				sendMessageInt(KEY_COMMAND_FMS_VHF_NAV_2, 0);
-			}
-			else
-			{
-				if(vhfNavBoth1 != 1)
-				{
-					sendMessageInt(KEY_COMMAND_FMS_VHF_NAV_NORMAL, 0);
-				}
-			}
-		}
+		//// KEY_COMMAND_FMS_VHF_NAV_1       949
+		//// KEY_COMMAND_FMS_VHF_NAV_NORMAL  950
+		//// KEY_COMMAND_FMS_VHF_NAV_2       951
+		//// VHF NAV Both on 1 switch position
+		//if(mastercard_input(67, &vhfNavBoth1))
+		//{
+		//	if(vhfNavBoth1 == 1)
+		//	{
+		//		sendMessageInt(KEY_COMMAND_FMS_VHF_NAV_1, 0);
+		//	}
+		//	else
+		//	{
+		//		if(vhfNavBoth2 != 1)
+		//		{
+		//			sendMessageInt(KEY_COMMAND_FMS_VHF_NAV_NORMAL, 0);
+		//		}
+		//	}
+		//}
+		//// VHF NAV Both on 2 switch position
+		//if(mastercard_input(68, &vhfNavBoth2))
+		//{
+		//	if(vhfNavBoth2 == 1)
+		//	{
+		//		sendMessageInt(KEY_COMMAND_FMS_VHF_NAV_2, 0);
+		//	}
+		//	else
+		//	{
+		//		if(vhfNavBoth1 != 1)
+		//		{
+		//			sendMessageInt(KEY_COMMAND_FMS_VHF_NAV_NORMAL, 0);
+		//		}
+		//	}
+		//}
 
-		// KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_PARK  174
-		// KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_INT   175
-		// KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_LOW   176
-		// KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_HIGH  177
-		// Left Wiper Park switch position
-		// 
-		//  NOTE  ******************************
-		//
-		// ONLY WORKS IN VC
-		//
-		if(mastercard_input(69, &wiper_l_pk))
-		{
-			if(wiper_l_pk == 1)
-			{
-				sendMessageInt(KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_PARK, 0);
-			}
-		}
-		//// Left Wiper Intermittent switch position
-		if(mastercard_input(70, &wiper_l_int))
-		{
-			if(wiper_l_int == 1)
-			{
-				sendMessageInt(KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_INT, 0);
-			}
-		}
-		//// Left Wiper Low switch position
-		if(mastercard_input(71, &wiper_l_low))
-		{
-			if(wiper_l_low == 1)
-			{
-				sendMessageInt(KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_LOW, 0);
-			}
-			else
-			{
-				if(wiper_l_int == 0 && wiper_l_int == 0 && wiper_l_pk == 0)
-				{
-					sendMessageInt(KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_HIGH, 0);
-				}
-			}
-		}
+		//// KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_PARK  174
+		//// KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_INT   175
+		//// KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_LOW   176
+		//// KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_HIGH  177
+		//// Left Wiper Park switch position
+		//// 
+		////  NOTE  ******************************
+		////
+		//// ONLY WORKS IN VC
+		////
+		//if(mastercard_input(69, &wiper_l_pk))
+		//{
+		//	if(wiper_l_pk == 1)
+		//	{
+		//		sendMessageInt(KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_PARK, 0);
+		//	}
+		//}
+		////// Left Wiper Intermittent switch position
+		//if(mastercard_input(70, &wiper_l_int))
+		//{
+		//	if(wiper_l_int == 1)
+		//	{
+		//		sendMessageInt(KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_INT, 0);
+		//	}
+		//}
+		////// Left Wiper Low switch position
+		//if(mastercard_input(71, &wiper_l_low))
+		//{
+		//	if(wiper_l_low == 1)
+		//	{
+		//		sendMessageInt(KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_LOW, 0);
+		//	}
+		//	else
+		//	{
+		//		if(wiper_l_int == 0 && wiper_l_int == 0 && wiper_l_pk == 0)
+		//		{
+		//			sendMessageInt(KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_HIGH, 0);
+		//		}
+		//	}
+		//}
 	}
 }

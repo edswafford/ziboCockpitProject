@@ -20,9 +20,9 @@ extern logger LOG;
 namespace zcockpit::cockpit::hardware
 {
 
-	std::string IOCards::mipIOCardDevice;
-	std::string IOCards::fwdOvrheadIOCardDevice;
-	std::string IOCards::rearOvrheadIOCardDevice;
+	//std::string IOCards::mipIOCardDevice;
+	//std::string IOCards::fwdOvrheadIOCardDevice;
+	//std::string IOCards::rearOvrheadIOCardDevice;
 	IOCards_bus_and_addr IOCards::iocards_device_list[IOCards::MAX_IOCARDS];
 
 	/* missing values: UCHAR has no missing value. FLT and DBL are the same */
@@ -31,7 +31,7 @@ namespace zcockpit::cockpit::hardware
 	#define DBL_MISS -2000000000.0
 
 
-	IOCards::IOCards(const std::string deviceBusAddr, const std::string name) : name(name) //, iocards_thread() 
+	IOCards::IOCards(const std::string deviceBusAddr, const std::string name) : device_name(name) //, iocards_thread() 
 	{
 		openDevice(deviceBusAddr);
 		if(handle != nullptr){
@@ -40,25 +40,25 @@ namespace zcockpit::cockpit::hardware
 				LOG() << "Cannot claim libusb device: error " << ret;
 			}
 			else {
-				isClaimed = true;
+				is_Claimed = true;
 			}
 		}
 //		if (dev != nullptr && handle != nullptr) {
-//			worker = std::make_unique<UsbWorker>(dev, handle, ctx, name);
+//			worker = std::make_unique<UsbWorker>(dev, handle, ctx, device_name);
 //		}
 	}
 
 	IOCards::~IOCards()
 	{
-		if(isClaimed) {
+		if(is_Claimed) {
 			auto ret = libusb_release_interface(handle, 0);
 			if(ret < 0) {
 				LOG() << "Cannot release libusb device: error " << ret;
 			}
 		}
-		if(isOpen && handle != nullptr) {
+		if(is_open && handle != nullptr) {
 			libusb_close(handle);
-			isOpen= false;
+			is_open= false;
 		}
 
 
@@ -70,7 +70,7 @@ namespace zcockpit::cockpit::hardware
 	void IOCards::openDevice(const std::string device_bus_addr)
 	{
 		libusb_device** devs;
-		isOpen = false;
+		is_open = false;
 
 		struct libusb_context* local_ctx = nullptr;
 
@@ -129,7 +129,7 @@ namespace zcockpit::cockpit::hardware
 					}
 					else
 					{
-						isOpen = true;
+						is_open = true;
 						LOG() << "IOCARDS:  libsub_open passed for Bus  " << devBus << " addr " << devAddr;
 
 						struct libusb_config_descriptor* config;
@@ -170,7 +170,7 @@ namespace zcockpit::cockpit::hardware
 				}
 			}
 		}
-		if (!isOpen)
+		if (!is_open)
 		{
 			LOG() << "Failed to find device:  Bus " << bus << " addr " << addr;
 		}
@@ -180,14 +180,14 @@ namespace zcockpit::cockpit::hardware
 	}
 
 
-	IOCards::IOCard_Device IOCards::identify_iocards_usb(unsigned short bus, unsigned short addr)
+	IOCards::IOCard_Device IOCards::identify_iocards_usb(const std::string& bus_address)
 	{
-		LOG() << "Attempting to identify IOCards device, Bus: " << bus << " address: " << addr;
+		LOG() << "Attempting to identify IOCards device, Bus/Address: " << bus_address;
 
 		IOCard_Device found_device = UNKNOWN;
-		const std::string deviceBusAddr = std::to_string(bus) + "_" + std::to_string(addr);
-		IOCards usb_device(deviceBusAddr, "unknown");
-		if (usb_device.isOpen)
+
+		IOCards usb_device(bus_address, "unknown");
+		if (usb_device.is_open)
 		{
 			//initialize 4 axis
 			if (usb_device.initializeIOCards(4))
@@ -215,6 +215,7 @@ namespace zcockpit::cockpit::hardware
 									if (usb_device.axes_old[0] > 200 && usb_device.axes_old[1] < 50 && usb_device.axes_old[2] > 200 && usb_device.axes_old[3] < 50)
 									{
 										found_device = MIP;
+										usb_device.set_iocard_device(MIP);
 										LOG() << "Found IOCards Device: MIP,  Number of Attempts: " << attempts;
 										break;
 									}
@@ -233,9 +234,8 @@ namespace zcockpit::cockpit::hardware
 
 									// reset for next cycle
 									axis_read_status = 0;
-									for (int count = 0; count < TAXES; count++)
-									{
-										usb_device.axes_old[count] = 0;
+									for(int& count : usb_device.axes_old) {
+										count = 0;
 									}
 								}
 							}
@@ -246,7 +246,7 @@ namespace zcockpit::cockpit::hardware
 							LOG() << "IOCards Device is connected.  Closing USB connection.";
 							break;
 						}
-					}
+					} // tries
 				} //while
 				if (found_device == UNKNOWN)
 				{
@@ -279,7 +279,7 @@ namespace zcockpit::cockpit::hardware
 
 
 		// check if we have a connected USB expander card
-		if (isOpen && isInitialized)
+		if (is_open && isInitialized)
 		{
 			constexpr int buffersize = 9;
 			unsigned char recv_data[buffersize];
@@ -1022,63 +1022,63 @@ namespace zcockpit::cockpit::hardware
 //		return ret;
 //	}
 //
-//	/* retrieve input value from given input position on MASTERCARD */
-//	/* Two types : */
-//	/* 0: pushbutton */
-//	/* 1: toggle switch */
-//	int IOCards::mastercard_input(int input, int* value, int card)
-//	{
-//		int retval = 0; /* returns 1 if something changed, and 0 if nothing changed, and -1 if something went wrong */
-//
-//		if (value != nullptr)
-//		{
-//			/* check if we have a connected and initialized mastercard */
-//			if (isOpen && isInitialized)
-//			{
-//				if ((card >= 0) && (card < MASTERCARDS))
-//				{
-//					if ((input >= 0) && (input < NUM_INPUTS))
-//					{
-//						/* simple pushbutton */
-//						if (inputs_old[input][card] != inputs[input][card])
-//						{
-//							/* something changed */
-//							*value = inputs[input][card];
-//							retval = 1;
-//							//
-//							// save value
-//							inputs_old[input][card] = inputs[input][card];
-//
-//							// LOG() << "LIBIOCARDS: Pushbutton     : card=" << card << " input=" << input << " value=%" << inputs[input][card];
-//						}
-//						else
-//						{
-//							/* nothing changed */
-//							*value = inputs[input][card];
-//							retval = 0;
-//						}
-//					}
-//					else
-//					{
-//						retval = -1;
-//						LOG() << "LIBIOCARDS: Invalid MASTERCARD input position detected: " << input;
-//					}
-//				}
-//				else
-//				{
-//					retval = -1;
-//					LOG() << "LIBIOCARDS: Invalid MASTERCARD number detected: " << card;
-//				}
-//			}
-//			else
-//			{
-//				retval = -1;
-//			}
-//		}
-//
-//		return (retval);
-//	}
-//
+	// retrieve input value from given input position on MASTERCARD
+	// Two types :
+	// 0: pushbutton 
+	// 1: toggle switch 
+	int IOCards::mastercard_input(int input, int* value, int card)
+	{
+		int retval = 0; /* returns 1 if something changed, and 0 if nothing changed, and -1 if something went wrong */
+
+		if (value != nullptr)
+		{
+			/* check if we have a connected and initialized mastercard */
+			if (is_open && isInitialized)
+			{
+				if ((card >= 0) && (card < MASTERCARDS))
+				{
+					if ((input >= 0) && (input < NUM_INPUTS))
+					{
+						/* simple pushbutton */
+						if (inputs_old[input][card] != inputs[input][card])
+						{
+							/* something changed */
+							*value = inputs[input][card];
+							retval = 1;
+							//
+							// save value
+							inputs_old[input][card] = inputs[input][card];
+
+							// LOG() << "LIBIOCARDS: Pushbutton     : card=" << card << " input=" << input << " value=%" << inputs[input][card];
+						}
+						else
+						{
+							/* nothing changed */
+							*value = inputs[input][card];
+							retval = 0;
+						}
+					}
+					else
+					{
+						retval = -1;
+						LOG() << "LIBIOCARDS: Invalid MASTERCARD input position detected: " << input;
+					}
+				}
+				else
+				{
+					retval = -1;
+					LOG() << "LIBIOCARDS: Invalid MASTERCARD number detected: " << card;
+				}
+			}
+			else
+			{
+				retval = -1;
+			}
+		}
+
+		return (retval);
+	}
+
 //	void IOCards::process_master_card_inputs(const OnOffKeyCommand keycmd[], int numberOfCmds, int card)
 //	{
 //		int* value;
