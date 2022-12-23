@@ -83,9 +83,7 @@ namespace zcockpit::cockpit::gui
 		}
 		if(ini_error == SI_OK)
 		{
-			//IOCards::mipIOCardDevice = ini.GetValue("iocards", "mip", "default");
-			//IOCards::fwdOvrheadIOCardDevice = ini.GetValue("iocards", "fwd_overhead", "default");
-			//IOCards::rearOvrheadIOCardDevice = ini.GetValue("iocards", "rear_overhead", "default");
+			// Nothing right now!!
 		}
 		main_window->set_iocard_mip_status(false);
 		main_window->set_iocard_fwd_overhead_status(false);
@@ -94,14 +92,11 @@ namespace zcockpit::cockpit::gui
 		//
 		// Initialize USB Library
 		if(LibUsbInterface::initialize()) {
-			// Find Potential IOCards
+			// Find Potential IOCards (ManifactureId == 0 AND ProductId == 0)
 			const auto devices = IOCards::find_iocard_devices();
 			main_window->set_iocard_status(devices);
 
-			// Update IOCards GUI Text Ctrls 
-			identify_iocard_devices();
-			initFwdOverheadCards();
-
+			initialize_iocard_devices();
 		}
 		else {
 			main_window->set_iocard_status(std::string("Failed to Initialize LibUsb"));
@@ -419,42 +414,45 @@ namespace zcockpit::cockpit::gui
 	}
 
 
-	void ZcockpitApp::identify_iocard_devices()
+	void ZcockpitApp::initialize_iocard_devices()
 	{
 
-		// IOCards Expansion USB see if we can identify it
-			int number_of_cards_found = 0;
-			for(auto& i : IOCards::iocards_device_list) {
-				if(i.bus != -1)
+		int number_of_cards_found = 0;
+		for(auto& i : IOCards::iocards_device_list) {
+			if(i.bus != -1)
+			{
+				auto bus_address = std::to_string(i.bus) + "_" + std::to_string(i.address);
+
+				// Identify IOCards by decoding the 4 Axes values
+				// Each card has a unique pattern of hardwired (open/grd) Axes pins 
+				const IOCards::IOCard_Device device_name = IOCards::identify_iocards_usb(bus_address);
+
+				if(device_name == IOCards::MIP)
 				{
-					auto bus_address = std::to_string(i.bus) + "_" + std::to_string(i.address);
-					const IOCards::IOCard_Device device_name = IOCards::identify_iocards_usb(bus_address);
-					if(device_name == IOCards::MIP)
-					{
-						// initialize MIP
-						LOG() << "Identified MIP bus _ addr " << bus_address;
-						main_window->set_iocard_mip_addr(bus_address);
-						number_of_cards_found += 1;
-					}
-					else if(device_name == IOCards::REAR_OVERHEAD)
-					{
-						// initialize Rear Overhead
-						LOG() << "Identified REAR bus _ addr " << bus_address;
-						main_window->set_iocard_rear_overhead_addr(bus_address);
-						number_of_cards_found += 1;
-					}
-					else if(device_name == IOCards::FWD_OVERHEAD)
-					{
-						LOG() << "Identified FWD bus _ addr " << bus_address;
-						main_window->set_iocard_fwd_overhead_addr(bus_address);
-						number_of_cards_found += 1;
-					}
-					if(number_of_cards_found >= 3)
-					{
-						break;
-					}
+					// initialize MIP
+					LOG() << "Identified MIP bus _ addr " << bus_address;
+					main_window->set_iocard_mip_addr(bus_address);
+					number_of_cards_found += 1;
+				}
+				else if(device_name == IOCards::REAR_OVERHEAD)
+				{
+					// initialize Rear Overhead
+					LOG() << "Identified REAR bus _ addr " << bus_address;
+					main_window->set_iocard_rear_overhead_addr(bus_address);
+					number_of_cards_found += 1;
+				}
+				else if(device_name == IOCards::FWD_OVERHEAD)
+				{
+					LOG() << "Identified FWD bus _ addr " << bus_address;
+					main_window->set_iocard_fwd_overhead_addr(bus_address);
+					number_of_cards_found += 1;
+				}
+				if(number_of_cards_found >= 3)
+				{
+					break;
 				}
 			}
+		}
 	}
 
 	void ZcockpitApp::initFwdOverheadCards()

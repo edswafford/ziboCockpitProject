@@ -37,9 +37,6 @@ namespace zcockpit::cockpit::hardware
 	class IOCards
 	{
 	public:
-		//static std::string mipIOCardDevice;
-		//static std::string fwdOvrheadIOCardDevice;
-		//static std::string rearOvrheadIOCardDevice;
 
 		static constexpr int MAX_IOCARDS = 10;
 		static IOCards_bus_and_addr iocards_device_list[MAX_IOCARDS];

@@ -19,10 +19,6 @@ extern logger LOG;
 
 namespace zcockpit::cockpit::hardware
 {
-
-	//std::string IOCards::mipIOCardDevice;
-	//std::string IOCards::fwdOvrheadIOCardDevice;
-	//std::string IOCards::rearOvrheadIOCardDevice;
 	IOCards_bus_and_addr IOCards::iocards_device_list[IOCards::MAX_IOCARDS];
 
 	/* missing values: UCHAR has no missing value. FLT and DBL are the same */
@@ -178,8 +174,9 @@ namespace zcockpit::cockpit::hardware
 		libusb_free_device_list(devs, 1);
 
 	}
-
-
+	//
+	// Identify IOCards by decoding the 4 Axes values
+	// Each card has a unique pattern of hardwired (open/grd) Axes pins 
 	IOCards::IOCard_Device IOCards::identify_iocards_usb(const std::string& bus_address)
 	{
 		LOG() << "Attempting to identify IOCards device, Bus/Address: " << bus_address;

@@ -66,7 +66,7 @@ namespace zcockpit::cockpit::gui
 		bool interfaceit_mip_status{false};
 		bool interfaceit_overhead_status{false};
 		void timer();
-		void identify_iocard_devices();
+		void initialize_iocard_devices();
 		void initFwdOverheadCards();
 
 		// Cycle Counters
