@@ -67,7 +67,8 @@ namespace zcockpit::cockpit::gui
 		bool interfaceit_overhead_status{false};
 		void timer();
 		void initialize_iocard_devices();
-		void initFwdOverheadCards(std::string bus_address);
+		void initFwdOverheadCards(const std::string& bus_address);
+		void do_updates(int current_cycle);
 
 		// Cycle Counters
 		int ONE_SECOND;

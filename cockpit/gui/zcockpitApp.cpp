@@ -332,53 +332,63 @@ namespace zcockpit::cockpit::gui
 					zibo_status = current_zibo_status;
 					main_window->set_zibo_status(zibo_status);
 				}
+//				if(zibo_status)
+				{
+					do_updates(current_cycle);
+					sim737_hardware.fiveHzTasks(current_cycle % FIVE_HZ);
+				}
 
-				sim737_hardware.fiveHzTasks(current_cycle % FIVE_HZ);
 
 				if (current_cycle >= ONE_SECOND)
 				{
 					sim737_hardware.checkConnections();
+				
+					//
+					// InterfaceIT MIP
+					auto current_interfaceit_mip_status = sim737_hardware.interfaceitMipStatus();
+					if(interfaceit_mip_status != current_interfaceit_mip_status || current_cycle == ONE_SECOND) {
+						interfaceit_mip_status = current_interfaceit_mip_status;
+						main_window->set_interfaceit_mip_status(interfaceit_mip_status);
+					}
+					//
+					// Interfaceit Overhead
+					auto current_interfaceit_overhead_status = sim737_hardware.interfaceitOverheadStatus();
+					if(interfaceit_overhead_status != current_interfaceit_overhead_status || current_cycle == ONE_SECOND) {
+						interfaceit_overhead_status = current_interfaceit_overhead_status;
+						main_window->set_interfaceit_overhead_status(interfaceit_overhead_status);
+					}
+
+					//
+					// IOCard MIP
+
+
+
+
+
+
+
+
+
+					// WEBSOCKET
+					//
+					////if(status_interval >= 20){
+					////	status_interval = 0;
+					////	id = client_endpoint.get_connection_id();
+					////	if(id != 0) {
+					////		json payload = {
+					////			{"id", id},
+					////			{"messageType", "status"},
+					////			{"ipAddress", client.get_ip_address()},
+					////			{"clientType", "hardware"},
+					////			{"xplaneStatus", client.xplaneStatus()},
+					////			{"ziboStatus", client.ziboStatus()},
+					////			{"messageNumber", message_number++}
+					////		};
+					////		client_endpoint.send(payload.dump());
+					////	}
+					////}
+
 				}
-				//
-				// InterfaceIT MIP
-				auto current_interfaceit_mip_status = sim737_hardware.interfaceitMipStatus();
-				if(interfaceit_mip_status != current_interfaceit_mip_status || current_cycle == ONE_SECOND) {
-					interfaceit_mip_status = current_interfaceit_mip_status;
-					main_window->set_interfaceit_mip_status(interfaceit_mip_status);
-				}
-				//
-				// Interfaceit Overhead
-				auto current_interfaceit_overhead_status = sim737_hardware.interfaceitOverheadStatus();
-				if(interfaceit_overhead_status != current_interfaceit_overhead_status || current_cycle == ONE_SECOND) {
-					interfaceit_overhead_status = current_interfaceit_overhead_status;
-					main_window->set_interfaceit_overhead_status(interfaceit_overhead_status);
-				}
-
-				//
-				// IOCard MIP
-
-
-
-				// WEBSOCKET
-				//
-				////if(status_interval >= 20){
-				////	status_interval = 0;
-				////	id = client_endpoint.get_connection_id();
-				////	if(id != 0) {
-				////		json payload = {
-				////			{"id", id},
-				////			{"messageType", "status"},
-				////			{"ipAddress", client.get_ip_address()},
-				////			{"clientType", "hardware"},
-				////			{"xplaneStatus", client.xplaneStatus()},
-				////			{"ziboStatus", client.ziboStatus()},
-				////			{"messageNumber", message_number++}
-				////		};
-				////		client_endpoint.send(payload.dump());
-				////	}
-				////}
-
-
 
 				update_counters();
 			}
@@ -439,6 +449,7 @@ namespace zcockpit::cockpit::gui
 					// initialize Rear Overhead
 					LOG() << "Identified REAR bus _ addr " << bus_address;
 					main_window->set_iocard_rear_overhead_addr(bus_address);
+					initFwdOverheadCards(bus_address);
 					number_of_cards_found += 1;
 				}
 				else if(device_name == IOCards::FWD_OVERHEAD)
@@ -455,7 +466,7 @@ namespace zcockpit::cockpit::gui
 		}
 	}
 
-	void ZcockpitApp::initFwdOverheadCards(std::string bus_address)
+	void ZcockpitApp::initFwdOverheadCards(const std::string& bus_address)
 	{
 
 	//	iocards_fwd_overhead_status = FAILED_STATUS;
@@ -468,30 +479,28 @@ namespace zcockpit::cockpit::gui
 		//	iocards_fwd_overhead_status = HEALTHY_STATUS;
 		//	LOG() << "fwd overhead status = " << iocards_fwd_overhead_status;
 
-			// start worker task and wait for run/abort
-//			ovrheadIOCards->startThread();
 
 			if(ovrheadIOCards->initForAsync()) {
 
-				// Axes are not used
+				// Axes are not used --> set to 0
 				constexpr unsigned char number_of_axes = 0;
 				if(ovrheadIOCards->initializeIOCards(number_of_axes) && ovrheadIOCards->initialize_iocardsdata())
 				{
+					if(ovrheadIOCards->submit_read_transfer()){
+						// Applications should not start the event thread until after their first call to libusb_open()
+						ovrheadIOCards->start_event_thread();
 
-					// set run to true -- thread is running
-	//				LOG() << "fwd overhead is initialized and thread is running";
+						LOG() << "fwd overhead is initialized and thread is running";
+					
+						ovrheadIOCards->receive_mastercard();
 
-					;
-
-	//				if(ovrheadIOCards->receive_mastercard() < 0)
-					{
-						LOG() << "IOCards: closing down fwd overhead receive < 0";
-	//					ovrheadIOCards->closeDown();
-		//				iocards_fwd_overhead_status = FAILED_STATUS;
-					}
 
 		//			LOG() << "fwd Done First Pass status =" << iocards_fwd_overhead_status;
 		//			PostMessage(mainHwnd, WM_IOCARDS_FWD_OVERHEAD_HEALTH, iocards_fwd_overhead_status, NULL);
+					}
+					else {
+						LOG() << "IOCards: fwd overhead failed to reading from usb";
+					}
 				}
 				else
 					{
@@ -508,6 +517,31 @@ namespace zcockpit::cockpit::gui
 
 	}
 
+	void ZcockpitApp::do_updates(int current_cycle)
+	{
+
+		// Every Cycle
+		//
+		if(ovrheadIOCards) {
+			if(!ovrheadIOCards->is_usb_thread_healthy()) {
+				ovrheadIOCards->closeDown();
+				//status = FAILED_STATUS;
+				LOG() << "IOCards 2: closing down fwd overhead receive < 0";
+			}
+			if(ovrheadIOCards->is_okay)
+			{
+				ovrheadIOCards->receive_mastercard();
+				ovrheadIOCards->processEncoders();
+			}
+		}
+
+		// Radios
+		//if(current_cycle % 2 == 0 && mipGauges->Available())
+		{
+			//mipGauges->updateRadios();
+		}
+
+	}
 //
 // Entry int WxWidgets main()
 //

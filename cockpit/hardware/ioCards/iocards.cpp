@@ -29,11 +29,12 @@ namespace zcockpit::cockpit::hardware
 
 	IOCards::IOCards(const std::string deviceBusAddr, const std::string name) : device_name(name) //, iocards_thread() 
 	{
-		openDevice(deviceBusAddr);
+		is_okay = openDevice(deviceBusAddr);
 		if(handle != nullptr){
 			auto ret = libusb_claim_interface(handle, 0);
 			if(ret < 0) {
 				LOG() << "Cannot claim libusb device: error " << ret;
+				is_okay = false;
 			}
 			else {
 				is_Claimed = true;
@@ -46,6 +47,15 @@ namespace zcockpit::cockpit::hardware
 
 	IOCards::~IOCards()
 	{
+		if (readTransfer) {
+			libusb_free_transfer(readTransfer);
+			readTransfer = nullptr;
+		}
+		if (writeTransfer) {
+			libusb_free_transfer(writeTransfer);
+			writeTransfer = nullptr;
+		}
+
 		if(is_Claimed) {
 			auto ret = libusb_release_interface(handle, 0);
 			if(ret < 0) {
@@ -56,14 +66,9 @@ namespace zcockpit::cockpit::hardware
 			libusb_close(handle);
 			is_open= false;
 		}
-
-
-//		if (!worker->is_dropped()) {
-//			worker->drop();
-//		}
 	}
 
-	void IOCards::openDevice(const std::string device_bus_addr)
+	bool IOCards::openDevice(const std::string device_bus_addr)
 	{
 		libusb_device** devs;
 		is_open = false;
@@ -75,13 +80,13 @@ namespace zcockpit::cockpit::hardware
 
 		if (device_bus_addr.empty())
 		{
-			return;
+			return false;
 		}
 
 		const auto idList = Util::split(device_bus_addr, '_');
 		if (idList.size() < 2)
 		{
-			return;
+			return false;
 		}
 		std::string str = idList[0];
 		bus = static_cast<unsigned short>(std::strtoul(str.c_str(), nullptr, 10));//  toUShort();
@@ -91,7 +96,7 @@ namespace zcockpit::cockpit::hardware
 		if (!LibUsbInterface::is_initialized())
 		{
 			if(!LibUsbInterface::initialize()) {
-				return;
+				return false;
 			}
 		}
 
@@ -100,7 +105,7 @@ namespace zcockpit::cockpit::hardware
 		const int cnt = static_cast<int>(libusb_get_device_list(local_ctx, &devs));
 		if (cnt < 0)
 		{
-			return;
+			return false;
 		}
 
 		int i = 0;
@@ -173,6 +178,7 @@ namespace zcockpit::cockpit::hardware
 		//  Free list and unreference all the devices by setting unref_devices: to 1
 		libusb_free_device_list(devs, 1);
 
+		return  is_open;
 	}
 	//
 	// Identify IOCards by decoding the 4 Axes values
@@ -533,21 +539,8 @@ namespace zcockpit::cockpit::hardware
 		}
 		return devices;
 	}
-//
-//
-//	void IOCards::mainThread()
-//	{
-//		worker->process();
-//		LOG() << "Worker thread ended for " << worker->name;
-//	}
-//
-//	void IOCards::startThread(void)
-//	{
-//		// start the thread
-//		iocards_thread = std::thread(&IOCards::mainThread, this);
-//	}
-//
-//
+
+
 	// sends initialization string to the MASTERCARD
 	// MASTERCARD is connected to USB EXPANSION CARD
 	bool IOCards::initializeIOCards(unsigned char number_of_axes)
@@ -572,15 +565,182 @@ namespace zcockpit::cockpit::hardware
 		if(ret == 0 && sizeof(send_data) <= transfered) {
 			isInitialized = true;
 		}
+		is_okay = is_okay == true? isInitialized : false;
 		return isInitialized;
 	}
 
 	bool IOCards::initForAsync()
 	{
+		bool status = false;
 		readTransfer = libusb_alloc_transfer(0);
-		if(!readTransfer)
+		if(readTransfer)
 		{
-			return false;
+			auto size = inBuffer.size();
+			if(size < inBufferSize) {
+				inBuffer.resize(inBufferSize+1);
+			}
+			libusb_fill_interrupt_transfer(readTransfer, handle, epIn, inBuffer.data(), inBufferSize, read_callback, this, 0);
+
+			writeTransfer = libusb_alloc_transfer(0);
+			if(writeTransfer) {
+				size = outBuffer.size();
+				if(size < outBufferSize) {
+					outBuffer.resize(outBufferSize+1);
+				}
+				libusb_fill_interrupt_transfer(writeTransfer, handle, epOut, outBuffer.data(), outBufferSize, write_callback, this, 0);
+				status = true;
+			}
+		}
+		is_okay = is_okay == true? status : false;
+		return status;
+	}
+
+	// Runs in libusb thread
+	void IOCards::do_usb_work()
+	{
+		struct libusb_context* ctx = nullptr;
+		if(is_okay) {
+			while(true) {
+				{
+					std::lock_guard<std::mutex> guard(usb_mutex);
+					if (event_thread_run)
+					{
+						break;
+					}
+				}
+				const auto ret = libusb_handle_events(ctx);
+				if (ret < 0) {
+					std::lock_guard<std::mutex> guard(usb_mutex);
+					event_thread_failed = true;
+					break;
+				}
+			}
+		}
+	}
+	void IOCards::start_event_thread()
+	{
+		event_thread_run = true;
+		event_thread = std::thread(&IOCards::do_usb_work, this);
+	}
+
+	// Runs in libusb thread
+	void LIBUSB_CALL IOCards::read_callback(struct libusb_transfer* transfer)
+	{
+		// explicitly cast to a pointer to TClassA
+		const auto mySelf = reinterpret_cast<IOCards*>(transfer->user_data);
+		mySelf->read_callback_cpp(transfer);
+	}
+
+	// Runs in libusb thread
+	void IOCards::read_callback_cpp(const struct libusb_transfer* transfer)
+	{
+
+		if(transfer->status != LIBUSB_TRANSFER_COMPLETED)
+		{
+			// read callback was not successful: exit!
+			readTransfer = nullptr;
+			std::lock_guard<std::mutex> lock(usb_mutex);
+			event_thread_failed = true;
+			return;
+		}
+		else
+		{
+			const auto length = transfer->actual_length;
+			if(length > 0){
+				std::vector<unsigned char> buffer(writeTransfer->buffer, writeTransfer->buffer + length);
+				inQueue.push(std::move(buffer));
+			}
+
+			std::lock_guard<std::mutex> lock(usb_mutex);
+			if(!event_thread_failed){
+				if(libusb_submit_transfer(readTransfer) < 0)
+				{
+					event_thread_failed = true;
+				}
+			}
+		}
+		return;
+	}
+
+	// Runs in libusb thread
+	void LIBUSB_CALL IOCards::write_callback(struct libusb_transfer* transfer)
+	{
+		const auto mySelf = reinterpret_cast<IOCards*>(transfer->user_data);
+		mySelf->write_callback_cpp(transfer);
+	}
+
+	// Runs in libusb thread
+	void IOCards::write_callback_cpp(const struct libusb_transfer* transfer)
+	{
+		{
+			std::lock_guard<std::mutex> lock(usb_mutex);
+			writing_transfer = false;
+		}
+		if(transfer->status != LIBUSB_TRANSFER_COMPLETED)
+		{
+			// write callback was not successful: exit!
+			writeTransfer = nullptr;
+			std::lock_guard<std::mutex> lock(usb_mutex);
+			event_thread_failed = true;
+			return;
+		}
+		else
+		{
+			if(outQueue.size() > 0){
+				if (const auto maybe_vector = outQueue.pop()) {
+					if (maybe_vector) {
+						auto buffer = *maybe_vector;
+						writeTransfer->buffer = buffer.data();
+						writeTransfer->length = static_cast<int>(buffer.size());
+						{
+							std::lock_guard<std::mutex> lock(usb_mutex);
+							if(!event_thread_failed){
+								writing_transfer = true;
+								if(libusb_submit_transfer(writeTransfer) < 0)
+								{
+									event_thread_failed = true;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	bool IOCards::is_usb_thread_healthy()
+	{
+		std::lock_guard<std::mutex> lock(usb_mutex);
+		return !event_thread_failed;
+	}
+
+	bool IOCards::submit_write_transfer(std::vector<unsigned char> buffer)
+	{
+		std::lock_guard<std::mutex> lock(usb_mutex);
+		if(!write_callback_running && !event_thread_failed) {
+			writeTransfer->buffer = buffer.data();
+			writeTransfer->length = static_cast<int>(buffer.size());
+			if(libusb_submit_transfer(writeTransfer) < 0)
+			{
+				event_thread_failed = true;
+			}
+			else {
+				return true;
+			}
+		}
+		return false;
+	}
+	bool IOCards::submit_read_transfer()
+	{
+		std::lock_guard<std::mutex> lock(usb_mutex);
+		if(!read_callback_running && !event_thread_failed) {
+			if(libusb_submit_transfer(readTransfer) < 0)
+			{
+				event_thread_failed = true;
+			}
+			else {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -600,435 +760,369 @@ namespace zcockpit::cockpit::hardware
 //	}
 //
 //
-//	void IOCards::closeDown()
-//	{
-//		if (isOpen)
-//		{
-//			if (worker)
-//			{
-//				worker->abort();
-//				while (worker->is_running()) {
-//					// give the worker some time to quit
-//					std::chrono::milliseconds dura(100);
-//					std::this_thread::sleep_for(dura);
-//				}
-//				//if (handle != nullptr)
-//				//{
-//				//	int is_running = worker->is_running();
-//				//	if (is_running != 0)
-//				//	{
-//				//		do
-//				//		{
-//				//			if (is_running == 1)
-//				//			{
-//				//				// still running send request to wake up libusb_handle_events()
-//				//				// THE PROBLEM: the worker is conditional wait which could last forever --
-//				//				// we need the iocard to send data to the usb to wake it up and worker task continue
-//				//				// it will then see the abort and return -- ending the task
-//				//				LOG() << "IOCARDS Closing Down worker is still running: " << worker->name;
-//				//				int buffersize = 8;
-//				//				unsigned char send_data[] = { 0x3d,0x00,0x3a,0x01,0x39,0x00,0xff,0xff };
-//				//				if (!sentWakeupMsg)
-//				//				{
-//				//					sentWakeupMsg = true;
-//				//					worker->write_usb(send_data, buffersize);
-//				//				}
-//				//				std::this_thread::sleep_for(std::chrono::milliseconds(200));
-//				//				is_running = worker->is_running();
-//				//				LOG() << "IOCARDS Closing Down for: " << worker->name << " is_running = " << is_running;
-//				//			}
-//				//			else if (is_running == -1)
-//				//			{ // cannot get the lock
-//				//				std::this_thread::sleep_for(std::chrono::milliseconds(200));
-//				//				is_running = worker->is_running();
-//				//				LOG() << "IOCARDS Closing Down can't get mutex (trying again ) for: " << worker->name << " is_running = " << is_running;
-//				//			}
-//				//		} while (is_running != 0);
-//				//	}
-//				//	else
-//				//	{
-//				//		LOG() << "IOCARDS ClosingDown -- Deleting thread for: " << worker->name;
-//				//	}
-//
-//
-//
-//					if (iocards_thread.joinable())
-//					{
-//						iocards_thread.join();
-//					}
-//					LOG() << "IOCARDS ClosingDown -- Deleting worker for: " << worker->name;
-//				//}
-//			}
-//		}
-//	}
-//
-//
-//	int IOCards::receive_mastercard(void)
-//	{
-//		int result = 0;
-//		int recv_status;
-//		int input[8][8]; /* 8 byte bit storage */
-//
-//		int index; /* mastercard input number */
-//		int card; /* mastercard counter: maximum 4 MASTERCARDS per USB expansion card */
-//		int slot; /* slot counter (each mastercard has 8 slots with 9 inputs) */
-//		int axisval; /* value of active A/D converter */
-//
-//		int found; /* found the next slot to be read */
-//		int readleft; /* yet to be read slot data for first 8 bits */
-//		int readnine; /* read slot data for last 9th bit in this byte */
-//		int sumnine; /* cumulated read slot data for last 9th bit */
-//		int sumslots; /* maximum number of 9bit slots present in this transmission */
-//		int sumcards; /* maximum number of cards present in this transmission */
-//
-//		const int buffersize = 8;
-//		unsigned char recv_data[buffersize]; /* mastercard raw IO data */
-//
-//		/* PROTOCOL */
-//		/* Each Mastercard has 72 Inputs, distributed over 8 slots with 9 inputs
-//		The first 8 inputs of each slot are read first, followed by an optional vector of the 9th input for each slot
-//		The Mastercard No. is given in the first byte (input 0-3)
-//		If any slots have inputs set to 1, these slots are set to 1 in byte 1
-//		The data of the present slots will then follow in the next bytes (bytes 2-7)
-//		If there are more slots than fit into a single message, a followup message must be read; such a message is
-//		identified by bit 7 of byte 0 being set.
-//		Note: if any A/D converters are turned on, by a "naxes" item in the usbiocards.ini file, this is reflected
-//		in the bits 4-6 of the first byte (1x, 2x, 3x or 4x giving the number of the currently reporting converter).
-//		In this case, the byte 1 is the output of the A/D converter, and the slot bits are moved to byte 2.
-//		Data of the present slots will then follow in bytes 3-7.
-//		Note also that the A/D converters will report continually, every 10msec or so, not only on value change!
-//		*/
-//
-//
-//		/* check if we have a connected USB expander card */
-//		if (isOpen && isInitialized && worker && worker->is_running() == 1)
-//		{
-//			/* check whether there is new data on the read buffer */
-//			recv_status = worker->read_usb(recv_data, buffersize);
-//			int byteCnt; // byte count 
-//
-//			if (recv_status > 0)
-//			{
-//				int bitCnt; // bit count within byte 
-//				/* fill the input array by bitshifting the first eight bytes */
-//				for (byteCnt = 0; byteCnt < 8; byteCnt++)
-//				{
-//					int x = recv_data[byteCnt];
-//					for (bitCnt = 0; bitCnt < 8; bitCnt++)
-//					{
-//						if (x & 01)
-//						{
-//							input[byteCnt][bitCnt] = 1;
-//						}
-//						else
-//						{
-//							input[byteCnt][bitCnt] = 0;
-//						}
-//						x = x >> 1;
-//					}
-//					//LOG() << "LIBIOCARDS: Received " << input[byteCnt][7] << input[byteCnt][6] << input[byteCnt][5] << input[byteCnt][4]
-//					//	<< input[byteCnt][3] << input[byteCnt][2] << input[byteCnt][1] << input[byteCnt][0];
-//				}
-//
-//				/* examine first byte: bits 0-3: Mastercard, 4-6: A/D, 7: continuation */
-//
-//				/* determine whether an A/D converter is active and read its value */
-//				axis = (recv_data[0] >> 4) & 7; /* extract the A/D number from bits 6-4 */
-//
-//				if (axis > 0)
-//				{
-//					axisval = recv_data[1];
-//					axes[axis - 1] = axisval;
-//				}
-//
-//				if (axis == 0)
-//				{
-//					/* no analog axis value: start slot indicator at second byte */
-//					byteCnt = 1;
-//				}
-//				else
-//				{
-//					/* axis value present in second byte: start slot indicator at third byte */
-//					byteCnt = 2;
-//				}
-//
-//
-//				if (input[0][7] == 0)
-//				{
-//					/* OPTION #1 */
-//					/* new transmission (first 8 byte packet) */
-//
-//					/* clean slot index data */
-//					for (card = 0; card < MASTERCARDS; card++)
-//					{
-//						for (slot = 0; slot < 8; slot++)
-//						{
-//							slotdata[slot][card] = 0;
-//						}
-//					}
-//
-//					/* fill slot index data with slot indices of first transmission */
-//					sumslots = 0;
-//					sumcards = 0;
-//					for (card = 0; card < MASTERCARDS; card++)
-//					{
-//						if (input[0][card] == 1)
-//						{
-//							for (slot = 0; slot < 8; slot++)
-//							{
-//								if (input[byteCnt + sumcards][slot] == 1)
-//								{
-//									slotdata[slot][card] = 1;
-//									sumslots++;
-//								}
-//							}
-//							sumcards++;
-//						}
-//					}
-//
-//					//LOG() << "LIBIOCARDS: new transmission with " << sumcards << " cards and " << sumslots << " slots present.";
-//
-//					card = 0; //for (card = 0; card < MASTERCARDS; card++)
-//					{
-//						//LOG() << "card " << card << " slots: " <<
-//						//    slotdata[7][card] << " " <<
-//						//    slotdata[6][card] << " " <<
-//						//    slotdata[5][card] << " " <<
-//						//    slotdata[4][card] << " " <<
-//						//    slotdata[3][card] << " " <<
-//						//    slotdata[2][card] << " " <<
-//						//    slotdata[1][card] << " " <<
-//						//    slotdata[0][card];
-//					}
-//
-//
-//					/* augment byte count to position of first data packet */
-//					byteCnt += sumcards;
-//				}
-//				else
-//				{
-//					/* OPTION #2 */
-//					/* continuation of previous transmission (another 8 byte packet) */
-//					LOG() << "option 2";
-//				}
-//
-//				while ((byteCnt < 8) && (byteCnt >= 0))
-//				{
-//					/* read slotwise input data for first 8 bits of each slot */
-//					found = 0;
-//					readleft = 0;
-//					for (card = 0; card < MASTERCARDS; card++)
-//					{
-//						for (slot = 0; slot < 8; slot++)
-//						{
-//							if (slotdata[slot][card] == 1)
-//							{
-//								readleft++;
-//								if (!found)
-//								{
-//									found = 1;
-//									slotdata[slot][card] = 2;
-//									if (card < NCARDS)
-//									{
-//										for (int bit = 0; bit < 8; bit++)
-//										{
-//											index = 9 * slot + bit;
-//											if (inputs[index][card] != input[byteCnt][bit])
-//											{
-//											//	LOG() << "index=" << index << " slot=" << slot << " bit=" << bit << " bytecnt=" << byteCnt << " old=" 
-//											//		<< inputs[index][card] << " new="  <<input[byteCnt][bit];
-//											}
-//											inputs[index][card] = input[byteCnt][bit];
-//										}
-//									}
-//									else
-//									{
-//										// "LIBIOCARDS: card x sent input but is not defined
-//									}
-//								}
-//							}
-//						}
-//					} // for cards (0-3)
-//
-//					/* read slotwise input data for last 9th bit of each slot */
-//					if (readleft == 0)
-//					{
-//						readnine = 0;
-//						sumnine = 0;
-//						for (card = 0; card < MASTERCARDS; card++)
-//						{
-//							for (slot = 0; slot < 8; slot++)
-//							{
-//								if (slotdata[slot][card] == 3)
-//								{
-//									sumnine++;
-//								}
-//								if (slotdata[slot][card] == 2)
-//								{
-//									if (readnine < 8)
-//									{
-//										slotdata[slot][card] = 3;
-//										if (card < NCARDS)
-//										{
-//											int bit = (sumnine + readnine) % 8; /* present slots fill up subsequent bytes with their 9th bit data */
-//											index = 9 * slot + 8;
-//											inputs[index][card] = input[byteCnt][bit];
-//										}
-//									}
-//									readnine++;
-//								}
-//							}
-//						}
-//					}
-//					/* next byte */
-//					byteCnt++;
-//				} // end while
-//				result = recv_status;
-//			}
-//		} // if open & init
-//
-//		return result;
-//	}
-//
-//	/* send changes in the outputs array (outputs and displays) to MASTERCARD */
-//	/* MASTERCARD is connected to USB EXPANSION CARD */
-//	int IOCards::send_mastercard(void)
-//	{
-//		int result = 0;
-//		int buffersize = 8;
-//		unsigned char send_data[] = { 0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff };
-//		int send_status = 0;
-//		int count;
-//		int firstoutput = 11; /* output channels start at 11, and go to 55 */
-//		int totchannels = 64; /* total channels per card (second card starts at 64(+11), 3rd at 128(+11), 4th at 192+11))*/
-//		int channelspersegment = 8;
-//		int totalSegments = totchannels / channelspersegment;
-//		int card;
-//		int channel;
-//		int changed;
-//		int segment; /* we have to write full segments of 8 outputs each */
-//
-//		int power;
-//
-//		/* check if we have a connected and initialized mastercard */
-//		if (isOpen && isInitialized && worker && worker->is_running() == 1)
-//		{
-//			/* TODO: check if outputs and displays work with multiple cards */
-//
-//			/* fill send data with output information */
-//			for (card = 0; card < MASTERCARDS; card++)
-//			{
-//				for (segment = 0; segment < (totalSegments); segment++)
-//				{
-//					changed = 0;
-//
-//					if ((segment * channelspersegment) < NUM_OUTPUTS)
-//					{
-//						/* 8-byte segment transfers */
-//						for (count = 0; count < channelspersegment; count++)
-//						{
-//							channel = segment * channelspersegment + count;
-//							power = 1 << count;
-//
-//							if (channel < NUM_OUTPUTS)
-//							{
-//								if (outputs[channel][card] != outputs_old[channel][card])
-//								{
-//									changed = 1;
-//								}
-//								if (count == 0)
-//								{
-//									send_data[1] = outputs[channel][card];
-//								}
-//								else
-//								{
-//									send_data[1] += outputs[channel][card] * power;
-//								}
-//							}
-//							else
-//							{
-//								if (count == 0)
-//								{
-//									send_data[1] = 1;
-//								}
-//								else
-//								{
-//									send_data[1] += power;
-//								}
-//							}
-//						}
-//
-//						if (changed == 1)
-//						{
-//							send_data[0] = card * totchannels + segment * channelspersegment + firstoutput;
-//
-//							send_status = worker->write_usb(send_data, buffersize);
-//							if ((send_status) < 0)
-//							{
-//								result = send_status;
-//								break;
-//							}
-//							memset(&send_data, 0xff, buffersize);
-//
-//							for (count = 0; count < channelspersegment; count++)
-//							{
-//								channel = count + segment * channelspersegment;
-//								if (channel < NUM_OUTPUTS)
-//								{
-//									printf("LIBIOCARDS: send output to MASTERCARD card=%i output=%i value=%i \n",
-//										card, firstoutput + channel, outputs[channel][card]);
-//								}
-//							}
-//						}
-//					}
-//				}
-//
-//
-//				/* fill send data with display information */
-//				//memset(&send_data, 0xff, buffersize);
-//				//for (count=0; count<NUM_DISPLAYS; count++) {
-//				//    if (displays[count][card] != displays_old[count][card]) {
-//
-//				//        // value first then position
-//				//        send_data[0] = displays[count][card];
-//				//        send_data[1] = card*MASTERCARDS + count;
-//
-//
-//				//        send_status = worker->write_usb(send_data, buffersize);
-//				//        if ((send_status) < 0) {
-//				//            result = send_status;
-//				//            break;
-//				//        }
-//
-//
-//				//        printf("LIBIOCARDS: send display to MASTERCARD card=%i display=%i value=%i \n",
-//				//            card, count, displays[count][card]);
-//				//    }
-//				//}
-//			}
-//		}
-//
-//		return result;
-//	}
-//
-//	int IOCards::mastercard_send_display(unsigned char value, int pos, int card)
-//	{
-//		int ret = 0;
-//		if (worker && worker->is_running() == 1)
-//		{
-//			unsigned char send_data[] = { 0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff };
-//			displays[pos][card] = value;
-//			if (displays[pos][card] != displays_old[pos][card])
-//			{
-//				// value first then position
-//				send_data[0] = displays[pos][card];
-//				send_data[1] = card * MASTERCARDS + pos;
-//				ret = worker->write_usb(send_data, 8);
-//			}
-//		}
-//		return ret;
-//	}
-//
+	void IOCards::closeDown()
+	{
+		if (is_open)
+		{
+			if (event_thread.joinable())
+			{
+				{
+					std::lock_guard<std::mutex> lock(usb_mutex);
+					event_thread_run = false;
+				}
+				libusb_close(handle); // This wakes up libusb_handle_events()
+				handle = nullptr;
+
+				event_thread.join();
+				LOG() << "IOCARDS ClosingDown";
+
+				//if (handle != nullptr)
+				//{
+				//	int is_running = worker->is_running();
+				//	if (is_running != 0)
+				//	{
+				//		do
+				//		{
+				//			if (is_running == 1)
+				//			{
+				//				// still running send request to wake up libusb_handle_events()
+				//				// THE PROBLEM: the worker is conditional wait which could last forever --
+				//				// we need the iocard to send data to the usb to wake it up and worker task continue
+				//				// it will then see the abort and return -- ending the task
+				//				LOG() << "IOCARDS Closing Down worker is still running: " << worker->name;
+				//				int buffersize = 8;
+				//				unsigned char send_data[] = { 0x3d,0x00,0x3a,0x01,0x39,0x00,0xff,0xff };
+				//				if (!sentWakeupMsg)
+				//				{
+				//					sentWakeupMsg = true;
+				//					worker->write_usb(send_data, buffersize);
+				//				}
+				//				std::this_thread::sleep_for(std::chrono::milliseconds(200));
+				//				is_running = worker->is_running();
+				//				LOG() << "IOCARDS Closing Down for: " << worker->name << " is_running = " << is_running;
+				//			}
+				//			else if (is_running == -1)
+				//			{ // cannot get the lock
+				//				std::this_thread::sleep_for(std::chrono::milliseconds(200));
+				//				is_running = worker->is_running();
+				//				LOG() << "IOCARDS Closing Down can't get mutex (trying again ) for: " << worker->name << " is_running = " << is_running;
+				//			}
+				//		} while (is_running != 0);
+				//	}
+				//	else
+				//	{
+				//		LOG() << "IOCARDS ClosingDown -- Deleting thread for: " << worker->name;
+				//	}
+				//}
+			}
+		}
+	}
+
+
+void IOCards::receive_mastercard(void)
+	{
+		int result = 0;
+
+		/* PROTOCOL */
+		/* Each Mastercard has 72 Inputs, distributed over 8 slots with 9 inputs
+		The first 8 inputs of each slot are read first, followed by an optional vector of the 9th input for each slot
+		The Mastercard No. is given in the first byte (input 0-3)
+		If any slots have inputs set to 1, these slots are set to 1 in byte 1
+		The data of the present slots will then follow in the next bytes (bytes 2-7)
+		If there are more slots than fit into a single message, a followup message must be read; such a message is
+		identified by bit 7 of byte 0 being set.
+		Note: if any A/D converters are turned on, by a "naxes" item in the usbiocards.ini file, this is reflected
+		in the bits 4-6 of the first byte (1x, 2x, 3x or 4x giving the number of the currently reporting converter).
+		In this case, the byte 1 is the output of the A/D converter, and the slot bits are moved to byte 2.
+		Data of the present slots will then follow in bytes 3-7.
+		Note also that the A/D converters will report continually, every 10msec or so, not only on value change!
+		*/
+
+
+		// check if we have a connected USB expander card
+		while (is_okay && inQueue.size() > 0)
+		{
+			if (const auto maybe_vector = inQueue.pop()) {
+				if (maybe_vector) {
+					auto recv_data = *maybe_vector;
+			
+					int byteCnt;
+					int input[8][8];
+					int index;
+					int card;
+					int slot;
+					/* fill the input array by bitshifting the first eight bytes */
+					for (byteCnt = 0; byteCnt < 8; byteCnt++)
+					{
+						int x = recv_data[byteCnt];
+						for (int bitCnt = 0; bitCnt < 8; bitCnt++)
+						{
+							if (x & 01)
+							{
+								input[byteCnt][bitCnt] = 1;
+							}
+							else
+							{
+								input[byteCnt][bitCnt] = 0;
+							}
+							x = x >> 1;
+						}
+						//LOG() << "LIBIOCARDS: Received " << input[byteCnt][7] << input[byteCnt][6] << input[byteCnt][5] << input[byteCnt][4]
+						//	<< input[byteCnt][3] << input[byteCnt][2] << input[byteCnt][1] << input[byteCnt][0];
+					}
+
+					/* examine first byte: bits 0-3: Mastercard, 4-6: A/D, 7: continuation */
+
+					/* determine whether an A/D converter is active and read its value */
+					axis = (recv_data[0] >> 4) & 7; /* extract the A/D number from bits 6-4 */
+
+					if (axis > 0)
+					{
+						const int axisval = recv_data[1];
+						axes[axis - 1] = axisval;
+					}
+
+					if (axis == 0)
+					{
+						/* no analog axis value: start slot indicator at second byte */
+						byteCnt = 1;
+					}
+					else
+					{
+						/* axis value present in second byte: start slot indicator at third byte */
+						byteCnt = 2;
+					}
+
+
+					if (input[0][7] == 0)
+					{
+						/* OPTION #1 */
+						/* new transmission (first 8 byte packet) */
+
+						/* clean slot index data */
+						for (card = 0; card < MASTERCARDS; card++)
+						{
+							for (slot = 0; slot < 8; slot++)
+							{
+								slotdata[slot][card] = 0;
+							}
+						}
+
+						/* fill slot index data with slot indices of first transmission */
+						int sumslots = 0;
+						int sumcards = 0;
+						for (card = 0; card < MASTERCARDS; card++)
+						{
+							if (input[0][card] == 1)
+							{
+								for (slot = 0; slot < 8; slot++)
+								{
+									if (input[byteCnt + sumcards][slot] == 1)
+									{
+										slotdata[slot][card] = 1;
+										sumslots++;
+									}
+								}
+								sumcards++;
+							}
+						}
+
+						//LOG() << "LIBIOCARDS: new transmission with " << sumcards << " cards and " << sumslots << " slots present.";
+
+						card = 0; //for (card = 0; card < MASTERCARDS; card++)
+						{
+							//LOG() << "card " << card << " slots: " <<
+							//    slotdata[7][card] << " " <<
+							//    slotdata[6][card] << " " <<
+							//    slotdata[5][card] << " " <<
+							//    slotdata[4][card] << " " <<
+							//    slotdata[3][card] << " " <<
+							//    slotdata[2][card] << " " <<
+							//    slotdata[1][card] << " " <<
+							//    slotdata[0][card];
+						}
+
+
+						/* augment byte count to position of first data packet */
+						byteCnt += sumcards;
+					}
+					else
+					{
+						/* OPTION #2 */
+						/* continuation of previous transmission (another 8 byte packet) */
+						LOG() << "option 2";
+					}
+
+					while ((byteCnt < 8) && (byteCnt >= 0))
+					{
+						/* read slotwise input data for first 8 bits of each slot */
+						int found = 0;
+						int readleft = 0;
+						for (card = 0; card < MASTERCARDS; card++)
+						{
+							for (slot = 0; slot < 8; slot++)
+							{
+								if (slotdata[slot][card] == 1)
+								{
+									readleft++;
+									if (!found)
+									{
+										found = 1;
+										slotdata[slot][card] = 2;
+										if (card < NCARDS)
+										{
+											for (int bit = 0; bit < 8; bit++)
+											{
+												index = 9 * slot + bit;
+												if (inputs[index][card] != input[byteCnt][bit])
+												{
+												//	LOG() << "index=" << index << " slot=" << slot << " bit=" << bit << " bytecnt=" << byteCnt << " old=" 
+												//		<< inputs[index][card] << " new="  <<input[byteCnt][bit];
+												}
+												inputs[index][card] = input[byteCnt][bit];
+											}
+										}
+										else
+										{
+											// "LIBIOCARDS: card x sent input but is not defined
+										}
+									}
+								}
+							}
+						} // for cards (0-3)
+
+						/* read slotwise input data for last 9th bit of each slot */
+						if (readleft == 0)
+						{
+							int readnine = 0;
+							int sumnine = 0;
+							for (card = 0; card < MASTERCARDS; card++)
+							{
+								for (slot = 0; slot < 8; slot++)
+								{
+									if (slotdata[slot][card] == 3)
+									{
+										sumnine++;
+									}
+									if (slotdata[slot][card] == 2)
+									{
+										if (readnine < 8)
+										{
+											slotdata[slot][card] = 3;
+											if (card < NCARDS)
+											{
+												int bit = (sumnine + readnine) % 8; /* present slots fill up subsequent bytes with their 9th bit data */
+												index = 9 * slot + 8;
+												inputs[index][card] = input[byteCnt][bit];
+											}
+										}
+										readnine++;
+									}
+								}
+							}
+						}
+						// next byte
+						byteCnt++;
+					} // end while
+				} 
+			}
+		} // is_okay
+	}
+
+	// send changes in the outputs array (outputs and displays) to MASTERCARD
+	// MASTERCARD is connected to USB EXPANSION CARD
+	void IOCards::send_mastercard(void)
+	{
+
+		int send_status = 0;
+
+		// check if we have a connected and initialized mastercard
+		if (is_okay) {
+			int count;
+			constexpr int totchannels = 64; // total channels per card (second card starts at 64(+11), 3rd at 128(+11), 4th at 192+11))
+			constexpr int channelspersegment = 8;
+			constexpr int totalSegments = totchannels / channelspersegment;
+			int channel;
+			// TODO: check if outputs and displays work with multiple cards
+
+			// fill send data with output information
+			for (int card = 0; card < MASTERCARDS; card++)
+			{
+				for (int segment = 0; segment < (totalSegments); segment++)
+				{
+					std::vector<unsigned char> send_data = { 0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff };
+					if ((segment * channelspersegment) < NUM_OUTPUTS)
+					{
+						int changed = 0;
+						// 8-byte segment transfers
+						for (count = 0; count < channelspersegment; count++)
+						{
+							channel = segment * channelspersegment + count;
+							const int power = 1 << count;
+
+							if (channel < NUM_OUTPUTS)
+							{
+								if (outputs[channel][card] != outputs_old[channel][card])
+								{
+									changed = 1;
+								}
+								if (count == 0)
+								{
+									send_data[1] = outputs[channel][card];
+								}
+								else
+								{
+									send_data[1] += outputs[channel][card] * power;
+								}
+							}
+							else
+							{
+								if (count == 0)
+								{
+									send_data[1] = 1;
+								}
+								else
+								{
+									send_data[1] += power;
+								}
+							}
+						}
+
+						if (changed == 1)
+						{
+							constexpr int firstoutput = 11;
+							send_data[0] = card * totchannels + segment * channelspersegment + firstoutput;
+							outQueue.push(std::move(send_data));
+
+							for (count = 0; count < channelspersegment; count++)
+							{
+								channel = count + segment * channelspersegment;
+								if (channel < NUM_OUTPUTS)
+								{
+									printf("LIBIOCARDS: send output to MASTERCARD card=%i output=%i value=%i \n",
+										card, firstoutput + channel, outputs[channel][card]);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	void IOCards::mastercard_send_display(unsigned char value, int pos, int card)
+	{
+		std::vector<unsigned char> send_data = { 0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff };
+		displays[pos][card] = value;
+		if (displays[pos][card] != displays_old[pos][card])
+		{
+			// value first then position
+			send_data[0] = displays[pos][card];
+			send_data[1] = card * MASTERCARDS + pos;
+			outQueue.push(send_data);
+		}
+	}
+
 	// retrieve input value from given input position on MASTERCARD
 	// Two types :
 	// 0: pushbutton 

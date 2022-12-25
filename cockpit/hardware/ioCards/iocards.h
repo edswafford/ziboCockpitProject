@@ -8,6 +8,7 @@
 #include <string>
 
 #include "libusb.h"
+#include "queue.hpp"
 
 //#include "usbworker.h"
 
@@ -56,30 +57,44 @@ namespace zcockpit::cockpit::hardware
 		static constexpr int TAXES = 4; /* number of axes available on the USB expansion or IOCard-USBServos card */
 
 		static constexpr int NCARDS = 1; /* number of cards on USB connection (only for Mastercard) */
+		static constexpr int INITIAL_BUFFER_SIZE = 32;
+
 
 		IOCards() = delete;
 		explicit IOCards(std::string deviceBusAddr, std::string name);
 
-		void openDevice(std::string device_bus_addr);
+		[[nodiscard]] bool openDevice(std::string device_bus_addr);
 
 		~IOCards();
 
 		static IOCards::IOCard_Device identify_iocards_usb(const std::string& bus_address);
 		static std::string find_iocard_devices();
+		void do_usb_work();
+		void start_event_thread();
 
 
 		//void closeDown();
 
-		//void mainThread();
-		//void startThread(void);
+
+		void read_callback_cpp(const struct libusb_transfer* transfer);
+		void static LIBUSB_CALL read_callback(struct libusb_transfer* transfer);
+
+		void write_callback_cpp(const struct libusb_transfer* transfer);
+		[[nodiscard]]bool is_usb_thread_healthy();
+		bool submit_write_transfer(std::vector<unsigned char> buffer);
+		bool submit_read_transfer();
+		void closeDown();
+		void static LIBUSB_CALL write_callback(struct libusb_transfer* transfer);
+
+
 		[[nodiscard]] bool initializeIOCards(unsigned char number_of_axes);
 		[[nodiscard]] bool initForAsync();
 		[[nodiscard]] int initialize_iocardsdata(void);
 		//int copyIOCardsData(void);
 
 		int receive_mastercard_synchronous();
-		//int receive_mastercard(void);
-		//int send_mastercard(void);
+		void receive_mastercard(void);
+		void send_mastercard(void);
 
 		int mastercard_input(int input, int* value, int card = 0);
 		//void process_master_card_inputs(const OnOffKeyCommand keycmd[], int numberOfCmds, int card = 0);
@@ -89,7 +104,7 @@ namespace zcockpit::cockpit::hardware
 		//int mastercard_output(int output, int* value, int card = 0);
 		//int mastercard_encoder(int input, double* value, double multiplier, double accelerator, int type = 2, int card = 0);
 		//int mastercard_display(int pos, int n0, int* value, int hasnegative, int card = 0);
-		//int mastercard_send_display(unsigned char value, int pos, int card = 0);
+		void mastercard_send_display(unsigned char value, int pos, int card = 0);
 
 		//struct libusb_context* Ctx() const
 		//{
@@ -113,11 +128,12 @@ namespace zcockpit::cockpit::hardware
 
 		bool is_open{false};
 		bool is_Claimed{false};
+		bool is_okay{true};
 
 		void set_iocard_device(IOCard_Device device) {io_card_device = device;}
 		[[nodiscard]] IOCard_Device get_io_card_device() const {return io_card_device;}
 
-		void set_name(std::string name) {name = name;}
+		void set_name(std::string name) {device_name = name;}
 		[[nodiscard]] std::string get_name() const {return device_name;}
 
 		//std::mutex iocards_mutex;
@@ -126,7 +142,6 @@ namespace zcockpit::cockpit::hardware
 
 	//	int get_acceleration(int card, int input, double accelerator);
 
-	//	std::thread iocards_thread;
 
 		std::string device_name;
 		IOCard_Device io_card_device{UNKNOWN};
@@ -138,13 +153,30 @@ namespace zcockpit::cockpit::hardware
 		unsigned char epOut; // output endpoint
 		uint16_t inBufferSize; // input endpoint buffer size
 		uint16_t outBufferSize; // output endpoint buffer size
+		std::vector<unsigned char> inBuffer{INITIAL_BUFFER_SIZE}; // pointer to input endpoint buffer
+		std::vector<unsigned char> outBuffer{INITIAL_BUFFER_SIZE}; // pointer to output endpoint buffer
+
+		common::ThreadSafeQueue<std::vector<unsigned char>>inQueue;
+		common::ThreadSafeQueue<std::vector<unsigned char>>outQueue;
 
 		// Used for Async operations
-		libusb_transfer* readTransfer;
-		libusb_transfer* writeTransfer;
+		libusb_transfer* readTransfer{nullptr};
+		libusb_transfer* writeTransfer{nullptr};
 
+		//******************************
+		// used by event thread
+		//
+		std::thread event_thread;
+		std::mutex usb_mutex;
+		bool event_thread_failed{false};
+		bool event_thread_run{false};
 
-
+		bool writing_transfer{false};
+		bool write_callback_running{false};
+		bool read_callback_running{false};
+		//
+		//******************************
+		
 		bool isInitialized{false};
 	//	bool sentWakeupMsg;
 
