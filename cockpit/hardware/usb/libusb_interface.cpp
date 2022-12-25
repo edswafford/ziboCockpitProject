@@ -15,7 +15,7 @@ namespace zcockpit::cockpit::hardware
 	{
 		if(libusb_is_initialized)
 		{
-			libusb_exit(nullptr);
+			libusb_exit(ctx);
 		}
 	}
 
