@@ -89,7 +89,7 @@ namespace zcockpit::cockpit::hardware
 
 		[[nodiscard]] bool initializeIOCards(unsigned char number_of_axes);
 		[[nodiscard]] bool initForAsync();
-		[[nodiscard]] int initialize_iocardsdata(void);
+		void initialize_iocardsdata();
 		//int copyIOCardsData(void);
 
 		int receive_mastercard_synchronous();
@@ -170,6 +170,7 @@ namespace zcockpit::cockpit::hardware
 		std::mutex usb_mutex;
 		bool event_thread_failed{false};
 		bool event_thread_run{false};
+		bool libusb_is_blocking{ false };
 
 		bool writing_transfer{false};
 		bool write_callback_running{false};

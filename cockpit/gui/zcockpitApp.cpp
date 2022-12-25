@@ -484,8 +484,10 @@ namespace zcockpit::cockpit::gui
 
 				// Axes are not used --> set to 0
 				constexpr unsigned char number_of_axes = 0;
-				if(ovrheadIOCards->initializeIOCards(number_of_axes) && ovrheadIOCards->initialize_iocardsdata())
+				if(ovrheadIOCards->initializeIOCards(number_of_axes))
 				{
+					ovrheadIOCards->initialize_iocardsdata();
+
 					if(ovrheadIOCards->submit_read_transfer()){
 						// Applications should not start the event thread until after their first call to libusb_open()
 						ovrheadIOCards->start_event_thread();

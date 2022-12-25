@@ -47,6 +47,8 @@ namespace zcockpit::cockpit::hardware
 
 	IOCards::~IOCards()
 	{
+		closeDown();
+
 		if (readTransfer) {
 			libusb_free_transfer(readTransfer);
 			readTransfer = nullptr;
@@ -56,7 +58,8 @@ namespace zcockpit::cockpit::hardware
 			writeTransfer = nullptr;
 		}
 
-		if(is_Claimed) {
+
+		if(is_Claimed && handle != nullptr) {
 			auto ret = libusb_release_interface(handle, 0);
 			if(ret < 0) {
 				LOG() << "Cannot release libusb device: error " << ret;
@@ -603,16 +606,20 @@ namespace zcockpit::cockpit::hardware
 			while(true) {
 				{
 					std::lock_guard<std::mutex> guard(usb_mutex);
-					if (event_thread_run)
+					if (!event_thread_run)
 					{
 						break;
 					}
+					libusb_is_blocking = true;
 				}
 				const auto ret = libusb_handle_events(ctx);
-				if (ret < 0) {
+				{
 					std::lock_guard<std::mutex> guard(usb_mutex);
-					event_thread_failed = true;
-					break;
+					libusb_is_blocking = false;
+					if (ret < 0) {
+						event_thread_failed = true;
+						break;
+					}
 				}
 			}
 		}
@@ -764,17 +771,41 @@ namespace zcockpit::cockpit::hardware
 	{
 		if (is_open)
 		{
-			if (event_thread.joinable())
+			bool thread_is_running = false;
 			{
-				{
-					std::lock_guard<std::mutex> lock(usb_mutex);
+				std::lock_guard<std::mutex> lock(usb_mutex);
+				thread_is_running = event_thread_run;
+				if (event_thread_run) {
 					event_thread_run = false;
 				}
-				libusb_close(handle); // This wakes up libusb_handle_events()
-				handle = nullptr;
-
-				event_thread.join();
-				LOG() << "IOCARDS ClosingDown";
+			}
+			if (thread_is_running)
+			{
+				bool is_blocking = false;
+				{
+					std::lock_guard<std::mutex> lock(usb_mutex);
+					is_blocking = libusb_is_blocking;
+				}
+				while (is_blocking) {
+					std::this_thread::sleep_for(std::chrono::milliseconds(100));
+					std::lock_guard<std::mutex> lock(usb_mutex);
+					is_blocking = libusb_is_blocking;
+				}
+				if (is_Claimed && handle != nullptr) {
+					auto ret = libusb_release_interface(handle, 0);
+					if (ret < 0) {
+						LOG() << "Cannot release libusb device: error " << ret;
+					}
+					is_Claimed = false;
+				}
+				if (handle != nullptr) {
+					libusb_close(handle); // This wakes up libusb_handle_events()
+					handle = nullptr;
+				}
+				if(event_thread.joinable()){
+					event_thread.join();
+					LOG() << "IOCARDS ClosingDown";
+				}
 
 				//if (handle != nullptr)
 				//{
@@ -1671,7 +1702,7 @@ void IOCards::receive_mastercard(void)
 //
 	// initialize data arrays with default values
 	// flight data for  USB and TCP/IP communication
-	int IOCards::initialize_iocardsdata(void)
+	void IOCards::initialize_iocardsdata()
 	{
 		const auto time_new = std::chrono::high_resolution_clock::now();
 
@@ -1703,9 +1734,6 @@ void IOCards::receive_mastercard(void)
 				displays_old[count][card] = -1;
 			}
 		}
-
-
-		return 0;
 	}
 
 //	/* this routine calculates the acceleration of rotary encoders based on last rotation time */
