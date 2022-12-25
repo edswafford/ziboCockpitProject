@@ -525,6 +525,7 @@ namespace zcockpit::cockpit::hardware
 						iocards_cnt++;
 					}
 				}
+
 			}
 			if(devices.empty())
 			{
@@ -780,10 +781,20 @@ namespace zcockpit::cockpit::hardware
 					is_blocking = libusb_is_blocking;
 				}
 				while (is_blocking) {
-					std::this_thread::sleep_for(std::chrono::milliseconds(100));
+					// still running send request to wake up libusb_handle_events()
+					// THE PROBLEM: the worker is conditional wait which could last forever --
+					// we need the iocard to send data to the usb to wake it up and worker task continue
+					// it will then see the abort and return -- ending the task
+					LOG() << "IOCARDS usblib sleeping --  trying to wake-up: ";
+					const std::vector<unsigned char> send_data { 0x3d,0x00,0x3a,0x01,0x39,0x00,0xff,0xff };
+					submit_write_transfer(send_data);
+
+					std::this_thread::sleep_for(std::chrono::milliseconds(200));
 					std::lock_guard<std::mutex> lock(usb_mutex);
 					is_blocking = libusb_is_blocking;
 				}
+
+
 				if (is_Claimed && handle != nullptr) {
 					auto ret = libusb_release_interface(handle, 0);
 					if (ret < 0) {
