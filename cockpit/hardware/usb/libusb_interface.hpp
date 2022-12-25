@@ -9,6 +9,8 @@ namespace zcockpit::cockpit::hardware
 		static void exit();
 		static bool initialize();
 		static bool is_initialized();
+		static libusb_context* ctx;
+
 	private:
 		static bool libusb_is_initialized;
 	};

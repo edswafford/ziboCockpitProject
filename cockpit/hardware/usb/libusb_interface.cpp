@@ -1,12 +1,14 @@
 #include <string>
 #include "libusb_interface.hpp"
+
+#include "libusbi.h"
 #include "logger.hpp"
 
 extern logger LOG;
 namespace zcockpit::cockpit::hardware
 {
 	bool LibUsbInterface::libusb_is_initialized = false;
-
+	libusb_context* LibUsbInterface::ctx = nullptr;
 
 
 	void LibUsbInterface::exit()
@@ -21,7 +23,7 @@ namespace zcockpit::cockpit::hardware
 	{
 		if(!LibUsbInterface::libusb_is_initialized)
 		{
-			const int ret = libusb_init(nullptr);
+			const int ret = libusb_init(&(LibUsbInterface::ctx));
 			if(ret < 0)
 			{
 				LOG() << "Libusb Initialization Error: " << ret;

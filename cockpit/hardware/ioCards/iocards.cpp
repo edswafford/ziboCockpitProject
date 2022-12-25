@@ -40,9 +40,6 @@ namespace zcockpit::cockpit::hardware
 				is_Claimed = true;
 			}
 		}
-//		if (dev != nullptr && handle != nullptr) {
-//			worker = std::make_unique<UsbWorker>(dev, handle, ctx, device_name);
-//		}
 	}
 
 	IOCards::~IOCards()
@@ -76,8 +73,6 @@ namespace zcockpit::cockpit::hardware
 		libusb_device** devs;
 		is_open = false;
 
-		struct libusb_context* local_ctx = nullptr;
-
 		memset(time_enc, 0, sizeof(time_enc));
 
 
@@ -104,8 +99,7 @@ namespace zcockpit::cockpit::hardware
 		}
 
 		libusb_device* dev =nullptr;
-		struct libusb_context* ctx = nullptr;
-		const int cnt = static_cast<int>(libusb_get_device_list(local_ctx, &devs));
+		const int cnt = static_cast<int>(libusb_get_device_list(LibUsbInterface::ctx, &devs));
 		if (cnt < 0)
 		{
 			return false;
@@ -486,7 +480,7 @@ namespace zcockpit::cockpit::hardware
 		std::string devices;
 
 		if(LibUsbInterface::is_initialized()){
-			const int cnt = static_cast<int>(libusb_get_device_list(nullptr, &devs));
+			const int cnt = static_cast<int>(libusb_get_device_list(LibUsbInterface::ctx, &devs));
 			if(cnt < 0)
 			{
 				LOG() << "Libusb get device list Error: " << cnt;;
@@ -601,7 +595,6 @@ namespace zcockpit::cockpit::hardware
 	// Runs in libusb thread
 	void IOCards::do_usb_work()
 	{
-		struct libusb_context* ctx = nullptr;
 		if(is_okay) {
 			while(true) {
 				{
@@ -612,7 +605,7 @@ namespace zcockpit::cockpit::hardware
 					}
 					libusb_is_blocking = true;
 				}
-				const auto ret = libusb_handle_events(ctx);
+				const auto ret = libusb_handle_events(LibUsbInterface::ctx);
 				{
 					std::lock_guard<std::mutex> guard(usb_mutex);
 					libusb_is_blocking = false;

@@ -106,15 +106,6 @@ namespace zcockpit::cockpit::hardware
 		//int mastercard_display(int pos, int n0, int* value, int hasnegative, int card = 0);
 		void mastercard_send_display(unsigned char value, int pos, int card = 0);
 
-		//struct libusb_context* Ctx() const
-		//{
-		//	return ctx;
-		//}
-
-		//void Ctx(struct libusb_context* val)
-		//{
-		//	ctx = val;
-		//}
 
 
 	public:
