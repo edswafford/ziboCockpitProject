@@ -16,6 +16,11 @@ namespace zcockpit::cockpit::hardware
 	{
 		interface_it.closeInterfaceITController();
 		interface_it.drop();
+
+		if (overhead_card) {
+			overhead_card->drop();
+			overhead_card = nullptr;
+		}
 	}
 
 	void Sim737Hardware::initialize_iocard_devices()
