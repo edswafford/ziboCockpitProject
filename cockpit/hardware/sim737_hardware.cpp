@@ -19,58 +19,12 @@ namespace zcockpit::cockpit::hardware
 	void Sim737Hardware::initialize_iocard_devices()
 	{
 		if(LibUsbInterface::is_initialized()) {
-			auto avaible_iocards = IOCards::find_iocard_devices();
-		}
-	}
-	void Sim737Hardware::init_fwd_overhead_iocard(const std::string& bus_address)
-	{
-
-	//	iocards_fwd_overhead_status = FAILED_STATUS;
-		LOG() << "IOCards: creating fwd overhead";
-		ovrheadIOCards = std::make_unique<OvrheadIOCards>(bus_address);
-		if(ovrheadIOCards->is_open)
-		{
-			// Did we find the fwd overhead device and manage to open usb connection 
-			LOG() << "fwd overhead is Open";
-		//	iocards_fwd_overhead_status = HEALTHY_STATUS;
-		//	LOG() << "fwd overhead status = " << iocards_fwd_overhead_status;
-
-
-			if(ovrheadIOCards->initForAsync()) {
-
-				// Axes are not used --> set to 0
-				constexpr unsigned char number_of_axes = 0;
-				if(ovrheadIOCards->initializeIOCards(number_of_axes))
-				{
-					ovrheadIOCards->initialize_iocardsdata();
-
-					if(ovrheadIOCards->submit_read_transfer()){
-						// Applications should not start the event thread until after their first call to libusb_open()
-						ovrheadIOCards->start_event_thread();
-
-						LOG() << "fwd overhead is initialized and thread is running";
-					
-						ovrheadIOCards->receive_mastercard();
-
-
-		//			LOG() << "fwd Done First Pass status =" << iocards_fwd_overhead_status;
-		//			PostMessage(mainHwnd, WM_IOCARDS_FWD_OVERHEAD_HEALTH, iocards_fwd_overhead_status, NULL);
-					}
-					else {
-						LOG() << "IOCards: fwd overhead failed to reading from usb";
-					}
-				}
-				else
-					{
-						LOG() << "IOCards: fwd overhead failed init";
-					}
+			auto available_iocards = IOCards::find_iocard_devices();
+			if(available_iocards.contains(IOCards::IOCard_Device::FWD_OVERHEAD)) {
+				const auto bus_addr = available_iocards[IOCards::IOCard_Device::FWD_OVERHEAD];
+				overhead_card = OvrheadIOCards::create_fwd_overhead_iocard(bus_addr);
 			}
 		}
-		else
-		{
-			LOG() << "IOCards: Failed to open fwd overhead.";
-		}
-
 	}
 
 
@@ -132,10 +86,10 @@ namespace zcockpit::cockpit::hardware
 
 		else if(five_hz_count == 1)
 		{
-			//if(this->ovrheadIOCards->isOpen)
+			//if(this->overhead_card->isOpen)
 			//{
 			//	status = HEALTHY_STATUS;
-			//	if(!this->ovrheadIOCards->IsInitialized())
+			//	if(!this->overhead_card->IsInitialized())
 			//	{
 			//		status = FAILED_STATUS;
 			//		LOG() << "IOCards 2: closing down fwd overhead failed init";
@@ -143,22 +97,22 @@ namespace zcockpit::cockpit::hardware
 			//	else
 			//	{
 			//		// update inputs
-			//		this->ovrheadIOCards->fastProcessOvrHead();
+			//		this->overhead_card->fastProcessOvrHead();
 
 			//		// send outputs
-			//		if(this->ovrheadIOCards->send_mastercard() < 0)
+			//		if(this->overhead_card->send_mastercard() < 0)
 			//		{
 			//			status = FAILED_STATUS;
 			//			LOG() << "IOCards 2: closing down fwd overhead send < 0";
-			//			this->ovrheadIOCards->closeDown();
+			//			this->overhead_card->closeDown();
 			//		}
 
 
-			//		//if(this->ovrheadIOCards->copyIOCardsData() < 0)
+			//		//if(this->overhead_card->copyIOCardsData() < 0)
 			//		//{
 			//		//	status = FAILED_STATUS;
 			//		//	LOG() << "IOCards 2: closing down fwd overhead copy data < 0";
-			//		//	this->ovrheadIOCards->closeDown();
+			//		//	this->overhead_card->closeDown();
 			//		//}
 			//	}
 			//}

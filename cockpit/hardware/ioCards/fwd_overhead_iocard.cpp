@@ -105,6 +105,50 @@ namespace zcockpit::cockpit::hardware
 		engine2_state = OFF;
 	}
 
+	std::unique_ptr<OvrheadIOCards> OvrheadIOCards::create_fwd_overhead_iocard(const std::string& bus_address)
+	{
+		LOG() << "IOCards: creating fwd overhead";
+		auto card = std::make_unique<OvrheadIOCards>(bus_address);
+		if(card->is_open)
+		{
+			// Did we find the fwd overhead device and manage to open usb connection 
+			LOG() << "fwd overhead is Open";;
+
+			if(card->init_for_async()) {
+
+				// Axes are not used --> set to 0
+				constexpr unsigned char number_of_axes = 0;
+				if(card->initialize_mastercard(number_of_axes))
+				{
+					card->clear_buffers();
+
+					if(card->submit_read_transfer()){
+						// Applications should not start the event thread until after their first call to libusb_open()
+						card->start_event_thread();
+						LOG() << "fwd overhead is initialized and thread is running";
+					
+						card->receive_mastercard();
+						LOG() << "fwd oveehead is running";
+						return card;
+					}
+					else {
+						LOG() << "IOCards: fwd overhead failed to reading from usb";
+					}
+				}
+				else
+				{
+					LOG() << "IOCards: fwd overhead failed init";
+				}
+			}
+		}
+		else
+		{
+			LOG() << "IOCards: Failed to open fwd overhead.";
+		}
+		return nullptr;
+	}
+
+
 	void OvrheadIOCards::update_displays()
 	{
 		static int selector = 0;

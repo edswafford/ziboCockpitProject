@@ -17,7 +17,6 @@ namespace zcockpit::cockpit::hardware
 		~Sim737Hardware();
 
 		void initialize_iocard_devices();
-		void init_fwd_overhead_iocard(const std::string& bus_address);
 
 		void fiveHzTasks(int five_hz_count);
 
@@ -29,7 +28,7 @@ namespace zcockpit::cockpit::hardware
 	private:
 		InterfaceIT& interface_it;
 		
-		std::unique_ptr<OvrheadIOCards> ovrheadIOCards;
+		std::unique_ptr<OvrheadIOCards> overhead_card;
 
 
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <chrono>
+#include <map>
 
 #include <mutex>
 #include <thread>
@@ -38,7 +39,10 @@ namespace zcockpit::cockpit::hardware
 	public:
 
 		static constexpr int MAX_IOCARDS = 10;
-		static IOCards_bus_and_addr iocards_device_list[MAX_IOCARDS];
+		static std::string devices;
+		static std::string mip_bus_addr;
+		static std::string fwd_overhead_bus_addr;
+		static std::string rear_overhead_bus_addr;
 
 		const enum IOCard_Device
 		{
@@ -57,22 +61,23 @@ namespace zcockpit::cockpit::hardware
 		static constexpr int NCARDS = 1; /* number of cards on USB connection (only for Mastercard) */
 		static constexpr int INITIAL_BUFFER_SIZE = 32;
 
+		static std::map<IOCards::IOCard_Device, std::string> find_iocard_devices();
 
+	private:
+		static [[nodiscard]] IOCard_Device identify_iocards_usb(const std::string& bus_address);
+
+
+	public:
 		IOCards() = delete;
 		explicit IOCards(std::string deviceBusAddr, std::string name);
 
-		[[nodiscard]] bool openDevice(std::string device_bus_addr);
+		[[nodiscard]] bool open_device(std::string device_bus_addr);
 
 		~IOCards();
 		void drop();
 
-		static IOCards::IOCard_Device identify_iocards_usb(const std::string& bus_address);
-		static std::string find_iocard_devices();
 		void do_usb_work();
 		void start_event_thread();
-
-
-		//void closeDown();
 
 
 		void read_callback_cpp(const struct libusb_transfer* transfer);
@@ -82,13 +87,13 @@ namespace zcockpit::cockpit::hardware
 		[[nodiscard]]bool is_usb_thread_healthy();
 		bool submit_write_transfer(std::vector<unsigned char> buffer);
 		bool submit_read_transfer();
-		void closeDown();
+		void close_down();
 		void static LIBUSB_CALL write_callback(struct libusb_transfer* transfer);
 
 
-		[[nodiscard]] bool initializeIOCards(unsigned char number_of_axes);
-		[[nodiscard]] bool initForAsync();
-		void initialize_iocardsdata();
+		[[nodiscard]] bool initialize_mastercard(unsigned char number_of_axes);
+		[[nodiscard]] bool init_for_async();
+		void clear_buffers();
 		//int copyIOCardsData(void);
 
 		int receive_mastercard_synchronous();

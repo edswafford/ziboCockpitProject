@@ -22,6 +22,7 @@ namespace zcockpit::cockpit::hardware
 	{
 	public:
 		OvrheadIOCards(std::string deviceBusAddr);
+		[[nodiscard]] static std::unique_ptr<OvrheadIOCards> create_fwd_overhead_iocard(const std::string& bus_address);
 
 		void fastProcessOvrHead();
 		void processOvrHead();

@@ -10,6 +10,7 @@
 #include "iocards.hpp"
 #include <cstdlib>
 #include <cassert>
+#include <map>
 
 #include "logger.hpp"
 #include "../usb/libusb_interface.hpp"
@@ -19,7 +20,12 @@ extern logger LOG;
 
 namespace zcockpit::cockpit::hardware
 {
-	IOCards_bus_and_addr IOCards::iocards_device_list[IOCards::MAX_IOCARDS];
+	// STATIC
+	std::string IOCards::devices;
+	std::string IOCards::mip_bus_addr;
+	std::string IOCards::fwd_overhead_bus_addr;
+	std::string IOCards::rear_overhead_bus_addr;
+
 
 	/* missing values: UCHAR has no missing value. FLT and DBL are the same */
 	#define INT_MISS -2000000000
@@ -29,7 +35,7 @@ namespace zcockpit::cockpit::hardware
 
 	IOCards::IOCards(const std::string deviceBusAddr, const std::string name) : device_name(name) //, iocards_thread() 
 	{
-		is_okay = openDevice(deviceBusAddr);
+		is_okay = open_device(deviceBusAddr);
 		if(handle != nullptr){
 			auto ret = libusb_claim_interface(handle, 0);
 			if(ret < 0) {
@@ -51,7 +57,7 @@ namespace zcockpit::cockpit::hardware
 	}
 
 	void IOCards::drop() {
-		closeDown();
+		close_down();
 		if (LibUsbInterface::is_initialized()) {
 			if (readTransfer) {
 				libusb_free_transfer(readTransfer);
@@ -77,7 +83,7 @@ namespace zcockpit::cockpit::hardware
 		has_dropped = true;
 	}
 
-	bool IOCards::openDevice(const std::string device_bus_addr)
+	bool IOCards::open_device(const std::string device_bus_addr)
 	{
 		libusb_device** devs;
 		is_open = false;
@@ -186,6 +192,123 @@ namespace zcockpit::cockpit::hardware
 
 		return  is_open;
 	}
+
+
+
+	//
+	// Find Potential IOCards (ManifactureId == 0 AND ProductId == 0)
+	//
+	std::map<IOCards::IOCard_Device, std::string> IOCards::find_iocard_devices()
+	{
+		std::map<IOCards::IOCard_Device, std::string>available_iocard_devices;
+		libusb_device** devs;
+
+		if(LibUsbInterface::is_initialized()){
+			const int cnt = static_cast<int>(libusb_get_device_list(LibUsbInterface::ctx, &devs));
+			if(cnt < 0)
+			{
+				LOG() << "Libusb get device list Error: " << cnt;;
+				IOCards::devices = "Libusb get device list Error: " + std::to_string(cnt);
+			}
+			else{
+				libusb_device* dev;
+				int i = 0;
+				int iocards_cnt = 0;
+				IOCards_bus_and_addr iocards_device_list[MAX_IOCARDS];
+
+				memset(iocards_device_list, -1, sizeof(IOCards_bus_and_addr) * MAX_IOCARDS);
+				while ((dev = devs[i++]) != nullptr)
+				{
+					libusb_device_descriptor desc{};
+					const int ret = libusb_get_device_descriptor(dev, &desc);
+					if (ret < 0)
+					{
+						LOG() << "Libusb get device descriptor Error: " << cnt;;
+						IOCards::devices = "Libusb get device descriptor Error: " + std::to_string(cnt);
+						break;
+					}
+					libusb_device_handle* handle_{ nullptr };	
+					libusb_open(dev, &handle_);
+					if (handle_) {
+						unsigned char string[256];
+						libusb_get_string_descriptor_ascii(handle_, desc.iManufacturer, string, sizeof(string));
+						if (ret > 0) {
+							LOG() << "Manufacturer: " << string << " Vendor id " << desc.idVendor << " Product id " << desc.idProduct;
+						}
+						libusb_close(handle_);
+					}
+
+					if(desc.idVendor == 0 && desc.idProduct == 0)
+					{
+						const uint8_t bus_number = libusb_get_bus_number(dev);
+						std::string bus = std::to_string(bus_number);
+						const uint8_t device_addr = libusb_get_device_address(dev);
+						std::string address = std::to_string(device_addr);
+						devices += bus + "_" + address + " - ";
+						if(iocards_cnt < 10)
+						{
+							iocards_device_list[iocards_cnt].bus = bus_number;
+							iocards_device_list[iocards_cnt].address = device_addr;
+							iocards_cnt++;
+						}
+					}
+
+				}
+
+				//  Free list and unreference all the devices by setting unref_devices: to 1
+				libusb_free_device_list(devs, 1);
+
+				if(devices.empty())
+				{
+					IOCards::devices = "NO IOCARDS DEVICES";
+				}
+				else {
+					int number_of_cards_found = 0;
+					for(auto i = 0; i<iocards_cnt; i++) {
+						const auto& card = iocards_device_list[i];
+						if(card.bus != -1)
+						{
+							auto bus_address = std::to_string(card.bus) + "_" + std::to_string(card.address);
+
+							// Identify IOCards by decoding the 4 Axes values
+							// Each card has a unique pattern of hardwired (open/grd) Axes pins 
+							const IOCards::IOCard_Device device_name = IOCards::identify_iocards_usb(bus_address);
+
+							if(device_name == IOCards::MIP)
+							{
+								// initialize MIP
+								LOG() << "Identified MIP bus _ addr " << bus_address;
+								mip_bus_addr = bus_address;
+								available_iocard_devices[IOCard_Device::MIP] = bus_address;
+								number_of_cards_found += 1;
+							}
+							else if(device_name == IOCards::REAR_OVERHEAD)
+							{
+								// initialize Rear Overhead
+								LOG() << "Identified REAR bus _ addr " << bus_address;
+								rear_overhead_bus_addr = bus_address;
+								available_iocard_devices[IOCard_Device::REAR_OVERHEAD] = bus_address;
+								number_of_cards_found += 1;
+							}
+							else if(device_name == IOCards::FWD_OVERHEAD)
+							{
+								LOG() << "Identified FWD bus _ addr " << bus_address;
+								fwd_overhead_bus_addr = bus_address;
+								available_iocard_devices[IOCard_Device::FWD_OVERHEAD] = bus_address;
+								number_of_cards_found += 1;
+							}
+							if(number_of_cards_found >= 3)
+							{
+								break;
+							}
+						}
+					}					
+				}
+			}
+		}
+		return available_iocard_devices;
+	}
+
 	//
 	// Identify IOCards by decoding the 4 Axes values
 	// Each card has a unique pattern of hardwired (open/grd) Axes pins 
@@ -200,7 +323,7 @@ namespace zcockpit::cockpit::hardware
 		{
 			int attempts = 0;
 			//initialize 4 axis
-			if(usb_device.initializeIOCards(4)){
+			if(usb_device.initialize_mastercard(4)){
 				while (found_device == UNKNOWN && attempts < 3)
 				{
 					attempts++;
@@ -483,74 +606,8 @@ namespace zcockpit::cockpit::hardware
 
 
 
-	std::string IOCards::find_iocard_devices()
-	{
-		libusb_device** devs;
-		std::string devices;
-
-		if(LibUsbInterface::is_initialized()){
-			const int cnt = static_cast<int>(libusb_get_device_list(LibUsbInterface::ctx, &devs));
-			if(cnt < 0)
-			{
-				LOG() << "Libusb get device list Error: " << cnt;;
-				return "Libusb get device list Error: " + std::to_string(cnt);
-			}
-
-			libusb_device* dev;
-			int i = 0;
-			int iocards_cnt = 0;
-			memset(iocards_device_list, -1, sizeof(IOCards_bus_and_addr) * MAX_IOCARDS);
-			while ((dev = devs[i++]) != nullptr)
-			{
-				libusb_device_descriptor desc{};
-				const int ret = libusb_get_device_descriptor(dev, &desc);
-				if (ret < 0)
-				{
-					LOG() << "Libusb get device descriptor Error: " << cnt;;
-					return "Libusb get device descriptor Error: " + std::to_string(cnt);
-				}
-				libusb_device_handle* handle_{ nullptr };	
-				libusb_open(dev, &handle_);
-				if (handle_) {
-					unsigned char string[256];
-					libusb_get_string_descriptor_ascii(handle_, desc.iManufacturer, string, sizeof(string));
-					if (ret > 0) {
-						LOG() << "Manufacturer: " << string << " Vendor id " << desc.idVendor << " Product id " << desc.idProduct;
-					}
-					libusb_close(handle_);
-				}
-
-				if(desc.idVendor == 0 && desc.idProduct == 0)
-				{
-					const uint8_t bus_number = libusb_get_bus_number(dev);
-					std::string bus = std::to_string(bus_number);
-					const uint8_t device_addr = libusb_get_device_address(dev);
-					std::string address = std::to_string(device_addr);
-					devices += bus + "_" + address + " - ";
-					if(iocards_cnt < 10)
-					{
-						iocards_device_list[iocards_cnt].bus = bus_number;
-						iocards_device_list[iocards_cnt].address = device_addr;
-						iocards_cnt++;
-					}
-				}
-
-			}
-			if(devices.empty())
-			{
-				devices = "NO IOCARDS DEVICES";
-			}
-
-			//  Free list and unreference all the devices by setting unref_devices: to 1
-			libusb_free_device_list(devs, 1);
-		}
-		return devices;
-	}
-
-
 	// sends initialization string to the MASTERCARD
-	// MASTERCARD is connected to USB EXPANSION CARD
-	bool IOCards::initializeIOCards(unsigned char number_of_axes)
+	bool IOCards::initialize_mastercard(unsigned char number_of_axes)
 	{
 		isInitialized = false;
 
@@ -576,7 +633,7 @@ namespace zcockpit::cockpit::hardware
 		return isInitialized;
 	}
 
-	bool IOCards::initForAsync()
+	bool IOCards::init_for_async()
 	{
 		bool status = false;
 		readTransfer = libusb_alloc_transfer(0);
@@ -770,7 +827,7 @@ namespace zcockpit::cockpit::hardware
 //	}
 //
 //
-	void IOCards::closeDown()
+	void IOCards::close_down()
 	{
 		if (is_open)
 		{
@@ -1677,7 +1734,7 @@ void IOCards::receive_mastercard(void)
 //
 	// initialize data arrays with default values
 	// flight data for  USB and TCP/IP communication
-	void IOCards::initialize_iocardsdata()
+	void IOCards::clear_buffers()
 	{
 		const auto time_new = std::chrono::high_resolution_clock::now();
 
