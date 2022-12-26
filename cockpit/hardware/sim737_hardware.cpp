@@ -1,5 +1,7 @@
 #include "sim737_hardware.hpp"
 
+#include "usb/libusb_interface.hpp"
+
 
 namespace zcockpit::cockpit::hardware
 {
@@ -13,6 +15,65 @@ namespace zcockpit::cockpit::hardware
 		interface_it.closeInterfaceITController();
 		interface_it.drop();
 	}
+
+	void Sim737Hardware::initialize_iocard_devices()
+	{
+		if(LibUsbInterface::is_initialized()) {
+			auto avaible_iocards = IOCards::find_iocard_devices();
+		}
+	}
+	void Sim737Hardware::init_fwd_overhead_iocard(const std::string& bus_address)
+	{
+
+	//	iocards_fwd_overhead_status = FAILED_STATUS;
+		LOG() << "IOCards: creating fwd overhead";
+		ovrheadIOCards = std::make_unique<OvrheadIOCards>(bus_address);
+		if(ovrheadIOCards->is_open)
+		{
+			// Did we find the fwd overhead device and manage to open usb connection 
+			LOG() << "fwd overhead is Open";
+		//	iocards_fwd_overhead_status = HEALTHY_STATUS;
+		//	LOG() << "fwd overhead status = " << iocards_fwd_overhead_status;
+
+
+			if(ovrheadIOCards->initForAsync()) {
+
+				// Axes are not used --> set to 0
+				constexpr unsigned char number_of_axes = 0;
+				if(ovrheadIOCards->initializeIOCards(number_of_axes))
+				{
+					ovrheadIOCards->initialize_iocardsdata();
+
+					if(ovrheadIOCards->submit_read_transfer()){
+						// Applications should not start the event thread until after their first call to libusb_open()
+						ovrheadIOCards->start_event_thread();
+
+						LOG() << "fwd overhead is initialized and thread is running";
+					
+						ovrheadIOCards->receive_mastercard();
+
+
+		//			LOG() << "fwd Done First Pass status =" << iocards_fwd_overhead_status;
+		//			PostMessage(mainHwnd, WM_IOCARDS_FWD_OVERHEAD_HEALTH, iocards_fwd_overhead_status, NULL);
+					}
+					else {
+						LOG() << "IOCards: fwd overhead failed to reading from usb";
+					}
+				}
+				else
+					{
+						LOG() << "IOCards: fwd overhead failed init";
+					}
+			}
+		}
+		else
+		{
+			LOG() << "IOCards: Failed to open fwd overhead.";
+		}
+
+	}
+
+
 
 	void Sim737Hardware::fiveHzTasks(int five_hz_count)
 	{
@@ -209,6 +270,7 @@ namespace zcockpit::cockpit::hardware
 		}
 
 	}
+
 
 	void Sim737Hardware::checkConnections()
 	{

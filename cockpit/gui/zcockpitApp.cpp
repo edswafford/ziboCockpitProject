@@ -17,7 +17,6 @@
 #include "network/multicast_controller.hpp"
 #include "network/udp.hpp"
 #include "network/udp_controller.hpp"
-#include "../hardware/sim737_hardware.hpp"
 #include "../hardware/InterfaceIT/HidInterfaceIT.hpp"
 
 #include <cassert>
@@ -25,10 +24,10 @@
 logger LOG("ZiboCockpit Client.log");
 
 
-#include "../hardware/ioCards/iocards.hpp"
 
 #include "../hardware/usb/libusb_interface.hpp"
 
+#include "../hardware/sim737_hardware.hpp"
 //#include "../hardware/ioCards/mip_iocard.hpp"
 #include "../hardware/ioCards/fwd_overhead_iocard.hpp"
 //#include "../hardware/ioCards/rear_overhead_iocard.hpp"
@@ -413,9 +412,9 @@ namespace zcockpit::cockpit::gui
 		}
 
 
-		if (ovrheadIOCards != nullptr) {
-			ovrheadIOCards->drop();
-		}
+		//if (ovrheadIOCards != nullptr) {
+		//	ovrheadIOCards->drop();
+		//}
 
 		LOG() << "Timer Stoped";
 
@@ -472,53 +471,53 @@ namespace zcockpit::cockpit::gui
 	void ZcockpitApp::initFwdOverheadCards(const std::string& bus_address)
 	{
 
-	//	iocards_fwd_overhead_status = FAILED_STATUS;
-		LOG() << "IOCards: creating fwd overhead";
-		ovrheadIOCards = std::make_unique<OvrheadIOCards>(bus_address);
-		if(ovrheadIOCards->is_open)
-		{
-			// Did we find the fwd overhead device and manage to open usb connection 
-			LOG() << "fwd overhead is Open";
-		//	iocards_fwd_overhead_status = HEALTHY_STATUS;
-		//	LOG() << "fwd overhead status = " << iocards_fwd_overhead_status;
+	////	iocards_fwd_overhead_status = FAILED_STATUS;
+	//	LOG() << "IOCards: creating fwd overhead";
+	//	ovrheadIOCards = std::make_unique<OvrheadIOCards>(bus_address);
+	//	if(ovrheadIOCards->is_open)
+	//	{
+	//		// Did we find the fwd overhead device and manage to open usb connection 
+	//		LOG() << "fwd overhead is Open";
+	//	//	iocards_fwd_overhead_status = HEALTHY_STATUS;
+	//	//	LOG() << "fwd overhead status = " << iocards_fwd_overhead_status;
 
 
-			if(ovrheadIOCards->initForAsync()) {
+	//		if(ovrheadIOCards->initForAsync()) {
 
-				// Axes are not used --> set to 0
-				constexpr unsigned char number_of_axes = 0;
-				if(ovrheadIOCards->initializeIOCards(number_of_axes))
-				{
-					ovrheadIOCards->initialize_iocardsdata();
+	//			// Axes are not used --> set to 0
+	//			constexpr unsigned char number_of_axes = 0;
+	//			if(ovrheadIOCards->initializeIOCards(number_of_axes))
+	//			{
+	//				ovrheadIOCards->initialize_iocardsdata();
 
-					if(ovrheadIOCards->submit_read_transfer()){
-						// Applications should not start the event thread until after their first call to libusb_open()
-						ovrheadIOCards->start_event_thread();
+	//				if(ovrheadIOCards->submit_read_transfer()){
+	//					// Applications should not start the event thread until after their first call to libusb_open()
+	//					ovrheadIOCards->start_event_thread();
 
-						LOG() << "fwd overhead is initialized and thread is running";
-					
-						ovrheadIOCards->receive_mastercard();
+	//					LOG() << "fwd overhead is initialized and thread is running";
+	//				
+	//					ovrheadIOCards->receive_mastercard();
 
 
-		//			LOG() << "fwd Done First Pass status =" << iocards_fwd_overhead_status;
-		//			PostMessage(mainHwnd, WM_IOCARDS_FWD_OVERHEAD_HEALTH, iocards_fwd_overhead_status, NULL);
-					}
-					else {
-						LOG() << "IOCards: fwd overhead failed to reading from usb";
-					}
-				}
-				else
-					{
-						LOG() << "IOCards: fwd overhead failed init";
-			//			iocards_fwd_overhead_status = FAILED_STATUS;
-					}
-			}
-		}
-		else
-		{
-			LOG() << "IOCards: fwd overhead is not Open [isOpen] = " << ovrheadIOCards->is_open;
-	//		iocards_fwd_overhead_status = FAILED_STATUS;
-		}
+	//	//			LOG() << "fwd Done First Pass status =" << iocards_fwd_overhead_status;
+	//	//			PostMessage(mainHwnd, WM_IOCARDS_FWD_OVERHEAD_HEALTH, iocards_fwd_overhead_status, NULL);
+	//				}
+	//				else {
+	//					LOG() << "IOCards: fwd overhead failed to reading from usb";
+	//				}
+	//			}
+	//			else
+	//				{
+	//					LOG() << "IOCards: fwd overhead failed init";
+	//		//			iocards_fwd_overhead_status = FAILED_STATUS;
+	//				}
+	//		}
+	//	}
+	//	else
+	//	{
+	//		LOG() << "IOCards: fwd overhead is not Open [isOpen] = " << ovrheadIOCards->is_open;
+	////		iocards_fwd_overhead_status = FAILED_STATUS;
+	//	}
 
 	}
 
@@ -527,18 +526,18 @@ namespace zcockpit::cockpit::gui
 
 		// Every Cycle
 		//
-		if(ovrheadIOCards) {
-			if(!ovrheadIOCards->is_usb_thread_healthy()) {
-				ovrheadIOCards->closeDown();
-				//status = FAILED_STATUS;
-				LOG() << "IOCards 2: closing down fwd overhead receive < 0";
-			}
-			if(ovrheadIOCards->is_okay)
-			{
-				ovrheadIOCards->receive_mastercard();
-				ovrheadIOCards->processEncoders();
-			}
-		}
+		//if(ovrheadIOCards) {
+		//	if(!ovrheadIOCards->is_usb_thread_healthy()) {
+		//		ovrheadIOCards->closeDown();
+		//		//status = FAILED_STATUS;
+		//		LOG() << "IOCards 2: closing down fwd overhead receive < 0";
+		//	}
+		//	if(ovrheadIOCards->is_okay)
+		//	{
+		//		ovrheadIOCards->receive_mastercard();
+		//		ovrheadIOCards->processEncoders();
+		//	}
+		//}
 
 		// Radios
 		//if(current_cycle % 2 == 0 && mipGauges->Available())

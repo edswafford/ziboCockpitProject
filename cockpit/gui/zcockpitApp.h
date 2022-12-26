@@ -12,17 +12,6 @@
 #include "../third_party/SimpleIni/SimpleIni.h"
 
 
-namespace zcockpit
-{
-	namespace cockpit
-	{
-		namespace hardware
-		{
-			class OvrheadIOCards;
-		}
-	}
-}
-
 namespace zcockpit::cockpit::gui
 {
 	class ZcockpitApp : public wxApp
@@ -53,8 +42,6 @@ namespace zcockpit::cockpit::gui
 		CSimpleIniA ini;
 		MainWindow* main_window{nullptr};
 
-
-		std::unique_ptr<zcockpit::cockpit::hardware::OvrheadIOCards> ovrheadIOCards;
 
 		std::mutex sim737_timer_mutex;
 		std::mutex timer_done_mutex;

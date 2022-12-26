@@ -1,5 +1,4 @@
-#ifndef IOCARDS_H
-#define IOCARDS_H
+#pragma once
 
 #include <chrono>
 
@@ -10,7 +9,6 @@
 #include "libusb.h"
 #include "queue.hpp"
 
-//#include "usbworker.h"
 
 //#include "../DeleteMeHotkey.h"
 
@@ -195,4 +193,3 @@ namespace zcockpit::cockpit::hardware
 		int displays_old[NUM_DISPLAYS][MASTERCARDS];
 	};
 }
-#endif // IOCARDS_H

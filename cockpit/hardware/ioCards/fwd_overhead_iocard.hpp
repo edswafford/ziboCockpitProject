@@ -1,8 +1,7 @@
-#ifndef OVRHEADIOCARDS_H
-#define OVRHEADIOCARDS_H
+#pragma once
 
 #include <string>
-#include "IOCards.hpp"
+#include "iocards.hpp"
 
 namespace zcockpit::cockpit::hardware
 {
@@ -128,4 +127,3 @@ namespace zcockpit::cockpit::hardware
 		EngineStartStates engine2_state;
 	};
 }
-#endif // OVRHEADIOCARDS_H
