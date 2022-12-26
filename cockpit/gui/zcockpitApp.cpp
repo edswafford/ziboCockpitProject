@@ -413,6 +413,9 @@ namespace zcockpit::cockpit::gui
 		}
 
 
+		if (ovrheadIOCards != nullptr) {
+			ovrheadIOCards->drop();
+		}
 
 		LOG() << "Timer Stoped";
 
@@ -449,13 +452,13 @@ namespace zcockpit::cockpit::gui
 					// initialize Rear Overhead
 					LOG() << "Identified REAR bus _ addr " << bus_address;
 					main_window->set_iocard_rear_overhead_addr(bus_address);
-					initFwdOverheadCards(bus_address);
 					number_of_cards_found += 1;
 				}
 				else if(device_name == IOCards::FWD_OVERHEAD)
 				{
 					LOG() << "Identified FWD bus _ addr " << bus_address;
 					main_window->set_iocard_fwd_overhead_addr(bus_address);
+					initFwdOverheadCards(bus_address);
 					number_of_cards_found += 1;
 				}
 				if(number_of_cards_found >= 3)

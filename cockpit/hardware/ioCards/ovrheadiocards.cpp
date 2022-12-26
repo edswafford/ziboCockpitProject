@@ -105,7 +105,6 @@ namespace zcockpit::cockpit::hardware
 		engine2_state = OFF;
 	}
 
-
 	void OvrheadIOCards::update_displays()
 	{
 		static int selector = 0;

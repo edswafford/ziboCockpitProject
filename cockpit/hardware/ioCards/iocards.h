@@ -66,6 +66,7 @@ namespace zcockpit::cockpit::hardware
 		[[nodiscard]] bool openDevice(std::string device_bus_addr);
 
 		~IOCards();
+		void drop();
 
 		static IOCards::IOCard_Device identify_iocards_usb(const std::string& bus_address);
 		static std::string find_iocard_devices();
@@ -120,6 +121,7 @@ namespace zcockpit::cockpit::hardware
 		bool is_open{false};
 		bool is_Claimed{false};
 		bool is_okay{true};
+		bool has_dropped{ false };
 
 		void set_iocard_device(IOCard_Device device) {io_card_device = device;}
 		[[nodiscard]] IOCard_Device get_io_card_device() const {return io_card_device;}

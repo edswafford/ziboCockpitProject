@@ -44,28 +44,37 @@ namespace zcockpit::cockpit::hardware
 
 	IOCards::~IOCards()
 	{
+		if (!has_dropped) {
+			drop();
+		}
+
+	}
+
+	void IOCards::drop() {
 		closeDown();
+		if (LibUsbInterface::is_initialized()) {
+			if (readTransfer) {
+				libusb_free_transfer(readTransfer);
+				readTransfer = nullptr;
+			}
+			if (writeTransfer) {
+				libusb_free_transfer(writeTransfer);
+				writeTransfer = nullptr;
+			}
 
-		if (readTransfer) {
-			libusb_free_transfer(readTransfer);
-			readTransfer = nullptr;
-		}
-		if (writeTransfer) {
-			libusb_free_transfer(writeTransfer);
-			writeTransfer = nullptr;
-		}
 
-
-		if(is_Claimed && handle != nullptr) {
-			auto ret = libusb_release_interface(handle, 0);
-			if(ret < 0) {
-				LOG() << "Cannot release libusb device: error " << ret;
+			if(is_Claimed && handle != nullptr) {
+				auto ret = libusb_release_interface(handle, 0);
+				if(ret < 0) {
+					LOG() << "Cannot release libusb device: error " << ret;
+				}
+			}
+			if(is_open && handle != nullptr) {
+				libusb_close(handle);
+				is_open= false;
 			}
 		}
-		if(is_open && handle != nullptr) {
-			libusb_close(handle);
-			is_open= false;
-		}
+		has_dropped = true;
 	}
 
 	bool IOCards::openDevice(const std::string device_bus_addr)
@@ -794,61 +803,23 @@ namespace zcockpit::cockpit::hardware
 					is_blocking = libusb_is_blocking;
 				}
 
-
-				if (is_Claimed && handle != nullptr) {
-					auto ret = libusb_release_interface(handle, 0);
-					if (ret < 0) {
-						LOG() << "Cannot release libusb device: error " << ret;
+				if (LibUsbInterface::is_initialized()) {
+					if (is_Claimed && handle != nullptr) {
+						auto ret = libusb_release_interface(handle, 0);
+						if (ret < 0) {
+							LOG() << "Cannot release libusb device: error " << ret;
+						}
+						is_Claimed = false;
 					}
-					is_Claimed = false;
+					if (handle != nullptr) {
+						libusb_close(handle); // This wakes up libusb_handle_events()
+						handle = nullptr;
+					}
+					if (event_thread.joinable()) {
+						event_thread.join();
+						LOG() << "IOCARDS ClosingDown";
+					}
 				}
-				if (handle != nullptr) {
-					libusb_close(handle); // This wakes up libusb_handle_events()
-					handle = nullptr;
-				}
-				if(event_thread.joinable()){
-					event_thread.join();
-					LOG() << "IOCARDS ClosingDown";
-				}
-
-				//if (handle != nullptr)
-				//{
-				//	int is_running = worker->is_running();
-				//	if (is_running != 0)
-				//	{
-				//		do
-				//		{
-				//			if (is_running == 1)
-				//			{
-				//				// still running send request to wake up libusb_handle_events()
-				//				// THE PROBLEM: the worker is conditional wait which could last forever --
-				//				// we need the iocard to send data to the usb to wake it up and worker task continue
-				//				// it will then see the abort and return -- ending the task
-				//				LOG() << "IOCARDS Closing Down worker is still running: " << worker->name;
-				//				int buffersize = 8;
-				//				unsigned char send_data[] = { 0x3d,0x00,0x3a,0x01,0x39,0x00,0xff,0xff };
-				//				if (!sentWakeupMsg)
-				//				{
-				//					sentWakeupMsg = true;
-				//					worker->write_usb(send_data, buffersize);
-				//				}
-				//				std::this_thread::sleep_for(std::chrono::milliseconds(200));
-				//				is_running = worker->is_running();
-				//				LOG() << "IOCARDS Closing Down for: " << worker->name << " is_running = " << is_running;
-				//			}
-				//			else if (is_running == -1)
-				//			{ // cannot get the lock
-				//				std::this_thread::sleep_for(std::chrono::milliseconds(200));
-				//				is_running = worker->is_running();
-				//				LOG() << "IOCARDS Closing Down can't get mutex (trying again ) for: " << worker->name << " is_running = " << is_running;
-				//			}
-				//		} while (is_running != 0);
-				//	}
-				//	else
-				//	{
-				//		LOG() << "IOCARDS ClosingDown -- Deleting thread for: " << worker->name;
-				//	}
-				//}
 			}
 		}
 	}
