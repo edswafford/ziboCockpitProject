@@ -25,7 +25,7 @@
 logger LOG("ZiboCockpit Client.log");
 
 
-#include "../hardware/ioCards/iocards.h"
+#include "../hardware/ioCards/iocards.hpp"
 
 #include "../hardware/usb/libusb_interface.hpp"
 

@@ -59,13 +59,13 @@ class frameMain : public wxFrame
 		wxPanel* m_panel2;
 		wxListBox* m_listBoxIocard;
 		wxButton* m_buttonIocardGetAvailable;
-		wxButton* m_buttonIocardMip;
+		wxStaticText* m_staticText20;
 		wxTextCtrl* m_textCtrlIocardMip;
 		wxStaticText* m_staticTextIocardMipStatus;
-		wxButton* m_buttonIocardFwdOverhead;
+		wxStaticText* m_staticText21;
 		wxTextCtrl* m_textCtrIocardFwdOverhead;
 		wxStaticText* m_staticTextIocardFwdOverheadStatus;
-		wxButton* m_buttonIocardRearOverhead;
+		wxStaticText* m_staticText22;
 		wxTextCtrl* m_textCtrIocardRearOverhead;
 		wxStaticText* m_staticTextIocardRearOverheadStatus;
 		wxMenuBar* m_menubarMain;

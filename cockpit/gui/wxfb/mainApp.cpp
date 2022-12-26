@@ -149,7 +149,7 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer8->Add( m_listBoxIocard, 0, wxALL|wxEXPAND, 5 );
 
 	m_buttonIocardGetAvailable = new wxButton( m_panel2, wxID_ANY, wxT("Get Available IOCard Devices"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer8->Add( m_buttonIocardGetAvailable, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
+	bSizer8->Add( m_buttonIocardGetAvailable, 0, wxALL, 5 );
 
 	wxBoxSizer* bSizer10;
 	bSizer10 = new wxBoxSizer( wxHORIZONTAL );
@@ -159,8 +159,9 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	fgSizer3->SetFlexibleDirection( wxBOTH );
 	fgSizer3->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
-	m_buttonIocardMip = new wxButton( m_panel2, wxID_ANY, wxT("Set MIP"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer3->Add( m_buttonIocardMip, 0, wxALL, 5 );
+	m_staticText20 = new wxStaticText( m_panel2, wxID_ANY, wxT("MIP"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText20->Wrap( -1 );
+	fgSizer3->Add( m_staticText20, 0, wxALL, 5 );
 
 	m_textCtrlIocardMip = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer3->Add( m_textCtrlIocardMip, 0, wxALL, 5 );
@@ -169,8 +170,9 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_staticTextIocardMipStatus->Wrap( -1 );
 	fgSizer3->Add( m_staticTextIocardMipStatus, 0, wxALL, 5 );
 
-	m_buttonIocardFwdOverhead = new wxButton( m_panel2, wxID_ANY, wxT("Set FWD OVERHEAD"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer3->Add( m_buttonIocardFwdOverhead, 0, wxALL, 5 );
+	m_staticText21 = new wxStaticText( m_panel2, wxID_ANY, wxT("FWD OVERHEAD"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText21->Wrap( -1 );
+	fgSizer3->Add( m_staticText21, 0, wxALL, 5 );
 
 	m_textCtrIocardFwdOverhead = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer3->Add( m_textCtrIocardFwdOverhead, 0, wxALL, 5 );
@@ -179,8 +181,9 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_staticTextIocardFwdOverheadStatus->Wrap( -1 );
 	fgSizer3->Add( m_staticTextIocardFwdOverheadStatus, 0, wxALL, 5 );
 
-	m_buttonIocardRearOverhead = new wxButton( m_panel2, wxID_ANY, wxT("Set REAR OVERHEAD"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer3->Add( m_buttonIocardRearOverhead, 0, wxALL, 5 );
+	m_staticText22 = new wxStaticText( m_panel2, wxID_ANY, wxT("REAR OVERHEAD"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText22->Wrap( -1 );
+	fgSizer3->Add( m_staticText22, 0, wxALL, 5 );
 
 	m_textCtrIocardRearOverhead = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer3->Add( m_textCtrIocardRearOverhead, 0, wxALL, 5 );
