@@ -35,23 +35,20 @@ add_executable (client WIN32
 	#"websocket/websocket_client.hpp"
 	#"websocket/websocket_client.cpp"
 
-  "aircraft_model_init_data.cpp"
-  "aircraft_model_init_str.cpp"   
+	"aircraft_model_init_data.cpp"
+	"aircraft_model_init_str.cpp"   
   
-  "hardware/util.cpp"
+	"hardware/util.cpp"
 
- # "hardware/ioCards/usbworker.cpp" 
- # "hardware/ioCards/usbworker.h" 
-  "hardware/ioCards/iocards.cpp" 
-  "hardware/ioCards/iocards.h"	
- # "hardware/ioCards/mipiocards.cpp" 
- # "hardware/ioCards/mipiocards.h"
-  "hardware/ioCards/ovrheadiocards.cpp"
-  "hardware/ioCards/ovrheadiocards.h"
- # "hardware/ioCards/rearovrheadiocards.cpp"
- # "hardware/ioCards/rearovrheadiocards.h"
+	"hardware/usb/libusb_interface.cpp" 
+	"hardware/ioCards/iocards.cpp" 
+	"hardware/ioCards/iocards.hpp"	
 
- "hardware/usb/libusb_interface.cpp")
+#	"hardware/ioCards/mip _iocard.cpp"
+#	"hardware/ioCards/rear_overhead_iocard.cpp"
+
+	"hardware/ioCards/fwd_overhead_iocard.cpp"
+)
 
 
 

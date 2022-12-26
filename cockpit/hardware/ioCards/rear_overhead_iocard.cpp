@@ -1,4 +1,4 @@
-#include "rearovrheadiocards.h"
+#include "rearovrheadiocards.hpp"
 #include "../DeleteMeHotkey.h"
 
 namespace zcockpit::cockpit::hardware

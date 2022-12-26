@@ -29,9 +29,9 @@ logger LOG("ZiboCockpit Client.log");
 
 #include "../hardware/usb/libusb_interface.hpp"
 
-//#include "../hardware/ioCards/mipiocards.h"
-#include "../hardware/ioCards/ovrheadiocards.h"
-//#include "../hardware/ioCards/rearovrheadiocards.h"
+//#include "../hardware/ioCards/mip_iocard.hpp"
+#include "../hardware/ioCards/fwd_overhead_iocard.hpp"
+//#include "../hardware/ioCards/rear_overhead_iocard.hpp"
 
 using namespace std::chrono_literals;
 using namespace zcockpit::common::network;
