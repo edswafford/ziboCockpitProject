@@ -277,6 +277,11 @@ namespace zcockpit::cockpit::gui
 			zcockpit::cockpit::Client<Udp> client(ip_address, udp, multicast_server_controller, multicast_app_controller, udp_controller, connection, gen, aircraft_model, UPDATE_RATE);
 
 			zcockpit::cockpit::hardware::Sim737Hardware sim737_hardware(interface_it);
+			//
+			// IOCards should be initialized by now
+			//
+			main_window->set_iocard_status(IOCards::devices);
+
 
 			LOG() << "Client running";
 

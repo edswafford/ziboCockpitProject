@@ -8,6 +8,8 @@ namespace zcockpit::cockpit::hardware
 	Sim737Hardware::Sim737Hardware(InterfaceIT& iit): interface_it(iit)
 	{
 		interface_it.initialize();
+
+		initialize_iocard_devices();
 	}
 
 	Sim737Hardware::~Sim737Hardware()
