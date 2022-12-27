@@ -166,8 +166,10 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_textCtrlIocardMip = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer3->Add( m_textCtrlIocardMip, 0, wxALL, 5 );
 
-	m_staticTextIocardMipStatus = new wxStaticText( m_panel2, wxID_ANY, wxT("Not Connected"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextIocardMipStatus = new wxStaticText( m_panel2, wxID_ANY, wxT("---"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextIocardMipStatus->Wrap( -1 );
+	m_staticTextIocardMipStatus->SetBackgroundColour( wxColour( 255, 0, 0 ) );
+
 	fgSizer3->Add( m_staticTextIocardMipStatus, 0, wxALL, 5 );
 
 	m_staticText21 = new wxStaticText( m_panel2, wxID_ANY, wxT("FWD OVERHEAD"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -177,8 +179,10 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_textCtrIocardFwdOverhead = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer3->Add( m_textCtrIocardFwdOverhead, 0, wxALL, 5 );
 
-	m_staticTextIocardFwdOverheadStatus = new wxStaticText( m_panel2, wxID_ANY, wxT("Not Connected"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextIocardFwdOverheadStatus = new wxStaticText( m_panel2, wxID_ANY, wxT("---"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextIocardFwdOverheadStatus->Wrap( -1 );
+	m_staticTextIocardFwdOverheadStatus->SetBackgroundColour( wxColour( 255, 0, 0 ) );
+
 	fgSizer3->Add( m_staticTextIocardFwdOverheadStatus, 0, wxALL, 5 );
 
 	m_staticText22 = new wxStaticText( m_panel2, wxID_ANY, wxT("REAR OVERHEAD"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -188,8 +192,10 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_textCtrIocardRearOverhead = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer3->Add( m_textCtrIocardRearOverhead, 0, wxALL, 5 );
 
-	m_staticTextIocardRearOverheadStatus = new wxStaticText( m_panel2, wxID_ANY, wxT("Not Connected"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextIocardRearOverheadStatus = new wxStaticText( m_panel2, wxID_ANY, wxT("---"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextIocardRearOverheadStatus->Wrap( -1 );
+	m_staticTextIocardRearOverheadStatus->SetBackgroundColour( wxColour( 255, 0, 0 ) );
+
 	fgSizer3->Add( m_staticTextIocardRearOverheadStatus, 0, wxALL, 5 );
 
 

@@ -1540,7 +1540,7 @@
                                                                                                 <property name="aui_position"></property>
                                                                                                 <property name="aui_row"></property>
                                                                                                 <property name="best_size"></property>
-                                                                                                <property name="bg"></property>
+                                                                                                <property name="bg">255,0,0</property>
                                                                                                 <property name="caption"></property>
                                                                                                 <property name="caption_visible">1</property>
                                                                                                 <property name="center_pane">0</property>
@@ -1558,7 +1558,7 @@
                                                                                                 <property name="gripper">0</property>
                                                                                                 <property name="hidden">0</property>
                                                                                                 <property name="id">wxID_ANY</property>
-                                                                                                <property name="label">Not Connected</property>
+                                                                                                <property name="label">---</property>
                                                                                                 <property name="markup">0</property>
                                                                                                 <property name="max_size"></property>
                                                                                                 <property name="maximize_button">0</property>
@@ -1726,7 +1726,7 @@
                                                                                                 <property name="aui_position"></property>
                                                                                                 <property name="aui_row"></property>
                                                                                                 <property name="best_size"></property>
-                                                                                                <property name="bg"></property>
+                                                                                                <property name="bg">255,0,0</property>
                                                                                                 <property name="caption"></property>
                                                                                                 <property name="caption_visible">1</property>
                                                                                                 <property name="center_pane">0</property>
@@ -1744,7 +1744,7 @@
                                                                                                 <property name="gripper">0</property>
                                                                                                 <property name="hidden">0</property>
                                                                                                 <property name="id">wxID_ANY</property>
-                                                                                                <property name="label">Not Connected</property>
+                                                                                                <property name="label">---</property>
                                                                                                 <property name="markup">0</property>
                                                                                                 <property name="max_size"></property>
                                                                                                 <property name="maximize_button">0</property>
@@ -1912,7 +1912,7 @@
                                                                                                 <property name="aui_position"></property>
                                                                                                 <property name="aui_row"></property>
                                                                                                 <property name="best_size"></property>
-                                                                                                <property name="bg"></property>
+                                                                                                <property name="bg">255,0,0</property>
                                                                                                 <property name="caption"></property>
                                                                                                 <property name="caption_visible">1</property>
                                                                                                 <property name="center_pane">0</property>
@@ -1930,7 +1930,7 @@
                                                                                                 <property name="gripper">0</property>
                                                                                                 <property name="hidden">0</property>
                                                                                                 <property name="id">wxID_ANY</property>
-                                                                                                <property name="label">Not Connected</property>
+                                                                                                <property name="label">---</property>
                                                                                                 <property name="markup">0</property>
                                                                                                 <property name="max_size"></property>
                                                                                                 <property name="maximize_button">0</property>
