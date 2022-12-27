@@ -14,13 +14,13 @@ namespace zcockpit::cockpit::hardware
 	{
 	public:
 
-		Sim737Hardware(InterfaceIT& iit);
+		Sim737Hardware(AircraftModel& ac_model, InterfaceIT& iit);
 
 		~Sim737Hardware();
 
-		void initialize_iocard_devices();
+		void initialize_iocard_devices(AircraftModel& ac_model);
 
-		void fiveHzTasks(int five_hz_count);
+		void do_updates(int current_cycle);
 
 		void checkConnections();
 

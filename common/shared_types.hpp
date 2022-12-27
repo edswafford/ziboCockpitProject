@@ -4,6 +4,20 @@
 
 namespace zcockpit::common
 {
+	static constexpr int HZ_40 = 25;
+	static constexpr int HZ_20 = 50; // 50ms
+	static constexpr int HZ_10 = 100; // 100ms
+	static constexpr int HZ_5 = 200; // 200ms
+	static constexpr int HZ_1 = 1000; // 1000ms
+
+	// Initialize Update Rate
+	static constexpr int UPDATE_RATE = HZ_20;
+	static constexpr int ONE_SECOND = 1000 / UPDATE_RATE;
+	static constexpr int FIVE_SECONDS = ONE_SECOND * 5;
+	static constexpr int FIVE_HZ = 200 / UPDATE_RATE;
+	static constexpr int TEN_HZ = 100 / UPDATE_RATE;
+	static constexpr int TWENTY_HZ = 50 / UPDATE_RATE;
+
 	/**
 	 *
 	 * TOGGLE

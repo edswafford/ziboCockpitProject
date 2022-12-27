@@ -94,7 +94,6 @@ namespace zcockpit::cockpit::hardware
 		[[nodiscard]] bool initialize_mastercard(unsigned char number_of_axes);
 		[[nodiscard]] bool init_for_async();
 		void clear_buffers();
-		//int copyIOCardsData(void);
 
 		int receive_mastercard_synchronous();
 		void receive_mastercard(void);

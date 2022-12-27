@@ -104,7 +104,7 @@ namespace zcockpit::cockpit {
 		std::unordered_map<std::string, DataRefParameter> dataref_subscriptions;
 		std::unordered_map<std::string, CommandRefParameter> commandref_subscriptions;
 
-		Z737AnnunData z737AnnunData{};
+		Z737AnnunData z737InData{};
 		Z737SwitchData hw_switch_data{};
 		Z737SwitchData xplane_switch_data{};
 		Z737SwitchCmd z737SwitchCmd{};

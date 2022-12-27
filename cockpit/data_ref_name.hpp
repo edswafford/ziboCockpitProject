@@ -165,6 +165,8 @@ namespace zcockpit::cockpit {
 		at_fms_disconnect1,
 		at_fms_disconnect2,
 		fms_exec_light_pilot,
+		main_bus,
+
 		//
 		// end of DataRef names
 		//
@@ -272,7 +274,7 @@ namespace zcockpit::cockpit {
 
 		unused,
 
-		kMaxValue = MFD_SYS_pb
+		kMaxValue = MFD_SYS_pb,
 	};
 
 
@@ -574,5 +576,6 @@ namespace zcockpit::cockpit {
 		DataRefName::at_fms_disconnect1,
 		DataRefName::at_fms_disconnect2,
 		DataRefName::fms_exec_light_pilot,
+		DataRefName::main_bus
 	};
 }

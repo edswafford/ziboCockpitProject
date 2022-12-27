@@ -10,8 +10,8 @@ namespace zcockpit::cockpit::hardware
 	std::string ForwardOverheadIOCard::iocard_bus_addr;
 	bool ForwardOverheadIOCard::running = false; 
 
-	ForwardOverheadIOCard::ForwardOverheadIOCard(const std::string deviceBusAddr)
-		: IOCards(deviceBusAddr, "fwdOverhead")
+	ForwardOverheadIOCard::ForwardOverheadIOCard(AircraftModel& ac_model, const std::string deviceBusAddr)
+		: IOCards(deviceBusAddr, "fwdOverhead"), aircraft_model(ac_model)
 	{
 		ForwardOverheadIOCard::iocard_bus_addr = deviceBusAddr;
 
@@ -107,12 +107,12 @@ namespace zcockpit::cockpit::hardware
 		engine2_state = OFF;
 	}
 
-	std::unique_ptr<ForwardOverheadIOCard> ForwardOverheadIOCard::create_iocard(const std::string& bus_address)
+	std::unique_ptr<ForwardOverheadIOCard> ForwardOverheadIOCard::create_iocard(AircraftModel& ac_model, const std::string& bus_address)
 	{
 		ForwardOverheadIOCard::running = false;
 
 		LOG() << "IOCards: creating Forward Overhead";
-		auto card = std::make_unique<ForwardOverheadIOCard>(bus_address);
+		auto card = std::make_unique<ForwardOverheadIOCard>(ac_model, bus_address);
 		if(card->is_open)
 		{
 			// Did we find the fwd overhead device and manage to open usb connection 

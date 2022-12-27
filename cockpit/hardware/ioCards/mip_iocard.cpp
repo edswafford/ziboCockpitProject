@@ -8,10 +8,9 @@ namespace zcockpit::cockpit::hardware
 	std::string MipIOCard::iocard_bus_addr;
 	bool MipIOCard::running = false; 
 
-	MipIOCard::MipIOCard(std::string deviceBusAddr)
-		: IOCards(deviceBusAddr, "mip")
+	MipIOCard::MipIOCard(AircraftModel& ac_model, const std::string& device_bus_addr): IOCards(device_bus_addr, "mip"), aircraft_model(ac_model)
 	{
-		MipIOCard::iocard_bus_addr = deviceBusAddr;
+		MipIOCard::iocard_bus_addr = device_bus_addr;
 
 		// Capt Main Panel DUs
 		captOutboardPFD = 0;
@@ -60,13 +59,13 @@ namespace zcockpit::cockpit::hardware
 
 		powerIsOn = false;
 	}
-	std::unique_ptr<MipIOCard> MipIOCard::create_iocard(const std::string& bus_address)
+	std::unique_ptr<MipIOCard> MipIOCard::create_iocard(AircraftModel& ac_model, const std::string& bus_address)
 	{
 		MipIOCard::running = false;
 
 		LOG() << "IOCards: creating MIP overhead";
 
-		auto card = std::make_unique<MipIOCard>(bus_address);
+		auto card = std::make_unique<MipIOCard>(ac_model, bus_address);
 		if(card->is_open)
 		{
 			// Did we find the mip device and manage to open usb connection 

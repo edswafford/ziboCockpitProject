@@ -2,14 +2,15 @@
 
 #include "usb/libusb_interface.hpp"
 
+using namespace zcockpit::common;
 
 namespace zcockpit::cockpit::hardware
 {
-	Sim737Hardware::Sim737Hardware(InterfaceIT& iit): interface_it(iit)
+	Sim737Hardware::Sim737Hardware(AircraftModel& ac_model, InterfaceIT& iit): interface_it(iit)
 	{
 		interface_it.initialize();
 
-		initialize_iocard_devices();
+		initialize_iocard_devices(ac_model);
 	}
 
 	Sim737Hardware::~Sim737Hardware()
@@ -31,83 +32,73 @@ namespace zcockpit::cockpit::hardware
 		}
 	}
 
-	void Sim737Hardware::initialize_iocard_devices()
+	void Sim737Hardware::initialize_iocard_devices(AircraftModel& ac_model)
 	{
 		if(LibUsbInterface::is_initialized()) {
 			auto available_iocards = IOCards::find_iocard_devices();
 			if(available_iocards.contains(IOCards::IOCard_Device::MIP)) {
 				const auto bus_addr = available_iocards[IOCards::IOCard_Device::MIP];
-				mip_iocard = MipIOCard::create_iocard(bus_addr);
+				mip_iocard = MipIOCard::create_iocard(ac_model, bus_addr);
 			}
 			if(available_iocards.contains(IOCards::IOCard_Device::FWD_OVERHEAD)) {
 				const auto bus_addr = available_iocards[IOCards::IOCard_Device::FWD_OVERHEAD];
-				forward_overhead_iocard = ForwardOverheadIOCard::create_iocard(bus_addr);
+				forward_overhead_iocard = ForwardOverheadIOCard::create_iocard(ac_model,bus_addr);
 			}
 			if(available_iocards.contains(IOCards::IOCard_Device::REAR_OVERHEAD)) {
 				const auto bus_addr = available_iocards[IOCards::IOCard_Device::REAR_OVERHEAD];
-				rear_overhead_iocard = RearOverheadIOCard::create_iocard(bus_addr);
+				rear_overhead_iocard = RearOverheadIOCard::create_iocard(ac_model, bus_addr);
 			}
 		}
 	}
 
 
 
-	void Sim737Hardware::fiveHzTasks(int five_hz_count)
+	void Sim737Hardware::do_updates(int current_cycle)
 	{
+		//if (powerIsOn && ifly737->electrical_power_state == 0)
+		//{
+		//	// turn off
+		//	if (mipGauges->Available())
+		//	{
+		//		mipGauges->updateLights(FiDevice::DISPLAYS_OFF);
+		//		powerIsOn = false;
+		//	}
+		//}
+		//else if (!powerIsOn && ifly737->electrical_power_state != 0)
+		//{
+		//	// turn on
+		//	if (mipGauges->Available())
+		//	{
+		//		mipGauges->updateLights(FiDevice::DISPLAYS_ON);
+		//		powerIsOn = true;
+		//	}
+		//}
+
+		//if(current_cycle % 2 == 0 && mipGauges->Available())
+		//{
+		//	mipGauges->updateRadios();
+		//}
+
+
+
 
 		// MIP IOCards
 		//
-		if(five_hz_count == 0)
+		if(current_cycle % FIVE_HZ == 0)
 		{
-			//if(this->mipIOCards->isOpen)
-			//{
-			//	status = HEALTHY_STATUS;
-			//	if(!this->mipIOCards->IsInitialized())
-			//	{
-			//		status = FAILED_STATUS;
-			//		LOG() << "IOCards 2: closing down mip failed it";
-			//	}
-			//	else
-			//	{
-			//		if(this->mipIOCards->receive_mastercard() < 0)
-			//		{
-			//			status = FAILED_STATUS;
-			//			LOG() << "IOCards 2: closing down mip receive < 0";
-			//			this->mipIOCards->closeDown();
-			//		}
-			//		// update inputs
-			//		this->mipIOCards->processMIP();
+			if(mip_iocard->is_okay)
+			{
+				mip_iocard->receive_mastercard();
 
-			//		// send outputs
-			//		if(this->mipIOCards->send_mastercard() < 0)
-			//		{
-			//			status = FAILED_STATUS;
-			//			LOG() << "IOCards 2: closing down mip send < 0";
-			//			this->mipIOCards->closeDown();
-			//		}
+				// update inputs
+				mip_iocard->processMIP();
 
-			//		//// copy current to previous
-			//		//if(this->mipIOCards->copyIOCardsData() < 0)
-			//		//{
-			//		//	status = FAILED_STATUS;
-			//		//	LOG() << "IOCards 2: closing down mip copy data < 0";
-			//		//	this->mipIOCards->closeDown();
-			//		//}
-			//	}
-			//}
-			//else
-			//{
-			//	status = FAILED_STATUS;
-			//}
-			//if(status != iocards_mip_status)
-			//{
-			//	iocards_mip_status = status;
-			//	PostMessage(mainHwnd, WM_IOCARDS_MIP_HEALTH, iocards_mip_status, NULL);
-			//	LOG() << "IOCards 2: mip status = " << status << " :: " << iocards_mip_status;
-			//}
+				// send outputs
+				mip_iocard->send_mastercard();
+			}
 		}
 
-		else if(five_hz_count == 1)
+		else if(current_cycle % FIVE_HZ == 1)
 		{
 			//if(this->forward_overhead_iocard->isOpen)
 			//{
@@ -131,12 +122,6 @@ namespace zcockpit::cockpit::hardware
 			//		}
 
 
-			//		//if(this->forward_overhead_iocard->copyIOCardsData() < 0)
-			//		//{
-			//		//	status = FAILED_STATUS;
-			//		//	LOG() << "IOCards 2: closing down fwd overhead copy data < 0";
-			//		//	this->forward_overhead_iocard->closeDown();
-			//		//}
 			//	}
 			//}
 			//else
@@ -152,7 +137,7 @@ namespace zcockpit::cockpit::hardware
 			//}
 		}
 
-		else if(five_hz_count == 2)
+		else if(current_cycle % FIVE_HZ == 2)
 		{
 			//if(this->rearOvrHeadIOCards->isOpen)
 			//{
@@ -178,12 +163,6 @@ namespace zcockpit::cockpit::hardware
 			//		// send_mastercard() not called
 			//		// Because there are no mastercard outputs 
 
-			//		//if(this->rearOvrHeadIOCards->copyIOCardsData() < 0)
-			//		//{
-			//		//	status = FAILED_STATUS;
-			//		//	LOG() << "IOCards 2: closing down rear overhead copy data < 0";
-			//		//	this->rearOvrHeadIOCards->closeDown();
-			//		//}
 			//	}
 			//}
 			//else
@@ -200,7 +179,7 @@ namespace zcockpit::cockpit::hardware
 		}
 
 
-		else if(five_hz_count == 3)
+		else if(current_cycle % FIVE_HZ == 3)
 		{
 			//if(xpndr->Available() && ifly737->shareMemSDK->IFLY737NG_STATE && ifly737->electrical_power_state != 0)
 			//{

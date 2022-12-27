@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "../../aircraft_model.hpp"
 #include "iocards.hpp"
 
 namespace zcockpit::cockpit::hardware
@@ -8,8 +9,10 @@ namespace zcockpit::cockpit::hardware
 	class MipIOCard : public IOCards
 	{
 	public:
-		MipIOCard(std::string deviceBusAddr);
-		[[nodiscard]] static std::unique_ptr<MipIOCard> create_iocard(const std::string& bus_address);
+		MipIOCard() = delete;
+		explicit MipIOCard(AircraftModel& ac_model, const std::string& device_bus_addr);
+
+		[[nodiscard]] static std::unique_ptr<MipIOCard> create_iocard(AircraftModel& ac_model, const std::string& bus_address);
 
 		void processMIP();
 		void updateRelays(int state);
@@ -18,10 +21,11 @@ namespace zcockpit::cockpit::hardware
 		static std::string get_bus_addr(){return iocard_bus_addr;}
 	private:
 
+		AircraftModel& aircraft_model;
 		void processOutputs();
 
 		static std::string iocard_bus_addr;
-		static bool running;	
+		static bool running;
 
 		bool powerIsOn;
 

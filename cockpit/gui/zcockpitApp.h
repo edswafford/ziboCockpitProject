@@ -18,7 +18,7 @@ namespace zcockpit::cockpit::gui
 	{
 	public:
 		ZcockpitApp();
-
+	   
 		// override base class virtuals
 		// ----------------------------
 
@@ -29,12 +29,6 @@ namespace zcockpit::cockpit::gui
 		virtual int OnExit() override;
 		void update_counters();
 
-
-		static constexpr int HZ_40 = 25;
-		static constexpr int HZ_20 = 50; // 50ms
-		static constexpr int HZ_10 = 100; // 100ms
-		static constexpr int HZ_5 = 200; // 200ms
-		static constexpr int HZ_1 = 1000; // 1000ms
 
 
 
@@ -58,15 +52,8 @@ namespace zcockpit::cockpit::gui
 		bool iocard_rear_overhead_status{false};
 
 		void timer();
-		void do_updates(int current_cycle);
 
 		// Cycle Counters
-		int ONE_SECOND;
-		int FIVE_SECONDS;
-		int FIVE_HZ;
-		int TEN_HZ;
-		int TWENTY_HZ;
-		int UPDATE_RATE;
 
 		int current_cycle;
 		int five_hz_counter;

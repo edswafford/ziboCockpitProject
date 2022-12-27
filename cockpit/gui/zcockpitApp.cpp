@@ -41,13 +41,6 @@ namespace zcockpit::cockpit::gui
 
 	ZcockpitApp::ZcockpitApp()
 	{
-		// Initialize Update Rate
-		UPDATE_RATE = HZ_20;
-		ONE_SECOND = 1000 / UPDATE_RATE;
-		FIVE_SECONDS = ONE_SECOND * 5;
-		FIVE_HZ = 200 / UPDATE_RATE;
-		TEN_HZ = 100 / UPDATE_RATE;
-		TWENTY_HZ = 50 / UPDATE_RATE;
 
 		// Start with everything timed out
 		current_cycle = ONE_SECOND;
@@ -276,7 +269,7 @@ namespace zcockpit::cockpit::gui
 
 			zcockpit::cockpit::Client<Udp> client(ip_address, udp, multicast_server_controller, multicast_app_controller, udp_controller, connection, gen, aircraft_model, UPDATE_RATE);
 
-			zcockpit::cockpit::hardware::Sim737Hardware sim737_hardware(interface_it);
+			zcockpit::cockpit::hardware::Sim737Hardware sim737_hardware(aircraft_model, interface_it);
 			
 			// IOCards should be initialized by now
 			//
@@ -336,8 +329,8 @@ namespace zcockpit::cockpit::gui
 				}
 //				if(zibo_status)
 				{
-					do_updates(current_cycle);
-					sim737_hardware.fiveHzTasks(current_cycle % FIVE_HZ);
+
+					sim737_hardware.do_updates(current_cycle);
 				}
 
 
@@ -445,34 +438,6 @@ namespace zcockpit::cockpit::gui
 
 	}
 
-
-
-
-	void ZcockpitApp::do_updates(int current_cycle)
-	{
-
-		// Every Cycle
-		//
-		//if(ovrheadIOCards) {
-		//	if(!ovrheadIOCards->is_usb_thread_healthy()) {
-		//		ovrheadIOCards->closeDown();
-		//		//status = FAILED_STATUS;
-		//		LOG() << "IOCards 2: closing down fwd overhead receive < 0";
-		//	}
-		//	if(ovrheadIOCards->is_okay)
-		//	{
-		//		ovrheadIOCards->receive_mastercard();
-		//		ovrheadIOCards->processEncoders();
-		//	}
-		//}
-
-		// Radios
-		//if(current_cycle % 2 == 0 && mipGauges->Available())
-		{
-			//mipGauges->updateRadios();
-		}
-
-	}
 //
 // Entry int WxWidgets main()
 //

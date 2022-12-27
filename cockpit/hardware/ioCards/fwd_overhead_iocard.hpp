@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "../../aircraft_model.hpp"
 #include "iocards.hpp"
 
 namespace zcockpit::cockpit::hardware
@@ -21,8 +22,10 @@ namespace zcockpit::cockpit::hardware
 	class ForwardOverheadIOCard : public IOCards
 	{
 	public:
-		ForwardOverheadIOCard(std::string deviceBusAddr);
-		[[nodiscard]] static std::unique_ptr<ForwardOverheadIOCard> create_iocard(const std::string& bus_address);
+		ForwardOverheadIOCard() = delete;
+		explicit ForwardOverheadIOCard(AircraftModel& ac_model, std::string deviceBusAddr);
+
+		[[nodiscard]] static std::unique_ptr<ForwardOverheadIOCard> create_iocard(AircraftModel& ac_model, const std::string& bus_address);
 
 		void fastProcessOvrHead();
 		void processOvrHead();
@@ -45,6 +48,7 @@ namespace zcockpit::cockpit::hardware
 		static bool is_running(){return running;}
 		static std::string get_bus_addr(){return iocard_bus_addr;}
 	private:
+		AircraftModel& aircraft_model;
 
 		static std::string iocard_bus_addr;
 		static bool running; 

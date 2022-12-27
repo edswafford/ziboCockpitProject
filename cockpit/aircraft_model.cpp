@@ -325,7 +325,7 @@ namespace zcockpit::cockpit {
 									break;
 								}
 							}
-							LOG() << "ID " << id << " " << data_ref_strings[ac_param.short_name].dataref_name << " changed to " << z737AnnunData.tail_number;;
+							LOG() << "ID " << id << " " << data_ref_strings[ac_param.short_name].dataref_name << " changed to " << z737InData.tail_number;;
 						}
 					},
 					[](auto& data) {}
@@ -485,8 +485,8 @@ namespace zcockpit::cockpit {
 					LOG() << "Confirmation " << name << " id " << id << "\t\t\t\t" << str_data;
 
 					/////////////////////////////////////////////
-					if (ac_param.short_name == DataRefName::acf_tailnum && std::strlen(z737AnnunData.tail_number) > 0) {
-						auto tail_num = std::string(z737AnnunData.tail_number);
+					if (ac_param.short_name == DataRefName::acf_tailnum && std::strlen(z737InData.tail_number) > 0) {
+						auto tail_num = std::string(z737InData.tail_number);
 						if ("ZB738" == tail_num) {
 							z738_available = true;
 						}

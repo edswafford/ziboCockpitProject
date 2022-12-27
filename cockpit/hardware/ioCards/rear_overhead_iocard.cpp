@@ -1,4 +1,5 @@
 #include "rear_overhead_iocard.hpp"
+#include "../../aircraft_model.hpp"
 #include "../common/logger.hpp"
 #include "../DeleteMeHotkey.h"
 
@@ -9,8 +10,8 @@ namespace zcockpit::cockpit::hardware
 	std::string RearOverheadIOCard::iocard_bus_addr;
 	bool RearOverheadIOCard::running = false;
 
-	RearOverheadIOCard::RearOverheadIOCard(std::string deviceBusAddr)
-		: IOCards(deviceBusAddr, "rearOverhead")
+	RearOverheadIOCard::RearOverheadIOCard(AircraftModel& ac_model, std::string deviceBusAddr)
+		: IOCards(deviceBusAddr, "rearOverhead"), aircraft_model(ac_model)
 	{
 		RearOverheadIOCard::iocard_bus_addr = deviceBusAddr;
 
@@ -40,13 +41,14 @@ namespace zcockpit::cockpit::hardware
 		disconnect_2 = 0;
 	}
 
-	std::unique_ptr<RearOverheadIOCard> RearOverheadIOCard::create_iocard(const std::string& bus_address)
+	std::unique_ptr<RearOverheadIOCard> RearOverheadIOCard::create_iocard(AircraftModel& ac_model, const std::string& bus_address) 
 	{
 		RearOverheadIOCard::running = false;
 
 		LOG() << "IOCards: creating Rear Overhead";
 
-		auto card = std::make_unique<RearOverheadIOCard>(bus_address);
+		auto card = std::make_unique<RearOverheadIOCard>(ac_model, bus_address);
+
 		if(card->is_open)
 		{
 			// Did we find the rear overhead device and manage to open usb connection 

@@ -812,21 +812,9 @@ namespace zcockpit::cockpit::hardware
 		return false;
 	}
 
-	//
-//
-//	/* saves a copy of all IOCARDS I/O states */
-//	/* this is needed because, at each step, only the modified values */
-//	/* are communicated either via TCP/IP or USB to X-Plane and IOCARDS */
-//	int IOCards::copyIOCardsData(void)
-//	{
-//		//memcpy(inputs_old, inputs, sizeof(inputs));
-//		//memcpy(outputs_old, outputs, sizeof(outputs));
-//		//memcpy(displays_old, displays, sizeof(displays));
-//
-//		return (0);
-//	}
-//
-//
+
+
+
 	void IOCards::close_down()
 	{
 		if (is_open)
