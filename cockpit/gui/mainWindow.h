@@ -123,17 +123,17 @@ class MainWindow : public frameMain
 	}
 	void set_iocard_rear_overhead_status(bool active)
 	{
-		const wxString text = m_staticTextIocardFwdOverheadStatus->GetLabelText();
+		const wxString text = m_staticTextIocardRearOverheadStatus->GetLabelText();
 		if(active){
 			if(text.CmpNoCase(connected) != 0) {
-				m_staticTextIocardFwdOverheadStatus->SetForegroundColour( wxColor(*wxGREEN));
-				m_staticTextIocardFwdOverheadStatus->SetLabel (connected);
+				m_staticTextIocardRearOverheadStatus->SetForegroundColour( wxColor(*wxGREEN));
+				m_staticTextIocardRearOverheadStatus->SetLabel (connected);
 			}
 		}
 		else {
 			if(text.CmpNoCase(not_connected) != 0) {
-				m_staticTextIocardFwdOverheadStatus->SetForegroundColour( wxColor(*wxRED));
-				m_staticTextIocardFwdOverheadStatus->SetLabel (not_connected);
+				m_staticTextIocardRearOverheadStatus->SetForegroundColour( wxColor(*wxRED));
+				m_staticTextIocardRearOverheadStatus->SetLabel (not_connected);
 			}
 		}
 	}

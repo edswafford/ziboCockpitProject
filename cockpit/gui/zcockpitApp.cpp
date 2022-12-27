@@ -365,7 +365,7 @@ namespace zcockpit::cockpit::gui
 					auto current_iocard_mip_status = sim737_hardware.get_iocard_mip_status();
 					if(iocard_mip_status != current_iocard_mip_status || current_cycle == ONE_SECOND) {
 						iocard_mip_status = current_iocard_mip_status;
-						main_window->set_iocard_mip_status(iocard_forward_overhead_status);
+						main_window->set_iocard_mip_status(iocard_mip_status);
 					}
 					//
 					// IOCards Forward Overhead
