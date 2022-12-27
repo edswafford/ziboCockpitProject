@@ -488,13 +488,13 @@ namespace zcockpit::cockpit::hardware
 	void MipIOCard::updateRelays(int state)
 	{
 		mastercard_output(49, &state);  // relay #1 Lights left MIP
-		//mastercard_output(50, &state);  // relay #2 CP flight power to center console
-		//mastercard_output(51, &state);  // relay #3 Lights Right MIP
-		//mastercard_output(52, &state);  // relay #4 Throttle servo motors
-		//mastercard_output(53, &state);  // relay #5 Throttle Lights
-		////mastercard_output(54, &state);  // relay #6
+		mastercard_output(50, &state);  // relay #2 CP flight power to center console
+		mastercard_output(51, &state);  // relay #3 Lights Right MIP
+		mastercard_output(52, &state);  // relay #4 Throttle servo motors
+		mastercard_output(53, &state);  // relay #5 Throttle Lights
+		//mastercard_output(54, &state);  // relay #6
 
-		//mastercard_output(55, &state);  // relay #7 MCP lights
+		mastercard_output(55, &state);  // relay #7 MCP lights
 	}
 
 
