@@ -2,6 +2,7 @@
 
 #include<string>
 
+#include "fwd_overhead_iocard.hpp"
 #include "iocards.hpp"
 
 namespace zcockpit::cockpit::hardware
@@ -11,7 +12,7 @@ namespace zcockpit::cockpit::hardware
 	{
 	public:
 		RearOverheadIOCard(std::string deviceBusAddr);
-		[[nodiscard]] static std::unique_ptr<RearOverheadIOCard> create_forward_overhead_iocard(const std::string& bus_address);
+		[[nodiscard]] static std::unique_ptr<RearOverheadIOCard> create_iocard(const std::string& bus_address);
 
 		void fastProcessRearOvrHead();
 		void processRearOvrHead();

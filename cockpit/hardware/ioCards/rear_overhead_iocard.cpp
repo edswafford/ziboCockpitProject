@@ -40,13 +40,50 @@ namespace zcockpit::cockpit::hardware
 		disconnect_2 = 0;
 	}
 
-	std::unique_ptr<RearOverheadIOCard> RearOverheadIOCard::create_forward_overhead_iocard(const std::string& bus_address)
+	std::unique_ptr<RearOverheadIOCard> RearOverheadIOCard::create_iocard(const std::string& bus_address)
 	{
 		RearOverheadIOCard::running = false;
 
-		LOG() << "IOCards: creating fwd overhead";
+		LOG() << "IOCards: creating Rear Overhead";
 
+		auto card = std::make_unique<RearOverheadIOCard>(bus_address);
+		if(card->is_open)
+		{
+			// Did we find the rear overhead device and manage to open usb connection 
+			LOG() << "IOCards Rear Overhead is Open";;
 
+			if(card->init_for_async()) {
+
+				// Axes are not used --> set to 0
+				constexpr unsigned char number_of_axes = 0;
+				if(card->initialize_mastercard(number_of_axes))
+				{
+					card->clear_buffers();
+
+					if(card->submit_read_transfer()){
+						// Applications should not start the event thread until after their first call to libusb_open()
+						card->start_event_thread();
+						LOG() << "IOCards Rear Overhead is initialized and thread is running";
+					
+						card->receive_mastercard();
+						RearOverheadIOCard::running = true;
+						LOG() << "IOCards Rear Overhead is running";
+						return card;
+					}
+					else {
+						LOG() << "IOCards Rear Overheadfailed to reading from usb";
+					}
+				}
+				else
+				{
+					LOG() << "IOCards Rear Overhead failed init";
+				}
+			}
+		}
+		else
+		{
+			LOG() << "Failed to open IOCards Rear Overhead.";
+		}
 		return nullptr;
 	}
 

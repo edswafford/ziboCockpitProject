@@ -33,9 +33,9 @@ namespace zcockpit::cockpit::hardware
 	private:
 		InterfaceIT& interface_it;
 		
-		std::unique_ptr<ForwardOverheadIOCard> mip_card;
-		std::unique_ptr<ForwardOverheadIOCard> forward_overhead_card;
-		std::unique_ptr<ForwardOverheadIOCard> rear_overhead_card;
+		std::unique_ptr<MipIOCard> mip_iocard;
+		std::unique_ptr<ForwardOverheadIOCard> forward_overhead_iocard;
+		std::unique_ptr<RearOverheadIOCard> rear_overhead_iocard;
 
 
 

@@ -22,7 +22,7 @@ namespace zcockpit::cockpit::hardware
 	{
 	public:
 		ForwardOverheadIOCard(std::string deviceBusAddr);
-		[[nodiscard]] static std::unique_ptr<ForwardOverheadIOCard> create_forward_overhead_iocard(const std::string& bus_address);
+		[[nodiscard]] static std::unique_ptr<ForwardOverheadIOCard> create_iocard(const std::string& bus_address);
 
 		void fastProcessOvrHead();
 		void processOvrHead();

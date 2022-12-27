@@ -60,13 +60,50 @@ namespace zcockpit::cockpit::hardware
 
 		powerIsOn = false;
 	}
-	std::unique_ptr<MipIOCard> MipIOCard::create_mip_iocard(const std::string& bus_address)
+	std::unique_ptr<MipIOCard> MipIOCard::create_iocard(const std::string& bus_address)
 	{
 		MipIOCard::running = false;
 
-		LOG() << "IOCards: creating fwd overhead";
+		LOG() << "IOCards: creating MIP overhead";
 
+		auto card = std::make_unique<MipIOCard>(bus_address);
+		if(card->is_open)
+		{
+			// Did we find the mip device and manage to open usb connection 
+			LOG() << "IOCards MIP is Open";;
 
+			if(card->init_for_async()) {
+
+				// Axes are not used --> set to 0
+				constexpr unsigned char number_of_axes = 0;
+				if(card->initialize_mastercard(number_of_axes))
+				{
+					card->clear_buffers();
+
+					if(card->submit_read_transfer()){
+						// Applications should not start the event thread until after their first call to libusb_open()
+						card->start_event_thread();
+						LOG() << "IOCards MIP is initialized and thread is running";
+					
+						card->receive_mastercard();
+						MipIOCard::running = true;
+						LOG() << "IOCards MIP is running";
+						return card;
+					}
+					else {
+						LOG() << "IOCards: MIP failed to reading from usb";
+					}
+				}
+				else
+				{
+					LOG() << "IOCards: IOCards MIP failed init";
+				}
+			}
+		}
+		else
+		{
+			LOG() << "IOCards: Failed to open IOCards MIP.";
+		}
 		return nullptr;
 	}
 	void MipIOCard::processMIP()

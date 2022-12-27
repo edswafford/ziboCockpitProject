@@ -9,7 +9,7 @@ namespace zcockpit::cockpit::hardware
 	{
 	public:
 		MipIOCard(std::string deviceBusAddr);
-		[[nodiscard]] static std::unique_ptr<MipIOCard> create_mip_iocard(const std::string& bus_address);
+		[[nodiscard]] static std::unique_ptr<MipIOCard> create_iocard(const std::string& bus_address);
 
 		void processMIP();
 		void updateRelays(int state);

@@ -107,16 +107,16 @@ namespace zcockpit::cockpit::hardware
 		engine2_state = OFF;
 	}
 
-	std::unique_ptr<ForwardOverheadIOCard> ForwardOverheadIOCard::create_forward_overhead_iocard(const std::string& bus_address)
+	std::unique_ptr<ForwardOverheadIOCard> ForwardOverheadIOCard::create_iocard(const std::string& bus_address)
 	{
 		ForwardOverheadIOCard::running = false;
 
-		LOG() << "IOCards: creating fwd overhead";
+		LOG() << "IOCards: creating Forward Overhead";
 		auto card = std::make_unique<ForwardOverheadIOCard>(bus_address);
 		if(card->is_open)
 		{
 			// Did we find the fwd overhead device and manage to open usb connection 
-			LOG() << "fwd overhead is Open";;
+			LOG() << "IOCards Forward Overhead is Open";;
 
 			if(card->init_for_async()) {
 
@@ -129,7 +129,7 @@ namespace zcockpit::cockpit::hardware
 					if(card->submit_read_transfer()){
 						// Applications should not start the event thread until after their first call to libusb_open()
 						card->start_event_thread();
-						LOG() << "fwd overhead is initialized and thread is running";
+						LOG() << "IOCards Forward Overhead  is initialized and thread is running";
 					
 						card->receive_mastercard();
 						ForwardOverheadIOCard::running = true;
@@ -137,18 +137,18 @@ namespace zcockpit::cockpit::hardware
 						return card;
 					}
 					else {
-						LOG() << "IOCards: fwd overhead failed to reading from usb";
+						LOG() << "IOCards Forward Overhead  failed to reading from usb";
 					}
 				}
 				else
 				{
-					LOG() << "IOCards: fwd overhead failed init";
+					LOG() << "IOCards Forward Overhead  failed init";
 				}
 			}
 		}
 		else
 		{
-			LOG() << "IOCards: Failed to open fwd overhead.";
+			LOG() << "Failed to open IOCards Forward Overhead .";
 		}
 		return nullptr;
 	}
