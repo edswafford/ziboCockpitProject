@@ -1284,60 +1284,60 @@ void IOCards::receive_mastercard(void)
 //			}
 //		}
 //	}
-//	#pragma optimize( "", on )  
-//
-//	/* fill output value for given output position on MASTERCARD */
-//	int IOCards::mastercard_output(int output, int* value, int card)
-//	{
-//		int retval = 0;
-//		int firstoutput = 11; /* output channels start at 11, and go to 55 */
-//
-//		if (value != nullptr)
-//		{
-//			/* check if we have a connected and initialized mastercard */
-//			if (isOpen && isInitialized)
-//			{
-//				if (*value != INT_MISS)
-//				{
-//					if ((card >= 0) && (card < MASTERCARDS))
-//					{
-//						if ((output >= firstoutput) && (output <= (firstoutput + NUM_OUTPUTS)))
-//						{
-//							if (*value == 1)
-//							{
-//								outputs[output - firstoutput][card] = 1;
-//							}
-//							else if (*value == 0)
-//							{
-//								outputs[output - firstoutput][card] = 0;
-//							}
-//							else
-//							{
-//								retval = -1;
-//							}
-//						}
-//						else
-//						{
-//							retval = -1;
-//							printf("LIBIOCARDS: Invalid MASTERCARD output position detected: %i \n", output);
-//						}
-//					}
-//					else
-//					{
-//						retval = -1;
-//						printf("LIBIOCARDS: Invalid MASTERCARD number detected: %i \n", card);
-//					}
-//				}
-//			}
-//			else
-//			{
-//				retval = -1;
-//				printf("LIBIOCARDS: Device either not a MASTERCARD or not ready \n");
-//			}
-//		}
-//
-//		return (retval);
-//	}
+	#pragma optimize( "", on )  
+
+	// fill output value for given output position on MASTERCARD
+	int IOCards::mastercard_output(int output, int* value, int card)
+	{
+		int retval = 0;
+		int firstoutput = 11; // output channels start at 11, and go to 55
+
+		if (value != nullptr)
+		{
+			/* check if we have a connected and initialized mastercard */
+			if (is_okay)
+			{
+				if (*value != INT_MISS)
+				{
+					if ((card >= 0) && (card < MASTERCARDS))
+					{
+						if ((output >= firstoutput) && (output <= (firstoutput + NUM_OUTPUTS)))
+						{
+							if (*value == 1)
+							{
+								outputs[output - firstoutput][card] = 1;
+							}
+							else if (*value == 0)
+							{
+								outputs[output - firstoutput][card] = 0;
+							}
+							else
+							{
+								retval = -1;
+							}
+						}
+						else
+						{
+							retval = -1;
+							LOG() << "LIBIOCARDS: Invalid MASTERCARD output position detected: " << output;
+						}
+					}
+					else
+					{
+						retval = -1;
+						LOG() << "LIBIOCARDS: Invalid MASTERCARD number detected:" << card;
+					}
+				}
+			}
+			else
+			{
+				retval = -1;
+				LOG() << "LIBIOCARDS: Device either not a MASTERCARD or not ready";
+			}
+		}
+
+		return (retval);
+	}
 //
 //	static double iocardRound(double number)
 //	{

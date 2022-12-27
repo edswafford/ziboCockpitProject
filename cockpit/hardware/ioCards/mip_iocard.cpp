@@ -56,8 +56,6 @@ namespace zcockpit::cockpit::hardware
 		aileronLeft = 0;
 		aileronRight = 0;
 
-
-		powerIsOn = false;
 	}
 	std::unique_ptr<MipIOCard> MipIOCard::create_iocard(AircraftModel& ac_model, const std::string& bus_address)
 	{
@@ -107,18 +105,18 @@ namespace zcockpit::cockpit::hardware
 	}
 	void MipIOCard::processMIP()
 	{
-		//if(powerIsOn && client->electrical_power_state == 0)
-		//{
-		//	powerIsOn = false;
-		//	// turn off relays
-		//	updateRelays(0);
-		//}
-		//else if(!powerIsOn && client->electrical_power_state != 0)
-		//{
-		//	powerIsOn = true;
-		//	// turn on relays;
-		//	updateRelays(1);
-		//}
+		if(powerIsOn && !aircraft_model.z737InData.main_bus)
+		{
+			powerIsOn = false;
+			// turn off relays
+			updateRelays(0);
+		}
+		else if(!powerIsOn && !aircraft_model.z737InData.main_bus)
+		{
+			powerIsOn = true;
+			// turn on relays;
+			updateRelays(1);
+		}
 
 		processOutputs();
 
@@ -489,7 +487,7 @@ namespace zcockpit::cockpit::hardware
 
 	void MipIOCard::updateRelays(int state)
 	{
-		//mastercard_output(49, &state);  // relay #1 Lights left MIP
+		mastercard_output(49, &state);  // relay #1 Lights left MIP
 		//mastercard_output(50, &state);  // relay #2 CP flight power to center console
 		//mastercard_output(51, &state);  // relay #3 Lights Right MIP
 		//mastercard_output(52, &state);  // relay #4 Throttle servo motors

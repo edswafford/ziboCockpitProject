@@ -27,7 +27,7 @@ namespace zcockpit::cockpit::hardware
 		static std::string iocard_bus_addr;
 		static bool running;
 
-		bool powerIsOn;
+		bool powerIsOn{false};
 
 		// Capt Main Panel DUs
 		int captOutboardPFD;

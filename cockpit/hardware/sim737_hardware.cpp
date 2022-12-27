@@ -86,7 +86,7 @@ namespace zcockpit::cockpit::hardware
 		//
 		if(current_cycle % FIVE_HZ == 0)
 		{
-			if(mip_iocard->is_okay)
+			if(mip_iocard && mip_iocard->is_okay)
 			{
 				mip_iocard->receive_mastercard();
 
