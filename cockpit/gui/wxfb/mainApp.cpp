@@ -43,7 +43,8 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_staticTextZiboStatus = new wxStaticText( sbsizerStatusBox->GetStaticBox(), wxID_ANY, wxT("Not Connected"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextZiboStatus->Wrap( -1 );
 	m_staticTextZiboStatus->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
-	m_staticTextZiboStatus->SetForegroundColour( wxColour( 255, 0, 0 ) );
+	m_staticTextZiboStatus->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) );
+	m_staticTextZiboStatus->SetBackgroundColour( wxColour( 255, 0, 0 ) );
 
 	fgSizer1->Add( m_staticTextZiboStatus, 0, wxALL, 5 );
 
@@ -54,7 +55,8 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_staticTextThrottleStatus = new wxStaticText( sbsizerStatusBox->GetStaticBox(), wxID_ANY, wxT("Not Connected"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextThrottleStatus->Wrap( -1 );
 	m_staticTextThrottleStatus->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
-	m_staticTextThrottleStatus->SetForegroundColour( wxColour( 255, 0, 0 ) );
+	m_staticTextThrottleStatus->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) );
+	m_staticTextThrottleStatus->SetBackgroundColour( wxColour( 255, 0, 0 ) );
 
 	fgSizer1->Add( m_staticTextThrottleStatus, 0, wxALL, 5 );
 
@@ -65,7 +67,8 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_staticTextTransponderStatus = new wxStaticText( sbsizerStatusBox->GetStaticBox(), wxID_ANY, wxT("Not Connected"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextTransponderStatus->Wrap( -1 );
 	m_staticTextTransponderStatus->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
-	m_staticTextTransponderStatus->SetForegroundColour( wxColour( 255, 0, 0 ) );
+	m_staticTextTransponderStatus->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) );
+	m_staticTextTransponderStatus->SetBackgroundColour( wxColour( 255, 0, 0 ) );
 
 	fgSizer1->Add( m_staticTextTransponderStatus, 0, wxALL, 5 );
 
@@ -76,7 +79,8 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_staticTextInterfaceitMipStatus = new wxStaticText( sbsizerStatusBox->GetStaticBox(), wxID_ANY, wxT("Not Connected"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextInterfaceitMipStatus->Wrap( -1 );
 	m_staticTextInterfaceitMipStatus->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
-	m_staticTextInterfaceitMipStatus->SetForegroundColour( wxColour( 255, 0, 0 ) );
+	m_staticTextInterfaceitMipStatus->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) );
+	m_staticTextInterfaceitMipStatus->SetBackgroundColour( wxColour( 255, 0, 0 ) );
 
 	fgSizer1->Add( m_staticTextInterfaceitMipStatus, 0, wxALL, 5 );
 
@@ -87,7 +91,8 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_staticTextInterfaceitOverheadStatus = new wxStaticText( sbsizerStatusBox->GetStaticBox(), wxID_ANY, wxT("Not Connected"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextInterfaceitOverheadStatus->Wrap( -1 );
 	m_staticTextInterfaceitOverheadStatus->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
-	m_staticTextInterfaceitOverheadStatus->SetForegroundColour( wxColour( 255, 0, 0 ) );
+	m_staticTextInterfaceitOverheadStatus->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) );
+	m_staticTextInterfaceitOverheadStatus->SetBackgroundColour( wxColour( 255, 0, 0 ) );
 
 	fgSizer1->Add( m_staticTextInterfaceitOverheadStatus, 0, wxALL, 5 );
 
@@ -98,7 +103,8 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_staticTextFlightIllusionsMipStatus = new wxStaticText( sbsizerStatusBox->GetStaticBox(), wxID_ANY, wxT("Not Connected"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextFlightIllusionsMipStatus->Wrap( -1 );
 	m_staticTextFlightIllusionsMipStatus->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
-	m_staticTextFlightIllusionsMipStatus->SetForegroundColour( wxColour( 255, 0, 0 ) );
+	m_staticTextFlightIllusionsMipStatus->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) );
+	m_staticTextFlightIllusionsMipStatus->SetBackgroundColour( wxColour( 255, 0, 0 ) );
 
 	fgSizer1->Add( m_staticTextFlightIllusionsMipStatus, 0, wxALL, 5 );
 
@@ -109,7 +115,8 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_staticTextFlightIllusionsOveheadStatus = new wxStaticText( sbsizerStatusBox->GetStaticBox(), wxID_ANY, wxT("Not Connected"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextFlightIllusionsOveheadStatus->Wrap( -1 );
 	m_staticTextFlightIllusionsOveheadStatus->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
-	m_staticTextFlightIllusionsOveheadStatus->SetForegroundColour( wxColour( 255, 0, 0 ) );
+	m_staticTextFlightIllusionsOveheadStatus->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) );
+	m_staticTextFlightIllusionsOveheadStatus->SetBackgroundColour( wxColour( 255, 0, 0 ) );
 
 	fgSizer1->Add( m_staticTextFlightIllusionsOveheadStatus, 0, wxALL, 5 );
 
@@ -120,7 +127,8 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_staticTextCduStatus = new wxStaticText( sbsizerStatusBox->GetStaticBox(), wxID_ANY, wxT("Not Connected"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextCduStatus->Wrap( -1 );
 	m_staticTextCduStatus->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxEmptyString ) );
-	m_staticTextCduStatus->SetForegroundColour( wxColour( 255, 0, 0 ) );
+	m_staticTextCduStatus->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) );
+	m_staticTextCduStatus->SetBackgroundColour( wxColour( 255, 0, 0 ) );
 
 	fgSizer1->Add( m_staticTextCduStatus, 0, wxALL, 5 );
 
@@ -166,8 +174,9 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_textCtrlIocardMip = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer3->Add( m_textCtrlIocardMip, 0, wxALL, 5 );
 
-	m_staticTextIocardMipStatus = new wxStaticText( m_panel2, wxID_ANY, wxT("---"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextIocardMipStatus = new wxStaticText( m_panel2, wxID_ANY, wxT("Not Connected"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextIocardMipStatus->Wrap( -1 );
+	m_staticTextIocardMipStatus->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) );
 	m_staticTextIocardMipStatus->SetBackgroundColour( wxColour( 255, 0, 0 ) );
 
 	fgSizer3->Add( m_staticTextIocardMipStatus, 0, wxALL, 5 );
@@ -179,8 +188,9 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_textCtrIocardFwdOverhead = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer3->Add( m_textCtrIocardFwdOverhead, 0, wxALL, 5 );
 
-	m_staticTextIocardFwdOverheadStatus = new wxStaticText( m_panel2, wxID_ANY, wxT("---"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextIocardFwdOverheadStatus = new wxStaticText( m_panel2, wxID_ANY, wxT("Not Connected"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextIocardFwdOverheadStatus->Wrap( -1 );
+	m_staticTextIocardFwdOverheadStatus->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) );
 	m_staticTextIocardFwdOverheadStatus->SetBackgroundColour( wxColour( 255, 0, 0 ) );
 
 	fgSizer3->Add( m_staticTextIocardFwdOverheadStatus, 0, wxALL, 5 );
@@ -192,8 +202,9 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_textCtrIocardRearOverhead = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer3->Add( m_textCtrIocardRearOverhead, 0, wxALL, 5 );
 
-	m_staticTextIocardRearOverheadStatus = new wxStaticText( m_panel2, wxID_ANY, wxT("---"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextIocardRearOverheadStatus = new wxStaticText( m_panel2, wxID_ANY, wxT("Not Connected"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextIocardRearOverheadStatus->Wrap( -1 );
+	m_staticTextIocardRearOverheadStatus->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND ) );
 	m_staticTextIocardRearOverheadStatus->SetBackgroundColour( wxColour( 255, 0, 0 ) );
 
 	fgSizer3->Add( m_staticTextIocardRearOverheadStatus, 0, wxALL, 5 );

@@ -35,13 +35,13 @@ class MainWindow : public frameMain
 
 		if(active){
 			if(text.CmpNoCase(connected) != 0) {
-				m_staticTextZiboStatus->SetForegroundColour( wxColor(*wxGREEN));
+				m_staticTextZiboStatus->SetBackgroundColour( wxColor(*wxGREEN));
 				m_staticTextZiboStatus->SetLabel (connected);
 			}
 		}
 		else {
 			if(text.CmpNoCase(not_connected) != 0) {
-				m_staticTextZiboStatus->SetForegroundColour( wxColor(*wxRED));
+				m_staticTextZiboStatus->SetBackgroundColour( wxColor(*wxRED));
 				m_staticTextZiboStatus->SetLabel (not_connected);
 			}
 		}
@@ -54,13 +54,13 @@ class MainWindow : public frameMain
 		const wxString text = m_staticTextInterfaceitMipStatus->GetLabelText();
 		if(active){
 			if(text.CmpNoCase(connected) != 0) {
-				m_staticTextInterfaceitMipStatus->SetForegroundColour( wxColor(*wxGREEN));
+				m_staticTextInterfaceitMipStatus->SetBackgroundColour( wxColor(*wxGREEN));
 				m_staticTextInterfaceitMipStatus->SetLabel (connected);
 			}
 		}
 		else {
 			if(text.CmpNoCase(not_connected) != 0) {
-				m_staticTextInterfaceitMipStatus->SetForegroundColour( wxColor(*wxRED));
+				m_staticTextInterfaceitMipStatus->SetBackgroundColour( wxColor(*wxRED));
 				m_staticTextInterfaceitMipStatus->SetLabel (not_connected);
 			}
 		}
@@ -71,13 +71,13 @@ class MainWindow : public frameMain
 		const wxString text = m_staticTextInterfaceitOverheadStatus->GetLabelText();
 		if(active){
 			if(text.CmpNoCase(connected) != 0) {
-				m_staticTextInterfaceitOverheadStatus->SetForegroundColour( wxColor(*wxGREEN));
+				m_staticTextInterfaceitOverheadStatus->SetBackgroundColour( wxColor(*wxGREEN));
 				m_staticTextInterfaceitOverheadStatus->SetLabel (connected);
 			}
 		}
 		else {
 			if(text.CmpNoCase(not_connected) != 0) {
-				m_staticTextInterfaceitOverheadStatus->SetForegroundColour( wxColor(*wxRED));
+				m_staticTextInterfaceitOverheadStatus->SetBackgroundColour( wxColor(*wxRED));
 				m_staticTextInterfaceitOverheadStatus->SetLabel (not_connected);
 			}
 		}
@@ -94,13 +94,13 @@ class MainWindow : public frameMain
 		const wxString text = m_staticTextIocardMipStatus->GetLabelText();
 		if(active){
 			if(text.CmpNoCase(connected) != 0) {
-				m_staticTextIocardMipStatus->SetForegroundColour( wxColor(*wxGREEN));
+				m_staticTextIocardMipStatus->SetBackgroundColour( wxColor(*wxGREEN));
 				m_staticTextIocardMipStatus->SetLabel (connected);
 			}
 		}
 		else {
 			if(text.CmpNoCase(not_connected) != 0) {
-				m_staticTextIocardMipStatus->SetForegroundColour( wxColor(*wxRED));
+				m_staticTextIocardMipStatus->SetBackgroundColour( wxColor(*wxRED));
 				m_staticTextIocardMipStatus->SetLabel (not_connected);
 			}
 		}
@@ -110,13 +110,13 @@ class MainWindow : public frameMain
 		const wxString text = m_staticTextIocardFwdOverheadStatus->GetLabelText();
 		if(active){
 			if(text.CmpNoCase(connected) != 0) {
-				m_staticTextIocardFwdOverheadStatus->SetForegroundColour( wxColor(*wxGREEN));
+				m_staticTextIocardFwdOverheadStatus->SetBackgroundColour( wxColor(*wxGREEN));
 				m_staticTextIocardFwdOverheadStatus->SetLabel (connected);
 			}
 		}
 		else {
 			if(text.CmpNoCase(not_connected) != 0) {
-				m_staticTextIocardFwdOverheadStatus->SetForegroundColour( wxColor(*wxRED));
+				m_staticTextIocardFwdOverheadStatus->SetBackgroundColour( wxColor(*wxRED));
 				m_staticTextIocardFwdOverheadStatus->SetLabel (not_connected);
 			}
 		}
@@ -126,13 +126,13 @@ class MainWindow : public frameMain
 		const wxString text = m_staticTextIocardRearOverheadStatus->GetLabelText();
 		if(active){
 			if(text.CmpNoCase(connected) != 0) {
-				m_staticTextIocardRearOverheadStatus->SetForegroundColour( wxColor(*wxGREEN));
+				m_staticTextIocardRearOverheadStatus->SetBackgroundColour( wxColor(*wxGREEN));
 				m_staticTextIocardRearOverheadStatus->SetLabel (connected);
 			}
 		}
 		else {
 			if(text.CmpNoCase(not_connected) != 0) {
-				m_staticTextIocardRearOverheadStatus->SetForegroundColour( wxColor(*wxRED));
+				m_staticTextIocardRearOverheadStatus->SetBackgroundColour( wxColor(*wxRED));
 				m_staticTextIocardRearOverheadStatus->SetLabel (not_connected);
 			}
 		}
