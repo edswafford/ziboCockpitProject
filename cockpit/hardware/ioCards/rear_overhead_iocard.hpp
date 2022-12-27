@@ -1,5 +1,4 @@
-#ifndef REAROVRHEADIOCARDS_H
-#define REAROVRHEADIOCARDS_H
+#pragma once
 
 #include<string>
 
@@ -8,15 +7,21 @@
 namespace zcockpit::cockpit::hardware
 {
 
-	class RearOvrHeadIOCards : public IOCards
+	class RearOverheadIOCard : public IOCards
 	{
 	public:
-		RearOvrHeadIOCards(std::string deviceBusAddr);
+		RearOverheadIOCard(std::string deviceBusAddr);
+		[[nodiscard]] static std::unique_ptr<RearOverheadIOCard> create_forward_overhead_iocard(const std::string& bus_address);
+
 		void fastProcessRearOvrHead();
 		void processRearOvrHead();
 
+		static bool is_running(){return running;}
+		static std::string get_bus_addr(){return iocard_bus_addr;}
 	private:
 
+		static std::string iocard_bus_addr;
+		static bool running;
 
 		//int l_IRU_Off;
 		//int l_IRU_Align;
@@ -44,5 +49,6 @@ namespace zcockpit::cockpit::hardware
 		int disconnect_2;
 
 	};
+
+
 }
-#endif // REAROVRHEADIOCARDS_H

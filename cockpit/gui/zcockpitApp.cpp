@@ -277,11 +277,13 @@ namespace zcockpit::cockpit::gui
 			zcockpit::cockpit::Client<Udp> client(ip_address, udp, multicast_server_controller, multicast_app_controller, udp_controller, connection, gen, aircraft_model, UPDATE_RATE);
 
 			zcockpit::cockpit::hardware::Sim737Hardware sim737_hardware(interface_it);
-			//
+			
 			// IOCards should be initialized by now
 			//
 			main_window->set_iocard_status(IOCards::devices);
-
+			main_window->set_iocard_mip_addr(MipIOCard::get_bus_addr());
+			main_window->set_iocard_fwd_overhead_addr(ForwardOverheadIOCard::get_bus_addr());
+			main_window->set_iocard_rear_overhead_addr(RearOverheadIOCard::get_bus_addr());
 
 			LOG() << "Client running";
 
@@ -359,9 +361,26 @@ namespace zcockpit::cockpit::gui
 					}
 
 					//
-					// IOCard MIP
-
-
+					// IOCards MIP
+					auto current_iocard_mip_status = sim737_hardware.get_iocard_mip_status();
+					if(iocard_mip_status != current_iocard_mip_status || current_cycle == ONE_SECOND) {
+						iocard_mip_status = current_iocard_mip_status;
+						main_window->set_iocard_mip_status(iocard_forward_overhead_status);
+					}
+					//
+					// IOCards Forward Overhead
+					auto current_iocard_forward_overhead_status = sim737_hardware.get_iocard_forward_overhead_status();
+					if(iocard_forward_overhead_status != current_iocard_forward_overhead_status || current_cycle == ONE_SECOND) {
+						iocard_forward_overhead_status = current_iocard_forward_overhead_status;
+						main_window->set_iocard_fwd_overhead_status(iocard_forward_overhead_status);
+					}
+					//
+					// IOCards Rear Overhead
+					auto current_iocard_rear_overhead_status = sim737_hardware.get_iocard_rear_overhead_status();
+					if(iocard_rear_overhead_status != current_iocard_rear_overhead_status || current_cycle == ONE_SECOND) {
+						iocard_rear_overhead_status = current_iocard_rear_overhead_status;
+						main_window->set_iocard_rear_overhead_status(iocard_rear_overhead_status);
+					}
 
 
 

@@ -43,11 +43,9 @@ add_executable (client WIN32
 	"hardware/usb/libusb_interface.cpp" 
 	"hardware/ioCards/iocards.cpp" 
 	"hardware/ioCards/iocards.hpp"	
-
-#	"hardware/ioCards/mip _iocard.cpp"
-#	"hardware/ioCards/rear_overhead_iocard.cpp"
-
+	"hardware/ioCards/mip_iocard.cpp"
 	"hardware/ioCards/fwd_overhead_iocard.cpp"
+	"hardware/ioCards/rear_overhead_iocard.cpp"
 )
 
 

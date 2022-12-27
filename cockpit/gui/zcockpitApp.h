@@ -53,6 +53,10 @@ namespace zcockpit::cockpit::gui
 		bool zibo_status{false};
 		bool interfaceit_mip_status{false};
 		bool interfaceit_overhead_status{false};
+		bool iocard_mip_status{false};
+		bool iocard_forward_overhead_status{false};
+		bool iocard_rear_overhead_status{false};
+
 		void timer();
 		void do_updates(int current_cycle);
 

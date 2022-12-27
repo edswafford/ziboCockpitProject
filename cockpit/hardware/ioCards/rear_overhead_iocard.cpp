@@ -1,11 +1,18 @@
-#include "rearovrheadiocards.hpp"
+#include "rear_overhead_iocard.hpp"
+#include "../common/logger.hpp"
 #include "../DeleteMeHotkey.h"
+
+extern logger LOG;
 
 namespace zcockpit::cockpit::hardware
 {
-	RearOvrHeadIOCards::RearOvrHeadIOCards(std::string deviceBusAddr)
+	std::string RearOverheadIOCard::iocard_bus_addr;
+	bool RearOverheadIOCard::running = false;
+
+	RearOverheadIOCard::RearOverheadIOCard(std::string deviceBusAddr)
 		: IOCards(deviceBusAddr, "rearOverhead")
 	{
+		RearOverheadIOCard::iocard_bus_addr = deviceBusAddr;
 
 		//l_IRU_Off = 0;
 		//l_IRU_Align = 0;
@@ -33,19 +40,27 @@ namespace zcockpit::cockpit::hardware
 		disconnect_2 = 0;
 	}
 
+	std::unique_ptr<RearOverheadIOCard> RearOverheadIOCard::create_forward_overhead_iocard(const std::string& bus_address)
+	{
+		RearOverheadIOCard::running = false;
 
-	void RearOvrHeadIOCards::fastProcessRearOvrHead()
+		LOG() << "IOCards: creating fwd overhead";
+
+
+		return nullptr;
+	}
+
+	void RearOverheadIOCard::fastProcessRearOvrHead()
 	{
 		LOG() << "Calling Rear";
-		process_master_card_inputs(constants::rear_overhead_to_keycmd, constants::rear_ovrhead_keycmd_size);
+		//process_master_card_inputs(constants::rear_overhead_to_keycmd, constants::rear_ovrhead_keycmd_size);
 		LOG() << "Done Rear";
 		processRearOvrHead();
 	}
 
-		void sendMessageInt(int cmd, int value){}
 		bool RightEngRunning(){return true;}
 
-	void RearOvrHeadIOCards::processRearOvrHead()
+	void RearOverheadIOCard::processRearOvrHead()
 	{
 		const int DEBOUNCE_MAX_COUNT = 3;
 		static int gen2Disconnect = 1;
@@ -84,19 +99,19 @@ namespace zcockpit::cockpit::hardware
 					gen2Counter = DEBOUNCE_MAX_COUNT;
 					if(disconnect_2 == 1)
 					{
-						if (lastGen2KeyCmd != KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_2_DISCONNECT_UP)
-						{
-							lastGen2KeyCmd = KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_2_DISCONNECT_UP;
-							sendMessageInt(KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_2_DISCONNECT_UP, 0);
-						}
-					}
-					else
-					{
-						if(lastGen2KeyCmd != KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_2_DISCONNECT_DOWN)
-						{
-							lastGen2KeyCmd = KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_2_DISCONNECT_DOWN;
-							sendMessageInt(KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_2_DISCONNECT_DOWN, 0);
-						}
+					//	if (lastGen2KeyCmd != KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_2_DISCONNECT_UP)
+					//	{
+					//		lastGen2KeyCmd = KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_2_DISCONNECT_UP;
+					//		sendMessageInt(KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_2_DISCONNECT_UP, 0);
+					//	}
+					//}
+					//else
+					//{
+					//	if(lastGen2KeyCmd != KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_2_DISCONNECT_DOWN)
+					//	{
+					//		lastGen2KeyCmd = KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_2_DISCONNECT_DOWN;
+					//		sendMessageInt(KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_2_DISCONNECT_DOWN, 0);
+					//	}
 					}
 				}
 			}
@@ -197,49 +212,49 @@ namespace zcockpit::cockpit::hardware
 		//   }
 
 		   // EEC On/ATN
-	    if(mastercard_input(17, &L_EEC_ON))
-	    {
-	        if(L_EEC_ON == 1)
-	        {
-	            sendMessageInt(KEY_COMMAND_ENGAPU_EEC_1_ON, 0); //504
-	        }
-	        else
-	        {
-	            sendMessageInt(KEY_COMMAND_ENGAPU_EEC_1_OFF, 0); //505  
-	        }
-	    }
+	 //   if(mastercard_input(17, &L_EEC_ON))
+	 //   {
+	 //       if(L_EEC_ON == 1)
+	 //       {
+	 //           sendMessageInt(KEY_COMMAND_ENGAPU_EEC_1_ON, 0); //504
+	 //       }
+	 //       else
+	 //       {
+	 //           sendMessageInt(KEY_COMMAND_ENGAPU_EEC_1_OFF, 0); //505  
+	 //       }
+	 //   }
 
-	    if(mastercard_input(8, &R_EEC_ON))
-	    {
-	        if(R_EEC_ON == 1)
-	        {
-	            sendMessageInt(KEY_COMMAND_ENGAPU_EEC_2_ON, 0); //507
-	        }
-	        else
-	        {
-	            sendMessageInt(KEY_COMMAND_ENGAPU_EEC_2_OFF, 0); //508  
-	        }
-	    }
+	 //   if(mastercard_input(8, &R_EEC_ON))
+	 //   {
+	 //       if(R_EEC_ON == 1)
+	 //       {
+	 //           sendMessageInt(KEY_COMMAND_ENGAPU_EEC_2_ON, 0); //507
+	 //       }
+	 //       else
+	 //       {
+	 //           sendMessageInt(KEY_COMMAND_ENGAPU_EEC_2_OFF, 0); //508  
+	 //       }
+	 //   }
 
-		// Airspeed Warning Test
-	    if(mastercard_input(33, &Airspd_Warn_1) && Airspd_Warn_1 == 0)
-		{
-	        sendMessageInt(KEY_COMMAND_WARNING_AIRSPEED_TEST, 0); //1195
-			}
-	    if(mastercard_input(31, &Airspd_Warn_2) && Airspd_Warn_2)
-		{
-	        sendMessageInt(KEY_COMMAND_WARNING_AIRSPEED_TEST, 0); //1195
-			}
+		//// Airspeed Warning Test
+	 //   if(mastercard_input(33, &Airspd_Warn_1) && Airspd_Warn_1 == 0)
+		//{
+	 //       sendMessageInt(KEY_COMMAND_WARNING_AIRSPEED_TEST, 0); //1195
+		//	}
+	 //   if(mastercard_input(31, &Airspd_Warn_2) && Airspd_Warn_2)
+		//{
+	 //       sendMessageInt(KEY_COMMAND_WARNING_AIRSPEED_TEST, 0); //1195
+		//	}
 
 
-		// Stall Warning
-	    if(mastercard_input(28, &Stall_Warn_1) && Stall_Warn_1 == 0)
-		{
-	        sendMessageInt(KEY_COMMAND_WARNING_STALL_TEST, 0); //1196
-		}
-	    if(mastercard_input(30, &Stall_Warn_2) && Stall_Warn_2 == 0)
-		{
-	        sendMessageInt(KEY_COMMAND_WARNING_STALL_TEST, 0); //1196
-		}
+		//// Stall Warning
+	 //   if(mastercard_input(28, &Stall_Warn_1) && Stall_Warn_1 == 0)
+		//{
+	 //       sendMessageInt(KEY_COMMAND_WARNING_STALL_TEST, 0); //1196
+		//}
+	 //   if(mastercard_input(30, &Stall_Warn_2) && Stall_Warn_2 == 0)
+		//{
+	 //       sendMessageInt(KEY_COMMAND_WARNING_STALL_TEST, 0); //1196
+		//}
 	}
 }

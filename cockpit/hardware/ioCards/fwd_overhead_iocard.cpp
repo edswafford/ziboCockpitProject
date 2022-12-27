@@ -7,11 +7,13 @@ extern logger LOG;
 
 namespace zcockpit::cockpit::hardware
 {
-		void sendMessageInt(int cmd, int value);
+	std::string ForwardOverheadIOCard::iocard_bus_addr;
+	bool ForwardOverheadIOCard::running = false; 
 
-	OvrheadIOCards::OvrheadIOCards(std::string deviceBusAddr)
+	ForwardOverheadIOCard::ForwardOverheadIOCard(const std::string deviceBusAddr)
 		: IOCards(deviceBusAddr, "fwdOverhead")
 	{
+		ForwardOverheadIOCard::iocard_bus_addr = deviceBusAddr;
 
 		compMode_altn = 0;
 		compMode_auto = 0;
@@ -105,10 +107,12 @@ namespace zcockpit::cockpit::hardware
 		engine2_state = OFF;
 	}
 
-	std::unique_ptr<OvrheadIOCards> OvrheadIOCards::create_fwd_overhead_iocard(const std::string& bus_address)
+	std::unique_ptr<ForwardOverheadIOCard> ForwardOverheadIOCard::create_forward_overhead_iocard(const std::string& bus_address)
 	{
+		ForwardOverheadIOCard::running = false;
+
 		LOG() << "IOCards: creating fwd overhead";
-		auto card = std::make_unique<OvrheadIOCards>(bus_address);
+		auto card = std::make_unique<ForwardOverheadIOCard>(bus_address);
 		if(card->is_open)
 		{
 			// Did we find the fwd overhead device and manage to open usb connection 
@@ -128,6 +132,7 @@ namespace zcockpit::cockpit::hardware
 						LOG() << "fwd overhead is initialized and thread is running";
 					
 						card->receive_mastercard();
+						ForwardOverheadIOCard::running = true;
 						LOG() << "fwd oveehead is running";
 						return card;
 					}
@@ -149,7 +154,7 @@ namespace zcockpit::cockpit::hardware
 	}
 
 
-	void OvrheadIOCards::update_displays()
+	void ForwardOverheadIOCard::update_displays()
 	{
 		static int selector = 0;
 		// Displays
@@ -170,7 +175,7 @@ namespace zcockpit::cockpit::hardware
 		selector = (selector + 1) % 6;
 	}
 
-	void OvrheadIOCards::update_electrical_display()
+	void ForwardOverheadIOCard::update_electrical_display()
 	{
 		// AC Volts
 		int const AC_VOLTS_1 = 21;
@@ -209,7 +214,7 @@ namespace zcockpit::cockpit::hardware
 		//mastercard_send_display(Ifly737::shareMemSDK->DC_VOLTS_10_Status, DC_VOLTS_10);
 	}
 
-	void OvrheadIOCards::update_landing_alt_display()
+	void ForwardOverheadIOCard::update_landing_alt_display()
 	{
 		// Landing Altitude
 		int const LAND_ALT_1 = 5;
@@ -230,7 +235,7 @@ namespace zcockpit::cockpit::hardware
 	}
 
 
-	void OvrheadIOCards::update_flight_alt_display()
+	void ForwardOverheadIOCard::update_flight_alt_display()
 	{
 		// Flight Altitude
 		int const FLT_ALT_1 = 0;
@@ -251,7 +256,7 @@ namespace zcockpit::cockpit::hardware
 		//mastercard_send_display(land_alt, FLT_ALT_10_000);
 	}
 
-	bool OvrheadIOCards::is_display_blank(std::array<unsigned char, NUMBER_OF_ALTITUDE_DIGITS> digits)
+	bool ForwardOverheadIOCard::is_display_blank(std::array<unsigned char, NUMBER_OF_ALTITUDE_DIGITS> digits)
 	{
 		for(auto i = 0; i < NUMBER_OF_ALTITUDE_DIGITS; i++)
 		{
@@ -263,7 +268,7 @@ namespace zcockpit::cockpit::hardware
 		return true;
 	}
 
-	long OvrheadIOCards::convert_digits_to_long(std::array<unsigned char, NUMBER_OF_ALTITUDE_DIGITS> digits)
+	long ForwardOverheadIOCard::convert_digits_to_long(std::array<unsigned char, NUMBER_OF_ALTITUDE_DIGITS> digits)
 	{
 		long val = 0;
 		int scaling = 1;
@@ -285,7 +290,7 @@ namespace zcockpit::cockpit::hardware
 		return val;
 	}
 
-	void OvrheadIOCards::processEncoders()
+	void ForwardOverheadIOCard::processEncoders()
 	{
 		// Encoders
 
@@ -327,7 +332,7 @@ namespace zcockpit::cockpit::hardware
 		//}
 	}
 
-	void OvrheadIOCards::fastProcessOvrHead()
+	void ForwardOverheadIOCard::fastProcessOvrHead()
 	{
 	//	unsigned char pwr;// = ifly737->electrical_power_state;
 
@@ -567,7 +572,7 @@ namespace zcockpit::cockpit::hardware
 	}
 
 
-	void OvrheadIOCards::processOvrHead()
+	void ForwardOverheadIOCard::processOvrHead()
 	{
 		//
 		// The outflow valve is spring loaded and must to held open

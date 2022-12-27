@@ -17,9 +17,9 @@ namespace zcockpit::cockpit::hardware
 		interface_it.closeInterfaceITController();
 		interface_it.drop();
 
-		if (overhead_card) {
-			overhead_card->drop();
-			overhead_card = nullptr;
+		if (forward_overhead_card) {
+			forward_overhead_card->drop();
+			forward_overhead_card = nullptr;
 		}
 	}
 
@@ -29,7 +29,7 @@ namespace zcockpit::cockpit::hardware
 			auto available_iocards = IOCards::find_iocard_devices();
 			if(available_iocards.contains(IOCards::IOCard_Device::FWD_OVERHEAD)) {
 				const auto bus_addr = available_iocards[IOCards::IOCard_Device::FWD_OVERHEAD];
-				overhead_card = OvrheadIOCards::create_fwd_overhead_iocard(bus_addr);
+				forward_overhead_card = ForwardOverheadIOCard::create_forward_overhead_iocard(bus_addr);
 			}
 		}
 	}
@@ -93,10 +93,10 @@ namespace zcockpit::cockpit::hardware
 
 		else if(five_hz_count == 1)
 		{
-			//if(this->overhead_card->isOpen)
+			//if(this->forward_overhead_card->isOpen)
 			//{
 			//	status = HEALTHY_STATUS;
-			//	if(!this->overhead_card->IsInitialized())
+			//	if(!this->forward_overhead_card->IsInitialized())
 			//	{
 			//		status = FAILED_STATUS;
 			//		LOG() << "IOCards 2: closing down fwd overhead failed init";
@@ -104,22 +104,22 @@ namespace zcockpit::cockpit::hardware
 			//	else
 			//	{
 			//		// update inputs
-			//		this->overhead_card->fastProcessOvrHead();
+			//		this->forward_overhead_card->fastProcessOvrHead();
 
 			//		// send outputs
-			//		if(this->overhead_card->send_mastercard() < 0)
+			//		if(this->forward_overhead_card->send_mastercard() < 0)
 			//		{
 			//			status = FAILED_STATUS;
 			//			LOG() << "IOCards 2: closing down fwd overhead send < 0";
-			//			this->overhead_card->closeDown();
+			//			this->forward_overhead_card->closeDown();
 			//		}
 
 
-			//		//if(this->overhead_card->copyIOCardsData() < 0)
+			//		//if(this->forward_overhead_card->copyIOCardsData() < 0)
 			//		//{
 			//		//	status = FAILED_STATUS;
 			//		//	LOG() << "IOCards 2: closing down fwd overhead copy data < 0";
-			//		//	this->overhead_card->closeDown();
+			//		//	this->forward_overhead_card->closeDown();
 			//		//}
 			//	}
 			//}
@@ -266,6 +266,34 @@ namespace zcockpit::cockpit::hardware
 		{
 			interfaceIT_overhead_status = current_interfaceIF_overhead_status;
 		}
+
+		// IOCards MIP Overhead
+		auto current_iocard_mip_overhead_status =Health::FAILED_STATUS;
+		if(MipIOCard::is_running()) {
+			current_iocard_mip_overhead_status = Health::HEALTHY_STATUS;
+		}
+		if(current_iocard_mip_overhead_status != iocard_mip_status) {
+			iocard_mip_status = current_iocard_mip_overhead_status;
+		}
+
+		// IOCards Forward Overhead
+		auto current_iocard_forward_overhead_status =Health::FAILED_STATUS;
+		if(ForwardOverheadIOCard::is_running()) {
+			current_iocard_forward_overhead_status = Health::HEALTHY_STATUS;
+		}
+		if(current_iocard_forward_overhead_status != iocard_forward_overhead_status) {
+			iocard_forward_overhead_status = current_iocard_forward_overhead_status;
+		}
+
+		// IOCards Forward Overhead
+		auto current_iocard_rear_overhead_status =Health::FAILED_STATUS;
+		if(RearOverheadIOCard::is_running()) {
+			current_iocard_rear_overhead_status = Health::HEALTHY_STATUS;
+		}
+		if(current_iocard_rear_overhead_status != iocard_rear_overhead_status) {
+			iocard_rear_overhead_status = current_iocard_rear_overhead_status;
+		}
+
 	}
 
 	bool Sim737Hardware::interfaceitMipStatus() const
@@ -273,4 +301,14 @@ namespace zcockpit::cockpit::hardware
 
 	bool Sim737Hardware::interfaceitOverheadStatus() const
 	{return interfaceIT_overhead_status == Health::HEALTHY_STATUS;}
+
+
+	bool Sim737Hardware::get_iocard_mip_status() const
+	{ return iocard_mip_status == Health::HEALTHY_STATUS;}
+
+	bool Sim737Hardware::get_iocard_forward_overhead_status() const
+	{ return iocard_forward_overhead_status == Health::HEALTHY_STATUS;}
+
+	bool Sim737Hardware::get_iocard_rear_overhead_status() const
+	{ return iocard_rear_overhead_status == Health::HEALTHY_STATUS;}
 }

@@ -18,11 +18,11 @@ namespace zcockpit::cockpit::hardware
 		FLT,
 	};
 
-	class OvrheadIOCards : public IOCards
+	class ForwardOverheadIOCard : public IOCards
 	{
 	public:
-		OvrheadIOCards(std::string deviceBusAddr);
-		[[nodiscard]] static std::unique_ptr<OvrheadIOCards> create_fwd_overhead_iocard(const std::string& bus_address);
+		ForwardOverheadIOCard(std::string deviceBusAddr);
+		[[nodiscard]] static std::unique_ptr<ForwardOverheadIOCard> create_forward_overhead_iocard(const std::string& bus_address);
 
 		void fastProcessOvrHead();
 		void processOvrHead();
@@ -41,8 +41,13 @@ namespace zcockpit::cockpit::hardware
 		void processEncoders();
 		int mag_eng1_start;
 		int mag_eng2_start;
+
+		static bool is_running(){return running;}
+		static std::string get_bus_addr(){return iocard_bus_addr;}
 	private:
 
+		static std::string iocard_bus_addr;
+		static bool running; 
 
 		int compMode_altn;
 		int compMode_auto;

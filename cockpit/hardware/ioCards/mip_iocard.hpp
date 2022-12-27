@@ -1,24 +1,27 @@
-#ifndef MIPIOCARDS_H
-#define MIPIOCARDS_H
+#pragma once
 
 #include <string>
 #include "iocards.hpp"
 
 namespace zcockpit::cockpit::hardware
 {
-	class MIPioCards : public IOCards
+	class MipIOCard : public IOCards
 	{
 	public:
-		MIPioCards(std::string deviceBusAddr);
-
+		MipIOCard(std::string deviceBusAddr);
+		[[nodiscard]] static std::unique_ptr<MipIOCard> create_mip_iocard(const std::string& bus_address);
 
 		void processMIP();
 		void updateRelays(int state);
 
+		static bool is_running(){return running;}
+		static std::string get_bus_addr(){return iocard_bus_addr;}
 	private:
 
 		void processOutputs();
-	;
+
+		static std::string iocard_bus_addr;
+		static bool running;	
 
 		bool powerIsOn;
 
@@ -67,7 +70,3 @@ namespace zcockpit::cockpit::hardware
 		int aileronRight;
 	};
 }
-
-
-
-#endif // MIPIOCARDS_H
