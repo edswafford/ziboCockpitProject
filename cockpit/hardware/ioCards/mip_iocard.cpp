@@ -111,7 +111,7 @@ namespace zcockpit::cockpit::hardware
 			// turn off relays
 			updateRelays(0);
 		}
-		else if(!powerIsOn && !aircraft_model.z737InData.main_bus)
+		else if(!powerIsOn && aircraft_model.z737InData.main_bus)
 		{
 			powerIsOn = true;
 			// turn on relays;
