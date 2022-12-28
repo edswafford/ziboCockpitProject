@@ -120,9 +120,8 @@ namespace zcockpit::cockpit::hardware
 			updateRelays(1);
 		}
 
-		processOutputs();
 
-		//  Capt Main Panel DUs rotary switch only one can change --> use if--else if
+		////  Capt Main Panel DUs rotary switch only one can change --> use if--else if
 		//if(mastercard_input(1, &captOutboardPFD) && captOutboardPFD)
 		//{
 		//	sendMessageInt(KEY_COMMAND_INSTRUMENT_CAPT_MAIN_PANEL_DISPLAY_UNIT_POS1, 0);
@@ -499,10 +498,4 @@ namespace zcockpit::cockpit::hardware
 		mastercard_output(55, &state);  // relay #7 MCP lights
 	}
 
-
-	void MipIOCard::processOutputs()
-	{
-
-
-	}
 }

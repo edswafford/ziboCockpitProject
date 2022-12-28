@@ -14,81 +14,85 @@ namespace zcockpit::cockpit {
 
 	void AircraftModel::initialize_ref_strings()
 	{
-		const bool bool_in_data = true;
+		constexpr bool convert_to_bool = true;
 		//
 		// SWITCHES
-		data_ref_strings[DataRefName::battery_pos] = { "laminar/B738/electric/battery_pos", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::bright_test] = { "laminar/B738/toggle_switch/bright_test", XplaneType::type_Float, !bool_in_data}; // [1, 0, -1]  up==test, center==brt, dn==dim
-		data_ref_strings[DataRefName::spd_ref] = { "laminar/B738/toggle_switch/spd_ref", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::autobrake_pos] = { "laminar/B738/autobrake/autobrake_pos", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::landing_gear] = { "laminar/B738/controls/gear_handle_down", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::fuel_flow_pos] = {"laminar/B738/toggle_switch/fuel_flow_pos", XplaneType::type_Float, !bool_in_data};
+		data_ref_strings[DataRefName::battery_pos] = { "laminar/B738/electric/battery_pos", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::bright_test] = { "laminar/B738/toggle_switch/bright_test", XplaneType::type_Float, !convert_to_bool}; // [1, 0, -1]  up==test, center==brt, dn==dim
+		data_ref_strings[DataRefName::spd_ref] = { "laminar/B738/toggle_switch/spd_ref", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::autobrake_pos] = { "laminar/B738/autobrake/autobrake_pos", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::landing_gear] = { "laminar/B738/controls/gear_handle_down", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::fuel_flow_pos] = {"laminar/B738/toggle_switch/fuel_flow_pos", XplaneType::type_Float, !convert_to_bool};
 
 
-		data_ref_strings[DataRefName::ap_discon_test1] = {"laminar/B738/toggle_switch/ap_discon_test1", XplaneType::type_Float, !bool_in_data};
+		data_ref_strings[DataRefName::ap_discon_test1] = {"laminar/B738/toggle_switch/ap_discon_test1", XplaneType::type_Float, !convert_to_bool};
 
-		data_ref_strings[DataRefName::guarded_covers] = { "laminar/B738/guarded_covers", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::guarded_covers] = { "laminar/B738/guarded_covers", XplaneType::type_Float, convert_to_bool};
 
-		data_ref_strings[DataRefName::ap_light_pilot] = {"laminar/B738/push_button/ap_light_pilot", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::at_light_pilot] = {"laminar/B738/push_button/at_light_pilot", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::fms_light_pilot] = {"laminar/B738/push_button/fms_light_pilot", XplaneType::type_Float, !bool_in_data};
+		data_ref_strings[DataRefName::ap_light_pilot] = {"laminar/B738/push_button/ap_light_pilot", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::at_light_pilot] = {"laminar/B738/push_button/at_light_pilot", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::fms_light_pilot] = {"laminar/B738/push_button/fms_light_pilot", XplaneType::type_Float, !convert_to_bool};
 
-		data_ref_strings[DataRefName::land_lights_ret_left_pos] = { "laminar/B738/switch/land_lights_ret_left_pos", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::land_lights_ret_right_pos] = { "laminar/B738/switch/land_lights_ret_right_pos", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::land_lights_left_pos] = { "laminar/B738/switch/land_lights_left_pos", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::land_lights_right_pos] = { "laminar/B738/switch/land_lights_right_pos", XplaneType::type_Float, !bool_in_data};
+		data_ref_strings[DataRefName::land_lights_ret_left_pos] = { "laminar/B738/switch/land_lights_ret_left_pos", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::land_lights_ret_right_pos] = { "laminar/B738/switch/land_lights_ret_right_pos", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::land_lights_left_pos] = { "laminar/B738/switch/land_lights_left_pos", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::land_lights_right_pos] = { "laminar/B738/switch/land_lights_right_pos", XplaneType::type_Float, !convert_to_bool};
 
-		data_ref_strings[DataRefName::rwy_light_left] = { "laminar/B738/toggle_switch/rwy_light_left", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::rwy_light_right] = { "laminar/B738/toggle_switch/rwy_light_right", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::taxi_light_brightness_pos] = { "laminar/B738/toggle_switch/taxi_light_brightness_pos", XplaneType::type_Float, !bool_in_data};  // off=0 on=2
-		data_ref_strings[DataRefName::APU_start_pos] = { "laminar/B738/spring_toggle_switch/APU_start_pos", XplaneType::type_Float, !bool_in_data};		// off=0, on==1 start==2
-		data_ref_strings[DataRefName::hydro_pumps1_pos] = { "laminar/B738/toggle_switch/hydro_pumps1_pos", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::hydro_pumps2_pos] = { "laminar/B738/toggle_switch/hydro_pumps2_pos", XplaneType::type_Float, !bool_in_data};
+		data_ref_strings[DataRefName::rwy_light_left] = { "laminar/B738/toggle_switch/rwy_light_left", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::rwy_light_right] = { "laminar/B738/toggle_switch/rwy_light_right", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::taxi_light_brightness_pos] = { "laminar/B738/toggle_switch/taxi_light_brightness_pos", XplaneType::type_Float, !convert_to_bool};  // off=0 on=2
+		data_ref_strings[DataRefName::APU_start_pos] = { "laminar/B738/spring_toggle_switch/APU_start_pos", XplaneType::type_Float, !convert_to_bool};		// off=0, on==1 start==2
+		data_ref_strings[DataRefName::hydro_pumps1_pos] = { "laminar/B738/toggle_switch/hydro_pumps1_pos", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::hydro_pumps2_pos] = { "laminar/B738/toggle_switch/hydro_pumps2_pos", XplaneType::type_Float, !convert_to_bool};
 
 		//
 		// *** NOTE *** Zibo has a typo the name for pumps 1 and 2 swapped
-		data_ref_strings[DataRefName::electric_hydro_pumps1_pos] = { "laminar/B738/toggle_switch/electric_hydro_pumps2_pos", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::electric_hydro_pumps2_pos] = { "laminar/B738/toggle_switch/electric_hydro_pumps1_pos", XplaneType::type_Float, !bool_in_data};
+		data_ref_strings[DataRefName::electric_hydro_pumps1_pos] = { "laminar/B738/toggle_switch/electric_hydro_pumps2_pos", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::electric_hydro_pumps2_pos] = { "laminar/B738/toggle_switch/electric_hydro_pumps1_pos", XplaneType::type_Float, !convert_to_bool};
 
-		data_ref_strings[DataRefName::eng_start_source] = { "laminar/B738/toggle_switch/eng_start_source", XplaneType::type_Float, !bool_in_data};		// left -1 both=0 right=1
-		data_ref_strings[DataRefName::fmc_source] = { "laminar/B738/toggle_switch/fmc_source", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::logo_light] = { "laminar/B738/toggle_switch/logo_light", XplaneType::type_Float, !bool_in_data};
+		data_ref_strings[DataRefName::eng_start_source] = { "laminar/B738/toggle_switch/eng_start_source", XplaneType::type_Float, !convert_to_bool};		// left -1 both=0 right=1
+		data_ref_strings[DataRefName::fmc_source] = { "laminar/B738/toggle_switch/fmc_source", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::logo_light] = { "laminar/B738/toggle_switch/logo_light", XplaneType::type_Float, !convert_to_bool};
 
-		data_ref_strings[DataRefName::beacon_on] = { "sim/cockpit2/switches/beacon_on", XplaneType::type_Int, !bool_in_data};						// anti-collision -- no command use dataref on=1 off=0
+		data_ref_strings[DataRefName::beacon_on] = { "sim/cockpit2/switches/beacon_on", XplaneType::type_Int, !convert_to_bool};						// anti-collision -- no command use dataref on=1 off=0
 
-		data_ref_strings[DataRefName::wing_light] = { "laminar/B738/toggle_switch/wing_light", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::wheel_light] = { "laminar/B738/toggle_switch/wheel_light", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::eq_cool_supply] = { "laminar/B738/toggle_switch/eq_cool_supply", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::eq_cool_exhaust] = { "laminar/B738/toggle_switch/eq_cool_exhaust", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::emer_exit_lights] = { "laminar/B738/toggle_switch/emer_exit_lights", XplaneType::type_Float, !bool_in_data};		// off=0 armed=1 on =2
-		data_ref_strings[DataRefName::seatbelt_sign_pos] = { "laminar/B738/toggle_switch/seatbelt_sign_pos", XplaneType::type_Float, !bool_in_data};	// off=0 auto=1 on=2
-		data_ref_strings[DataRefName::no_smoking_pos] = { "laminar/B738/toggle_switch/no_smoking_pos", XplaneType::type_Float, !bool_in_data};			// off=0 auto=1 on=2
+		data_ref_strings[DataRefName::wing_light] = { "laminar/B738/toggle_switch/wing_light", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::wheel_light] = { "laminar/B738/toggle_switch/wheel_light", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::eq_cool_supply] = { "laminar/B738/toggle_switch/eq_cool_supply", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::eq_cool_exhaust] = { "laminar/B738/toggle_switch/eq_cool_exhaust", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::emer_exit_lights] = { "laminar/B738/toggle_switch/emer_exit_lights", XplaneType::type_Float, !convert_to_bool};		// off=0 armed=1 on =2
+		data_ref_strings[DataRefName::seatbelt_sign_pos] = { "laminar/B738/toggle_switch/seatbelt_sign_pos", XplaneType::type_Float, !convert_to_bool};	// off=0 auto=1 on=2
+		data_ref_strings[DataRefName::no_smoking_pos] = { "laminar/B738/toggle_switch/no_smoking_pos", XplaneType::type_Float, !convert_to_bool};			// off=0 auto=1 on=2
 
-		data_ref_strings[DataRefName::attend] = { "laminar/B738/push_button/attend_pos", XplaneType::type_Float, !bool_in_data};			
-		data_ref_strings[DataRefName::grd_call] = { "laminar/B738/push_button/grd_call_pos", XplaneType::type_Float, !bool_in_data};			
+		data_ref_strings[DataRefName::attend] = { "laminar/B738/push_button/attend_pos", XplaneType::type_Float, !convert_to_bool};			
+		data_ref_strings[DataRefName::grd_call] = { "laminar/B738/push_button/grd_call_pos", XplaneType::type_Float, !convert_to_bool};			
 
-		data_ref_strings[DataRefName::cross_feed_pos] = { "laminar/B738/knobs/cross_feed_pos", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::fuel_tank_pos_lft1] = { "laminar/B738/fuel/fuel_tank_pos_lft1", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::fuel_tank_pos_lft2] = { "laminar/B738/fuel/fuel_tank_pos_lft2", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::fuel_tank_pos_rgt2] = { "laminar/B738/fuel/fuel_tank_pos_rgt2", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::fuel_tank_pos_rgt1] = { "laminar/B738/fuel/fuel_tank_pos_rgt1", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::fuel_tank_pos_ctr1] = { "laminar/B738/fuel/fuel_tank_pos_ctr1", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::fuel_tank_pos_ctr2] = { "laminar/B738/fuel/fuel_tank_pos_ctr2", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::yaw_dumper_pos] = { "laminar/B738/toggle_switch/yaw_dumper_pos", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::cab_util_pos] = { "laminar/B738/toggle_switch/cab_util_pos", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::standby_bat_pos] = { "laminar/B738/electric/standby_bat_pos", XplaneType::type_Float, !bool_in_data};				//bat=-1 off=0 auto=1 
-		data_ref_strings[DataRefName::gpu_pos] = { "laminar/B738/electrical/gpu_pos", XplaneType::type_Float, !bool_in_data};							// up=-1 center=0 dn =1
-		data_ref_strings[DataRefName::gen1_pos] = { "laminar/B738/electrical/gen1_pos", XplaneType::type_Float, !bool_in_data};							// up=-1 center=0 dn =1
-		data_ref_strings[DataRefName::gen2_pos] = { "laminar/B738/electrical/gen2_pos", XplaneType::type_Float, !bool_in_data};							// up=-1 center=0 dn =1
-		data_ref_strings[DataRefName::apu_gen1_pos] = { "laminar/B738/electrical/apu_gen1_pos", XplaneType::type_Float, !bool_in_data};					// up=-1 center=0 dn =1
-		data_ref_strings[DataRefName::apu_gen2_pos] = { "laminar/B738/electrical/apu_gen2_pos", XplaneType::type_Float, !bool_in_data};					// up=-1 center=0 dn =1
-		data_ref_strings[DataRefName::window_heat_l_side_pos] = { "laminar/B738/ice/window_heat_l_side_pos", XplaneType::type_Float, !bool_in_data};	// on=1 off=0
-		data_ref_strings[DataRefName::window_heat_l_fwd_pos] = { "laminar/B738/ice/window_heat_l_fwd_pos", XplaneType::type_Float, !bool_in_data};		// on=1 off=0
-		data_ref_strings[DataRefName::window_heat_r_fwd_pos] = { "laminar/B738/ice/window_heat_r_fwd_pos", XplaneType::type_Float, !bool_in_data};		// on=1 off=0
-		data_ref_strings[DataRefName::window_heat_r_side_pos] = { "laminar/B738/ice/window_heat_r_side_pos", XplaneType::type_Float, !bool_in_data};	// on=1 off=0
-		data_ref_strings[DataRefName::window_ovht_test] = { "laminar/B738/toggle_switch/window_ovht_test", XplaneType::type_Float, !bool_in_data};		// dn=1 up=-1
-		data_ref_strings[DataRefName::capt_probes_pos] = { "laminar/B738/toggle_switch/capt_probes_pos", XplaneType::type_Float, !bool_in_data};		// on=1 off=0
-		data_ref_strings[DataRefName::fo_probes_pos] = { "laminar/B738/toggle_switch/fo_probes_pos", XplaneType::type_Float, !bool_in_data};			// on=1 off=0
+		data_ref_strings[DataRefName::cross_feed_pos] = { "laminar/B738/knobs/cross_feed_pos", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::fuel_tank_pos_lft1] = { "laminar/B738/fuel/fuel_tank_pos_lft1", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::fuel_tank_pos_lft2] = { "laminar/B738/fuel/fuel_tank_pos_lft2", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::fuel_tank_pos_rgt2] = { "laminar/B738/fuel/fuel_tank_pos_rgt2", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::fuel_tank_pos_rgt1] = { "laminar/B738/fuel/fuel_tank_pos_rgt1", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::fuel_tank_pos_ctr1] = { "laminar/B738/fuel/fuel_tank_pos_ctr1", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::fuel_tank_pos_ctr2] = { "laminar/B738/fuel/fuel_tank_pos_ctr2", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::yaw_dumper_pos] = { "laminar/B738/toggle_switch/yaw_dumper_pos", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::cab_util_pos] = { "laminar/B738/toggle_switch/cab_util_pos", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::standby_bat_pos] = { "laminar/B738/electric/standby_bat_pos", XplaneType::type_Float, !convert_to_bool};				//bat=-1 off=0 auto=1 
+		data_ref_strings[DataRefName::gpu_pos] = { "laminar/B738/electrical/gpu_pos", XplaneType::type_Float, !convert_to_bool};							// up=-1 center=0 dn =1
+		data_ref_strings[DataRefName::gen1_pos] = { "laminar/B738/electrical/gen1_pos", XplaneType::type_Float, !convert_to_bool};							// up=-1 center=0 dn =1
+		data_ref_strings[DataRefName::gen2_pos] = { "laminar/B738/electrical/gen2_pos", XplaneType::type_Float, !convert_to_bool};							// up=-1 center=0 dn =1
+		data_ref_strings[DataRefName::apu_gen1_pos] = { "laminar/B738/electrical/apu_gen1_pos", XplaneType::type_Float, !convert_to_bool};					// up=-1 center=0 dn =1
+		data_ref_strings[DataRefName::apu_gen2_pos] = { "laminar/B738/electrical/apu_gen2_pos", XplaneType::type_Float, !convert_to_bool};					// up=-1 center=0 dn =1
+		data_ref_strings[DataRefName::window_heat_l_side_pos] = { "laminar/B738/ice/window_heat_l_side_pos", XplaneType::type_Float, !convert_to_bool};	// on=1 off=0
+		data_ref_strings[DataRefName::window_heat_l_fwd_pos] = { "laminar/B738/ice/window_heat_l_fwd_pos", XplaneType::type_Float, !convert_to_bool};		// on=1 off=0
+		data_ref_strings[DataRefName::window_heat_r_fwd_pos] = { "laminar/B738/ice/window_heat_r_fwd_pos", XplaneType::type_Float, !convert_to_bool};		// on=1 off=0
+		data_ref_strings[DataRefName::window_heat_r_side_pos] = { "laminar/B738/ice/window_heat_r_side_pos", XplaneType::type_Float, !convert_to_bool};	// on=1 off=0
+		data_ref_strings[DataRefName::window_ovht_test] = { "laminar/B738/toggle_switch/window_ovht_test", XplaneType::type_Float, !convert_to_bool};		// dn=1 up=-1
+		data_ref_strings[DataRefName::capt_probes_pos] = { "laminar/B738/toggle_switch/capt_probes_pos", XplaneType::type_Float, !convert_to_bool};		// on=1 off=0
+		data_ref_strings[DataRefName::fo_probes_pos] = { "laminar/B738/toggle_switch/fo_probes_pos", XplaneType::type_Float, !convert_to_bool};			// on=1 off=0
+
+		data_ref_strings[DataRefName::main_pnl_du_capt] = {"laminar/B738/toggle_switch/main_pnl_du_capt", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::main_pnl_du_fo] = {"laminar/B738/toggle_switch/main_pnl_du_fo", XplaneType::type_Float, !convert_to_bool};
+
 
 		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !bool_annun};
 		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !bool_annun};
@@ -110,193 +114,193 @@ namespace zcockpit::cockpit {
 		//
 		// Pushbuttons -- NOT Used
 		//
-		data_ref_strings[DataRefName::master_caution1_pb] ={"master_caution1_pb", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::capt_six_pack_pb] = {"capt_six_pack_pb", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::chrono_capt_et_mode_pb] = {"chrono_capt_et_mode_pb", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::fire_bell_light1_pb] = {"fire_bell_light1_pb", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::MFD_ENG_pb] = {"MFD_ENG_pb", XplaneType::type_Float, !bool_in_data};
-		data_ref_strings[DataRefName::MFD_SYS_pb] = {"MFD_SYS_pb", XplaneType::type_Float, !bool_in_data};
+		data_ref_strings[DataRefName::master_caution1_pb] ={"master_caution1_pb", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::capt_six_pack_pb] = {"capt_six_pack_pb", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::chrono_capt_et_mode_pb] = {"chrono_capt_et_mode_pb", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::fire_bell_light1_pb] = {"fire_bell_light1_pb", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::MFD_ENG_pb] = {"MFD_ENG_pb", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::MFD_SYS_pb] = {"MFD_SYS_pb", XplaneType::type_Float, !convert_to_bool};
 
 
 
 
 		// Annunciators
 		data_ref_strings[DataRefName::acf_tailnum] = { "sim/aircraft/view/acf_tailnum", XplaneType::type_String };
-		data_ref_strings[DataRefName::crossfeed] = { "laminar/B738/annunciator/crossfeed", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::engine1_ovht] = { "laminar/B738/annunciator/engine1_ovht", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::engine2_ovht] = { "laminar/B738/annunciator/engine2_ovht", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::crossfeed] = { "laminar/B738/annunciator/crossfeed", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::engine1_ovht] = { "laminar/B738/annunciator/engine1_ovht", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::engine2_ovht] = { "laminar/B738/annunciator/engine2_ovht", XplaneType::type_Float, convert_to_bool};
 
-		data_ref_strings[DataRefName::cabin_alt] = { "laminar/B738/annunciator/cabin_alt", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::hyd_A_rud] = { "laminar/B738/annunciator/hyd_A_rud", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::hyd_B_rud] = { "laminar/B738/annunciator/hyd_B_rud", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::takeoff_config] = { "laminar/B738/annunciator/takeoff_config", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::gps] = { "laminar/B738/annunciator/gps", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::pax_oxy] = { "laminar/B738/annunciator/pax_oxy", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::cabin_alt] = { "laminar/B738/annunciator/cabin_alt", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::hyd_A_rud] = { "laminar/B738/annunciator/hyd_A_rud", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::hyd_B_rud] = { "laminar/B738/annunciator/hyd_B_rud", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::takeoff_config] = { "laminar/B738/annunciator/takeoff_config", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::gps] = { "laminar/B738/annunciator/gps", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::pax_oxy] = { "laminar/B738/annunciator/pax_oxy", XplaneType::type_Float, convert_to_bool};
 
-		data_ref_strings[DataRefName::left_gear_safe] = { "laminar/B738/annunciator/left_gear_safe", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::nose_gear_safe] = { "laminar/B738/annunciator/nose_gear_safe", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::right_gear_safe] = { "laminar/B738/annunciator/right_gear_safe", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::left_gear_transit] = { "laminar/B738/annunciator/left_gear_transit", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::nose_gear_transit] = { "laminar/B738/annunciator/nose_gear_transit", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::right_gear_transit] = { "laminar/B738/annunciator/right_gear_transit", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::left_gear_safe] = { "laminar/B738/annunciator/left_gear_safe", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::nose_gear_safe] = { "laminar/B738/annunciator/nose_gear_safe", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::right_gear_safe] = { "laminar/B738/annunciator/right_gear_safe", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::left_gear_transit] = { "laminar/B738/annunciator/left_gear_transit", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::nose_gear_transit] = { "laminar/B738/annunciator/nose_gear_transit", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::right_gear_transit] = { "laminar/B738/annunciator/right_gear_transit", XplaneType::type_Float, convert_to_bool};
 
-		data_ref_strings[DataRefName::yaw_damp] = { "laminar/B738/annunciator/yaw_damp", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::hyd_stdby_rud] = { "laminar/B738/annunciator/hyd_stdby_rud", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::feel_diff_press] = { "laminar/B738/annunciator/feel_diff_press", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::auto_slat_fail] = { "laminar/B738/annunciator/auto_slat_fail", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::bat_discharge] = { "laminar/B738/annunciator/bat_discharge", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::yaw_damp] = { "laminar/B738/annunciator/yaw_damp", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::hyd_stdby_rud] = { "laminar/B738/annunciator/hyd_stdby_rud", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::feel_diff_press] = { "laminar/B738/annunciator/feel_diff_press", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::auto_slat_fail] = { "laminar/B738/annunciator/auto_slat_fail", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::bat_discharge] = { "laminar/B738/annunciator/bat_discharge", XplaneType::type_Float, convert_to_bool};
 
-		data_ref_strings[DataRefName::tr_unit] = { "laminar/B738/annunciator/tr_unit", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::elec] = { "laminar/B738/annunciator/elec", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::standby_pwr_off] = { "laminar/B738/annunciator/standby_pwr_off", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::ground_power_avail] = { "laminar/B738/annunciator/ground_power_avail", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::apu_gen_off_bus] = { "laminar/B738/annunciator/apu_gen_off_bus", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::apu_low_oil] = { "laminar/B738/annunciator/apu_low_oil", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::apu_fault] = { "laminar/B738/annunciator/apu_fault", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::tr_unit] = { "laminar/B738/annunciator/tr_unit", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::elec] = { "laminar/B738/annunciator/elec", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::standby_pwr_off] = { "laminar/B738/annunciator/standby_pwr_off", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::ground_power_avail] = { "laminar/B738/annunciator/ground_power_avail", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::apu_gen_off_bus] = { "laminar/B738/annunciator/apu_gen_off_bus", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::apu_low_oil] = { "laminar/B738/annunciator/apu_low_oil", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::apu_fault] = { "laminar/B738/annunciator/apu_fault", XplaneType::type_Float, convert_to_bool};
 
-		data_ref_strings[DataRefName::emer_exit] = { "laminar/B738/annunciator/emer_exit", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::capt_pitot_off] = { "laminar/B738/annunciator/capt_pitot_off", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::fo_pitot_off] = { "laminar/B738/annunciator/fo_pitot_off", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::dual_bleed] = { "laminar/B738/annunciator/dual_bleed", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::ram_door_open1] = { "laminar/B738/annunciator/ram_door_open1", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::ram_door_open2] = { "laminar/B738/annunciator/ram_door_open2", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::emer_exit] = { "laminar/B738/annunciator/emer_exit", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::capt_pitot_off] = { "laminar/B738/annunciator/capt_pitot_off", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::fo_pitot_off] = { "laminar/B738/annunciator/fo_pitot_off", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::dual_bleed] = { "laminar/B738/annunciator/dual_bleed", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::ram_door_open1] = { "laminar/B738/annunciator/ram_door_open1", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::ram_door_open2] = { "laminar/B738/annunciator/ram_door_open2", XplaneType::type_Float, convert_to_bool};
 
-		data_ref_strings[DataRefName::six_pack_flt_cont] = { "laminar/B738/annunciator/six_pack_flt_cont", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::six_pack_irs] = { "laminar/B738/annunciator/six_pack_irs", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::six_pack_fuel] = { "laminar/B738/annunciator/six_pack_fuel", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::six_pack_elec] = { "laminar/B738/annunciator/six_pack_elec", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::six_pack_apu] = { "laminar/B738/annunciator/six_pack_apu", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::six_pack_fire] = { "laminar/B738/annunciator/six_pack_fire", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::six_pack_ice] = { "laminar/B738/annunciator/six_pack_ice", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::six_pack_hyd] = { "laminar/B738/annunciator/six_pack_hyd", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::six_pack_doors] = { "laminar/B738/annunciator/six_pack_doors", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::six_pack_eng] = { "laminar/B738/annunciator/six_pack_eng", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::six_pack_overhead] = { "laminar/B738/annunciator/six_pack_overhead", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::six_pack_air_cond] = { "laminar/B738/annunciator/six_pack_air_cond", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::six_pack_flt_cont] = { "laminar/B738/annunciator/six_pack_flt_cont", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::six_pack_irs] = { "laminar/B738/annunciator/six_pack_irs", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::six_pack_fuel] = { "laminar/B738/annunciator/six_pack_fuel", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::six_pack_elec] = { "laminar/B738/annunciator/six_pack_elec", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::six_pack_apu] = { "laminar/B738/annunciator/six_pack_apu", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::six_pack_fire] = { "laminar/B738/annunciator/six_pack_fire", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::six_pack_ice] = { "laminar/B738/annunciator/six_pack_ice", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::six_pack_hyd] = { "laminar/B738/annunciator/six_pack_hyd", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::six_pack_doors] = { "laminar/B738/annunciator/six_pack_doors", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::six_pack_eng] = { "laminar/B738/annunciator/six_pack_eng", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::six_pack_overhead] = { "laminar/B738/annunciator/six_pack_overhead", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::six_pack_air_cond] = { "laminar/B738/annunciator/six_pack_air_cond", XplaneType::type_Float, convert_to_bool};
 
-		data_ref_strings[DataRefName::speedbrake_armed] = { "laminar/B738/annunciator/speedbrake_armed", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::spd_brk_not_arm] = { "laminar/B738/annunciator/spd_brk_not_arm", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::speedbrake_extend] = { "laminar/B738/annunciator/speedbrake_extend", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::stab_out_of_trim] = { "laminar/B738/annunciator/stab_out_of_trim", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::anti_skid_inop] = { "laminar/B738/annunciator/anti_skid_inop", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::auto_brake_disarm] = { "laminar/B738/annunciator/auto_brake_disarm", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::slats_transit] = { "laminar/B738/annunciator/slats_transit", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::slats_extend] = { "laminar/B738/annunciator/slats_extend", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::gpws] = { "laminar/B738/annunciator/gpws", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::speedbrake_armed] = { "laminar/B738/annunciator/speedbrake_armed", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::spd_brk_not_arm] = { "laminar/B738/annunciator/spd_brk_not_arm", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::speedbrake_extend] = { "laminar/B738/annunciator/speedbrake_extend", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::stab_out_of_trim] = { "laminar/B738/annunciator/stab_out_of_trim", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::anti_skid_inop] = { "laminar/B738/annunciator/anti_skid_inop", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::auto_brake_disarm] = { "laminar/B738/annunciator/auto_brake_disarm", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::slats_transit] = { "laminar/B738/annunciator/slats_transit", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::slats_extend] = { "laminar/B738/annunciator/slats_extend", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::gpws] = { "laminar/B738/annunciator/gpws", XplaneType::type_Float, convert_to_bool};
 
-		data_ref_strings[DataRefName::parking_brake] = { "laminar/B738/annunciator/parking_brake", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::wheel_well_fire] = { "laminar/B738/annunciator/wheel_well_fire", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::fire_fault_inop] = { "laminar/B738/annunciator/fire_fault_inop", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::extinguisher_circuit_annun_apu] = { "laminar/B738/annunciator/extinguisher_circuit_annun_apu", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::apu_bottle_discharge] = { "laminar/B738/annunciator/apu_bottle_discharge", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::cargo_fault_detector] = { "laminar/B738/annunciator/cargo_fault_detector", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::cargo_fire] = { "laminar/B738/annunciator/cargo_fire", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::xpond_fail] = { "laminar/B738/transponder/indicators/xpond_fail", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::parking_brake] = { "laminar/B738/annunciator/parking_brake", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::wheel_well_fire] = { "laminar/B738/annunciator/wheel_well_fire", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::fire_fault_inop] = { "laminar/B738/annunciator/fire_fault_inop", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::extinguisher_circuit_annun_apu] = { "laminar/B738/annunciator/extinguisher_circuit_annun_apu", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::apu_bottle_discharge] = { "laminar/B738/annunciator/apu_bottle_discharge", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::cargo_fault_detector] = { "laminar/B738/annunciator/cargo_fault_detector", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::cargo_fire] = { "laminar/B738/annunciator/cargo_fire", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::xpond_fail] = { "laminar/B738/transponder/indicators/xpond_fail", XplaneType::type_Float, convert_to_bool};
 
-		data_ref_strings[DataRefName::fwd_entry] = { "laminar/B738/annunciator/fwd_entry", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::aft_entry] = { "laminar/B738/annunciator/aft_entry", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::fwd_service] = { "laminar/B738/annunciator/fwd_service", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::aft_service] = { "laminar/B738/annunciator/aft_service", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::airstair] = { "laminar/B738/annunciator/airstair", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::left_fwd_overwing] = { "laminar/B738/annunciator/left_fwd_overwing", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::right_fwd_overwing] = { "laminar/B738/annunciator/right_fwd_overwing", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::left_aft_overwing] = { "laminar/B738/annunciator/left_aft_overwing", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::right_aft_overwing] = { "laminar/B738/annunciator/right_aft_overwing", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::fwd_cargo] = { "laminar/B738/annunciator/fwd_cargo", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::aft_cargo] = { "laminar/B738/annunciator/aft_cargo", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::equip_door] = { "laminar/B738/annunciator/equip_door", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::door_lock_fail] = { "laminar/B738/annunciator/door_lock_fail", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::door_auto_unlk] = { "laminar/B738/annunciator/door_auto_unlk", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::fwd_entry] = { "laminar/B738/annunciator/fwd_entry", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::aft_entry] = { "laminar/B738/annunciator/aft_entry", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::fwd_service] = { "laminar/B738/annunciator/fwd_service", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::aft_service] = { "laminar/B738/annunciator/aft_service", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::airstair] = { "laminar/B738/annunciator/airstair", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::left_fwd_overwing] = { "laminar/B738/annunciator/left_fwd_overwing", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::right_fwd_overwing] = { "laminar/B738/annunciator/right_fwd_overwing", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::left_aft_overwing] = { "laminar/B738/annunciator/left_aft_overwing", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::right_aft_overwing] = { "laminar/B738/annunciator/right_aft_overwing", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::fwd_cargo] = { "laminar/B738/annunciator/fwd_cargo", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::aft_cargo] = { "laminar/B738/annunciator/aft_cargo", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::equip_door] = { "laminar/B738/annunciator/equip_door", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::door_lock_fail] = { "laminar/B738/annunciator/door_lock_fail", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::door_auto_unlk] = { "laminar/B738/annunciator/door_auto_unlk", XplaneType::type_Float, convert_to_bool};
 
-		data_ref_strings[DataRefName::autofail] = { "laminar/B738/annunciator/autofail", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::off_sched_descent] = { "laminar/B738/annunciator/off_sched_descent", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::altn_press] = { "laminar/B738/annunciator/altn_press", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::manual_press] = { "laminar/B738/annunciator/manual_press", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::irs_align_left] = { "laminar/B738/annunciator/irs_align_left", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::irs_align_right] = { "laminar/B738/annunciator/irs_align_right", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::irs_on_dc_left] = { "laminar/B738/annunciator/irs_on_dc_left", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::irs_on_dc_right] = { "laminar/B738/annunciator/irs_on_dc_right", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::irs_align_fail_left] = { "laminar/B738/annunciator/irs_align_fail_left", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::irs_align_fail_right] = { "laminar/B738/annunciator/irs_align_fail_right", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::irs_dc_fail_left] = { "laminar/B738/annunciator/irs_dc_fail_left", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::irs_dc_fail_right] = { "laminar/B738/annunciator/irs_dc_fail_right", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::autofail] = { "laminar/B738/annunciator/autofail", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::off_sched_descent] = { "laminar/B738/annunciator/off_sched_descent", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::altn_press] = { "laminar/B738/annunciator/altn_press", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::manual_press] = { "laminar/B738/annunciator/manual_press", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::irs_align_left] = { "laminar/B738/annunciator/irs_align_left", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::irs_align_right] = { "laminar/B738/annunciator/irs_align_right", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::irs_on_dc_left] = { "laminar/B738/annunciator/irs_on_dc_left", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::irs_on_dc_right] = { "laminar/B738/annunciator/irs_on_dc_right", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::irs_align_fail_left] = { "laminar/B738/annunciator/irs_align_fail_left", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::irs_align_fail_right] = { "laminar/B738/annunciator/irs_align_fail_right", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::irs_dc_fail_left] = { "laminar/B738/annunciator/irs_dc_fail_left", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::irs_dc_fail_right] = { "laminar/B738/annunciator/irs_dc_fail_right", XplaneType::type_Float, convert_to_bool};
 
-		data_ref_strings[DataRefName::reverser_fail_0] = { "laminar/B738/annunciator/reverser_fail_0", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::reverser_fail_1] = { "laminar/B738/annunciator/reverser_fail_1", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::fadec_fail_0] = { "laminar/B738/annunciator/fadec_fail_0", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::fadec_fail_1] = { "laminar/B738/annunciator/fadec_fail_1", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::eng1_valve_closed] = { "laminar/B738/annunciator/eng1_valve_closed", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::eng2_valve_closed] = { "laminar/B738/annunciator/eng2_valve_closed", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::spar1_valve_closed] = { "laminar/B738/annunciator/spar1_valve_closed", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::spar2_valve_closed] = { "laminar/B738/annunciator/spar2_valve_closed", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::bypass_filter_1] = { "laminar/B738/annunciator/bypass_filter_1", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::bypass_filter_2] = { "laminar/B738/annunciator/bypass_filter_2", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::reverser_fail_0] = { "laminar/B738/annunciator/reverser_fail_0", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::reverser_fail_1] = { "laminar/B738/annunciator/reverser_fail_1", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::fadec_fail_0] = { "laminar/B738/annunciator/fadec_fail_0", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::fadec_fail_1] = { "laminar/B738/annunciator/fadec_fail_1", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::eng1_valve_closed] = { "laminar/B738/annunciator/eng1_valve_closed", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::eng2_valve_closed] = { "laminar/B738/annunciator/eng2_valve_closed", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::spar1_valve_closed] = { "laminar/B738/annunciator/spar1_valve_closed", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::spar2_valve_closed] = { "laminar/B738/annunciator/spar2_valve_closed", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::bypass_filter_1] = { "laminar/B738/annunciator/bypass_filter_1", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::bypass_filter_2] = { "laminar/B738/annunciator/bypass_filter_2", XplaneType::type_Float, convert_to_bool};
 
-		data_ref_strings[DataRefName::low_fuel_press_l1] = { "laminar/B738/annunciator/low_fuel_press_l1", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::low_fuel_press_r1] = { "laminar/B738/annunciator/low_fuel_press_r1", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::low_fuel_press_l2] = { "laminar/B738/annunciator/low_fuel_press_l2", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::low_fuel_press_r2] = { "laminar/B738/annunciator/low_fuel_press_r2", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::low_fuel_press_c1] = { "laminar/B738/annunciator/low_fuel_press_c1", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::low_fuel_press_c2] = { "laminar/B738/annunciator/low_fuel_press_c2", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::trans_bus_off1] = { "laminar/B738/annunciator/trans_bus_off1", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::trans_bus_off2] = { "laminar/B738/annunciator/trans_bus_off2", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::source_off1] = { "laminar/B738/annunciator/source_off1", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::source_off2] = { "laminar/B738/annunciator/source_off2", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::gen_off_bus1] = { "laminar/B738/annunciator/gen_off_bus1", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::gen_off_bus2] = { "laminar/B738/annunciator/gen_off_bus2", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::drive1] = { "laminar/B738/annunciator/drive1", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::drive2] = { "laminar/B738/annunciator/drive2", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::low_fuel_press_l1] = { "laminar/B738/annunciator/low_fuel_press_l1", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::low_fuel_press_r1] = { "laminar/B738/annunciator/low_fuel_press_r1", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::low_fuel_press_l2] = { "laminar/B738/annunciator/low_fuel_press_l2", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::low_fuel_press_r2] = { "laminar/B738/annunciator/low_fuel_press_r2", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::low_fuel_press_c1] = { "laminar/B738/annunciator/low_fuel_press_c1", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::low_fuel_press_c2] = { "laminar/B738/annunciator/low_fuel_press_c2", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::trans_bus_off1] = { "laminar/B738/annunciator/trans_bus_off1", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::trans_bus_off2] = { "laminar/B738/annunciator/trans_bus_off2", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::source_off1] = { "laminar/B738/annunciator/source_off1", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::source_off2] = { "laminar/B738/annunciator/source_off2", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::gen_off_bus1] = { "laminar/B738/annunciator/gen_off_bus1", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::gen_off_bus2] = { "laminar/B738/annunciator/gen_off_bus2", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::drive1] = { "laminar/B738/annunciator/drive1", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::drive2] = { "laminar/B738/annunciator/drive2", XplaneType::type_Float, convert_to_bool};
 
-		data_ref_strings[DataRefName::window_heat_ovht_ls] = { "laminar/B738/annunciator/window_heat_ovht_ls", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::window_heat_ovht_lf] = { "laminar/B738/annunciator/window_heat_ovht_lf", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::window_heat_ovht_rf] = { "laminar/B738/annunciator/window_heat_ovht_rf", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::window_heat_ovht_rs] = { "laminar/B738/annunciator/window_heat_ovht_rs", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::window_heat_l_fwd] = { "laminar/B738/annunciator/window_heat_l_fwd", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::window_heat_r_fwd] = { "laminar/B738/annunciator/window_heat_r_fwd", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::window_heat_l_side] = { "laminar/B738/annunciator/window_heat_l_side", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::window_heat_r_side] = { "laminar/B738/annunciator/window_heat_r_side", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::wing_ice_on_L] = { "laminar/B738/annunciator/wing_ice_on_L", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::wing_ice_on_R] = { "laminar/B738/annunciator/wing_ice_on_R", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::cowl_ice_0] = { "laminar/B738/annunciator/cowl_ice_0", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::cowl_ice_1] = { "laminar/B738/annunciator/cowl_ice_1", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::cowl_ice_on_0] = { "laminar/B738/annunciator/cowl_ice_on_0", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::cowl_ice_on_1] = { "laminar/B738/annunciator/cowl_ice_on_1", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::window_heat_ovht_ls] = { "laminar/B738/annunciator/window_heat_ovht_ls", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::window_heat_ovht_lf] = { "laminar/B738/annunciator/window_heat_ovht_lf", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::window_heat_ovht_rf] = { "laminar/B738/annunciator/window_heat_ovht_rf", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::window_heat_ovht_rs] = { "laminar/B738/annunciator/window_heat_ovht_rs", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::window_heat_l_fwd] = { "laminar/B738/annunciator/window_heat_l_fwd", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::window_heat_r_fwd] = { "laminar/B738/annunciator/window_heat_r_fwd", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::window_heat_l_side] = { "laminar/B738/annunciator/window_heat_l_side", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::window_heat_r_side] = { "laminar/B738/annunciator/window_heat_r_side", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::wing_ice_on_L] = { "laminar/B738/annunciator/wing_ice_on_L", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::wing_ice_on_R] = { "laminar/B738/annunciator/wing_ice_on_R", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::cowl_ice_0] = { "laminar/B738/annunciator/cowl_ice_0", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::cowl_ice_1] = { "laminar/B738/annunciator/cowl_ice_1", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::cowl_ice_on_0] = { "laminar/B738/annunciator/cowl_ice_on_0", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::cowl_ice_on_1] = { "laminar/B738/annunciator/cowl_ice_on_1", XplaneType::type_Float, convert_to_bool};
 
-		data_ref_strings[DataRefName::hyd_press_a] = { "laminar/B738/annunciator/hyd_press_a", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::hyd_press_b] = { "laminar/B738/annunciator/hyd_press_b", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::hyd_el_press_a] = { "laminar/B738/annunciator/hyd_el_press_a", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::hyd_el_press_b] = { "laminar/B738/annunciator/hyd_el_press_b", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::pack_left] = { "laminar/B738/annunciator/pack_left", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::pack_right] = { "laminar/B738/annunciator/pack_right", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::wing_body_ovht_left] = { "laminar/B738/annunciator/wing_body_ovht_left", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::wing_body_ovht_right] = { "laminar/B738/annunciator/wing_body_ovht_right", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::bleed_trip_1] = { "laminar/B738/annunciator/bleed_trip_1", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::bleed_trip_2] = { "laminar/B738/annunciator/bleed_trip_2", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::engine1_fire] = { "laminar/B738/annunciator/engine1_fire", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::engine2_fire] = { "laminar/B738/annunciator/engine2_fire", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::master_caution_light] = { "laminar/B738/annunciator/master_caution_light", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::below_gs] = { "laminar/B738/annunciator/below_gs", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::hyd_press_a] = { "laminar/B738/annunciator/hyd_press_a", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::hyd_press_b] = { "laminar/B738/annunciator/hyd_press_b", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::hyd_el_press_a] = { "laminar/B738/annunciator/hyd_el_press_a", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::hyd_el_press_b] = { "laminar/B738/annunciator/hyd_el_press_b", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::pack_left] = { "laminar/B738/annunciator/pack_left", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::pack_right] = { "laminar/B738/annunciator/pack_right", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::wing_body_ovht_left] = { "laminar/B738/annunciator/wing_body_ovht_left", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::wing_body_ovht_right] = { "laminar/B738/annunciator/wing_body_ovht_right", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::bleed_trip_1] = { "laminar/B738/annunciator/bleed_trip_1", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::bleed_trip_2] = { "laminar/B738/annunciator/bleed_trip_2", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::engine1_fire] = { "laminar/B738/annunciator/engine1_fire", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::engine2_fire] = { "laminar/B738/annunciator/engine2_fire", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::master_caution_light] = { "laminar/B738/annunciator/master_caution_light", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::below_gs] = { "laminar/B738/annunciator/below_gs", XplaneType::type_Float, convert_to_bool};
 
-		data_ref_strings[DataRefName::ap_disconnect1] = { "laminar/B738/annunciator/ap_disconnect1", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::ap_disconnect2] = { "laminar/B738/annunciator/ap_disconnect2", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::at_disconnect1] = { "laminar/B738/annunciator/at_disconnect1", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::at_disconnect2] = { "laminar/B738/annunciator/at_disconnect2", XplaneType::type_Float, bool_in_data};
-
-
-		data_ref_strings[DataRefName::ap_warn1] = { "laminar/B738/annunciator/ap_warn1", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::ap_warn2] = { "laminar/B738/annunciator/ap_warn2", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::at_fms_warn1] = { "laminar/B738/annunciator/at_fms_warn1", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::at_fms_warn2] = { "laminar/B738/annunciator/at_fms_warn2", XplaneType::type_Float, bool_in_data};
-
-		data_ref_strings[DataRefName::at_fms_disconnect1] = { "laminar/B738/annunciator/at_fms_disconnect1", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::at_fms_disconnect2] = { "laminar/B738/annunciator/at_fms_disconnect2", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::ap_disconnect1] = { "laminar/B738/annunciator/ap_disconnect1", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::ap_disconnect2] = { "laminar/B738/annunciator/ap_disconnect2", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::at_disconnect1] = { "laminar/B738/annunciator/at_disconnect1", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::at_disconnect2] = { "laminar/B738/annunciator/at_disconnect2", XplaneType::type_Float, convert_to_bool};
 
 
-		data_ref_strings[DataRefName::fms_exec_light_pilot] = { "laminar/B738/indicators/fms_exec_light_pilot", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::fms_exec_light_copilot] = { "laminar/B738/indicators/fms_exec_light_copilot", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::ap_warn1] = { "laminar/B738/annunciator/ap_warn1", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::ap_warn2] = { "laminar/B738/annunciator/ap_warn2", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::at_fms_warn1] = { "laminar/B738/annunciator/at_fms_warn1", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::at_fms_warn2] = { "laminar/B738/annunciator/at_fms_warn2", XplaneType::type_Float, convert_to_bool};
 
-		data_ref_strings[DataRefName::ac_tnsbus1_status] = {"laminar/B738/electric/ac_tnsbus1_status", XplaneType::type_Float, bool_in_data};
-		data_ref_strings[DataRefName::ac_tnsbus2_status] = {"laminar/B738/electric/ac_tnsbus2_status", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::at_fms_disconnect1] = { "laminar/B738/annunciator/at_fms_disconnect1", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::at_fms_disconnect2] = { "laminar/B738/annunciator/at_fms_disconnect2", XplaneType::type_Float, convert_to_bool};
+
+
+		data_ref_strings[DataRefName::fms_exec_light_pilot] = { "laminar/B738/indicators/fms_exec_light_pilot", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::fms_exec_light_copilot] = { "laminar/B738/indicators/fms_exec_light_copilot", XplaneType::type_Float, convert_to_bool};
+
+		data_ref_strings[DataRefName::ac_tnsbus1_status] = {"laminar/B738/electric/ac_tnsbus1_status", XplaneType::type_Float, convert_to_bool};
+		data_ref_strings[DataRefName::ac_tnsbus2_status] = {"laminar/B738/electric/ac_tnsbus2_status", XplaneType::type_Float, convert_to_bool};
 
 
 		//
@@ -419,7 +423,14 @@ namespace zcockpit::cockpit {
 		command_ref_strings[CommandRefName::window_ovht_test_dn] = {"laminar/B738/toggle_switch/window_ovht_test_dn"};
 		command_ref_strings[CommandRefName::capt_probes_pos] = {"laminar/B738/toggle_switch/capt_probes_pos"};
 		command_ref_strings[CommandRefName::fo_probes_pos] = {"laminar/B738/toggle_switch/fo_probes_pos"};
+		command_ref_strings[CommandRefName::main_pnl_du_capt_left] = {"laminar/B738/toggle_switch/main_pnl_du_capt_left"};
+		command_ref_strings[CommandRefName::main_pnl_du_capt_right] = {"laminar/B738/toggle_switch/main_pnl_du_capt_right"};
+		command_ref_strings[CommandRefName::main_pnl_du_fo_left] = {"laminar/B738/toggle_switch/main_pnl_du_fo_left"};
+		command_ref_strings[CommandRefName::main_pnl_du_fo_right] = {"laminar/B738/toggle_switch/main_pnl_du_fo_right"};
 
+		//command_ref_strings[CommandRefName::] = {""};
+		//command_ref_strings[CommandRefName::] = {""};
+		//command_ref_strings[CommandRefName::] = {""};
 		//command_ref_strings[CommandRefName::] = {""};
 		//command_ref_strings[CommandRefName::] = {""};
 		//command_ref_strings[CommandRefName::] = {""};

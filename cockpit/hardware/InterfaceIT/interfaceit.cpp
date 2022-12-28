@@ -265,6 +265,8 @@ namespace zcockpit::cockpit::hardware
 		overhead_zcockpit_switches[63] = ZcockpitSwitch(DataRefName::capt_probes_pos, overhead_switches[63].type);				// PROBE_A_HEAT_ON=1, PROBE_A_HEAT_OFF=0				63
 		overhead_zcockpit_switches[64] = ZcockpitSwitch(DataRefName::window_ovht_test, overhead_switches[64].type);				// WINDOW_HEAT_TEST_DOWN=1								64
 
+
+
 	}
 
 

@@ -253,7 +253,8 @@ namespace zcockpit::cockpit {
 		window_ovht_test,
 		capt_probes_pos,
 		fo_probes_pos,
-
+		main_pnl_du_capt,
+		main_pnl_du_fo,
 
 
 		
@@ -345,7 +346,8 @@ namespace zcockpit::cockpit {
 		DataRefName::window_ovht_test,
 		DataRefName::capt_probes_pos,
 		DataRefName::fo_probes_pos,
-
+		DataRefName::main_pnl_du_capt,
+		DataRefName::main_pnl_du_fo,
 	};
 
 
@@ -416,7 +418,8 @@ namespace zcockpit::cockpit {
 		DataRefName::window_ovht_test,
 		DataRefName::capt_probes_pos,
 		DataRefName::fo_probes_pos,
-
+		DataRefName::main_pnl_du_capt,
+		DataRefName::main_pnl_du_fo,
 		//
 		// end of HARDWARE SWITCHES
 		//

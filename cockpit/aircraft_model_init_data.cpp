@@ -75,6 +75,8 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::capt_probes_pos] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.capt_probes_pos,			&z737SwitchCmd.capt_probes_pos);
 		z_cockpit_data[DataRefName::fo_probes_pos] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.fo_probes_pos,				&z737SwitchCmd.fo_probes_pos);
 
+		z_cockpit_data[DataRefName::main_pnl_du_capt] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.main_pnl_du_capt,				&z737SwitchCmd.main_pnl_du_capt);
+		z_cockpit_data[DataRefName::main_pnl_du_fo] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.main_pnl_du_fo,				&z737SwitchCmd.main_pnl_du_fo);
 
 
 

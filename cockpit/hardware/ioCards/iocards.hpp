@@ -84,8 +84,10 @@ namespace zcockpit::cockpit::hardware
 		void static LIBUSB_CALL read_callback(struct libusb_transfer* transfer);
 
 		void write_callback_cpp(const struct libusb_transfer* transfer);
+		void start_write_transfer();
+
 		[[nodiscard]]bool is_usb_thread_healthy();
-		bool submit_write_transfer(std::vector<unsigned char> buffer);
+
 		bool submit_read_transfer();
 		void close_down();
 		void static LIBUSB_CALL write_callback(struct libusb_transfer* transfer);
@@ -134,6 +136,7 @@ namespace zcockpit::cockpit::hardware
 		//std::mutex iocards_mutex;
 	private:
 
+		bool submit_write_transfer(std::vector<unsigned char> buffer);
 
 	//	int get_acceleration(int card, int input, double accelerator);
 
@@ -167,7 +170,6 @@ namespace zcockpit::cockpit::hardware
 		bool event_thread_run{false};
 		bool libusb_is_blocking{ false };
 
-		bool writing_transfer{false};
 		bool write_callback_running{false};
 		bool read_callback_running{false};
 		//

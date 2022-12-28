@@ -22,8 +22,6 @@ namespace zcockpit::cockpit::hardware
 	private:
 
 		AircraftModel& aircraft_model;
-		void processOutputs();
-
 		static std::string iocard_bus_addr;
 		static bool running;
 

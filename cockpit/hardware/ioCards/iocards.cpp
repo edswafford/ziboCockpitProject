@@ -672,6 +672,38 @@ namespace zcockpit::cockpit::hardware
 					}
 					libusb_is_blocking = true;
 				}
+				// Read callback -- submits read transfers
+				//
+				// We need depend on external outQueue for submit write transfers
+				// First see if callback completed then pull data off queue and submit
+				bool writing_to_usb = false;
+				{
+					std::lock_guard<std::mutex> lock(usb_mutex);
+					writing_to_usb = write_callback_running;
+				}
+				if(!writing_to_usb) {
+					if(outQueue.size() > 0){
+						if (const auto maybe_vector = outQueue.pop()) {
+							if (maybe_vector) {
+								auto buffer = *maybe_vector;
+								writeTransfer->buffer = buffer.data();
+								writeTransfer->length = static_cast<int>(buffer.size());
+								{
+									std::lock_guard<std::mutex> lock(usb_mutex);
+									if(!event_thread_failed){
+										write_callback_running = true;
+										if(libusb_submit_transfer(writeTransfer) < 0)
+										{
+											event_thread_failed = true;
+											write_callback_running = false;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
 				const auto ret = libusb_handle_events(LibUsbInterface::ctx);
 				{
 					std::lock_guard<std::mutex> guard(usb_mutex);
@@ -741,7 +773,7 @@ namespace zcockpit::cockpit::hardware
 	{
 		{
 			std::lock_guard<std::mutex> lock(usb_mutex);
-			writing_transfer = false;
+			write_callback_running = false;
 		}
 		if(transfer->status != LIBUSB_TRANSFER_COMPLETED)
 		{
@@ -749,28 +781,17 @@ namespace zcockpit::cockpit::hardware
 			writeTransfer = nullptr;
 			std::lock_guard<std::mutex> lock(usb_mutex);
 			event_thread_failed = true;
-			return;
 		}
-		else
-		{
-			if(outQueue.size() > 0){
-				if (const auto maybe_vector = outQueue.pop()) {
-					if (maybe_vector) {
-						auto buffer = *maybe_vector;
-						writeTransfer->buffer = buffer.data();
-						writeTransfer->length = static_cast<int>(buffer.size());
-						{
-							std::lock_guard<std::mutex> lock(usb_mutex);
-							if(!event_thread_failed){
-								writing_transfer = true;
-								if(libusb_submit_transfer(writeTransfer) < 0)
-								{
-									event_thread_failed = true;
-								}
-							}
-						}
-					}
-				}
+	}
+
+	void IOCards::start_write_transfer()
+	{
+		std::lock_guard<std::mutex> lock(usb_mutex);
+		if(!write_callback_running && !event_thread_failed){
+			write_callback_running = true;
+			if(libusb_submit_transfer(writeTransfer) < 0)
+			{
+				event_thread_failed = true;
 			}
 		}
 	}
@@ -779,6 +800,21 @@ namespace zcockpit::cockpit::hardware
 	{
 		std::lock_guard<std::mutex> lock(usb_mutex);
 		return !event_thread_failed;
+	}
+
+	bool IOCards::submit_read_transfer()
+	{
+		std::lock_guard<std::mutex> lock(usb_mutex);
+		if(!read_callback_running && !event_thread_failed) {
+			if(libusb_submit_transfer(readTransfer) < 0)
+			{
+				event_thread_failed = true;
+			}
+			else {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	bool IOCards::submit_write_transfer(std::vector<unsigned char> buffer)
@@ -797,22 +833,6 @@ namespace zcockpit::cockpit::hardware
 		}
 		return false;
 	}
-	bool IOCards::submit_read_transfer()
-	{
-		std::lock_guard<std::mutex> lock(usb_mutex);
-		if(!read_callback_running && !event_thread_failed) {
-			if(libusb_submit_transfer(readTransfer) < 0)
-			{
-				event_thread_failed = true;
-			}
-			else {
-				return true;
-			}
-		}
-		return false;
-	}
-
-
 
 
 	void IOCards::close_down()
@@ -870,7 +890,7 @@ namespace zcockpit::cockpit::hardware
 	}
 
 
-void IOCards::receive_mastercard(void)
+	void IOCards::receive_mastercard(void)
 	{
 		int result = 0;
 
@@ -1080,6 +1100,7 @@ void IOCards::receive_mastercard(void)
 		} // is_okay
 	}
 
+
 	// send changes in the outputs array (outputs and displays) to MASTERCARD
 	// MASTERCARD is connected to USB EXPANSION CARD
 	void IOCards::send_mastercard(void)
@@ -1144,6 +1165,7 @@ void IOCards::receive_mastercard(void)
 							constexpr int firstoutput = 11;
 							send_data[0] = card * totchannels + segment * channelspersegment + firstoutput;
 							outQueue.push(std::move(send_data));
+
 
 							for (count = 0; count < channelspersegment; count++)
 							{
