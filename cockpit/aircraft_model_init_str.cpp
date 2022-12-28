@@ -295,7 +295,10 @@ namespace zcockpit::cockpit {
 		data_ref_strings[DataRefName::fms_exec_light_pilot] = { "laminar/B738/indicators/fms_exec_light_pilot", XplaneType::type_Float, bool_in_data};
 		data_ref_strings[DataRefName::fms_exec_light_copilot] = { "laminar/B738/indicators/fms_exec_light_copilot", XplaneType::type_Float, bool_in_data};
 
-		data_ref_strings[DataRefName::main_bus] = {"laminar/B738/electric/main_bus", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::ac_tnsbus1_status] = {"laminar/B738/electric/ac_tnsbus1_status", XplaneType::type_Float, bool_in_data};
+		data_ref_strings[DataRefName::ac_tnsbus2_status] = {"laminar/B738/electric/ac_tnsbus2_status", XplaneType::type_Float, bool_in_data};
+
+
 		//
 		// End ZBO datarefs
 		//

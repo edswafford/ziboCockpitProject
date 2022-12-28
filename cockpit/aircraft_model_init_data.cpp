@@ -279,7 +279,8 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::fms_exec_light_pilot] = ZCockpitInData(&z737InData.CDU_annunEXEC[0], ZCockpitType::ZBool);
 		z_cockpit_data[DataRefName::fms_exec_light_copilot] = ZCockpitInData(&z737InData.CDU_annunEXEC[1], ZCockpitType::ZBool);
 
-		z_cockpit_data[DataRefName::main_bus] = ZCockpitInData(&z737InData.main_bus, ZCockpitType::ZBool);
+		z_cockpit_data[DataRefName::ac_tnsbus1_status] = ZCockpitInData(&z737InData.ac_tnsbus1_status, ZCockpitType::ZBool);
+		z_cockpit_data[DataRefName::ac_tnsbus2_status] = ZCockpitInData(&z737InData.ac_tnsbus2_status, ZCockpitType::ZBool);
 	}
 
 

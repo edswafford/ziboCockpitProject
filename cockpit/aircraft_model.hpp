@@ -88,13 +88,14 @@ namespace zcockpit::cockpit {
 
 
 		bool z738_is_available() const { return z738_available; }
-
+		bool z738_ac_power_is_on() const { return (z737InData.ac_tnsbus1_status || z737InData.ac_tnsbus2_status);}
 		void clear_ref_id_lists();
 
 		void push_switch_change(hardware::ZcockpitSwitch switch_data);
 
 		[[nodiscard]] std::vector<common::packet_data_t> update_switch_values();
 		std::vector<common::packet_data_t> open_guards();
+
 
 		std::unordered_map<int, DataRefParameter> ref_id_to_dataref;
 		std::unordered_map<DataRefName, int>dataref_to_ref_id;
@@ -108,9 +109,9 @@ namespace zcockpit::cockpit {
 		Z737SwitchData hw_switch_data{};
 		Z737SwitchData xplane_switch_data{};
 		Z737SwitchCmd z737SwitchCmd{};
-
 	private:
 		bool z738_available{ false };
+
 
 		common::EnumArray<DataRefName, z_class_t> z_cockpit_data;
 		common::EnumArray<DataRefName, DataRefString> data_ref_strings;

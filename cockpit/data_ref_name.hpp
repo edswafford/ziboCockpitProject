@@ -165,7 +165,9 @@ namespace zcockpit::cockpit {
 		at_fms_disconnect1,
 		at_fms_disconnect2,
 		fms_exec_light_pilot,
-		main_bus,
+		ac_tnsbus1_status,
+		ac_tnsbus2_status,
+
 
 		//
 		// end of DataRef names
@@ -576,6 +578,8 @@ namespace zcockpit::cockpit {
 		DataRefName::at_fms_disconnect1,
 		DataRefName::at_fms_disconnect2,
 		DataRefName::fms_exec_light_pilot,
-		DataRefName::main_bus
+		DataRefName::ac_tnsbus1_status,
+		DataRefName::ac_tnsbus2_status,
+
 	};
 }

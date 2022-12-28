@@ -105,15 +105,17 @@ namespace zcockpit::cockpit::hardware
 	}
 	void MipIOCard::processMIP()
 	{
-		if(powerIsOn && !aircraft_model.z737InData.main_bus)
+		static bool power_is_on = false;
+
+		if(power_is_on && !aircraft_model.z738_ac_power_is_on())
 		{
-			powerIsOn = false;
+			power_is_on = false;
 			// turn off relays
 			updateRelays(0);
 		}
-		else if(!powerIsOn && aircraft_model.z737InData.main_bus)
+		else if(!power_is_on && aircraft_model.z738_ac_power_is_on())
 		{
-			powerIsOn = true;
+			power_is_on = true;
 			// turn on relays;
 			updateRelays(1);
 		}

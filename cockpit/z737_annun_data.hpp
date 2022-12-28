@@ -167,6 +167,8 @@ namespace zcockpit::cockpit {
 		bool MAIN_annun_AP_AMBER[2]{false, false};
 
 		bool MAIN_annun_AT_AMBER[2]{false, false};
-		bool main_bus{false};
+
+		bool ac_tnsbus1_status{false};
+		bool ac_tnsbus2_status{false};
 	};
 }
