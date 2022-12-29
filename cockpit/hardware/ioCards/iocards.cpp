@@ -663,66 +663,71 @@ namespace zcockpit::cockpit::hardware
 	void IOCards::do_usb_work()
 	{
 		if(is_okay) {
-			while(true) {
-				{
-					std::lock_guard<std::mutex> guard(usb_mutex);
-					if (!event_thread_run)
+			try {
+				while (true) {
 					{
-						LOG() << "libusb event thread stopping";
-						break;
+						std::lock_guard<std::mutex> guard(usb_mutex);
+						if (!event_thread_run)
+						{
+							LOG() << "libusb event thread stopping";
+							break;
+						}
+						libusb_is_blocking = true;
 					}
-					libusb_is_blocking = true;
-				}
-				// Read callback -- submits read transfers
-				//
-				// We need depend on external outQueue for submit write transfers
-				// First see if callback completed then pull data off queue and submit
-				bool writing_to_usb = false;
-				{
-					std::lock_guard<std::mutex> lock(usb_mutex);
-					writing_to_usb = write_callback_running;
-				}
-				if(!writing_to_usb) {
-					LOG() << "Do work: writting callback completed, queue size = " << outQueue.size();
-					if(outQueue.size() > 0){
-						if (const auto maybe_vector = outQueue.pop()) {
-							if (maybe_vector) {
-								auto buffer = *maybe_vector;
-								writeTransfer->buffer = buffer.data();
-								writeTransfer->length = static_cast<int>(buffer.size());
-								{
-									std::lock_guard<std::mutex> lock(usb_mutex);
-									if(!event_thread_failed){
-										write_callback_running = true;
-										if(libusb_submit_transfer(writeTransfer) < 0)
-										{
-											event_thread_failed = true;
-											write_callback_running = false;
-											LOG() << "write submit transfer failed";
+					// Read callback -- submits read transfers
+					//
+					// We need depend on external outQueue for submit write transfers
+					// First see if callback completed then pull data off queue and submit
+					bool writing_to_usb = false;
+					{
+						std::lock_guard<std::mutex> lock(usb_mutex);
+						writing_to_usb = write_callback_running;
+					}
+					if (!writing_to_usb) {
+						LOG() << "Do work: writting callback completed, queue size = " << outQueue.size();
+						if (outQueue.size() > 0) {
+							if (const auto maybe_vector = outQueue.pop()) {
+								if (maybe_vector) {
+									auto buffer = *maybe_vector;
+									writeTransfer->buffer = buffer.data();
+									writeTransfer->length = static_cast<int>(buffer.size());
+									{
+										std::lock_guard<std::mutex> lock(usb_mutex);
+										if (!event_thread_failed) {
+											write_callback_running = true;
+											if (libusb_submit_transfer(writeTransfer) < 0)
+											{
+												event_thread_failed = true;
+												write_callback_running = false;
+												LOG() << "write submit transfer failed";
+											}
 										}
-									}
-									else {
-										LOG() << "Write transfer succeded";
+										else {
+											LOG() << "Write transfer succeded";
+										}
 									}
 								}
 							}
 						}
 					}
-				}
-				LOG() << "Calling libusb handle events Blocking!! " << device_name;
-				const auto ret = libusb_handle_events(LibUsbInterface::ctx);
-				{
-					std::lock_guard<std::mutex> guard(usb_mutex);
-					libusb_is_blocking = false;
-					if (ret < 0) {
-						event_thread_failed = true;
-						LOG() << "libusb handle events failed " << device_name;
-						break;
+					LOG() << "Calling libusb handle events Blocking!! " << device_name;
+					const auto ret = libusb_handle_events(LibUsbInterface::ctx);
+					{
+						std::lock_guard<std::mutex> guard(usb_mutex);
+						libusb_is_blocking = false;
+						if (ret < 0) {
+							event_thread_failed = true;
+							LOG() << "libusb handle events failed " << device_name;
+							break;
+						}
+						else {
+							LOG() << "libusb handle events succeded " << device_name;
+						}
 					}
-					else {
-						LOG() << "libusb handle events succeded " << device_name;
-					}
 				}
+			}
+			catch (...) {
+				LOG() << "Unknown Exception";
 			}
 		}
 	}
@@ -757,7 +762,7 @@ namespace zcockpit::cockpit::hardware
 			if(length > 0){
 				std::vector<unsigned char> buffer(writeTransfer->buffer, writeTransfer->buffer + length);
 				inQueue.push(std::move(buffer));
-				LOG() << "Read callback pushed " << length;
+				LOG() << "Read callback pushed " << length << ", " << device_name;
 			}
 
 			std::lock_guard<std::mutex> lock(usb_mutex);
@@ -767,9 +772,9 @@ namespace zcockpit::cockpit::hardware
 					event_thread_failed = true;
 					LOG() << "Submit transfer read failed";
 				}
-			}
-			else {
-				LOG() << "Submit transfer read succeded";
+				else {
+					LOG() << "Submit transfer read succeded " << device_name;
+				}
 			}
 		}
 		return;
@@ -798,7 +803,7 @@ namespace zcockpit::cockpit::hardware
 			LOG() << "write callback failed";
 		}
 		else {
-			LOG() << "write callback completed";
+			LOG() << "write callback completed " << device_name;
 		}
 	}
 
@@ -1136,7 +1141,7 @@ namespace zcockpit::cockpit::hardware
 	{
 
 		int send_status = 0;
-		int queue_size = -1;
+		static int queue_size = 0;
 		// check if we have a connected and initialized mastercard
 		if (is_okay) {
 			int count;
@@ -1190,15 +1195,12 @@ namespace zcockpit::cockpit::hardware
 						}
 
 						if (changed == 1)
-						{
-							queue_size = outQueue.size();
-								
-							 
+						{							 
 							constexpr int firstoutput = 11;
 							send_data[0] = card * totchannels + segment * channelspersegment + firstoutput;
 							outQueue.push(std::move(send_data));
 
-							LOG() << "Queue size " << queue_size;
+
 							for (count = 0; count < channelspersegment; count++)
 							{
 								channel = count + segment * channelspersegment;
@@ -1210,6 +1212,48 @@ namespace zcockpit::cockpit::hardware
 						}
 					}
 				}
+			}
+			auto current_queue_size = outQueue.size();
+			if (current_queue_size > 0) {
+				if (current_queue_size < queue_size) {
+					// libusb is processing the queue
+					queue_size = current_queue_size;
+					LOG() << "libusb is processing quque, size = " << current_queue_size;
+				}
+				else if (current_queue_size == queue_size) {
+					// queue has not changed -- libusb may be waiting on submit transfer
+					bool is_blocking = false;
+					{
+						std::lock_guard<std::mutex> guard(usb_mutex);
+						is_blocking = libusb_is_blocking;
+					}
+					if (is_blocking) {
+						LOG() << "Waking Event handler: Queue size " << queue_size << " device " << device_name << " is blocking == " << is_blocking;
+						//std::lock_guard<std::mutex> guard(usb_mutex);
+						//if (const auto maybe_vector = outQueue.pop()) {
+						//	if (maybe_vector) {
+						//		if (!submit_write_transfer(*maybe_vector)) {
+						//			LOG() << "failed submit write transfer";
+						//		}
+
+						//	}
+						//}
+						//queue_size = outQueue.size();;
+					}
+					else {
+						queue_size = current_queue_size;
+						LOG() << "Handler is NOT Blocking, Queue size " << queue_size << " device " << device_name << " is blocking == " << is_blocking;
+					}
+				}
+				else {
+					// Queue is growing
+					queue_size = current_queue_size;
+					LOG() << "Queue is Growing Queue size " << queue_size << " device " << device_name;
+				}
+			}
+			else {
+				// queue is empty
+				queue_size = 0;
 			}
 		}
 	}

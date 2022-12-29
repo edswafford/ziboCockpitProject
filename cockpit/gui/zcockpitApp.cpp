@@ -36,6 +36,7 @@ using namespace std::chrono_literals;
 using namespace zcockpit::common::network;
 using namespace zcockpit::cockpit::hardware;
 
+
 namespace zcockpit::cockpit::gui
 {
 
@@ -419,8 +420,8 @@ namespace zcockpit::cockpit::gui
 		////catch (websocketpp::exception const& e) {
 		////	std::cout << e.what() << std::endl;
 		////}
-		catch (...) {
-			wxSafeShowMessage("Fatal Error", "other exception");
+		catch (std::runtime_error& e) {
+			wxSafeShowMessage("Fatal Error", "other exception ");
 			main_window->Close(true);
 		}
 
