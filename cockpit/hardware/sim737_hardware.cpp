@@ -18,6 +18,25 @@ namespace zcockpit::cockpit::hardware
 		interface_it.closeInterfaceITController();
 		interface_it.drop();
 
+
+		std::unique_lock<std::mutex> lk(LibUsbInterface::event_thread_done_mutex);
+		{
+			std::lock_guard<std::mutex> guard(LibUsbInterface::event_thread_mutex);
+				if (LibUsbInterface::event_thread_run) {
+					LibUsbInterface::event_thread_run = false;
+					LibUsbInterface::condition.wait(lk, []
+						{
+							return (LibUsbInterface::event_thread_has_stopped);
+						});
+				}
+		}
+		if(LibUsbInterface::event_thread.joinable()) {
+			LibUsbInterface::event_thread.join();
+		}
+
+
+
+
 		if (mip_iocard) {
 			mip_iocard->drop();
 			mip_iocard = nullptr;
@@ -48,6 +67,10 @@ namespace zcockpit::cockpit::hardware
 				const auto bus_addr = available_iocards[IOCards::IOCard_Device::REAR_OVERHEAD];
 				rear_overhead_iocard = RearOverheadIOCard::create_iocard(ac_model, bus_addr);
 			}
+
+			// Applications should not start the event thread until after their first call to libusb_open()
+			LibUsbInterface::start_event_thread();
+			LOG() << "libusb Event thread is running";
 		}
 	}
 

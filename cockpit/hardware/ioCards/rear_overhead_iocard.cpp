@@ -62,18 +62,17 @@ namespace zcockpit::cockpit::hardware
 				{
 					card->clear_buffers();
 
-					if(card->submit_read_transfer()){
-						// Applications should not start the event thread until after their first call to libusb_open()
-						card->start_event_thread();
-						LOG() << "IOCards Rear Overhead is initialized and thread is running";
-					
+					// submit first asynchronous read call
+					if(libusb_submit_transfer(card->readTransfer) < 0)
+					{
+						card->event_thread_failed = true;
+						LOG() << "IOCards Rear Overhead failed to reading from usb";
+					}
+					else {
 						card->receive_mastercard();
 						RearOverheadIOCard::running = true;
 						LOG() << "IOCards Rear Overhead is running";
 						return card;
-					}
-					else {
-						LOG() << "IOCards Rear Overheadfailed to reading from usb";
 					}
 				}
 				else

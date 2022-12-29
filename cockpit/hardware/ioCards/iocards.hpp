@@ -76,22 +76,21 @@ namespace zcockpit::cockpit::hardware
 		~IOCards();
 		void drop();
 
-		void do_usb_work();
-		void start_event_thread();
+
 
 
 		void read_callback_cpp(const struct libusb_transfer* transfer);
 		void static LIBUSB_CALL read_callback(struct libusb_transfer* transfer);
 
 		void write_callback_cpp(const struct libusb_transfer* transfer);
-		void start_write_transfer();
+		void static LIBUSB_CALL write_callback(struct libusb_transfer* transfer);
+
 
 		[[nodiscard]]bool is_usb_thread_healthy();
 
-		bool submit_read_transfer();
+
 		int copyIOCardsData(void);
 		void close_down();
-		void static LIBUSB_CALL write_callback(struct libusb_transfer* transfer);
 
 
 		[[nodiscard]] bool initialize_mastercard(unsigned char number_of_axes);
@@ -134,10 +133,23 @@ namespace zcockpit::cockpit::hardware
 		void set_name(std::string name) {device_name = name;}
 		[[nodiscard]] std::string get_name() const {return device_name;}
 
+		// Used for Async operations
+		libusb_transfer* readTransfer{nullptr};
+		libusb_transfer* writeTransfer{nullptr};
+		//******************************
+		// used by event thread
+		//
+
+		std::mutex usb_mutex;
+		bool event_thread_failed{false};
+		bool write_callback_running{false};
+		//
+		//******************************
+
+
 		//std::mutex iocards_mutex;
 	private:
 
-		bool submit_write_transfer(std::vector<unsigned char> buffer);
 
 	//	int get_acceleration(int card, int input, double accelerator);
 
@@ -158,23 +170,7 @@ namespace zcockpit::cockpit::hardware
 		common::ThreadSafeQueue<std::vector<unsigned char>>inQueue;
 		common::ThreadSafeQueue<std::vector<unsigned char>>outQueue;
 
-		// Used for Async operations
-		libusb_transfer* readTransfer{nullptr};
-		libusb_transfer* writeTransfer{nullptr};
 
-		//******************************
-		// used by event thread
-		//
-		std::thread event_thread;
-		std::mutex usb_mutex;
-		bool event_thread_failed{false};
-		bool event_thread_run{false};
-		bool libusb_is_blocking{ false };
-
-		bool write_callback_running{false};
-		bool read_callback_running{false};
-		//
-		//******************************
 		
 		bool isInitialized{false};
 	//	bool sentWakeupMsg;
