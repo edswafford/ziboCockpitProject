@@ -668,6 +668,7 @@ namespace zcockpit::cockpit::hardware
 					std::lock_guard<std::mutex> guard(usb_mutex);
 					if (!event_thread_run)
 					{
+						LOG() << "libusb event thread stopping";
 						break;
 					}
 					libusb_is_blocking = true;
@@ -681,11 +682,9 @@ namespace zcockpit::cockpit::hardware
 					std::lock_guard<std::mutex> lock(usb_mutex);
 					writing_to_usb = write_callback_running;
 				}
-				LOG() << "writing to usb = " << writing_to_usb;
 				if(!writing_to_usb) {
+					LOG() << "Do work: writting callback completed, queue size = " << outQueue.size();
 					if(outQueue.size() > 0){
-						LOG() << "Queue Size " << outQueue.size();
-
 						if (const auto maybe_vector = outQueue.pop()) {
 							if (maybe_vector) {
 								auto buffer = *maybe_vector;
@@ -699,21 +698,29 @@ namespace zcockpit::cockpit::hardware
 										{
 											event_thread_failed = true;
 											write_callback_running = false;
+											LOG() << "write submit transfer failed";
 										}
+									}
+									else {
+										LOG() << "Write transfer succeded";
 									}
 								}
 							}
 						}
 					}
 				}
-
+				LOG() << "Calling libusb handle events Blocking!!";
 				const auto ret = libusb_handle_events(LibUsbInterface::ctx);
 				{
 					std::lock_guard<std::mutex> guard(usb_mutex);
 					libusb_is_blocking = false;
 					if (ret < 0) {
 						event_thread_failed = true;
+						LOG() << "libusb handle events failed";
 						break;
+					}
+					else {
+						LOG() << "libusb handle events succeded";
 					}
 				}
 			}
@@ -736,14 +743,13 @@ namespace zcockpit::cockpit::hardware
 	// Runs in libusb thread
 	void IOCards::read_callback_cpp(const struct libusb_transfer* transfer)
 	{
-
 		if(transfer->status != LIBUSB_TRANSFER_COMPLETED)
 		{
 			// read callback was not successful: exit!
 			readTransfer = nullptr;
 			std::lock_guard<std::mutex> lock(usb_mutex);
 			event_thread_failed = true;
-			return;
+			LOG() << "read callback failed";
 		}
 		else
 		{
@@ -751,6 +757,7 @@ namespace zcockpit::cockpit::hardware
 			if(length > 0){
 				std::vector<unsigned char> buffer(writeTransfer->buffer, writeTransfer->buffer + length);
 				inQueue.push(std::move(buffer));
+				LOG() << "Read callback pushed " << length;
 			}
 
 			std::lock_guard<std::mutex> lock(usb_mutex);
@@ -758,7 +765,11 @@ namespace zcockpit::cockpit::hardware
 				if(libusb_submit_transfer(readTransfer) < 0)
 				{
 					event_thread_failed = true;
+					LOG() << "Submit transfer read failed";
 				}
+			}
+			else {
+				LOG() << "Submit transfer read succeded";
 			}
 		}
 		return;
@@ -784,8 +795,11 @@ namespace zcockpit::cockpit::hardware
 			writeTransfer = nullptr;
 			std::lock_guard<std::mutex> lock(usb_mutex);
 			event_thread_failed = true;
+			LOG() << "write callback failed";
 		}
-		LOG() << "write callback";
+		else {
+			LOG() << "write callback completed";
+		}
 	}
 
 	void IOCards::start_write_transfer()
@@ -1177,14 +1191,14 @@ namespace zcockpit::cockpit::hardware
 
 						if (changed == 1)
 						{
-							if (outQueue.size() == 0) {
-								queue_size = 0;
-							 }
+							queue_size = outQueue.size();
+								
+							 
 							constexpr int firstoutput = 11;
 							send_data[0] = card * totchannels + segment * channelspersegment + firstoutput;
 							outQueue.push(std::move(send_data));
 
-
+							LOG() << "Queue size " << queue_size;
 							for (count = 0; count < channelspersegment; count++)
 							{
 								channel = count + segment * channelspersegment;
@@ -1197,33 +1211,6 @@ namespace zcockpit::cockpit::hardware
 					}
 				}
 			}
-			if (queue_size == 0) {
-				//std::lock_guard<std::mutex> lock(usb_mutex);
-				//if (outQueue.size() > 0 && write_callback_running) {
-				//	LOG() << "Queue Size " << outQueue.size();
-
-				//	if (const auto maybe_vector = outQueue.pop()) {
-				//		if (maybe_vector) {
-				//			auto buffer = *maybe_vector;
-				//			writeTransfer->buffer = buffer.data();
-				//			writeTransfer->length = static_cast<int>(buffer.size());
-				//			{
-				//				std::lock_guard<std::mutex> lock(usb_mutex);
-				//				if (!event_thread_failed) {
-				//					write_callback_running = true;
-				//					if (libusb_submit_transfer(writeTransfer) < 0)
-				//					{
-				//						event_thread_failed = true;
-				//						write_callback_running = false;
-				//					}
-				//				}
-				//			}
-				//		}
-				//	}
-				//}
-
-			}
-
 		}
 	}
 
