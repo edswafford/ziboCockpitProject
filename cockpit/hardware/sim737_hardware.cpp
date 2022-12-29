@@ -18,24 +18,12 @@ namespace zcockpit::cockpit::hardware
 		interface_it.closeInterfaceITController();
 		interface_it.drop();
 
-
-		std::unique_lock<std::mutex> lk(LibUsbInterface::event_thread_done_mutex);
 		{
 			std::lock_guard<std::mutex> guard(LibUsbInterface::event_thread_mutex);
-				if (LibUsbInterface::event_thread_run) {
-					LibUsbInterface::event_thread_run = false;
-					LibUsbInterface::condition.wait(lk, []
-						{
-							return (LibUsbInterface::event_thread_has_stopped);
-						});
-				}
+			if (LibUsbInterface::event_thread_run) {
+				LibUsbInterface::event_thread_run = false;
+			}
 		}
-		if(LibUsbInterface::event_thread.joinable()) {
-			LibUsbInterface::event_thread.join();
-		}
-
-
-
 
 		if (mip_iocard) {
 			mip_iocard->drop();
@@ -49,6 +37,16 @@ namespace zcockpit::cockpit::hardware
 			rear_overhead_iocard->drop();
 			rear_overhead_iocard = nullptr;
 		}
+
+		std::unique_lock<std::mutex> lk(LibUsbInterface::event_thread_done_mutex);
+			LibUsbInterface::condition.wait(lk, []
+				{
+					return (LibUsbInterface::event_thread_has_stopped);
+				});
+		if(LibUsbInterface::event_thread.joinable()) {
+			LibUsbInterface::event_thread.join();
+		}
+
 	}
 
 	void Sim737Hardware::initialize_iocard_devices(AircraftModel& ac_model)
