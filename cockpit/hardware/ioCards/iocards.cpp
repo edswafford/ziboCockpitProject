@@ -709,18 +709,18 @@ namespace zcockpit::cockpit::hardware
 						}
 					}
 				}
-				LOG() << "Calling libusb handle events Blocking!!";
+				LOG() << "Calling libusb handle events Blocking!! " << device_name;
 				const auto ret = libusb_handle_events(LibUsbInterface::ctx);
 				{
 					std::lock_guard<std::mutex> guard(usb_mutex);
 					libusb_is_blocking = false;
 					if (ret < 0) {
 						event_thread_failed = true;
-						LOG() << "libusb handle events failed";
+						LOG() << "libusb handle events failed " << device_name;
 						break;
 					}
 					else {
-						LOG() << "libusb handle events succeded";
+						LOG() << "libusb handle events succeded " << device_name;
 					}
 				}
 			}
