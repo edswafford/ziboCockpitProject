@@ -37,7 +37,14 @@ namespace zcockpit::cockpit::hardware
 		std::unique_ptr<ForwardOverheadIOCard> forward_overhead_iocard;
 		std::unique_ptr<RearOverheadIOCard> rear_overhead_iocard;
 
-
+		void do_usb_work();
+		void start_event_thread();
+		bool event_thread_run{false};
+		bool event_thread_has_stopped{true};
+		std::condition_variable condition;
+		std::mutex event_thread_mutex;
+		std::mutex event_thread_done_mutex;
+		std::thread event_thread;
 
 
 		Health interfaceIT_MIP_status{Health::UNKNOWN_STATUS};

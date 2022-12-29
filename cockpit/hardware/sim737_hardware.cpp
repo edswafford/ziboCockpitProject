@@ -19,9 +19,9 @@ namespace zcockpit::cockpit::hardware
 		interface_it.drop();
 
 		{
-			std::lock_guard<std::mutex> guard(LibUsbInterface::event_thread_mutex);
-			if (LibUsbInterface::event_thread_run) {
-				LibUsbInterface::event_thread_run = false;
+			std::lock_guard<std::mutex> guard(event_thread_mutex);
+			if (event_thread_run) {
+				event_thread_run = false;
 			}
 		}
 
@@ -38,16 +38,50 @@ namespace zcockpit::cockpit::hardware
 			rear_overhead_iocard = nullptr;
 		}
 
-		std::unique_lock<std::mutex> lk(LibUsbInterface::event_thread_done_mutex);
-			LibUsbInterface::condition.wait(lk, []
+		std::unique_lock<std::mutex> lk(event_thread_done_mutex);
+			condition.wait(lk, [this]
 				{
-					return (LibUsbInterface::event_thread_has_stopped);
+					return (this->event_thread_has_stopped);
 				});
-		if(LibUsbInterface::event_thread.joinable()) {
-			LibUsbInterface::event_thread.join();
+		if(event_thread.joinable()) {
+			event_thread.join();
 		}
 
 	}
+		// Runs in libusb thread
+	void Sim737Hardware::do_usb_work()
+	{
+		event_thread_has_stopped = false;
+		while (true) {
+			{
+				std::lock_guard<std::mutex> guard(event_thread_mutex);
+				if (!event_thread_run)
+				{
+					LOG() << "libusb event thread stopping";
+					event_thread_has_stopped = false;
+					break;
+				}
+			}
+
+			struct timeval tv = { 1, 0 };
+			const auto ret = libusb_handle_events_timeout(LibUsbInterface::ctx, &tv);
+			if (ret < 0) {
+				event_thread_run = false;
+				break;
+		    }
+		}
+		std::unique_lock<std::mutex> lk( event_thread_done_mutex);
+		event_thread_has_stopped = true;
+		lk.unlock();
+		condition.notify_one();
+	}
+	void Sim737Hardware::start_event_thread()
+	{
+		event_thread_run = true;
+		event_thread = std::thread(&Sim737Hardware::do_usb_work, this);
+	}
+
+
 
 	void Sim737Hardware::initialize_iocard_devices(AircraftModel& ac_model)
 	{
@@ -67,7 +101,7 @@ namespace zcockpit::cockpit::hardware
 			}
 
 			// Applications should not start the event thread until after their first call to libusb_open()
-			LibUsbInterface::start_event_thread();
+			start_event_thread();
 			LOG() << "libusb Event thread is running";
 		}
 	}
