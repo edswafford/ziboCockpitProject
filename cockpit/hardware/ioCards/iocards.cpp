@@ -681,8 +681,11 @@ namespace zcockpit::cockpit::hardware
 					std::lock_guard<std::mutex> lock(usb_mutex);
 					writing_to_usb = write_callback_running;
 				}
+				LOG() << "writing to usb = " << writing_to_usb;
 				if(!writing_to_usb) {
 					if(outQueue.size() > 0){
+						LOG() << "Queue Size " << outQueue.size();
+
 						if (const auto maybe_vector = outQueue.pop()) {
 							if (maybe_vector) {
 								auto buffer = *maybe_vector;
@@ -782,6 +785,7 @@ namespace zcockpit::cockpit::hardware
 			std::lock_guard<std::mutex> lock(usb_mutex);
 			event_thread_failed = true;
 		}
+		LOG() << "write callback";
 	}
 
 	void IOCards::start_write_transfer()
@@ -834,6 +838,17 @@ namespace zcockpit::cockpit::hardware
 		return false;
 	}
 
+	// saves a copy of all IOCARDS I/O states 
+	// this is needed because, at each step, only the modified values
+	// are communicated either via TCP/IP or USB to X-Plane and IOCARDS
+	int IOCards::copyIOCardsData(void)
+	{
+		memcpy(inputs_old, inputs, sizeof(inputs));
+		memcpy(outputs_old, outputs, sizeof(outputs));
+		memcpy(displays_old, displays, sizeof(displays));
+
+		return (0);
+	}
 
 	void IOCards::close_down()
 	{
@@ -1107,7 +1122,7 @@ namespace zcockpit::cockpit::hardware
 	{
 
 		int send_status = 0;
-
+		int queue_size = -1;
 		// check if we have a connected and initialized mastercard
 		if (is_okay) {
 			int count;
@@ -1162,6 +1177,9 @@ namespace zcockpit::cockpit::hardware
 
 						if (changed == 1)
 						{
+							if (outQueue.size() == 0) {
+								queue_size = 0;
+							 }
 							constexpr int firstoutput = 11;
 							send_data[0] = card * totchannels + segment * channelspersegment + firstoutput;
 							outQueue.push(std::move(send_data));
@@ -1172,14 +1190,40 @@ namespace zcockpit::cockpit::hardware
 								channel = count + segment * channelspersegment;
 								if (channel < NUM_OUTPUTS)
 								{
-									printf("LIBIOCARDS: send output to MASTERCARD card=%i output=%i value=%i \n",
-										card, firstoutput + channel, outputs[channel][card]);
+									LOG() << "LIBIOCARDS: send output to MASTERCARD card output [" << card << "][" << firstoutput + channel << "] " << outputs[channel][card];
 								}
 							}
 						}
 					}
 				}
 			}
+			if (queue_size == 0) {
+				//std::lock_guard<std::mutex> lock(usb_mutex);
+				//if (outQueue.size() > 0 && write_callback_running) {
+				//	LOG() << "Queue Size " << outQueue.size();
+
+				//	if (const auto maybe_vector = outQueue.pop()) {
+				//		if (maybe_vector) {
+				//			auto buffer = *maybe_vector;
+				//			writeTransfer->buffer = buffer.data();
+				//			writeTransfer->length = static_cast<int>(buffer.size());
+				//			{
+				//				std::lock_guard<std::mutex> lock(usb_mutex);
+				//				if (!event_thread_failed) {
+				//					write_callback_running = true;
+				//					if (libusb_submit_transfer(writeTransfer) < 0)
+				//					{
+				//						event_thread_failed = true;
+				//						write_callback_running = false;
+				//					}
+				//				}
+				//			}
+				//		}
+				//	}
+				//}
+
+			}
+
 		}
 	}
 

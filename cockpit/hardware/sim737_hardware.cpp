@@ -95,6 +95,13 @@ namespace zcockpit::cockpit::hardware
 
 				// send outputs
 				mip_iocard->send_mastercard();
+
+				// copy current to previous
+				if(mip_iocard->copyIOCardsData() < 0)
+				{
+					LOG() << "IOCards 2: closing down mip copy data < 0";
+					mip_iocard->close_down();
+				}
 			}
 		}
 

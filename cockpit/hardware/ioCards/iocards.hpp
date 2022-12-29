@@ -89,6 +89,7 @@ namespace zcockpit::cockpit::hardware
 		[[nodiscard]]bool is_usb_thread_healthy();
 
 		bool submit_read_transfer();
+		int copyIOCardsData(void);
 		void close_down();
 		void static LIBUSB_CALL write_callback(struct libusb_transfer* transfer);
 
