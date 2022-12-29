@@ -760,7 +760,7 @@ namespace zcockpit::cockpit::hardware
 		{
 			const auto length = transfer->actual_length;
 			if(length > 0){
-				std::vector<unsigned char> buffer(writeTransfer->buffer, writeTransfer->buffer + length);
+				std::vector<unsigned char> buffer(transfer->buffer, transfer->buffer + length);
 				inQueue.push(std::move(buffer));
 				LOG() << "Read callback pushed " << length << ", " << device_name;
 			}
