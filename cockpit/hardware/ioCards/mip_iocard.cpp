@@ -11,51 +11,7 @@ namespace zcockpit::cockpit::hardware
 	MipIOCard::MipIOCard(AircraftModel& ac_model, const std::string& device_bus_addr): IOCards(device_bus_addr, "mip"), aircraft_model(ac_model)
 	{
 		MipIOCard::iocard_bus_addr = device_bus_addr;
-
-		// Capt Main Panel DUs
-		captOutboardPFD = 0;
-		captNormal = 0;
-		captEngPrimary = 0;
-		captPFD = 0;
-
-		// Capt Lower DU
-		captEngPrimaryLowerDU = 0;
-		captPFDLowerDU = 0;
-
-		// Fo Main Panel DUs
-		foOutboardPFD = 0;
-		foNormal = 0;
-		foEngPrimary = 0;
-		foPFD = 0;
-		foMFD = 0;
-
-		// FO Lower DU
-		foEngPrimaryLowerDU = 0;
-		foPFDLowerDU = 0;
-		foNDLowerDU = 0;
-
-		foClock = 0;
-		FoMasterFire = 0;
-		FoMasteCaution = 0;
-		warningAnn = 0;
-		eng2N2Set = 0;
-		eng1N2Set = 0;
-		N1SetAuto = 0;
-		N1SetBoth = 0;
-		apWarning = 0;
-		atWarning = 0;
-		fmcWarning = 0;
-		afdsTest2 = 0;
-		afdsTest1 = 0;
-		gpws = 0;
-		flapsInhibit = 0;
-		terrainInhibit = 0;
-		gearInhibit = 0;
-		rudderLeft = 0;
-		rudderRight = 0;
-		aileronLeft = 0;
-		aileronRight = 0;
-
+		initialize_switches();
 	}
 	std::unique_ptr<MipIOCard> MipIOCard::create_iocard(AircraftModel& ac_model, const std::string& bus_address)
 	{
@@ -119,32 +75,42 @@ namespace zcockpit::cockpit::hardware
 			updateRelays(1);
 		}
 
+		//
+		//
+		// All Switch values are initialized to zero. The function mastercard_input(pin_number, value) does two things
+		// (1) set value to the switch 0 or 1
+		// (2) returns 1 if something changed, and 0 if nothing changed, and -1 if something went wrong 
+		//
+		// So for example, On the first pass: if pin # 1 is equal to 1 and the initial value of captOutboardPFD == 0
+		// Then captOutboardPFD will be set to one and the function returns 1  --> (return 1 ) && (captOutboardPFD of 1) == 1
+		// Therefore, the if statement is true and the switch change command is sent to Xplane
+		//
+		// On second pass pin #1 is still 1 and therefore captOutboardPFD is again set to 1, but the return value is ZERO
+		// because nothing changed.  Therefore, the if statement is false and nothing is sent to Xplane.
+		//
+		//  Capt Main Panel DUs rotary switch only one can change --> use if--else if
+		if(mastercard_input(1, &captOutboardPFD) && captOutboardPFD)
+		{
+			aircraft_model.push_switch_change(mip_zcockpit_switches[1]);
+		}
+		else if(mastercard_input(2, &captNormal) && captNormal)
+		{
+			aircraft_model.push_switch_change(mip_zcockpit_switches[2]);
+		}
+		else if(mastercard_input(3, &captEngPrimary) && captEngPrimary)
+		{
+			aircraft_model.push_switch_change(mip_zcockpit_switches[3]);
+		}
+		else if(mastercard_input(4, &captPFD) && captPFD)
+		{
+			aircraft_model.push_switch_change(mip_zcockpit_switches[4]);
+		}
+		else if(captOutboardPFD == 0 && captNormal == 0 && captEngPrimary == 0 && captPFD == 0)
+		{
+			// MFD 
+			aircraft_model.push_switch_change(mip_zcockpit_switches[0]);
+		}
 
-		////  Capt Main Panel DUs rotary switch only one can change --> use if--else if
-		//if(mastercard_input(1, &captOutboardPFD) && captOutboardPFD)
-		//{
-		//	sendMessageInt(KEY_COMMAND_INSTRUMENT_CAPT_MAIN_PANEL_DISPLAY_UNIT_POS1, 0);
-		//}
-		//else if(mastercard_input(2, &captNormal) && captNormal)
-		//{
-		//	sendMessageInt(KEY_COMMAND_INSTRUMENT_CAPT_MAIN_PANEL_DISPLAY_UNIT_POS2, 0);
-		//}
-		//else if(mastercard_input(3, &captEngPrimary) && captEngPrimary)
-		//{
-		//	sendMessageInt(KEY_COMMAND_INSTRUMENT_CAPT_MAIN_PANEL_DISPLAY_UNIT_POS3, 0);
-		//}
-		//else if(mastercard_input(4, &captPFD) && captPFD)
-		//{
-		//	if(captPFD)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_INSTRUMENT_CAPT_MAIN_PANEL_DISPLAY_UNIT_POS4, 0);
-		//	}
-		//}
-		//else if(captOutboardPFD == 0 && captNormal == 0 && captEngPrimary == 0 && captPFD == 0)
-		//{
-		//	// MFD 
-		//	sendMessageInt(KEY_COMMAND_INSTRUMENT_CAPT_MAIN_PANEL_DISPLAY_UNIT_POS5, 0);
-		//}
 
 		////  Capt Lower DUs rotary switch only one can change --> use if--else if
 		//if(mastercard_input(5, &captEngPrimaryLowerDU) && captEngPrimaryLowerDU)
@@ -496,5 +462,31 @@ namespace zcockpit::cockpit::hardware
 
 		mastercard_output(55, &state);  // relay #7 MCP lights
 	}
+
+	// xplane auto=0 v1=1,vr=2,wt=3,vref=4,bug=5,set=6
+	constexpr int XPLANE_OUTBOARD_PFD = -1;
+	constexpr int XPLANE_NORMAL = 0;
+	constexpr int XPLANE_ENG_PRIMARY = 1;
+	constexpr int XPLANE_PFD = 2;
+	constexpr int XPLANE_MFD = 3;
+
+
+
+
+	void MipIOCard::initialize_switches()
+	{
+		mip_zcockpit_switches[0]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, 0, XPLANE_MFD);
+		mip_zcockpit_switches[1]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, 0, XPLANE_OUTBOARD_PFD);
+		mip_zcockpit_switches[2]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, 0, XPLANE_NORMAL);
+		mip_zcockpit_switches[3]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, 0, XPLANE_ENG_PRIMARY);
+		mip_zcockpit_switches[4]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, 0, XPLANE_PFD);
+
+
+//		mip_zcockpit_switches[0]  = ZcockpitSwitch();										// no connection	0
+
+
+	};
+
+
 
 }
