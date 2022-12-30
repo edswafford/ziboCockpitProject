@@ -188,11 +188,11 @@ namespace zcockpit::cockpit {
 		SwitchCommands capt_probes_pos{2,std::vector<CommandRefName>{CommandRefName::capt_probes_pos, CommandRefName::capt_probes_pos}};
 		SwitchCommands fo_probes_pos{2,std::vector<CommandRefName>{CommandRefName::fo_probes_pos, CommandRefName::fo_probes_pos}};
 						  
-		SwitchCommands main_pnl_du_capt{5, std::vector<CommandRefName>{CommandRefName::main_pnl_du_capt_right, CommandRefName::main_pnl_du_capt_left}};
-		SwitchCommands main_pnl_du_fo{5, std::vector<CommandRefName>{CommandRefName::main_pnl_du_fo_right, CommandRefName::main_pnl_du_fo_left}};
+		SwitchCommands main_pnl_du_capt{2, std::vector<CommandRefName>{CommandRefName::main_pnl_du_capt_right, CommandRefName::main_pnl_du_capt_left}};
+		SwitchCommands main_pnl_du_fo{2, std::vector<CommandRefName>{CommandRefName::main_pnl_du_fo_right, CommandRefName::main_pnl_du_fo_left}};
 
-		SwitchCommands lower_du_capt{3, std::vector<CommandRefName>{CommandRefName::lower_du_capt_right, CommandRefName::lower_du_capt_left}};
-		SwitchCommands lower_du_fo{3, std::vector<CommandRefName>{CommandRefName::lower_du_fo_right, CommandRefName::lower_du_fo_left}};
+		SwitchCommands lower_du_capt{2, std::vector<CommandRefName>{CommandRefName::lower_du_capt_right, CommandRefName::lower_du_capt_left}};
+		SwitchCommands lower_du_fo{2, std::vector<CommandRefName>{CommandRefName::lower_du_fo_right, CommandRefName::lower_du_fo_left}};
 
 	};
 }
