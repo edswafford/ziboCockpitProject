@@ -119,8 +119,12 @@ namespace zcockpit::cockpit {
 		main_pnl_du_capt_right,
 		main_pnl_du_fo_left,
 		main_pnl_du_fo_right, 
-		
-		kMaxValue = main_pnl_du_fo_right
+		lower_du_capt_left,
+		lower_du_capt_right,
+		lower_du_fo_left,
+		lower_du_fo_right,
+
+		kMaxValue = lower_du_fo_right
 	};
 	static constexpr CommandRefName command_ref_name_list[] = {
 		CommandRefName::battery_dn,
@@ -228,7 +232,11 @@ namespace zcockpit::cockpit {
 		CommandRefName::main_pnl_du_capt_left,
 		CommandRefName::main_pnl_du_capt_right,
 		CommandRefName::main_pnl_du_fo_left,
-		CommandRefName::main_pnl_du_fo_right
+		CommandRefName::main_pnl_du_fo_right,
+		CommandRefName::lower_du_capt_left,
+		CommandRefName::lower_du_capt_right,
+		CommandRefName::lower_du_fo_left,
+		CommandRefName::lower_du_fo_right
 
 	};
 

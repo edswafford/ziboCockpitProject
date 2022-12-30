@@ -83,7 +83,8 @@ namespace zcockpit::cockpit {
 		int fo_probes_pos{0};
 		int main_pnl_du_capt{0};
 		int main_pnl_du_fo{0};
-
+		int lower_du_capt{0};
+		int lower_du_fo{0};
 	};
 
 
@@ -190,6 +191,8 @@ namespace zcockpit::cockpit {
 		SwitchCommands main_pnl_du_capt{5, std::vector<CommandRefName>{CommandRefName::main_pnl_du_capt_right, CommandRefName::main_pnl_du_capt_left}};
 		SwitchCommands main_pnl_du_fo{5, std::vector<CommandRefName>{CommandRefName::main_pnl_du_fo_right, CommandRefName::main_pnl_du_fo_left}};
 
+		SwitchCommands lower_du_capt{3, std::vector<CommandRefName>{CommandRefName::lower_du_capt_right, CommandRefName::lower_du_capt_left}};
+		SwitchCommands lower_du_fo{3, std::vector<CommandRefName>{CommandRefName::lower_du_fo_right, CommandRefName::lower_du_fo_left}};
 
 	};
 }

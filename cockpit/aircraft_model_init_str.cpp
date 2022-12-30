@@ -93,6 +93,8 @@ namespace zcockpit::cockpit {
 		data_ref_strings[DataRefName::main_pnl_du_capt] = {"laminar/B738/toggle_switch/main_pnl_du_capt", XplaneType::type_Float, !convert_to_bool};
 		data_ref_strings[DataRefName::main_pnl_du_fo] = {"laminar/B738/toggle_switch/main_pnl_du_fo", XplaneType::type_Float, !convert_to_bool};
 
+		data_ref_strings[DataRefName::lower_du_capt] = {"laminar/B738/toggle_switch/lower_du_capt", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::lower_du_fo] = {"laminar/B738/toggle_switch/lower_du_fo", XplaneType::type_Float, !convert_to_bool};
 
 		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !bool_annun};
 		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !bool_annun};
@@ -427,11 +429,10 @@ namespace zcockpit::cockpit {
 		command_ref_strings[CommandRefName::main_pnl_du_capt_right] = {"laminar/B738/toggle_switch/main_pnl_du_capt_right"};
 		command_ref_strings[CommandRefName::main_pnl_du_fo_left] = {"laminar/B738/toggle_switch/main_pnl_du_fo_left"};
 		command_ref_strings[CommandRefName::main_pnl_du_fo_right] = {"laminar/B738/toggle_switch/main_pnl_du_fo_right"};
-
-		//command_ref_strings[CommandRefName::] = {""};
-		//command_ref_strings[CommandRefName::] = {""};
-		//command_ref_strings[CommandRefName::] = {""};
-		//command_ref_strings[CommandRefName::] = {""};
+		command_ref_strings[CommandRefName::lower_du_capt_left] = {"laminar/B738/toggle_switch/lower_du_capt_left"};
+		command_ref_strings[CommandRefName::lower_du_capt_right] = {"laminar/B738/toggle_switch/lower_du_capt_right"};
+		command_ref_strings[CommandRefName::lower_du_fo_left] = {"laminar/B738/toggle_switch/lower_du_fo_left"};
+		command_ref_strings[CommandRefName::lower_du_fo_right] = {"laminar/B738/toggle_switch/lower_du_fo_right"};
 		//command_ref_strings[CommandRefName::] = {""};
 		//command_ref_strings[CommandRefName::] = {""};
 		//command_ref_strings[CommandRefName::] = {""};

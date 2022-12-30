@@ -463,7 +463,7 @@ namespace zcockpit::cockpit::hardware
 		mastercard_output(55, &state);  // relay #7 MCP lights
 	}
 
-	// xplane auto=0 v1=1,vr=2,wt=3,vref=4,bug=5,set=6
+	
 	constexpr int XPLANE_OUTBOARD_PFD = -1;
 	constexpr int XPLANE_NORMAL = 0;
 	constexpr int XPLANE_ENG_PRIMARY = 1;

@@ -77,9 +77,12 @@ namespace zcockpit::cockpit {
 
 		z_cockpit_data[DataRefName::main_pnl_du_capt] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.main_pnl_du_capt,				&z737SwitchCmd.main_pnl_du_capt);
 		z_cockpit_data[DataRefName::main_pnl_du_fo] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.main_pnl_du_fo,				&z737SwitchCmd.main_pnl_du_fo);
+		z_cockpit_data[DataRefName::lower_du_capt] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.lower_du_capt,				&z737SwitchCmd.lower_du_capt);
+		z_cockpit_data[DataRefName::lower_du_fo] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.lower_du_fo,				&z737SwitchCmd.lower_du_fo);
 
 
 
+						
 		// PUSHBUTTONS	 -- we don't need a switch value to compare
 		// master caution
 		z_cockpit_data[DataRefName::master_caution1_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.master_caution1_pb );

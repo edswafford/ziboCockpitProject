@@ -255,7 +255,8 @@ namespace zcockpit::cockpit {
 		fo_probes_pos,
 		main_pnl_du_capt,
 		main_pnl_du_fo,
-
+		lower_du_capt,
+		lower_du_fo,
 
 		
 		//
@@ -348,6 +349,9 @@ namespace zcockpit::cockpit {
 		DataRefName::fo_probes_pos,
 		DataRefName::main_pnl_du_capt,
 		DataRefName::main_pnl_du_fo,
+		DataRefName::lower_du_capt,
+		DataRefName::lower_du_fo,
+
 	};
 
 
