@@ -26,12 +26,34 @@ namespace zcockpit::cockpit {
 
 
 		data_ref_strings[DataRefName::ap_discon_test1] = {"laminar/B738/toggle_switch/ap_discon_test1", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::ap_discon_test2] = {"laminar/B738/toggle_switch/ap_discon_test2", XplaneType::type_Float, !convert_to_bool};
 
 		data_ref_strings[DataRefName::guarded_covers] = { "laminar/B738/guarded_covers", XplaneType::type_Float, convert_to_bool};
 
 		data_ref_strings[DataRefName::ap_light_pilot] = {"laminar/B738/push_button/ap_light_pilot", XplaneType::type_Float, !convert_to_bool};
 		data_ref_strings[DataRefName::at_light_pilot] = {"laminar/B738/push_button/at_light_pilot", XplaneType::type_Float, !convert_to_bool};
 		data_ref_strings[DataRefName::fms_light_pilot] = {"laminar/B738/push_button/fms_light_pilot", XplaneType::type_Float, !convert_to_bool};
+
+		data_ref_strings[DataRefName::ap_light_fo] = {"laminar/B738/push_button/ap_light_fo", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::at_light_fo] = {"laminar/B738/push_button/at_light_fo", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::fms_light_fo] = {"laminar/B738/push_button/fms_light_fo", XplaneType::type_Float, !convert_to_bool};
+
+		data_ref_strings[DataRefName::gpws_test_pos] = {"laminar/B738/push_button/gpws_test_pos", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::gpws_flap_pos] = {"laminar/B738/toggle_switch/gpws_flap_pos", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::gpws_terr_pos] = {"laminar/B738/toggle_switch/gpws_terr_pos", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::gpws_gear_pos] = {"laminar/B738/toggle_switch/gpws_gear_pos", XplaneType::type_Float, !convert_to_bool};
+
+
+
+		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !convert_to_bool};
+
 
 		data_ref_strings[DataRefName::land_lights_ret_left_pos] = { "laminar/B738/switch/land_lights_ret_left_pos", XplaneType::type_Float, !convert_to_bool};
 		data_ref_strings[DataRefName::land_lights_ret_right_pos] = { "laminar/B738/switch/land_lights_ret_right_pos", XplaneType::type_Float, !convert_to_bool};
@@ -116,10 +138,19 @@ namespace zcockpit::cockpit {
 		//
 		// Pushbuttons -- NOT Used
 		//
+
+		// Capt
 		data_ref_strings[DataRefName::master_caution1_pb] ={"master_caution1_pb", XplaneType::type_Float, !convert_to_bool};
 		data_ref_strings[DataRefName::capt_six_pack_pb] = {"capt_six_pack_pb", XplaneType::type_Float, !convert_to_bool};
 		data_ref_strings[DataRefName::chrono_capt_et_mode_pb] = {"chrono_capt_et_mode_pb", XplaneType::type_Float, !convert_to_bool};
 		data_ref_strings[DataRefName::fire_bell_light1_pb] = {"fire_bell_light1_pb", XplaneType::type_Float, !convert_to_bool};
+		// FO
+		data_ref_strings[DataRefName::master_caution2_pb] ={"master_caution2_pb", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::fo_six_pack_pb] = {"fo_six_pack_pb", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::chrono_fo_et_mode_pb] = {"chrono_fo_et_mode_pb", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::fire_bell_light2_pb] = {"fire_bell_light2_pb", XplaneType::type_Float, !convert_to_bool};
+
+
 		data_ref_strings[DataRefName::MFD_ENG_pb] = {"MFD_ENG_pb", XplaneType::type_Float, !convert_to_bool};
 		data_ref_strings[DataRefName::MFD_SYS_pb] = {"MFD_SYS_pb", XplaneType::type_Float, !convert_to_bool};
 
@@ -333,20 +364,33 @@ namespace zcockpit::cockpit {
 		command_ref_strings[CommandRefName::fuel_flow_dn] = {"laminar/B738/toggle_switch/fuel_flow_dn"};
 		command_ref_strings[CommandRefName::fuel_flow_up] = {"laminar/B738/toggle_switch/fuel_flow_up"};
 
-
+		// Capt
 		command_ref_strings[CommandRefName::master_caution1] = { "laminar/B738/push_button/master_caution1"};
 		command_ref_strings[CommandRefName::capt_six_pack] = { "laminar/B738/push_button/capt_six_pack"};
 		command_ref_strings[CommandRefName::chrono_capt_et_mode] = {"laminar/B738/push_button/chrono_capt_et_mode"};
 		command_ref_strings[CommandRefName::fire_bell_light1] = {"laminar/B738/push_button/fire_bell_light1"};
+		// FO
+		command_ref_strings[CommandRefName::master_caution2] = { "laminar/B738/push_button/master_caution2"};
+		command_ref_strings[CommandRefName::fo_six_pack] = { "laminar/B738/push_button/fo_six_pack"};
+		command_ref_strings[CommandRefName::chrono_fo_et_mode] = {"laminar/B738/push_button/chrono_fo_et_mode"};
+		command_ref_strings[CommandRefName::fire_bell_light2] = {"laminar/B738/push_button/fire_bell_light2"};
+
 		command_ref_strings[CommandRefName::MFD_ENG] = {"laminar/B738/LDU_control/push_button/MFD_ENG"};
 		command_ref_strings[CommandRefName::MFD_SYS] = {"laminar/B738/LDU_control/push_button/MFD_SYS"};
 
+		// Capt
+		command_ref_strings[CommandRefName::ap_disconnect_test1_dn] = {"laminar/B738/toggle_switch/ap_disconnect_test1_dn"};  // Capt TEST 2
+		command_ref_strings[CommandRefName::ap_disconnect_test1_up] = {"laminar/B738/toggle_switch/ap_disconnect_test1_up"};  // Capt TEST 1
 		command_ref_strings[CommandRefName::ap_light_pilot_pb] = {"laminar/B738/push_button/ap_light_pilot"};
 		command_ref_strings[CommandRefName::at_light_pilot_pb] = {"laminar/B738/push_button/at_light_pilot"};
 		command_ref_strings[CommandRefName::fms_light_pilot_pb] = {"laminar/B738/push_button/fms_light_pilot"};
+		// FO
+		command_ref_strings[CommandRefName::ap_disconnect_test2_dn] = {"laminar/B738/toggle_switch/ap_disconnect_test2_dn"};  // FO TEST 2
+		command_ref_strings[CommandRefName::ap_disconnect_test2_up] = {"laminar/B738/toggle_switch/ap_disconnect_test2_up"};  // FO TEST 1
+		command_ref_strings[CommandRefName::ap_light_fo_pb] = {"laminar/B738/push_button/ap_light_fo"};
+		command_ref_strings[CommandRefName::at_light_fo_pb] = {"laminar/B738/push_button/at_light_fo"};
+		command_ref_strings[CommandRefName::fms_light_fo_pb] = {"laminar/B738/push_button/fms_light_fo"};
 
-		command_ref_strings[CommandRefName::ap_disconnect_test1_dn] = {"laminar/B738/toggle_switch/ap_disconnect_test1_dn"};  // Capt TEST 2
-		command_ref_strings[CommandRefName::ap_disconnect_test1_up] = {"laminar/B738/toggle_switch/ap_disconnect_test1_up"};  // Capt TEST 1
 
 		command_ref_strings[CommandRefName::land_lights_ret_left_off] = { "laminar/B738/switch/land_lights_ret_left_off" };
 		command_ref_strings[CommandRefName::land_lights_ret_left_on] = { "laminar/B738/switch/land_lights_ret_left_on" };
@@ -433,6 +477,13 @@ namespace zcockpit::cockpit {
 		command_ref_strings[CommandRefName::lower_du_capt_right] = {"laminar/B738/toggle_switch/lower_du_capt_right"};
 		command_ref_strings[CommandRefName::lower_du_fo_left] = {"laminar/B738/toggle_switch/lower_du_fo_left"};
 		command_ref_strings[CommandRefName::lower_du_fo_right] = {"laminar/B738/toggle_switch/lower_du_fo_right"};
+
+		command_ref_strings[CommandRefName::gpws_test] = {"laminar/B738/push_button/gpws_test"};
+		command_ref_strings[CommandRefName::gpws_flap] = {"laminar/B738/toggle_switch/gpws_flap"};
+		command_ref_strings[CommandRefName::gpws_terr] = {"laminar/B738/toggle_switch/gpws_terr"};
+		command_ref_strings[CommandRefName::gpws_gear] = {"laminar/B738/toggle_switch/gpws_gear"};
+
+
 		//command_ref_strings[CommandRefName::] = {""};
 		//command_ref_strings[CommandRefName::] = {""};
 		//command_ref_strings[CommandRefName::] = {""};

@@ -1025,7 +1025,7 @@ namespace zcockpit::cockpit::hardware
 		if (interface_it_switch.type != common::SwitchType::unused)
 		{
 			const auto dataref_name = overhead_zcockpit_switches[nswitch].dataref_name;
-			if (dataref_name != DataRefName::unused) {
+			if (dataref_name != DataRefName::DataRefName_unused) {
 				overhead_zcockpit_switches[nswitch].hw_value = switch_value;
 
 				if(common::SwitchType::pushbutton == interface_it_switch.type && switch_value == 1) 
@@ -1103,7 +1103,7 @@ namespace zcockpit::cockpit::hardware
 		const int switch_value = hw_switch.state_to_value[state];
 		const auto dataref_name = mip_zcockpit_switches[nswitch].dataref_name;
 
-		if (dataref_name != DataRefName::unused) {
+		if (dataref_name != DataRefName::DataRefName_unused) {
 			if (hw_switch.type != common::SwitchType::unused)
 			{
 				if (nswitch == 19)

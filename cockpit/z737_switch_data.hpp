@@ -85,6 +85,19 @@ namespace zcockpit::cockpit {
 		int main_pnl_du_fo{0};
 		int lower_du_capt{0};
 		int lower_du_fo{0};
+		int ap_discon_test2{0};
+		int ap_light_fo{0};
+		int at_light_fo{0};
+		int fms_light_fo{0};
+		int gpws_test{0};
+		int gpws_test_pos{0};
+		int gpws_flap{0};
+		int gpws_flap_cover_pos{0};
+		int gpws_terr{0};
+		int gpws_terr_cover_pos{0}; 
+		int gpws_gear{0};
+		int gpws_gear_cover_pos{0};
+
 	};
 
 
@@ -111,21 +124,32 @@ namespace zcockpit::cockpit {
 		SwitchCommands fuel_flow_pos{2, std::vector<CommandRefName>{CommandRefName::fuel_flow_dn, CommandRefName::fuel_flow_up }};
 
 
-
+		// Capt
 		SwitchCommands master_caution1_pb{1, std::vector<CommandRefName>{CommandRefName::master_caution1}};
 		SwitchCommands capt_six_pack_pb{1, std::vector<CommandRefName>{CommandRefName::capt_six_pack}};
 		SwitchCommands chrono_capt_et_mode_pb{1, std::vector<CommandRefName>{CommandRefName::chrono_capt_et_mode}};
 		SwitchCommands fire_bell_light1_pb{1, std::vector<CommandRefName>{CommandRefName::fire_bell_light1}};
+		// FO
+		SwitchCommands master_caution2_pb{1, std::vector<CommandRefName>{CommandRefName::master_caution2}};
+		SwitchCommands fo_six_pack_pb{1, std::vector<CommandRefName>{CommandRefName::fo_six_pack}};
+		SwitchCommands chrono_fo_et_mode_pb{1, std::vector<CommandRefName>{CommandRefName::chrono_fo_et_mode}};
+		SwitchCommands fire_bell_light2_pb{1, std::vector<CommandRefName>{CommandRefName::fire_bell_light2}};
+
 		SwitchCommands MFD_ENG_pb{1, std::vector<CommandRefName>{CommandRefName::MFD_ENG}};
 		SwitchCommands MFD_SYS_pb{1, std::vector<CommandRefName>{CommandRefName::MFD_SYS}};
 
 		SwitchCommands ap_discon_test1{2, std::vector<CommandRefName>{CommandRefName::ap_disconnect_test1_up, CommandRefName::ap_disconnect_test1_dn}};
+		SwitchCommands ap_discon_test2{2, std::vector<CommandRefName>{CommandRefName::ap_disconnect_test2_up, CommandRefName::ap_disconnect_test2_dn}};
 
 
 		// need to be processed like spring loaded switches
 		SwitchCommands ap_light_pilot{2, std::vector<CommandRefName>{CommandRefName::ap_light_pilot_pb, CommandRefName::ap_light_pilot_pb }};
 		SwitchCommands at_light_pilot{2, std::vector<CommandRefName>{CommandRefName::at_light_pilot_pb, CommandRefName::at_light_pilot_pb }};
 		SwitchCommands fms_light_pilot{2, std::vector<CommandRefName>{CommandRefName::fms_light_pilot_pb, CommandRefName::fms_light_pilot_pb }};
+		// FO
+		SwitchCommands ap_light_fo{2, std::vector<CommandRefName>{CommandRefName::ap_light_fo_pb, CommandRefName::ap_light_fo_pb }};
+		SwitchCommands at_light_fo{2, std::vector<CommandRefName>{CommandRefName::at_light_fo_pb, CommandRefName::at_light_fo_pb }};
+		SwitchCommands fms_light_fo{2, std::vector<CommandRefName>{CommandRefName::fms_light_fo_pb, CommandRefName::fms_light_fo_pb }};
 
 
 		SwitchCommands land_lights_ret_left_pos{2, std::vector<CommandRefName>{CommandRefName::land_lights_ret_left_on, CommandRefName::land_lights_ret_left_off}};
@@ -193,6 +217,12 @@ namespace zcockpit::cockpit {
 
 		SwitchCommands lower_du_capt{2, std::vector<CommandRefName>{CommandRefName::lower_du_capt_right, CommandRefName::lower_du_capt_left}};
 		SwitchCommands lower_du_fo{2, std::vector<CommandRefName>{CommandRefName::lower_du_fo_right, CommandRefName::lower_du_fo_left}};
+
+		SwitchCommands gpws_test{1, std::vector<CommandRefName>{CommandRefName::gpws_test}};
+		SwitchCommands gpws_flap{2, std::vector<CommandRefName>{CommandRefName::gpws_flap, CommandRefName::gpws_flap}};
+		SwitchCommands gpws_terr{2, std::vector<CommandRefName>{CommandRefName::gpws_terr, CommandRefName::gpws_terr}};
+		SwitchCommands gpws_gear{2, std::vector<CommandRefName>{CommandRefName::gpws_gear, CommandRefName::gpws_gear}};
+
 
 	};
 }

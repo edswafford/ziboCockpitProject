@@ -14,7 +14,7 @@ namespace zcockpit::cockpit::hardware{
 			hw_value(value)
 		{}
 
-		DataRefName dataref_name{DataRefName::unused};
+		DataRefName dataref_name{DataRefName::DataRefName_unused};
 		common::SwitchType switch_type{common::SwitchType::unused};
 		int spring_loaded_return_value{0};
 		int hw_value{0};

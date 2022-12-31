@@ -28,7 +28,7 @@ namespace zcockpit::cockpit::hardware
 		static std::string iocard_bus_addr;
 		static bool running;
 
-		ZcockpitSwitch mip_zcockpit_switches[MIP_SW_SIZE]{};
+		ZcockpitSwitch iocard_mip_zcockpit_switches[MIP_SW_SIZE]{};
 
 
 		// Capt Main Panel DUs

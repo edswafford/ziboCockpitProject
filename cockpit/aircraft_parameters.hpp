@@ -31,17 +31,31 @@ namespace zcockpit::cockpit {
 		fuel_flow_dn,
 		fuel_flow_up,
 
+		// Capt
 		master_caution1,
 		capt_six_pack,
 		chrono_capt_et_mode,
 		fire_bell_light1,
+		// FO
+		master_caution2,
+		fo_six_pack,
+		chrono_fo_et_mode,
+		fire_bell_light2,
+
 		MFD_ENG,
 		MFD_SYS,
+		//Capt
+		ap_disconnect_test1_dn,
+		ap_disconnect_test1_up,
 		ap_light_pilot_pb,
 		at_light_pilot_pb,
 		fms_light_pilot_pb,
-		ap_disconnect_test1_dn,
-		ap_disconnect_test1_up,
+		// FO
+		ap_disconnect_test2_dn,
+		ap_disconnect_test2_up,
+		ap_light_fo_pb,
+		at_light_fo_pb,
+		fms_light_fo_pb,
 
 		land_lights_ret_left_off,
 		land_lights_ret_left_on,
@@ -124,7 +138,15 @@ namespace zcockpit::cockpit {
 		lower_du_fo_left,
 		lower_du_fo_right,
 
-		kMaxValue = lower_du_fo_right
+		gpws_test,
+		gpws_flap,
+		gpws_terr,
+		gpws_gear,
+
+
+		CommandRefName_unused,
+
+		kMaxValue = CommandRefName_unused
 	};
 	static constexpr CommandRefName command_ref_name_list[] = {
 		CommandRefName::battery_dn,
@@ -144,17 +166,31 @@ namespace zcockpit::cockpit {
 		CommandRefName::gear_off,
 		CommandRefName::fuel_flow_dn,
 		CommandRefName::fuel_flow_up,
+		// Capt
 		CommandRefName::master_caution1,
 		CommandRefName::capt_six_pack,
 		CommandRefName::chrono_capt_et_mode,
 		CommandRefName::fire_bell_light1,
+		// FO
+		CommandRefName::master_caution2,
+		CommandRefName::fo_six_pack,
+		CommandRefName::chrono_fo_et_mode,
+		CommandRefName::fire_bell_light2,
+
 		CommandRefName::MFD_ENG,
 		CommandRefName::MFD_SYS,
+		// Capt
+		CommandRefName::ap_disconnect_test1_dn,
+		CommandRefName::ap_disconnect_test1_up,
 		CommandRefName::ap_light_pilot_pb,
 		CommandRefName::at_light_pilot_pb,
 		CommandRefName::fms_light_pilot_pb,
-		CommandRefName::ap_disconnect_test1_dn,
-		CommandRefName::ap_disconnect_test1_up,
+		// FO
+		CommandRefName::ap_disconnect_test2_dn,
+		CommandRefName::ap_disconnect_test2_up,
+		CommandRefName::ap_light_fo_pb,
+		CommandRefName::at_light_fo_pb,
+		CommandRefName::fms_light_fo_pb,
 
 		CommandRefName::land_lights_ret_left_off,
 		CommandRefName::land_lights_ret_left_on,
@@ -236,8 +272,13 @@ namespace zcockpit::cockpit {
 		CommandRefName::lower_du_capt_left,
 		CommandRefName::lower_du_capt_right,
 		CommandRefName::lower_du_fo_left,
-		CommandRefName::lower_du_fo_right
+		CommandRefName::lower_du_fo_right,
 
+		CommandRefName::gpws_test,
+		CommandRefName::gpws_flap,
+		CommandRefName::gpws_terr,
+		CommandRefName::gpws_gear,
+		
 	};
 
 	struct DataRefParameter

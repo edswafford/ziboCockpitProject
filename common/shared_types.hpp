@@ -144,9 +144,9 @@ namespace zcockpit::common
 	  int size() const { return size_; }
 
 	 private:
-	  ValueType array_[static_cast<int>(IndexType::kMaxValue) + 1]{};
+	  ValueType array_[static_cast<int>(IndexType::kMaxValue)]{};
 
-	  int size_ = static_cast<int>(IndexType::kMaxValue) + 1;
+	  int size_ = static_cast<int>(IndexType::kMaxValue);
 	}; 
 
 }

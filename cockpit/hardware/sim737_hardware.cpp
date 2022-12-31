@@ -6,6 +6,8 @@ using namespace zcockpit::common;
 
 namespace zcockpit::cockpit::hardware
 {
+	bool Sim737Hardware::has_run_for_one_second_ = false;
+
 	Sim737Hardware::Sim737Hardware(AircraftModel& ac_model, InterfaceIT& iit): interface_it(iit)
 	{
 		interface_it.initialize();
@@ -110,6 +112,10 @@ namespace zcockpit::cockpit::hardware
 
 	void Sim737Hardware::do_updates(int current_cycle)
 	{
+		if(current_cycle >= ONE_SECOND) {
+			Sim737Hardware::has_run_for_one_second_ = true;
+		}
+
 		//if (powerIsOn && ifly737->electrical_power_state == 0)
 		//{
 		//	// turn off

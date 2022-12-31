@@ -79,25 +79,45 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::main_pnl_du_fo] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.main_pnl_du_fo,				&z737SwitchCmd.main_pnl_du_fo);
 		z_cockpit_data[DataRefName::lower_du_capt] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.lower_du_capt,				&z737SwitchCmd.lower_du_capt);
 		z_cockpit_data[DataRefName::lower_du_fo] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.lower_du_fo,				&z737SwitchCmd.lower_du_fo);
+		
+		z_cockpit_data[DataRefName::gpws_test] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.gpws_test,				&z737SwitchCmd.gpws_test);
+		z_cockpit_data[DataRefName::gpws_flap] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.gpws_flap,				&z737SwitchCmd.gpws_flap);
+		z_cockpit_data[DataRefName::gpws_terr] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.gpws_terr,				&z737SwitchCmd.gpws_terr);
+		z_cockpit_data[DataRefName::gpws_gear] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.gpws_gear,				&z737SwitchCmd.gpws_gear);
 
 
-
+		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
+		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
+		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
 						
 		// PUSHBUTTONS	 -- we don't need a switch value to compare
-		// master caution
+		// Capt
 		z_cockpit_data[DataRefName::master_caution1_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.master_caution1_pb );
 		z_cockpit_data[DataRefName::capt_six_pack_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.capt_six_pack_pb );
 		z_cockpit_data[DataRefName::chrono_capt_et_mode_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.chrono_capt_et_mode_pb);
-		
 		z_cockpit_data[DataRefName::fire_bell_light1_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.fire_bell_light1_pb );
+		// FO
+		z_cockpit_data[DataRefName::master_caution2_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.master_caution2_pb );
+		z_cockpit_data[DataRefName::fo_six_pack_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.fo_six_pack_pb );
+		z_cockpit_data[DataRefName::chrono_fo_et_mode_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.chrono_fo_et_mode_pb);
+		z_cockpit_data[DataRefName::fire_bell_light2_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.fire_bell_light2_pb );
+
+
+
 		z_cockpit_data[DataRefName::MFD_ENG_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.MFD_ENG_pb);
 		z_cockpit_data[DataRefName::MFD_SYS_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.MFD_SYS_pb);
 
-		z_cockpit_data[DataRefName::ap_light_pilot] = ZCockpitSwitchData(ZCockpitType::ZBool, &xplane_switch_data.ap_light_pilot, &z737SwitchCmd.ap_light_pilot);
-		z_cockpit_data[DataRefName::at_light_pilot] = ZCockpitSwitchData(ZCockpitType::ZBool, &xplane_switch_data.at_light_pilot, &z737SwitchCmd.at_light_pilot);
-		z_cockpit_data[DataRefName::fms_light_pilot] = ZCockpitSwitchData(ZCockpitType::ZBool, &xplane_switch_data.fms_light_pilot, &z737SwitchCmd.fms_light_pilot);
-
+		// Capt
 		z_cockpit_data[DataRefName::ap_discon_test1] = ZCockpitSwitchData(ZCockpitType::ZInt, &xplane_switch_data.ap_discon_test1, &z737SwitchCmd.ap_discon_test1 );
+		z_cockpit_data[DataRefName::ap_light_pilot] = ZCockpitSwitchData(ZCockpitType::ZInt, &xplane_switch_data.ap_light_pilot, &z737SwitchCmd.ap_light_pilot);
+		z_cockpit_data[DataRefName::at_light_pilot] = ZCockpitSwitchData(ZCockpitType::ZInt, &xplane_switch_data.at_light_pilot, &z737SwitchCmd.at_light_pilot);
+		z_cockpit_data[DataRefName::fms_light_pilot] = ZCockpitSwitchData(ZCockpitType::ZInt, &xplane_switch_data.fms_light_pilot, &z737SwitchCmd.fms_light_pilot);
+		// FO
+		z_cockpit_data[DataRefName::ap_discon_test2] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.ap_discon_test2,				&z737SwitchCmd.ap_discon_test2);
+		z_cockpit_data[DataRefName::ap_light_fo] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.ap_light_fo,				&z737SwitchCmd.ap_light_fo);
+		z_cockpit_data[DataRefName::at_light_fo] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.at_light_fo,				&z737SwitchCmd.at_light_fo);
+		z_cockpit_data[DataRefName::fms_light_fo] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.fms_light_fo,				&z737SwitchCmd.fms_light_fo);
+
 
 //NOT USED		z_cockpit_data[DataRefName::cover_position] = ZCockpitSwitchData(ZCockpitType::ZVectorFloat, &xplane_switch_data.cover_position, nullptr);
 

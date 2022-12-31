@@ -182,11 +182,18 @@ namespace zcockpit::cockpit {
 		autobrake_pos,			//    laminar/B738/autobrake/autobrake_pos [0,1,2,3,4,5] rto, off, 1,2,3,max
 		landing_gear,			//    laminar/B738/switches/landing_gear  0-up, 1-off, 2-down	
 		fuel_flow_pos,
-		ap_discon_test1,		//	laminar/B738/toggle_switch/ap_discon_test1  "capt TEST 1/2" up=1, 0=off, -1=dn
 
+		// Capt
+		ap_discon_test1,		//	laminar/B738/toggle_switch/ap_discon_test1  "capt TEST 1/2" up=1, 0=off, -1=dn
 		ap_light_pilot,
 		at_light_pilot,
 		fms_light_pilot,
+
+		// FO
+		ap_discon_test2,
+		ap_light_fo,
+		at_light_fo,
+		fms_light_fo,
 
 		// guards [11]
 		// [0] EEC #1			open = 1.0
@@ -260,8 +267,8 @@ namespace zcockpit::cockpit {
 
 		
 		//
-		// These are made up some Dataref Commands can be looked up
-		// There are Xplane dataRef i.e. "laminar/B738/..." associated with these
+		// These are made up Datarefs used so we can look up the associated Command Datarefs
+		// There are NO Xplane dataRef i.e. "laminar/B738/..." associated with these
 		//
 		master_caution1_pb,
 		capt_six_pack_pb,
@@ -270,15 +277,29 @@ namespace zcockpit::cockpit {
 		MFD_ENG_pb,
 		MFD_SYS_pb,
 
+		// FO
+		master_caution2_pb,
+		fo_six_pack_pb,
+		chrono_fo_et_mode_pb,
+		fire_bell_light2_pb,
 
+		gpws_test,
+		gpws_test_pos,
+		gpws_flap_pos,
+		gpws_terr_pos, 
+		gpws_gear_pos,
+
+		gpws_flap,
+		gpws_terr,
+		gpws_gear,
 
 		//
 		// end of HARDWARE SWITCHES
 		//
 
-		unused,
+		DataRefName_unused,
 
-		kMaxValue = MFD_SYS_pb,
+		kMaxValue = DataRefName_unused,
 	};
 
 
@@ -293,11 +314,16 @@ namespace zcockpit::cockpit {
 		DataRefName::autobrake_pos,
 		DataRefName::landing_gear,	
 		DataRefName::fuel_flow_pos,
-
+		// Capt
 		DataRefName::ap_discon_test1,
 		DataRefName::ap_light_pilot,
 		DataRefName::at_light_pilot,
 		DataRefName::fms_light_pilot,
+		//FO
+		DataRefName::ap_discon_test2,
+		DataRefName::ap_light_fo,
+		DataRefName::at_light_fo,
+		DataRefName::fms_light_fo,
 
 		DataRefName::land_lights_ret_left_pos,
 		DataRefName::land_lights_ret_right_pos,
@@ -352,6 +378,16 @@ namespace zcockpit::cockpit {
 		DataRefName::lower_du_capt,
 		DataRefName::lower_du_fo,
 
+
+		DataRefName::gpws_test,
+		DataRefName::gpws_test_pos,
+		DataRefName::gpws_flap,
+		DataRefName::gpws_flap_pos,
+		DataRefName::gpws_terr,
+		DataRefName::gpws_terr_pos,
+		DataRefName::gpws_gear,
+		DataRefName::gpws_gear_pos,
+
 	};
 
 
@@ -367,11 +403,17 @@ namespace zcockpit::cockpit {
 		DataRefName::landing_gear,	
 		DataRefName::fuel_flow_pos,
 
-
+		// Capt
 		DataRefName::ap_discon_test1,
 		DataRefName::ap_light_pilot,
 		DataRefName::at_light_pilot,
 		DataRefName::fms_light_pilot,
+		//FO
+		DataRefName::ap_discon_test2,
+		DataRefName::ap_light_fo,
+		DataRefName::at_light_fo,
+		DataRefName::fms_light_fo,
+
 		DataRefName::guarded_covers,
 
 		DataRefName::land_lights_ret_left_pos,

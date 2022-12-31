@@ -29,8 +29,10 @@ namespace zcockpit::cockpit::hardware
 		[[nodiscard]] bool get_iocard_mip_status() const;
 		[[nodiscard]] bool get_iocard_forward_overhead_status() const;
 		[[nodiscard]] bool get_iocard_rear_overhead_status() const;
-
+		static bool has_run_for_one_second(){return has_run_for_one_second_;}
 	private:
+		static bool has_run_for_one_second_;
+
 		InterfaceIT& interface_it;
 		
 		std::unique_ptr<MipIOCard> mip_iocard;
