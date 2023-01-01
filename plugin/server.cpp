@@ -166,7 +166,7 @@ namespace zcockpit::plugin
 					SubscribeDataRefPacket subscribe_packet = std::get<SubscribeDataRefPacket>(packet);
 					std::vector<int> subscribed_dataref_id;
 					for (const SubscribeData& xplane_dataref : subscribe_packet.xplane_dataref) {
-						//LOG() << "Subscribe DataRef " << xplane_dataref.dataref_string << " is_annum: " << xplane_dataref.is_boolean_annun;
+						//LOG() << "Subscribe DataRef " << xplane_dataref.dataref_string << " is_annum: " << xplane_dataref.is_rounded;
 						if (auto maybe_id = xp_data_ref_repository.subscribe_dataref(xplane_dataref)) {
 							auto id = maybe_id.value();
 							subscribed_dataref_id.push_back(id);

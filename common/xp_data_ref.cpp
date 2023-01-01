@@ -144,11 +144,46 @@ namespace zcockpit::common {
 				assert(size_ == values_copied);
 				if (is_bool_annum) {
 					for (auto i = 0; i < size_; i++) {
-						new_value_[i] = new_value_[i] == 0.0 ? 0.0 : 1.0;
+						if(is_bool_annum){
+							new_value_[i] = new_value_[i] == 0.0 ? 0.0 : 1.0;
+						}
 					}
 				}
 			}
 		}
+
+		void VectorFloatXPDataRef::set_new_xplane_value(common::var_t val)
+		{
+			if (size_ == 0)
+			{
+				size_ = XPLMGetDatavf(xplane_data_ref_, nullptr, 0, 0);
+				if (size_ > 0) {
+					new_value_ = std::vector<float>(size_);
+					value_ = std::vector<float>(size_);
+				}
+			}
+			if(std::holds_alternative<std::vector<float>>(val)) {
+				std::vector<float> float_vals = std::get<std::vector<float>>(val);
+
+				auto count = float_vals.size();
+				count = count >= size_? size_ : count;
+				XPLMSetDatavf(xplane_data_ref_, float_vals.data(), 0, count);
+
+				const auto values_copied = XPLMGetDatavf(xplane_data_ref_, &new_value_[0], 0, size_);
+				assert(size_ == values_copied);
+				if (is_bool_annum) {
+					for (auto i = 0; i < size_; i++) {
+						if(is_bool_annum){
+							new_value_[i] = new_value_[i] == 0.0 ? 0.0 : 1.0;
+						}
+					}
+				}
+			}
+			else {
+				LOG() << "ERROR: New DataRef value is NOT type std::vector<float> id " << xplane_data_ref_;
+			}			
+		}
+
 		std::optional<common::var_t> VectorFloatXPDataRef::get_changed_value()
 		{
 			auto values_changed = false;
@@ -224,7 +259,7 @@ namespace zcockpit::common {
 		//
 		// ***********************************************************************************************
 
-		XPDataRef::XPDataRef(std::string name, common::XplaneType requested_type, bool is_annun) : name_(std::move(name)), type_(requested_type), is_annun_(is_annun)
+		XPDataRef::XPDataRef(std::string name, common::XplaneType requested_type, bool is_rounded) : name_(std::move(name)), type_(requested_type), is_rounded_(is_rounded)
 		{
 			create_data_ref();
 		}
@@ -402,43 +437,43 @@ namespace zcockpit::common {
 				{
 					case common::XplaneType::type_Unknown:
 					if (refType & xplmType_Float) {
-						xp_dataref_ = FloatXPDataRef(ref, refType, is_annun_);
+						xp_dataref_ = FloatXPDataRef(ref, refType, is_rounded_);
 						type_ = XplaneType::type_Float;
-						LOG() << "Created " << name_ << " Unknown FloatXPDataRef ref " << ref << " is annun " << is_annun_;
+						LOG() << "Created " << name_ << " Unknown FloatXPDataRef ref " << ref << " is annun " << is_rounded_;
 					}
 					else if (refType & xplmType_Int) {
-						xp_dataref_ = IntXPDataRef(ref, refType, is_annun_);
+						xp_dataref_ = IntXPDataRef(ref, refType, is_rounded_);
 						type_ = XplaneType::type_Int;
-						LOG() << "Created " << name_ << " Unknown IntXPDataRef ref " << ref << " is annun " << is_annun_;
+						LOG() << "Created " << name_ << " Unknown IntXPDataRef ref " << ref << " is annun " << is_rounded_;
 					}
 					else if (refType & xplmType_Double) {
-						xp_dataref_ = DoubleXPDataRef(ref, refType, is_annun_);
+						xp_dataref_ = DoubleXPDataRef(ref, refType, is_rounded_);
 						type_ = XplaneType::type_Double;
-						LOG() << "Created " << name_ << " Unknown DoubleXPDataRef ref " << ref << " is annun " << is_annun_;
+						LOG() << "Created " << name_ << " Unknown DoubleXPDataRef ref " << ref << " is annun " << is_rounded_;
 					}
 
 					else if (refType & xplmType_FloatArray) {
-						xp_dataref_ = VectorFloatXPDataRef(ref, refType, is_annun_);
+						xp_dataref_ = VectorFloatXPDataRef(ref, refType, is_rounded_);
 						type_ = XplaneType::type_FloatArray;
-						LOG() << "Created " << name_ << " Unknown VectorFloatXPDataRef ref " << ref << " is annun " << is_annun_;
+						LOG() << "Created " << name_ << " Unknown VectorFloatXPDataRef ref " << ref << " is annun " << is_rounded_;
 					}
 					else if (refType & xplmType_IntArray) {
-						xp_dataref_ = VectorIntXPDataRef(ref, refType, is_annun_);
+						xp_dataref_ = VectorIntXPDataRef(ref, refType, is_rounded_);
 						type_ = XplaneType::type_IntArray;
-						LOG() << "Created " << name_ << " Unknown VectorIntXPDataRef ref " << ref << " is annun " << is_annun_;
+						LOG() << "Created " << name_ << " Unknown VectorIntXPDataRef ref " << ref << " is annun " << is_rounded_;
 					}
 					else if (refType & xplmType_Data) {
-						xp_dataref_ = VectorCharXPDataRef(ref, refType, is_annun_);
+						xp_dataref_ = VectorCharXPDataRef(ref, refType, is_rounded_);
 						type_ = XplaneType::type_String;
-						LOG() << "Created " << name_ << " Unknown VectorCharXPDataRef ref " << ref << " is annun " << is_annun_;
+						LOG() << "Created " << name_ << " Unknown VectorCharXPDataRef ref " << ref << " is annun " << is_rounded_;
 					}
 					break;
 				case common::XplaneType::type_Int:
 					if (refType & xplmType_Int)
 					{
-						xp_dataref_ = IntXPDataRef(ref, refType, is_annun_);
+						xp_dataref_ = IntXPDataRef(ref, refType, is_rounded_);
 						type_ = XplaneType::type_Int;
-						LOG() << "Created " << name_ << " IntXPDataRef ref " << ref << " is annun " << is_annun_;
+						LOG() << "Created " << name_ << " IntXPDataRef ref " << ref << " is annun " << is_rounded_;
 					}
 					break;
 
@@ -446,9 +481,9 @@ namespace zcockpit::common {
 				case common::XplaneType::type_Float:
 					if (refType & xplmType_Float)
 					{
-						xp_dataref_ = FloatXPDataRef(ref, refType, is_annun_);
+						xp_dataref_ = FloatXPDataRef(ref, refType, is_rounded_);
 						type_ = XplaneType::type_Float;
-						LOG() << "Created " << name_ << " FloatXPDataRef ref " << ref << " is annun " << is_annun_;
+						LOG() << "Created " << name_ << " FloatXPDataRef ref " << ref << " is annun " << is_rounded_;
 
 					}
 					break;
@@ -456,34 +491,34 @@ namespace zcockpit::common {
 				case common::XplaneType::type_Double:
 					if (refType & xplmType_Double)
 					{
-						xp_dataref_ = DoubleXPDataRef(ref, refType, is_annun_);
+						xp_dataref_ = DoubleXPDataRef(ref, refType, is_rounded_);
 						type_ = XplaneType::type_Double;
-						LOG() << "Created " << name_ << " DoubleXPDataRef ref " << ref << " is annun " << is_annun_;
+						LOG() << "Created " << name_ << " DoubleXPDataRef ref " << ref << " is annun " << is_rounded_;
 					}
 					break;
 
 				case common::XplaneType::type_FloatArray:
 					if (refType & xplmType_FloatArray)
 					{
-						xp_dataref_ = VectorFloatXPDataRef(ref, refType, is_annun_);
+						xp_dataref_ = VectorFloatXPDataRef(ref, refType, is_rounded_);
 						type_ = XplaneType::type_FloatArray;
-						LOG() << "Created " << name_ << " VectorFlaotXPDataRef ref " << ref << " is annun " << is_annun_;
+						LOG() << "Created " << name_ << " VectorFlaotXPDataRef ref " << ref << " is annun " << is_rounded_;
 					}
 					break;
 				case common::XplaneType::type_IntArray:
 					if (refType & xplmType_IntArray)
 					{
-						xp_dataref_ = VectorIntXPDataRef(ref, refType, is_annun_);
+						xp_dataref_ = VectorIntXPDataRef(ref, refType, is_rounded_);
 						type_ = XplaneType::type_IntArray;
-						LOG() << "Created " << name_ << " VectorIntXPDataRef ref " << ref << " is annun " << is_annun_;
+						LOG() << "Created " << name_ << " VectorIntXPDataRef ref " << ref << " is annun " << is_rounded_;
 					}
 					break;
 				case common::XplaneType::type_String:
 					if (refType & xplmType_Data)
 					{
-						xp_dataref_ = VectorCharXPDataRef(ref, refType, is_annun_);
+						xp_dataref_ = VectorCharXPDataRef(ref, refType, is_rounded_);
 						type_ = XplaneType::type_String;
-						LOG() << "Created " << name_ << " VectorCharXPDataRef ref " << ref << " is annun " << is_annun_;
+						LOG() << "Created " << name_ << " VectorCharXPDataRef ref " << ref << " is annun " << is_rounded_;
 					}
 					break;
 				}

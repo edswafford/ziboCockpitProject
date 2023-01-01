@@ -22,7 +22,7 @@ namespace zcockpit::cockpit {
 	{
 		common::ZCockpitType hw_type;
 		void* xplane_data;
-		void* command;
+		void* operation;
 	};
 	struct ZCockpitInData
 	{
@@ -44,7 +44,7 @@ namespace zcockpit::cockpit {
 	{
 		const char* dataref_name{ "" };
 		common::XplaneType type{ common::XplaneType::type_Unknown };
-		bool is_boolean{ false };
+		bool is_rounded{ false };
 	};
 
 	struct CommandRefString
@@ -62,6 +62,8 @@ namespace zcockpit::cockpit {
 
 		[[nodiscard]] std::vector<common::packet_data_t> build_xplane_commands(const hardware::ZcockpitSwitch switch_data, const SwitchCommands* commands, int xplane_value,
 		                                                                       const int hw_value);
+		std::vector<common::packet_data_t> process_hw_switch_values(hardware::ZcockpitSwitch sw_data, ZCockpitSwitchData switch_data);
+		std::vector<common::packet_data_t> process_hw_switch_commands(hardware::ZcockpitSwitch sw_data, ZCockpitSwitchData switch_data);
 
 
 		[[nodiscard]] std::vector<common::packet_data_t> process_hw_switch(const hardware::ZcockpitSwitch switch_data);

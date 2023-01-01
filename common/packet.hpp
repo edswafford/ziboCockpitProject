@@ -326,21 +326,21 @@ namespace zcockpit::common
 	{
 		std::string dataref_string{""};
 		XplaneType requested_type{XplaneType::type_Unknown};
-		bool is_boolean_annun{false};
+		bool is_rounded{false};
 
 		SubscribeData()=default;
-		SubscribeData(std::string name, XplaneType type, bool is_bool): dataref_string(name), requested_type(type), is_boolean_annun(is_bool){}
+		SubscribeData(std::string name, XplaneType type, bool is_bool): dataref_string(name), requested_type(type), is_rounded(is_bool){}
 
 		template <class Archive>
 		void save(Archive& ar) const
 		{
-			ar(dataref_string, requested_type, is_boolean_annun);
+			ar(dataref_string, requested_type, is_rounded);
 		}
 
 		template <class Archive>
 		void load(Archive& ar)
 		{
-			ar(dataref_string, requested_type, is_boolean_annun);
+			ar(dataref_string, requested_type, is_rounded);
 		}
 	};
 

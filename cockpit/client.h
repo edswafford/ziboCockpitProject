@@ -266,7 +266,7 @@ namespace zcockpit::cockpit
 						udp_controller_.client_send(connection_);
 						packet_dataref.clear();
 					}
-					packet_dataref.emplace_back(SubscribeData(param.first, param.second.xplane_type, param.second.is_boolean));
+					packet_dataref.emplace_back(SubscribeData(param.first, param.second.xplane_type, param.second.is_rounded));
 					LOG() << message_count << " " << param.first;
 					message_count += 1;
 				}
@@ -314,7 +314,7 @@ namespace zcockpit::cockpit
 		void process_switches(int current_cycle)
 		{
 			//
-			// zbo_active is when we have all subscription conformations for datarefs and cmdrefs
+			// zbo_active:: Is true when we have all subscription conformations for datarefs and cmdrefs
 			if(ClientState::zbo_active == client_state) {
 				// Sync XPlane to HW Switches
 				if(sync_hw_switches) {
@@ -507,7 +507,7 @@ namespace zcockpit::cockpit
 
 						std::vector<SubscribeData> packet_data;
 						for (const auto& param : requested_dataref_subscriptions) {
-							packet_data.emplace_back(SubscribeData(param.first, param.second.xplane_type, param.second.is_boolean)); 
+							packet_data.emplace_back(SubscribeData(param.first, param.second.xplane_type, param.second.is_rounded)); 
 						}
 						packet_t tail_number_packet = SubscribeDataRefPacket(client_id, packet_data);
 						udp_controller_.add_message(connection_, tail_number_packet);

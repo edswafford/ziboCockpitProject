@@ -34,7 +34,7 @@ namespace zcockpit::cockpit {
 				continue;
 			}
 			dataref_subscriptions.emplace(data_ref_strings[data_ref_name].dataref_name, 
-				DataRefParameter(data_ref_name, data_ref_strings[data_ref_name].type, data_ref_strings[data_ref_name].is_boolean));
+				DataRefParameter(data_ref_name, data_ref_strings[data_ref_name].type, data_ref_strings[data_ref_name].is_rounded));
 		}
 
 		for(auto& command_ref_name : command_ref_name_list) {
@@ -157,77 +157,139 @@ namespace zcockpit::cockpit {
 		return xplane_commands;
 	}
 
+	// Switch that change XPlane State by changing DatRefs values
+	std::vector<common::packet_data_t> AircraftModel::process_hw_switch_values(const hardware::ZcockpitSwitch sw_data, const ZCockpitSwitchData switch_data)
+	{
+		auto const dataref_name = sw_data.dataref_name;
+		std::vector<packet_data_t> xplane_dataref;
+		
+		const auto operation = (static_cast<SwitchValues*>(switch_data.operation));
+
+		if(switch_data.hw_type == ZCockpitType::ZFloat) {
+			float xplane_value = *(static_cast<float*>(switch_data.xplane_data));
+			const float float_hw_value = sw_data.float_hw_value;
+			if(sw_data.switch_type == SwitchType::encoder) {
+				xplane_value += float_hw_value;
+				if(xplane_value > operation->max_value) {
+						xplane_value = operation->max_value;
+				}
+				else if(xplane_value < operation->min_value) {
+					xplane_value = operation->min_value;
+				}
+				common::var_t variant = xplane_value;
+				int data_ref_id = dataref_to_ref_id[dataref_name];
+				common::SetDataRef set_data_ref(data_ref_id, variant);
+				xplane_dataref.emplace_back(set_data_ref);
+				LOG() << "Send DataRef " << get_data_ref_string(dataref_name) << " id " << data_ref_id;
+			}
+			if(float_hw_value != xplane_value) {
+				if(dataref_to_ref_id.contains(dataref_name)){
+					// change xplane_value so send change multiple times
+					*(static_cast<float*>(switch_data.xplane_data)) = float_hw_value;
+
+					int data_ref_id = dataref_to_ref_id[dataref_name];
+					common::var_t variant = float_hw_value;
+					common::SetDataRef set_data_ref(data_ref_id, variant);
+					xplane_dataref.emplace_back(set_data_ref);
+					LOG() << "Send DataRef " << get_data_ref_string(dataref_name) << " id " << data_ref_id;
+				}
+			}
+		}
+		else if(switch_data.hw_type == ZCockpitType::ZVectorFloat) {
+			auto size = operation->size;
+			std::vector<float> xplane_values = *(static_cast<std::vector<float>*>(switch_data.xplane_data));
+			xplane_values.resize(size);
+			const int index = sw_data.offset;
+			if(index < xplane_values.size()) {
+				if(sw_data.switch_type == SwitchType::encoder) {
+					xplane_values[index] += sw_data.float_hw_value;
+					if(xplane_values[index] > operation->max_value) {
+						xplane_values[index] = operation->max_value;
+					}
+					else if(xplane_values[index] < operation->min_value) {
+						xplane_values[index] = operation->min_value;
+					}
+					common::var_t variant = xplane_values;
+					int data_ref_id = dataref_to_ref_id[dataref_name];
+					common::SetDataRef set_data_ref(data_ref_id, variant);
+					xplane_dataref.emplace_back(set_data_ref);
+					LOG() << "Send DataRef " << get_data_ref_string(dataref_name) << " id " << data_ref_id;
+				}
+				{
+					LOG() << "Expecting Switch Encoder, other types not supported";
+				}
+			}
+
+		}
+		return xplane_dataref;
+	}
+
+
+	std::vector<common::packet_data_t> AircraftModel::process_hw_switch_commands(const hardware::ZcockpitSwitch sw_data, const ZCockpitSwitchData switch_data)
+	{
+		auto const dataref_name = sw_data.dataref_name;
+		auto const int_hw_value = sw_data.int_hw_value;
+		auto const sw_type = sw_data.switch_type;
+		std::vector<packet_data_t> xplane_command;
+
+		const auto commands = (static_cast<SwitchCommands*>(switch_data.operation));
+
+			if(common::SwitchType::pushbutton == sw_type) {
+
+				if(commands != nullptr && commands->size == 1) {
+					const CommandRefName command_ref_name = commands->names[0];
+					if(cmdref_to_ref_id.contains(command_ref_name)){
+						auto cmd_ref_id = cmdref_to_ref_id[command_ref_name];
+						xplane_command.emplace_back(XplaneCommand(cmd_ref_id, XplaneCommand_enum::once));
+						LOG() << "Pushbutton Command once " << get_cmd_ref_string(command_ref_name) << " id " << cmd_ref_id;
+					}
+				}
+			}
+			else if(sw_type == common::SwitchType::multiposition) {
+				if(int_hw_value < commands->size) {
+					const CommandRefName command_ref_name = commands->names[int_hw_value];
+					if(cmdref_to_ref_id.contains(command_ref_name)){
+						auto cmd_ref_id = cmdref_to_ref_id[command_ref_name];
+						xplane_command.emplace_back(XplaneCommand(cmd_ref_id, XplaneCommand_enum::once));
+						LOG() << "Multiposition Command once " << get_cmd_ref_string(command_ref_name) << " id " << cmd_ref_id;
+					}
+				}
+			}
+			else if(sw_type == common::SwitchType::rotary || sw_type == common::SwitchType::toggle || sw_type == common::SwitchType::spring_loaded)
+			{
+				const int xplane_value = *(static_cast<int*>(switch_data.xplane_data));
+				if (int_hw_value != xplane_value || (sw_type == common::SwitchType::spring_loaded && int_hw_value == sw_data.spring_loaded_return_value)) {
+					xplane_command = build_xplane_commands(sw_data, commands, static_cast<int>(xplane_value), int_hw_value);
+				}
+			}
+			else {
+				LOG() << "unknows hardware switch type";
+			}
+
+		return xplane_command;
+	}
 
 	[[nodiscard]] std::vector<common::packet_data_t> AircraftModel::process_hw_switch(const hardware::ZcockpitSwitch sw_data)
 	{
 		auto const dataref_name = sw_data.dataref_name;
-		auto const hw_value = sw_data.int_hw_value;
-		auto const sw_type = sw_data.switch_type;
-
-		if (std::holds_alternative<ZCockpitSwitchData>(z_cockpit_data[dataref_name])) {
+		if (std::holds_alternative<ZCockpitSwitchData>(z_cockpit_data[dataref_name])) 
+		{
 			const ZCockpitSwitchData switch_data = std::get<ZCockpitSwitchData>(z_cockpit_data[dataref_name]);
-			const auto commands = (static_cast<SwitchCommands*>(switch_data.command));
-			if(commands != nullptr){
-
-				std::vector<packet_data_t> xplane_command;
-				if(common::SwitchType::pushbutton == sw_type) {
-
-					if(commands != nullptr && commands->size == 1) {
-						const CommandRefName command_ref_name = commands->names[0];
-						if(cmdref_to_ref_id.contains(command_ref_name)){
-							auto cmd_ref_id = cmdref_to_ref_id[command_ref_name];
-							xplane_command.emplace_back(XplaneCommand(cmd_ref_id, XplaneCommand_enum::once));
-							LOG() << "Pushbutton Command once " << get_cmd_ref_string(command_ref_name) << " id " << cmd_ref_id;
-						}
-					}
-					return xplane_command;
-				}
-				else if(sw_type == common::SwitchType::multiposition) {
-					if(hw_value < commands->size) {
-						const CommandRefName command_ref_name = commands->names[hw_value];
-						if(cmdref_to_ref_id.contains(command_ref_name)){
-							auto cmd_ref_id = cmdref_to_ref_id[command_ref_name];
-							xplane_command.emplace_back(XplaneCommand(cmd_ref_id, XplaneCommand_enum::once));
-							LOG() << "Multiposition Command once " << get_cmd_ref_string(command_ref_name) << " id " << cmd_ref_id;
-						}
-					}
-					return xplane_command;
-				}
-				else if(sw_type == common::SwitchType::rotary || sw_type == common::SwitchType::toggle || sw_type == common::SwitchType::spring_loaded)
+			if(switch_data.operation){
+				if(typeid(switch_data.operation) == typeid(SwitchCommands))
 				{
-					const int xplane_value = *(static_cast<int*>(switch_data.xplane_data));
-						if (hw_value != xplane_value || (sw_type == common::SwitchType::spring_loaded && hw_value == sw_data.spring_loaded_return_value)) {
-							return  build_xplane_commands(sw_data, commands, static_cast<int>(xplane_value), hw_value);
-						}
+					return process_hw_switch_commands(sw_data, switch_data);
+				}
+				else if(typeid(switch_data.operation) == typeid(SwitchValues)) 
+				{
+					return process_hw_switch_values(sw_data, switch_data);
 				}
 				else {
-					LOG() << "unknows hardware switch type";
+					LOG() << "Unexpected switch type " << get_data_ref_string(dataref_name);
 				}
 			}
 			else {
-				//
-				// Switch that change XPlane State by changing DatRefs values
-				//
-				std::vector<packet_data_t> xplane_dataref;
-
-				if(switch_data.hw_type == ZCockpitType::ZInt) {
-					const int xplane_value = *(static_cast<int*>(switch_data.xplane_data));
-					if(hw_value != xplane_value) {
-						if(dataref_to_ref_id.contains(dataref_name)){
-							// change xplane_value so send change multiple times
-							*(static_cast<int*>(switch_data.xplane_data)) = hw_value;
-
-							int data_ref_id = dataref_to_ref_id[dataref_name];
-							// output value needs to be float
-							common::var_t variant = static_cast<float>(hw_value);
-							common::SetDataRef set_data_ref(data_ref_id, variant);
-							xplane_dataref.emplace_back(set_data_ref);
-							LOG() << "Send DataRef " << get_data_ref_string(DataRefName::guarded_covers) << " id " << data_ref_id;
-							return xplane_dataref;
-						}
-					}
-				}
-
+				LOG() << "Switch Operation is null";
 			}
 		}
 		return {};
@@ -567,7 +629,7 @@ namespace zcockpit::cockpit {
 
 	std::vector<common::packet_data_t> AircraftModel::open_guards()
 	{
-		return process_hw_switch( hardware::ZcockpitSwitch(DataRefName::guarded_covers, SwitchType::toggle, 1));
+		return process_hw_switch( hardware::ZcockpitSwitch(DataRefName::guarded_covers, SwitchType::toggle, 1.0f));
 
 	}
 }

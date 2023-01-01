@@ -127,9 +127,9 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::fms_light_fo] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.fms_light_fo,				&z737SwitchCmd.fms_light_fo);
 
 
-//NOT USED		z_cockpit_data[DataRefName::cover_position] = ZCockpitSwitchData(ZCockpitType::ZVectorFloat, &xplane_switch_data.cover_position, nullptr);
+//NOT USED		z_cockpit_data[DataRefName::cover_position] = ZCockpitSwitchData(ZCockpitType::ZVectorFloat, &xplane_switch_data.cover_position);
 
-		z_cockpit_data[DataRefName::guarded_covers] = ZCockpitSwitchData(ZCockpitType::ZInt, &xplane_switch_data.guarded_covers, nullptr );
+		z_cockpit_data[DataRefName::guarded_covers] = ZCockpitSwitchData(ZCockpitType::ZFloat, &xplane_switch_data.guarded_covers, &z737SwitchValue.guarded_covers);
 
 		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd. );
 

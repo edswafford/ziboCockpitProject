@@ -44,10 +44,10 @@ namespace zcockpit::common
 			}
 			else {
 				try {
-					auto xp_data_ref = std::make_unique<XPDataRef>( name, xplane_dataref.requested_type, xplane_dataref.is_boolean_annun);
+					auto xp_data_ref = std::make_unique<XPDataRef>( name, xplane_dataref.requested_type, xplane_dataref.is_rounded);
 					subscribed_dataref_by_id.emplace(std::make_pair(next_id_, std::move(xp_data_ref)));
 					subscribed_dataref_id_by_name.emplace(std::make_pair(name, id));
-					//LOG() << next_id_ << " DataRef " << name << " Subscribed is_annun " << xplane_dataref.is_boolean_annun;
+					//LOG() << next_id_ << " DataRef " << name << " Subscribed is_rounded " << xplane_dataref.is_rounded;
 
 					next_id_ += 1;
 

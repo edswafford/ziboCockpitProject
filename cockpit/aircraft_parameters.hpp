@@ -294,10 +294,10 @@ namespace zcockpit::cockpit {
 
 	struct DataRefParameter
 	{
-		DataRefParameter(DataRefName name, common::XplaneType type, bool is_bool): short_name(name), xplane_type(type), is_boolean(is_bool){}
+		DataRefParameter(DataRefName name, common::XplaneType type, bool is_bool): short_name(name), xplane_type(type), is_rounded(is_bool){}
 		DataRefName short_name;
 		common::XplaneType xplane_type;
-		bool is_boolean;
+		bool is_rounded;
 	};
 
 	struct CommandRefParameter

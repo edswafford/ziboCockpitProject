@@ -17,10 +17,10 @@ namespace zcockpit::common {
 		class IntXPDataRef
 		{
 		public:
-			explicit IntXPDataRef(void* xplane_data_ref, int data_type_id, bool is_annun) : 
+			explicit IntXPDataRef(void* xplane_data_ref, int data_type_id, bool is_rounded) : 
 				xplane_data_ref_(xplane_data_ref), 
 				xp_data_type_id_(data_type_id), 
-				is_bool_annum(is_annun)
+				is_bool_annum(is_rounded)
 			{
 				
 			}
@@ -49,10 +49,10 @@ namespace zcockpit::common {
 		{
 		public:
 			explicit FloatXPDataRef() = default;
-			explicit FloatXPDataRef(void* xplane_data_ref, int data_type_id, bool is_annun) : 
+			explicit FloatXPDataRef(void* xplane_data_ref, int data_type_id, bool is_rounded) : 
 				 xplane_data_ref_(xplane_data_ref), 
 				xp_data_type_id_(data_type_id), 
-				is_bool_annum(is_annun)
+				is_bool_annum(is_rounded)
 			{
 				
 			}
@@ -80,10 +80,10 @@ namespace zcockpit::common {
 		{
 		public:
 			explicit DoubleXPDataRef() = default;
-			explicit DoubleXPDataRef(void* xplane_data_ref, int data_type_id, bool is_annun) :
+			explicit DoubleXPDataRef(void* xplane_data_ref, int data_type_id, bool is_rounded) :
 				xplane_data_ref_(xplane_data_ref), 
 				xp_data_type_id_(data_type_id), 
-				is_bool_annum(is_annun)
+				is_bool_annum(is_rounded)
 			{
 				
 			}
@@ -110,10 +110,10 @@ namespace zcockpit::common {
 		{
 		public:
 			explicit VectorIntXPDataRef() = default;
-			explicit VectorIntXPDataRef(void* xplane_data_ref, int data_type_id, bool is_annun) :
+			explicit VectorIntXPDataRef(void* xplane_data_ref, int data_type_id, bool is_rounded) :
 				xplane_data_ref_(xplane_data_ref), 
 				xp_data_type_id_(data_type_id),
-				is_bool_annum(is_annun)
+				is_bool_annum(is_rounded)
 			{
 				
 			}
@@ -143,10 +143,10 @@ namespace zcockpit::common {
 		{
 		public:
 			explicit VectorFloatXPDataRef() = default;
-			explicit VectorFloatXPDataRef(void* xplane_data_ref, int data_type_id, bool is_annun) : 
+			explicit VectorFloatXPDataRef(void* xplane_data_ref, int data_type_id, bool is_rounded) : 
 				xplane_data_ref_(xplane_data_ref), 
 				xp_data_type_id_(data_type_id),
-				is_bool_annum(is_annun)
+				is_bool_annum(is_rounded)
 			{
 				
 			}
@@ -155,10 +155,7 @@ namespace zcockpit::common {
 
 		private:
 			void update_new_value_from_xplane();
-			void set_new_xplane_value(common::var_t val)
-			{
-				LOG() << "Set Value: Vector Float NOT IMPLEMENTED";
-			}
+			void set_new_xplane_value(common::var_t val);
 			[[nodiscard]] std::optional<common::var_t> get_changed_value();
 			[[nodiscard]] common::var_t get_new_value() { return new_value_; }
 
@@ -263,6 +260,6 @@ namespace zcockpit::common {
 			var_class_t xp_dataref_{};
 			bool value_changed_{ false };
 			int subscriber_count_{ 1 };
-			bool is_annun_{false};
+			bool is_rounded_{false};
 		};
 }

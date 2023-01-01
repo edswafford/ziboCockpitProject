@@ -32,7 +32,7 @@ namespace zcockpit::cockpit {
 
 		int ap_discon_test1{0};
 		std::vector<float> cover_position{.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0};
-		float guarded_covers{0};
+		float guarded_covers{0.0f};
 
 		int land_lights_ret_left_pos{0};
 		int land_lights_ret_right_pos{0};
@@ -241,13 +241,13 @@ namespace zcockpit::cockpit {
 	{
 		float max_value{1.0f};
 		float min_value{-1.0f};
-		float increment{0.1f};
-		float decrement{-0.1f};
+		int size{1};
 	};
 	struct Z737SwitchValue
 	{
-		SwitchValues instrument_brightness{1.0f, -1.0f, 0.1f, -0.1f};
-		SwitchValues spd_ref_adjust{1.0f, -1.0f, 0.1f, -0.1f};
-		SwitchValues n1_set_adjust{1.0f, -1.0f, 0.1f, -0.1f};
+		SwitchValues guarded_covers{1.0f, 0.0, 1};
+		SwitchValues instrument_brightness{1.0f, -1.0f, 6};
+		SwitchValues spd_ref_adjust{1.0f, -1.0f, 1};
+		SwitchValues n1_set_adjust{1.0f, -1.0f, 1};
 	};
 }
