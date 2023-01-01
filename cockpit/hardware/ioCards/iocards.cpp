@@ -1452,281 +1452,282 @@ namespace zcockpit::cockpit::hardware
 //		return (retval);
 //	}
 //
-//	/* retrieve encoder value and for given encoder type from given input position on MASTERCARD */
-//	/* three type of encoders: */
-//	/* 0: 1x12 rotary switch, wired like demonstrated on OpenCockpits website */
-//	/* 1: optical rotary encoder using the Encoder II card */
-//	/* 2: 2 bit gray type mechanical encoder */
-//	/* 3: optical rotary encoder without the Encoder II card */
-//	int IOCards::mastercard_encoder(int input, double* value, double multiplier, double accelerator, int type/*=2*/, int card/*=0*/)
-//	{
-//		int oldcount, newcount; /* encoder integer counters */
-//		int updown = 0; /* encoder direction */
-//		int retval = 0; /* returns 1 if something changed, 0 if nothing changed and -1 if something went wrong */
-//		int obits[2]; /* bit arrays for 2 bit gray encoder */
-//		int nbits[2]; /* bit arrays for 2 bit gray encoder */
-//
-//		int acceleration;
-//
-//		if (value != nullptr)
-//		{
-//			/* check if we have a connected and initialized mastercard */
-//			if (isOpen && isInitialized)
-//			{
-//				if ((card >= 0) && (card < MASTERCARDS))
-//				{
-//					if (*value != FLT_MISS)
-//					{
-//						if (((input >= 0) && (input < (NUM_INPUTS - 2)) && (type == 0)) ||
-//							((input >= 0) && (input < (NUM_INPUTS - 1)) && (type > 0)))
-//						{
-//							if (type == 0)
-//							{
-//								assert(false);
-//								//
-//								// Not supported -- inputs_old needs to be saved while processing
-//
-//								/* simulated encoder out of a 1x12 rotary switch */
-//
-//								if ((inputs[input][card] +
-//									inputs[input + 1][card] +
-//									inputs[input + 2][card]) == 0)
-//									/* 0 0 0 is a wrong measurement due to switch mechanics: do not count */
-//								{
-//									inputs[input][card] = inputs_old[input][card];
-//									inputs[input + 1][card] = inputs_old[input + 1][card];
-//									inputs[input + 2][card] = inputs_old[input + 2][card];
-//								}
-//								else
-//								{
-//									if (((inputs[input][card] != inputs_old[input][card]) ||
-//										(inputs[input + 1][card] != inputs_old[input + 1][card]) ||
-//										(inputs[input + 2][card] != inputs_old[input + 2][card])) &&
-//										(inputs_old[input][card] != -1) &&
-//										(inputs_old[input + 1][card] != -1) &&
-//										(inputs_old[input + 2][card] != -1))
-//									{
-//										/* something has changed */
-//
-//
-//										LOG() << "LIBIOCARDS: Rotary Encoder    1x12 Type :  card= " << card << " inputs= " << input << "-" << input + 2 << " values= " <<
-//											inputs[input][card] << " " << inputs[input + 1][card] << " " << inputs[input + 2][card];
-//
-//										newcount = inputs[input][card] +
-//											inputs[input + 1][card] * 2 + inputs[input + 2][card] * 3;
-//										oldcount = inputs_old[input][card] +
-//											inputs_old[input + 1][card] * 2 + inputs_old[input + 2][card] * 3;
-//
-//										if (newcount > oldcount)
-//										{
-//											updown = 1;
-//										}
-//										else
-//										{
-//											updown = -1;
-//										}
-//
-//										if ((oldcount == 3) && (newcount == 1))
-//										{
-//											updown = 1;
-//										}
-//										if ((oldcount == 1) && (newcount == 3))
-//										{
-//											updown = -1;
-//										}
-//
-//										if (updown != 0)
-//										{
-//											*value = *value + (float)(updown * get_acceleration(card, input, accelerator)) * multiplier;
-//											retval = 1;
-//										}
-//									}
-//								}
-//							}
-//
-//							if (type == 1)
-//							{
-//								assert(false);
-//								//
-//								// Not supported -- inputs_old needs to be saved while processing
-//
-//
-//								/* optical rotary encoder using the Encoder II card */
-//
-//								if (((inputs[input][card] != inputs_old[input][card]) ||
-//									(inputs[input + 1][card] != inputs_old[input + 1][card]))
-//									&& (inputs_old[input][card] != -1) && (inputs_old[input + 1][card] != -1))
-//								{
-//									/* something has changed */
-//
-//
-//									printf("LIBIOCARDS: Rotary Encoder Optical Type : card=%i inputs=%i-%i values=%i %i \n",
-//										card, input, input + 1, inputs[input][card], inputs[input + 1][card]);
-//
-//
-//									if (inputs[input + 1][card] == 1)
-//									{
-//										updown = 1;
-//									}
-//									else
-//									{
-//										updown = -1;
-//									}
-//
-//									if (updown != 0)
-//									{
-//										LOG() << "value = " << *value << "upDown " << updown;
-//										*value = *value + (float)(updown * get_acceleration(card, input, accelerator)) * multiplier;
-//										retval = 1;
-//									}
-//								}
-//							}
-//
-//							if (type == 2)
-//							{
-//								/* 2 bit gray type encoder */
-//
-//								//printf("%i %i %i %i\n",inputs_old[input][card],inputs_old[input+1][card],inputs[input][card],inputs[input+1][card]);
-//								if (((inputs[input][card] != inputs_old[input][card]) ||
-//									(inputs[input + 1][card] != inputs_old[input + 1][card]))
-//									&& (inputs_old[input][card] != -1) && (inputs_old[input + 1][card] != -1))
-//								{
-//									/* something has changed */
-//
-//
-//									//               printf("LIBIOCARDS: Rotary Encoder    Gray Type : card=%i inputs=%i-%i values=%i %i \n",
-//									//                   card,input,input+1,inputs[input][card],inputs[input+1][card]);
-//
-//
-//									/* derive last encoder count */
-//									obits[0] = inputs_old[input][card];
-//									obits[1] = inputs_old[input + 1][card];
-//									oldcount = obits[0] + 2 * obits[1];
-//
-//									/* derive new encoder count */
-//									nbits[0] = inputs[input][card];
-//									nbits[1] = inputs[input + 1][card];
-//									newcount = nbits[0] + 2 * nbits[1];
-//
-//									/* forward */
-//									if (((oldcount == 0) && (newcount == 1)) ||
-//										((oldcount == 1) && (newcount == 3)) ||
-//										((oldcount == 3) && (newcount == 2)) ||
-//										((oldcount == 2) && (newcount == 0)))
-//									{
-//										updown = 1;
-//									}
-//
-//									/* backward */
-//									if (((oldcount == 2) && (newcount == 3)) ||
-//										((oldcount == 3) && (newcount == 1)) ||
-//										((oldcount == 1) && (newcount == 0)) ||
-//										((oldcount == 0) && (newcount == 2)))
-//									{
-//										updown = -1;
-//									}
-//
-//									if (updown != 0)
-//									{
-//										acceleration = get_acceleration(card, input, accelerator);
-//										//	LOG() << "value = " << *value << " upDown " << updown << " accel " << acceleration;
-//										*value = *value + (updown * acceleration * multiplier);
-//										retval = 1;
-//									}
-//
-//									//inputs_old[input][card] = inputs[input][card];
-//									//inputs_old[input + 1][card] = inputs[input + 1][card];
-//								}
-//								inputs_old[input][card] = inputs[input][card];
-//								inputs_old[input + 1][card] = inputs[input + 1][card];
-//							}
-//
-//							if (type == 3)
-//							{
-//								assert(false);
-//								//
-//								// Not supported -- inputs_old needs to be saved while processing
-//
-//
-//								/* 2 bit optical encoder: phase e.g. EC11 from ALPS */
-//
-//								if (((inputs[input][card] != inputs_old[input][card]) ||
-//									(inputs[input + 1][card] != inputs_old[input + 1][card]))
-//									&& (inputs_old[input][card] != -1) && (inputs_old[input + 1][card] != -1))
-//								{
-//									/* something has changed */
-//
-//
-//									printf("LIBIOCARDS: Rotary Encoder  Phased Type : card=%i inputs=%i-%i values=%i %i \n",
-//										card, input, input + 1, inputs[input][card], inputs[input + 1][card]);
-//
-//									/* derive last encoder count */
-//									obits[0] = inputs_old[input][card];
-//									obits[1] = inputs_old[input + 1][card];
-//									/* derive new encoder count */
-//									nbits[0] = inputs[input][card];
-//									nbits[1] = inputs[input + 1][card];
-//
-//									if ((obits[0] == 0) && (obits[1] == 1) && (nbits[0] == 0) && (nbits[1] == 0))
-//									{
-//										updown = -1;
-//									}
-//									else if ((obits[0] == 0) && (obits[1] == 1) && (nbits[0] == 1) && (nbits[1] == 1))
-//									{
-//										updown = 1;
-//									}
-//									else if ((obits[0] == 1) && (obits[1] == 0) && (nbits[0] == 1) && (nbits[1] == 1))
-//									{
-//										updown = -1;
-//									}
-//									else if ((obits[0] == 1) && (obits[1] == 0) && (nbits[0] == 0) && (nbits[1] == 0))
-//									{
-//										updown = 1;
-//									}
-//
-//									if (updown != 0)
-//									{
-//										*value = *value + (float)(updown * get_acceleration(card, input, accelerator)) * multiplier;
-//										retval = 1;
-//									}
-//								}
-//							}
-//						}
-//						else
-//						{
-//							retval = -1;
-//							if (type == 0)
-//							{
-//								printf("LIBIOCARDS: Invalid MASTERCARD input position detected: %i - %i \n", input, input + 2);
-//							}
-//							else
-//							{
-//								printf("LIBIOCARDS: Invalid MASTERCARD input position detected: %i - %i \n", input, input + 1);
-//							}
-//						}
-//					} /* input encoder value not missing */
-//				}
-//				else
-//				{
-//					retval = -1;
-//					LOG() << "LIBIOCARDS: Invalid MASTERCARD number detected: " << card;
-//				}
-//
-//				if ((type < 0) || (type > 3))
-//				{
-//					retval = -1;
-//					LOG() << "LIBIOCARDS: Invalid encoder type detected: " << type;
-//				}
-//			}
-//			else
-//			{
-//				retval = -1;
-//			}
-//		}
-//
-//		return (retval);
-//	}
-//
+	// retrieve encoder value and for given encoder type from given input position on MASTERCARD
+	// three type of encoders:
+	// 0: 1x12 rotary switch, wired like demonstrated on OpenCockpits website
+	// 1: optical rotary encoder using the Encoder II card
+	// 2: 2 bit gray type mechanical encoder
+	// 3: optical rotary encoder without the Encoder II card
+	int IOCards::mastercard_encoder(int input, double* value, double multiplier, double accelerator, int type/*=2*/, int card/*=0*/)
+	{
+
+		int updown = 0; // encoder direction
+		int retval = 0; // returns 1 if something changed, 0 if nothing changed and -1 if something went wrong
+
+		if (value != nullptr)
+		{
+			// check if we have a connected and initialized mastercard
+			if (is_okay)
+			{
+				if ((card >= 0) && (card < MASTERCARDS))
+				{
+					if (*value != FLT_MISS)
+					{
+						if (((input >= 0) && (input < (NUM_INPUTS - 2)) && (type == 0)) ||
+							((input >= 0) && (input < (NUM_INPUTS - 1)) && (type > 0)))
+						{
+							int oldcount; // encoder integer counters
+							int newcount; // encoder integer counters 
+
+							int obits[2];
+							int nbits[2];
+							if (type == 0)
+							{
+								assert(false);
+								//
+								// Not supported -- inputs_old needs to be saved while processing
+
+								// simulated encoder out of a 1x12 rotary switch
+
+								if ((inputs[input][card] +
+									inputs[input + 1][card] +
+									inputs[input + 2][card]) == 0)
+									// 0 0 0 is a wrong measurement due to switch mechanics: do not count
+								{
+									inputs[input][card] = inputs_old[input][card];
+									inputs[input + 1][card] = inputs_old[input + 1][card];
+									inputs[input + 2][card] = inputs_old[input + 2][card];
+								}
+								else
+								{
+									if (((inputs[input][card] != inputs_old[input][card]) ||
+										(inputs[input + 1][card] != inputs_old[input + 1][card]) ||
+										(inputs[input + 2][card] != inputs_old[input + 2][card])) &&
+										(inputs_old[input][card] != -1) &&
+										(inputs_old[input + 1][card] != -1) &&
+										(inputs_old[input + 2][card] != -1))
+									{
+										// something has changed
+
+
+										LOG() << "LIBIOCARDS: Rotary Encoder    1x12 Type :  card= " << card << " inputs= " << input << "-" << input + 2 << " values= " <<
+											inputs[input][card] << " " << inputs[input + 1][card] << " " << inputs[input + 2][card];
+
+										newcount = inputs[input][card] +
+											inputs[input + 1][card] * 2 + inputs[input + 2][card] * 3;
+										oldcount = inputs_old[input][card] +
+											inputs_old[input + 1][card] * 2 + inputs_old[input + 2][card] * 3;
+
+										if (newcount > oldcount)
+										{
+											updown = 1;
+										}
+										else
+										{
+											updown = -1;
+										}
+
+										if ((oldcount == 3) && (newcount == 1))
+										{
+											updown = 1;
+										}
+										if ((oldcount == 1) && (newcount == 3))
+										{
+											updown = -1;
+										}
+
+										if (updown != 0)
+										{
+											*value = *value + static_cast<float>(updown * get_acceleration(card, input, accelerator)) * multiplier;
+											retval = 1;
+										}
+									}
+								}
+							}
+
+							if (type == 1)
+							{
+								assert(false);
+								//
+								// Not supported -- inputs_old needs to be saved while processing
+
+
+								/* optical rotary encoder using the Encoder II card */
+
+								if (((inputs[input][card] != inputs_old[input][card]) ||
+									(inputs[input + 1][card] != inputs_old[input + 1][card]))
+									&& (inputs_old[input][card] != -1) && (inputs_old[input + 1][card] != -1))
+								{
+									/* something has changed */
+
+
+									printf("LIBIOCARDS: Rotary Encoder Optical Type : card=%i inputs=%i-%i values=%i %i \n",
+										card, input, input + 1, inputs[input][card], inputs[input + 1][card]);
+
+
+									if (inputs[input + 1][card] == 1)
+									{
+										updown = 1;
+									}
+									else
+									{
+										updown = -1;
+									}
+
+									if (updown != 0)
+									{
+										LOG() << "value = " << *value << "upDown " << updown;
+										*value = *value + static_cast<float>(updown * get_acceleration(card, input, accelerator)) * multiplier;
+										retval = 1;
+									}
+								}
+							}
+
+							if (type == 2)
+							{
+								/* 2 bit gray type encoder */
+
+								//printf("%i %i %i %i\n",inputs_old[input][card],inputs_old[input+1][card],inputs[input][card],inputs[input+1][card]);
+								if (((inputs[input][card] != inputs_old[input][card]) ||
+									(inputs[input + 1][card] != inputs_old[input + 1][card]))
+									&& (inputs_old[input][card] != -1) && (inputs_old[input + 1][card] != -1))
+								{
+									/* something has changed */
+
+
+									//               printf("LIBIOCARDS: Rotary Encoder    Gray Type : card=%i inputs=%i-%i values=%i %i \n",
+									//                   card,input,input+1,inputs[input][card],inputs[input+1][card]);
+
+
+									/* derive last encoder count */
+									obits[0] = inputs_old[input][card];
+									obits[1] = inputs_old[input + 1][card];
+									oldcount = obits[0] + 2 * obits[1];
+
+									/* derive new encoder count */
+									nbits[0] = inputs[input][card];
+									nbits[1] = inputs[input + 1][card];
+									newcount = nbits[0] + 2 * nbits[1];
+
+									/* forward */
+									if (((oldcount == 0) && (newcount == 1)) ||
+										((oldcount == 1) && (newcount == 3)) ||
+										((oldcount == 3) && (newcount == 2)) ||
+										((oldcount == 2) && (newcount == 0)))
+									{
+										updown = 1;
+									}
+
+									/* backward */
+									if (((oldcount == 2) && (newcount == 3)) ||
+										((oldcount == 3) && (newcount == 1)) ||
+										((oldcount == 1) && (newcount == 0)) ||
+										((oldcount == 0) && (newcount == 2)))
+									{
+										updown = -1;
+									}
+
+									if (updown != 0)
+									{
+										const int acceleration = get_acceleration(card, input, accelerator);
+										//	LOG() << "value = " << *value << " upDown " << updown << " accel " << acceleration;
+										*value = *value + (updown * acceleration * multiplier);
+										retval = 1;
+									}
+
+									//inputs_old[input][card] = inputs[input][card];
+									//inputs_old[input + 1][card] = inputs[input + 1][card];
+								}
+								inputs_old[input][card] = inputs[input][card];
+								inputs_old[input + 1][card] = inputs[input + 1][card];
+							}
+
+							if (type == 3)
+							{
+								assert(false);
+								//
+								// Not supported -- inputs_old needs to be saved while processing
+
+
+								/* 2 bit optical encoder: phase e.g. EC11 from ALPS */
+
+								if (((inputs[input][card] != inputs_old[input][card]) ||
+									(inputs[input + 1][card] != inputs_old[input + 1][card]))
+									&& (inputs_old[input][card] != -1) && (inputs_old[input + 1][card] != -1))
+								{
+									/* something has changed */
+
+
+									printf("LIBIOCARDS: Rotary Encoder  Phased Type : card=%i inputs=%i-%i values=%i %i \n",
+										card, input, input + 1, inputs[input][card], inputs[input + 1][card]);
+
+									/* derive last encoder count */
+									obits[0] = inputs_old[input][card];
+									obits[1] = inputs_old[input + 1][card];
+									/* derive new encoder count */
+									nbits[0] = inputs[input][card];
+									nbits[1] = inputs[input + 1][card];
+
+									if ((obits[0] == 0) && (obits[1] == 1) && (nbits[0] == 0) && (nbits[1] == 0))
+									{
+										updown = -1;
+									}
+									else if ((obits[0] == 0) && (obits[1] == 1) && (nbits[0] == 1) && (nbits[1] == 1))
+									{
+										updown = 1;
+									}
+									else if ((obits[0] == 1) && (obits[1] == 0) && (nbits[0] == 1) && (nbits[1] == 1))
+									{
+										updown = -1;
+									}
+									else if ((obits[0] == 1) && (obits[1] == 0) && (nbits[0] == 0) && (nbits[1] == 0))
+									{
+										updown = 1;
+									}
+
+									if (updown != 0)
+									{
+										*value = *value + static_cast<float>(updown * get_acceleration(card, input, accelerator)) * multiplier;
+										retval = 1;
+									}
+								}
+							}
+						}
+						else
+						{
+							retval = -1;
+							if (type == 0)
+							{
+								printf("LIBIOCARDS: Invalid MASTERCARD input position detected: %i - %i \n", input, input + 2);
+							}
+							else
+							{
+								printf("LIBIOCARDS: Invalid MASTERCARD input position detected: %i - %i \n", input, input + 1);
+							}
+						}
+					} /* input encoder value not missing */
+				}
+				else
+				{
+					retval = -1;
+					LOG() << "LIBIOCARDS: Invalid MASTERCARD number detected: " << card;
+				}
+
+				if ((type < 0) || (type > 3))
+				{
+					retval = -1;
+					LOG() << "LIBIOCARDS: Invalid encoder type detected: " << type;
+				}
+			}
+			else
+			{
+				retval = -1;
+			}
+		}
+
+		return (retval);
+	}
+
 	// initialize data arrays with default values
 	// flight data for  USB and TCP/IP communication
 	void IOCards::clear_buffers()
@@ -1763,36 +1764,31 @@ namespace zcockpit::cockpit::hardware
 		}
 	}
 
-//	/* this routine calculates the acceleration of rotary encoders based on last rotation time */
-//	int IOCards::get_acceleration(int card, int input, double accelerator)
-//	{
-//		//	long long t2 = 0;
-//		//	long long t1 = 0;
-//		double dt;
-//		int acceleration;
-//
-//		double mintime = 0.001;
-//		double maxtime = 0.8;
-//
-//		/* get new time */
-//		auto t1 = std::chrono::high_resolution_clock::now();
-//		auto t2 = time_enc[input][card];
-//
-//		auto dt_ms = std::chrono::duration<double, std::milli>(t2 - t1);
-//		dt = -dt_ms.count() / 1000.0;
-//
-//		if (dt < mintime)
-//		{
-//			dt = mintime;
-//		}
-//
-//		acceleration = 1 + (int)((maxtime / dt) * accelerator);
-//
-//		//LOG() << "LIBIOCARDS: difference= " << dt << " [seconds], acceleration=" << acceleration << " for input= " << input << " card= " << card;
-//
-//
-//		time_enc[input][card] = t1;
-//
-//		return acceleration;
-//	}
+	// this routine calculates the acceleration of rotary encoders based on last rotation time
+	int IOCards::get_acceleration(int card, int input, double accelerator)
+	{
+		constexpr double mintime = 0.001;
+		constexpr double maxtime = 0.8;
+
+		/* get new time */
+		const auto t1 = std::chrono::high_resolution_clock::now();
+		const auto t2 = time_enc[input][card];
+
+		const auto dt_ms = std::chrono::duration<double, std::milli>(t2 - t1);
+		double dt = -dt_ms.count() / 1000.0;
+
+		if (dt < mintime)
+		{
+			dt = mintime;
+		}
+
+		const int acceleration = 1 + static_cast<int>((maxtime / dt) * accelerator);
+
+		//LOG() << "LIBIOCARDS: difference= " << dt << " [seconds], acceleration=" << acceleration << " for input= " << input << " card= " << card;
+
+
+		time_enc[input][card] = t1;
+
+		return acceleration;
+	}
 }

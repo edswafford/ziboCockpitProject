@@ -85,8 +85,16 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::gpws_terr] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.gpws_terr,				&z737SwitchCmd.gpws_terr);
 		z_cockpit_data[DataRefName::gpws_gear] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.gpws_gear,				&z737SwitchCmd.gpws_gear);
 
+		z_cockpit_data[DataRefName::rudder_trim] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.rudder_trim,				&z737SwitchCmd.rudder_trim);
+		z_cockpit_data[DataRefName::aileron_trim] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.aileron_trim,				&z737SwitchCmd.aileron_trim);
 
-		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
+		z_cockpit_data[DataRefName::instrument_brightness] = ZCockpitSwitchData(ZCockpitType::ZVectorFloat,	&xplane_switch_data.instrument_brightness,		&z737SwitchValue.instrument_brightness);
+		z_cockpit_data[DataRefName::spd_ref_adjust] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.spd_ref_adjust,				&z737SwitchValue.spd_ref_adjust);
+
+		z_cockpit_data[DataRefName::n1_set_source] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.n1_set_source,				&z737SwitchCmd.n1_set_source);
+		z_cockpit_data[DataRefName::n1_set_adjust] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.n1_set_adjust,				&z737SwitchValue.n1_set_adjust);
+
+
 		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
 		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
 						

@@ -161,7 +161,7 @@ namespace zcockpit::cockpit {
 	[[nodiscard]] std::vector<common::packet_data_t> AircraftModel::process_hw_switch(const hardware::ZcockpitSwitch sw_data)
 	{
 		auto const dataref_name = sw_data.dataref_name;
-		auto const hw_value = sw_data.hw_value;
+		auto const hw_value = sw_data.int_hw_value;
 		auto const sw_type = sw_data.switch_type;
 
 		if (std::holds_alternative<ZCockpitSwitchData>(z_cockpit_data[dataref_name])) {
@@ -543,7 +543,7 @@ namespace zcockpit::cockpit {
 	void AircraftModel::push_switch_change(hardware::ZcockpitSwitch switch_data)
 	{
 		pending_switch_changes.push(switch_data);
-		LOG() << "pushed switch change " << get_data_ref_string(switch_data.dataref_name) << " value " << switch_data.hw_value;
+		LOG() << "pushed switch change " << get_data_ref_string(switch_data.dataref_name) << " value " << switch_data.int_hw_value;
 	}
 
 	std::vector<packet_data_t> AircraftModel::update_switch_values()
@@ -555,7 +555,7 @@ namespace zcockpit::cockpit {
 				if(maybe_switch_data) {
 					hardware::ZcockpitSwitch switch_data = *maybe_switch_data;
 
-					LOG() << "Processing Switch " << get_data_ref_string(switch_data.dataref_name) << " value " << switch_data.hw_value;
+					LOG() << "Processing Switch " << get_data_ref_string(switch_data.dataref_name) << " value " << switch_data.int_hw_value;
 					auto commands = process_hw_switch(switch_data);
 					xplane_commands.insert(xplane_commands.end(), commands.begin(), commands.end());
 				}

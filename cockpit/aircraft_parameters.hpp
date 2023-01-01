@@ -142,7 +142,12 @@ namespace zcockpit::cockpit {
 		gpws_flap,
 		gpws_terr,
 		gpws_gear,
-
+		rudder_trim_left,
+		rudder_trim_right,
+		aileron_trim_left,
+		aileron_trim_right,
+		n1_set_source_left,
+		n1_set_source_right,
 
 		CommandRefName_unused,
 
@@ -278,7 +283,13 @@ namespace zcockpit::cockpit {
 		CommandRefName::gpws_flap,
 		CommandRefName::gpws_terr,
 		CommandRefName::gpws_gear,
-		
+		CommandRefName::rudder_trim_left,
+		CommandRefName::rudder_trim_right,
+		CommandRefName::aileron_trim_left,
+		CommandRefName::aileron_trim_right,
+		CommandRefName::n1_set_source_left,
+		CommandRefName::n1_set_source_right,
+
 	};
 
 	struct DataRefParameter

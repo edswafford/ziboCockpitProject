@@ -50,6 +50,7 @@ namespace zcockpit::common
 		spring_loaded,
 		rotary,				// xplane only supports up or down
 		multiposition,		// xplane supports all positions
+		encoder,
 		other
 	};
 

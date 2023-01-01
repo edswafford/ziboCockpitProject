@@ -157,113 +157,113 @@ namespace zcockpit::cockpit::hardware
 		//mip_multiway_sw[28].push_back(31);
 
 		mip_zcockpit_switches[0]  = ZcockpitSwitch();										// no connection	0
-		mip_zcockpit_switches[1]  = ZcockpitSwitch(DataRefName::spd_ref, mip_switches[1].type);		// AUTO				1		
-		mip_zcockpit_switches[2]  = ZcockpitSwitch(DataRefName::spd_ref, mip_switches[2].type);		// VR				2
-		mip_zcockpit_switches[3]  = ZcockpitSwitch(DataRefName::spd_ref, mip_switches[3].type);		// WT				3
-		mip_zcockpit_switches[4]  = ZcockpitSwitch(DataRefName::spd_ref, mip_switches[4].type);		// VREF				4
-		mip_zcockpit_switches[5]  = ZcockpitSwitch(DataRefName::spd_ref, mip_switches[5].type);		// BUG5				5
-		mip_zcockpit_switches[6]  = ZcockpitSwitch(DataRefName::spd_ref, mip_switches[6].type);		// SET				6
-		mip_zcockpit_switches[7]  = ZcockpitSwitch(DataRefName::spd_ref, mip_switches[7].type);		// V1				7
+		mip_zcockpit_switches[1]  = ZcockpitSwitch(DataRefName::spd_ref, mip_switches[1].type, 0);		// AUTO				1		
+		mip_zcockpit_switches[2]  = ZcockpitSwitch(DataRefName::spd_ref, mip_switches[2].type, 0);		// VR				2
+		mip_zcockpit_switches[3]  = ZcockpitSwitch(DataRefName::spd_ref, mip_switches[3].type, 0);		// WT				3
+		mip_zcockpit_switches[4]  = ZcockpitSwitch(DataRefName::spd_ref, mip_switches[4].type, 0);		// VREF				4
+		mip_zcockpit_switches[5]  = ZcockpitSwitch(DataRefName::spd_ref, mip_switches[5].type, 0);		// BUG5				5
+		mip_zcockpit_switches[6]  = ZcockpitSwitch(DataRefName::spd_ref, mip_switches[6].type, 0);		// SET				6
+		mip_zcockpit_switches[7]  = ZcockpitSwitch(DataRefName::spd_ref, mip_switches[7].type, 0);		// V1				7
 		mip_zcockpit_switches[8]  = ZcockpitSwitch();					 							// no connection	8
-		mip_zcockpit_switches[9]  = ZcockpitSwitch(DataRefName::autobrake_pos, mip_switches[9].type);	// RTO				9
-		mip_zcockpit_switches[10] = ZcockpitSwitch(DataRefName::autobrake_pos, mip_switches[10].type);	// OFF				10
-		mip_zcockpit_switches[11] = ZcockpitSwitch(DataRefName::autobrake_pos, mip_switches[11].type);	// 1				11
-		mip_zcockpit_switches[12] = ZcockpitSwitch(DataRefName::autobrake_pos, mip_switches[12].type);	// 2				12
-		mip_zcockpit_switches[13] = ZcockpitSwitch(DataRefName::autobrake_pos, mip_switches[13].type);	// 3				13
-		mip_zcockpit_switches[14] = ZcockpitSwitch(DataRefName::autobrake_pos, mip_switches[14].type);	// MAX				14
+		mip_zcockpit_switches[9]  = ZcockpitSwitch(DataRefName::autobrake_pos, mip_switches[9].type, 0);	// RTO				9
+		mip_zcockpit_switches[10] = ZcockpitSwitch(DataRefName::autobrake_pos, mip_switches[10].type, 0);	// OFF				10
+		mip_zcockpit_switches[11] = ZcockpitSwitch(DataRefName::autobrake_pos, mip_switches[11].type, 0);	// 1				11
+		mip_zcockpit_switches[12] = ZcockpitSwitch(DataRefName::autobrake_pos, mip_switches[12].type, 0);	// 2				12
+		mip_zcockpit_switches[13] = ZcockpitSwitch(DataRefName::autobrake_pos, mip_switches[13].type, 0);	// 3				13
+		mip_zcockpit_switches[14] = ZcockpitSwitch(DataRefName::autobrake_pos, mip_switches[14].type, 0);	// MAX				14
 	
-		mip_zcockpit_switches[15] = ZcockpitSwitch(DataRefName::fuel_flow_pos, mip_switches[15].type);						// FUEL_FLOW_USED				15
-		mip_zcockpit_switches[16] = ZcockpitSwitch(DataRefName::fuel_flow_pos, mip_switches[16].type);						// FUEL_FLOW_RESET				16
-		mip_zcockpit_switches[17] = ZcockpitSwitch(DataRefName::master_caution1_pb, mip_switches[17].type);			// MASTER_CAUTION				17
-		mip_zcockpit_switches[18] = ZcockpitSwitch(DataRefName::capt_six_pack_pb, mip_switches[18].type);				// SixPack ANNUNCIATOR			18
-		mip_zcockpit_switches[19] = ZcockpitSwitch(DataRefName::chrono_capt_et_mode_pb, mip_switches[19].type);	// CLOCK CAPT ET				19
-		mip_zcockpit_switches[20] = ZcockpitSwitch(DataRefName::fire_bell_light1_pb, mip_switches[20].type);			// FIRE WARN LIGHT				20
-		mip_zcockpit_switches[21] = ZcockpitSwitch(DataRefName::bright_test, mip_switches[21].type);							// Annun Bright/Test			21
+		mip_zcockpit_switches[15] = ZcockpitSwitch(DataRefName::fuel_flow_pos, mip_switches[15].type, 0);						// FUEL_FLOW_USED				15
+		mip_zcockpit_switches[16] = ZcockpitSwitch(DataRefName::fuel_flow_pos, mip_switches[16].type, 0);						// FUEL_FLOW_RESET				16
+		mip_zcockpit_switches[17] = ZcockpitSwitch(DataRefName::master_caution1_pb, mip_switches[17].type, 0);			// MASTER_CAUTION				17
+		mip_zcockpit_switches[18] = ZcockpitSwitch(DataRefName::capt_six_pack_pb, mip_switches[18].type, 0);				// SixPack ANNUNCIATOR			18
+		mip_zcockpit_switches[19] = ZcockpitSwitch(DataRefName::chrono_capt_et_mode_pb, mip_switches[19].type, 0);	// CLOCK CAPT ET				19
+		mip_zcockpit_switches[20] = ZcockpitSwitch(DataRefName::fire_bell_light1_pb, mip_switches[20].type, 0);			// FIRE WARN LIGHT				20
+		mip_zcockpit_switches[21] = ZcockpitSwitch(DataRefName::bright_test, mip_switches[21].type, 0);							// Annun Bright/Test			21
 		mip_zcockpit_switches[22] = ZcockpitSwitch();																								// STAB Out of Trim				22
-		mip_zcockpit_switches[23] = ZcockpitSwitch(DataRefName::MFD_ENG_pb, mip_switches[23].type);							// MFD_ENG						23
-		mip_zcockpit_switches[24] = ZcockpitSwitch(DataRefName::MFD_SYS_pb, mip_switches[24].type);							// MFD_SYS						24
-		mip_zcockpit_switches[25] = ZcockpitSwitch(DataRefName::ap_light_pilot,  mip_switches[25].type);				// AUTOPILOT_DIS_LIGHT			25
-		mip_zcockpit_switches[26] = ZcockpitSwitch(DataRefName::at_light_pilot,  mip_switches[26].type);				// AUTOTHROTTLE_DIS_LIGHT		26
-		mip_zcockpit_switches[27] = ZcockpitSwitch(DataRefName::fms_light_pilot, mip_switches[27].type);			// FMC_ALERT_LIGHT				27
-		mip_zcockpit_switches[28] = ZcockpitSwitch(DataRefName::landing_gear, mip_switches[28].type);						// GEAR_LEVER_UP				28
-		mip_zcockpit_switches[29] = ZcockpitSwitch(DataRefName::ap_discon_test1, mip_switches[29].type);					// Capt AP LIGHT TEST 2 (dn)	29
-		mip_zcockpit_switches[30] = ZcockpitSwitch(DataRefName::ap_discon_test1, mip_switches[30].type);					// Capt AP LIGHT TEST 1 (up)	30
-		mip_zcockpit_switches[31] = ZcockpitSwitch(DataRefName::landing_gear, mip_switches[31].type);						// GEAR_LEVER_DN				31
+		mip_zcockpit_switches[23] = ZcockpitSwitch(DataRefName::MFD_ENG_pb, mip_switches[23].type, 0);							// MFD_ENG						23
+		mip_zcockpit_switches[24] = ZcockpitSwitch(DataRefName::MFD_SYS_pb, mip_switches[24].type, 0);							// MFD_SYS						24
+		mip_zcockpit_switches[25] = ZcockpitSwitch(DataRefName::ap_light_pilot,  mip_switches[25].type, 0);				// AUTOPILOT_DIS_LIGHT			25
+		mip_zcockpit_switches[26] = ZcockpitSwitch(DataRefName::at_light_pilot,  mip_switches[26].type, 0);				// AUTOTHROTTLE_DIS_LIGHT		26
+		mip_zcockpit_switches[27] = ZcockpitSwitch(DataRefName::fms_light_pilot, mip_switches[27].type, 0);			// FMC_ALERT_LIGHT				27
+		mip_zcockpit_switches[28] = ZcockpitSwitch(DataRefName::landing_gear, mip_switches[28].type, 0);						// GEAR_LEVER_UP				28
+		mip_zcockpit_switches[29] = ZcockpitSwitch(DataRefName::ap_discon_test1, mip_switches[29].type, 0);					// Capt AP LIGHT TEST 2 (dn)	29
+		mip_zcockpit_switches[30] = ZcockpitSwitch(DataRefName::ap_discon_test1, mip_switches[30].type, 0);					// Capt AP LIGHT TEST 1 (up)	30
+		mip_zcockpit_switches[31] = ZcockpitSwitch(DataRefName::landing_gear, mip_switches[31].type, 0);						// GEAR_LEVER_DN				31
 		mip_zcockpit_switches[32] = ZcockpitSwitch();																								//	{ -1, -1 } no connection	32
 
 
 		overhead_zcockpit_switches[0]  = ZcockpitSwitch();												// no connection	 0
-		overhead_zcockpit_switches[1]  = ZcockpitSwitch(DataRefName::land_lights_ret_left_pos,  overhead_switches[1].type);			// LANDING_LIGHT_1								1
-		overhead_zcockpit_switches[2]  = ZcockpitSwitch(DataRefName::land_lights_ret_right_pos, overhead_switches[2].type);			// LANDING_LIGHT_2								2
-		overhead_zcockpit_switches[3]  = ZcockpitSwitch(DataRefName::land_lights_left_pos,      overhead_switches[3].type);			// LANDING_LIGHT_3								3
-		overhead_zcockpit_switches[4]  = ZcockpitSwitch(DataRefName::land_lights_right_pos,     overhead_switches[4].type);			// LANDING_LIGHT_4								4
-		overhead_zcockpit_switches[5]  = ZcockpitSwitch(DataRefName::rwy_light_left, overhead_switches[5].type);					// RUNWAY_TURNOFF_LIGHT_L						5
-		overhead_zcockpit_switches[6]  = ZcockpitSwitch(DataRefName::rwy_light_right, overhead_switches[6].type);					// RUNWAY_TURNOFF_LIGHT_R						6
-		overhead_zcockpit_switches[7]  = ZcockpitSwitch(DataRefName::taxi_light_brightness_pos, overhead_switches[7].type  );		// TAXI_LIGHT									7
+		overhead_zcockpit_switches[1]  = ZcockpitSwitch(DataRefName::land_lights_ret_left_pos,  overhead_switches[1].type, 0);			// LANDING_LIGHT_1								1
+		overhead_zcockpit_switches[2]  = ZcockpitSwitch(DataRefName::land_lights_ret_right_pos, overhead_switches[2].type, 0);			// LANDING_LIGHT_2								2
+		overhead_zcockpit_switches[3]  = ZcockpitSwitch(DataRefName::land_lights_left_pos,      overhead_switches[3].type, 0);			// LANDING_LIGHT_3								3
+		overhead_zcockpit_switches[4]  = ZcockpitSwitch(DataRefName::land_lights_right_pos,     overhead_switches[4].type, 0);			// LANDING_LIGHT_4								4
+		overhead_zcockpit_switches[5]  = ZcockpitSwitch(DataRefName::rwy_light_left, overhead_switches[5].type, 0);					// RUNWAY_TURNOFF_LIGHT_L						5
+		overhead_zcockpit_switches[6]  = ZcockpitSwitch(DataRefName::rwy_light_right, overhead_switches[6].type, 0);					// RUNWAY_TURNOFF_LIGHT_R						6
+		overhead_zcockpit_switches[7]  = ZcockpitSwitch(DataRefName::taxi_light_brightness_pos, overhead_switches[7].type, 0);		// TAXI_LIGHT									7
 
 
-		overhead_zcockpit_switches[8]  = ZcockpitSwitch(DataRefName::APU_start_pos, overhead_switches[8].type);								// APU_ON ==1, APU_OFF == 0	 -- toggle			8
+		overhead_zcockpit_switches[8]  = ZcockpitSwitch(DataRefName::APU_start_pos, overhead_switches[8].type, 0);								// APU_ON ==1, APU_OFF == 0	 -- toggle			8
 		overhead_zcockpit_switches[9]  = ZcockpitSwitch(DataRefName::APU_start_pos, overhead_switches[9].type,XPLANE_APU_ON);		// APU_ON ==1, APU_START ==2 -- string loaded	9
 
-		overhead_zcockpit_switches[10] = ZcockpitSwitch(DataRefName::hydro_pumps2_pos, overhead_switches[10].type  );				// HYDRAULIC_ENG_PUMP_2							10
-		overhead_zcockpit_switches[11] = ZcockpitSwitch(DataRefName::electric_hydro_pumps1_pos, overhead_switches[11].type  );	// HYDRAULIC_ELECTRIC_PUMP_1					11
-		overhead_zcockpit_switches[12] = ZcockpitSwitch(DataRefName::eng_start_source, overhead_switches[12].type  );				// XPLANE_IGNITION_SELECT_BOTH=0, IGNITION_SELECT_2=1	12
-		overhead_zcockpit_switches[13] = ZcockpitSwitch(DataRefName::electric_hydro_pumps2_pos, overhead_switches[13].type  );	// HYDRAULIC_ELECTRIC_PUMP_2					13
-		overhead_zcockpit_switches[14] = ZcockpitSwitch(DataRefName::eng_start_source, overhead_switches[14].type  );				// XPLANE_IGNITION_SELECT_BOTH =0 IGNITION_SELECT_1=-1 14
-		overhead_zcockpit_switches[15] = ZcockpitSwitch(DataRefName::hydro_pumps1_pos, overhead_switches[15].type  );				// HYDRAULIC_ENG_PUMP_1							15
+		overhead_zcockpit_switches[10] = ZcockpitSwitch(DataRefName::hydro_pumps2_pos, overhead_switches[10].type, 0);				// HYDRAULIC_ENG_PUMP_2							10
+		overhead_zcockpit_switches[11] = ZcockpitSwitch(DataRefName::electric_hydro_pumps1_pos, overhead_switches[11].type, 0);	// HYDRAULIC_ELECTRIC_PUMP_1					11
+		overhead_zcockpit_switches[12] = ZcockpitSwitch(DataRefName::eng_start_source, overhead_switches[12].type, 0);				// XPLANE_IGNITION_SELECT_BOTH=0, IGNITION_SELECT_2=1	12
+		overhead_zcockpit_switches[13] = ZcockpitSwitch(DataRefName::electric_hydro_pumps2_pos, overhead_switches[13].type, 0);	// HYDRAULIC_ELECTRIC_PUMP_2					13
+		overhead_zcockpit_switches[14] = ZcockpitSwitch(DataRefName::eng_start_source, overhead_switches[14].type, 0);				// XPLANE_IGNITION_SELECT_BOTH =0 IGNITION_SELECT_1=-1 14
+		overhead_zcockpit_switches[15] = ZcockpitSwitch(DataRefName::hydro_pumps1_pos, overhead_switches[15].type, 0);				// HYDRAULIC_ENG_PUMP_1							15
 		overhead_zcockpit_switches[16] = ZcockpitSwitch();												// no connection	 16
-		overhead_zcockpit_switches[17] = ZcockpitSwitch(DataRefName::fmc_source, overhead_switches[17].type);						// FMC_SOURCE_SELECT_NORMAL=0, FMC_SOURCE_L=-1	17
-		overhead_zcockpit_switches[18] = ZcockpitSwitch(DataRefName::logo_light, overhead_switches[18].type);						//LOGO_LIGHT									18
-		overhead_zcockpit_switches[19] = ZcockpitSwitch(DataRefName::fmc_source, overhead_switches[19].type);						// FMC_SOURCE_SELECT_NORMAL=0 FMC_SOURCE_R=1	19
-		overhead_zcockpit_switches[20] = ZcockpitSwitch(DataRefName::beacon_on, overhead_switches[20].type);						// ANTI_COLLISION_LIGHT -- no COMMAND			20      ************************
-		overhead_zcockpit_switches[21] = ZcockpitSwitch(DataRefName::wing_light, overhead_switches[21].type);						// WING_LIGHT on=1 off=0						21
-		overhead_zcockpit_switches[22] = ZcockpitSwitch(DataRefName::wheel_light, overhead_switches[22].type);						// WHEEL_WELL_LIGHT on=1 off=0					22
+		overhead_zcockpit_switches[17] = ZcockpitSwitch(DataRefName::fmc_source, overhead_switches[17].type, 0);						// FMC_SOURCE_SELECT_NORMAL=0, FMC_SOURCE_L=-1	17
+		overhead_zcockpit_switches[18] = ZcockpitSwitch(DataRefName::logo_light, overhead_switches[18].type, 0);						//LOGO_LIGHT									18
+		overhead_zcockpit_switches[19] = ZcockpitSwitch(DataRefName::fmc_source, overhead_switches[19].type, 0);						// FMC_SOURCE_SELECT_NORMAL=0 FMC_SOURCE_R=1	19
+		overhead_zcockpit_switches[20] = ZcockpitSwitch(DataRefName::beacon_on, overhead_switches[20].type, 0);						// ANTI_COLLISION_LIGHT -- no COMMAND			20      ************************
+		overhead_zcockpit_switches[21] = ZcockpitSwitch(DataRefName::wing_light, overhead_switches[21].type, 0);						// WING_LIGHT on=1 off=0						21
+		overhead_zcockpit_switches[22] = ZcockpitSwitch(DataRefName::wheel_light, overhead_switches[22].type, 0);						// WHEEL_WELL_LIGHT on=1 off=0					22
 
-		overhead_zcockpit_switches[23] = ZcockpitSwitch(DataRefName::attend, overhead_switches[23].type);							// attend Call									23
-		overhead_zcockpit_switches[24] = ZcockpitSwitch(DataRefName::grd_call, overhead_switches[24].type);							// ground Call									24
+		overhead_zcockpit_switches[23] = ZcockpitSwitch(DataRefName::attend, overhead_switches[23].type, 0);							// attend Call									23
+		overhead_zcockpit_switches[24] = ZcockpitSwitch(DataRefName::grd_call, overhead_switches[24].type, 0);							// ground Call									24
 		
-		overhead_zcockpit_switches[25] = ZcockpitSwitch(DataRefName::eq_cool_supply, overhead_switches[25].type);					// COOLING_SUPPLY_ALTN=1 COOLING_SUPPLY_NORM=0	25
-		overhead_zcockpit_switches[26] = ZcockpitSwitch(DataRefName::eq_cool_exhaust, overhead_switches[26].type);				// COOLING_EXHAUST_ALTN=1 COOLING_EXHST_NORM=0	26
-		overhead_zcockpit_switches[27] = ZcockpitSwitch(DataRefName::emer_exit_lights, overhead_switches[27].type);				// EMER_LIGHT_ARMED==1, EMER_LIGHT_ON=2			27
-		overhead_zcockpit_switches[28] = ZcockpitSwitch(DataRefName::emer_exit_lights, overhead_switches[28].type);				// EMER_LIGHT_ARMED=1, EMER_LIGHT_OFF=0			28
-		overhead_zcockpit_switches[29] = ZcockpitSwitch(DataRefName::seatbelt_sign_pos, overhead_switches[29].type);				// FASTEN_BELTS_AUTO=1, FASTEN_BELTS_ON=2		29
-		overhead_zcockpit_switches[30] = ZcockpitSwitch(DataRefName::seatbelt_sign_pos, overhead_switches[30].type);				// FASTEN_BELTS_AUTO=1, FASTEN_BELTS_OFF=0		30
-		overhead_zcockpit_switches[31] = ZcockpitSwitch(DataRefName::no_smoking_pos, overhead_switches[31].type);					// NO_SMOKING_AUTO=1, NO_SMOKING_ON=2			31
-		overhead_zcockpit_switches[32] = ZcockpitSwitch(DataRefName::no_smoking_pos, overhead_switches[32].type);					// NO_SMOKING_AUTO=1, NO_SMOKING_OFF=0			32
-		overhead_zcockpit_switches[33] = ZcockpitSwitch(DataRefName::cross_feed_pos, overhead_switches[33].type);					// CROSSFEED_ON=1, CROSSFEED_OFF=0				33
-		overhead_zcockpit_switches[34] = ZcockpitSwitch(DataRefName::fuel_tank_pos_rgt2, overhead_switches[34].type);				// FUEL_FWD_2									34
-		overhead_zcockpit_switches[35] = ZcockpitSwitch(DataRefName::fuel_tank_pos_ctr1, overhead_switches[35].type);				// FUEL_CTR_L									35
+		overhead_zcockpit_switches[25] = ZcockpitSwitch(DataRefName::eq_cool_supply, overhead_switches[25].type, 0);					// COOLING_SUPPLY_ALTN=1 COOLING_SUPPLY_NORM=0	25
+		overhead_zcockpit_switches[26] = ZcockpitSwitch(DataRefName::eq_cool_exhaust, overhead_switches[26].type, 0);				// COOLING_EXHAUST_ALTN=1 COOLING_EXHST_NORM=0	26
+		overhead_zcockpit_switches[27] = ZcockpitSwitch(DataRefName::emer_exit_lights, overhead_switches[27].type, 0);				// EMER_LIGHT_ARMED==1, EMER_LIGHT_ON=2			27
+		overhead_zcockpit_switches[28] = ZcockpitSwitch(DataRefName::emer_exit_lights, overhead_switches[28].type, 0);				// EMER_LIGHT_ARMED=1, EMER_LIGHT_OFF=0			28
+		overhead_zcockpit_switches[29] = ZcockpitSwitch(DataRefName::seatbelt_sign_pos, overhead_switches[29].type, 0);				// FASTEN_BELTS_AUTO=1, FASTEN_BELTS_ON=2		29
+		overhead_zcockpit_switches[30] = ZcockpitSwitch(DataRefName::seatbelt_sign_pos, overhead_switches[30].type, 0);				// FASTEN_BELTS_AUTO=1, FASTEN_BELTS_OFF=0		30
+		overhead_zcockpit_switches[31] = ZcockpitSwitch(DataRefName::no_smoking_pos, overhead_switches[31].type, 0);					// NO_SMOKING_AUTO=1, NO_SMOKING_ON=2			31
+		overhead_zcockpit_switches[32] = ZcockpitSwitch(DataRefName::no_smoking_pos, overhead_switches[32].type, 0);					// NO_SMOKING_AUTO=1, NO_SMOKING_OFF=0			32
+		overhead_zcockpit_switches[33] = ZcockpitSwitch(DataRefName::cross_feed_pos, overhead_switches[33].type, 0);					// CROSSFEED_ON=1, CROSSFEED_OFF=0				33
+		overhead_zcockpit_switches[34] = ZcockpitSwitch(DataRefName::fuel_tank_pos_rgt2, overhead_switches[34].type, 0);				// FUEL_FWD_2									34
+		overhead_zcockpit_switches[35] = ZcockpitSwitch(DataRefName::fuel_tank_pos_ctr1, overhead_switches[35].type, 0);				// FUEL_CTR_L									35
 		overhead_zcockpit_switches[36] = ZcockpitSwitch();												// no connection	 36
-		overhead_zcockpit_switches[37] = ZcockpitSwitch(DataRefName::fuel_tank_pos_ctr2, overhead_switches[37].type);				// FUEL_CTR_R_									37
-		overhead_zcockpit_switches[38] = ZcockpitSwitch(DataRefName::fuel_tank_pos_lft2, overhead_switches[38].type);				// FUEL_FWD_1									38
-		overhead_zcockpit_switches[39] = ZcockpitSwitch(DataRefName::fuel_tank_pos_lft1, overhead_switches[39].type);				// FUEL_AFT_1									39
-		overhead_zcockpit_switches[40] = ZcockpitSwitch(DataRefName::fuel_tank_pos_rgt1, overhead_switches[40].type);				// FUEL_AFT_2									40
-		overhead_zcockpit_switches[41] = ZcockpitSwitch(DataRefName::yaw_dumper_pos, overhead_switches[41].type);					// YAW_DAMPER									41
-		overhead_zcockpit_switches[42] = ZcockpitSwitch(DataRefName::cab_util_pos, overhead_switches[42].type);					// CAB_UTIL										42
-		overhead_zcockpit_switches[43] = ZcockpitSwitch(DataRefName::battery_pos, overhead_switches[43].type);						// BAT_ON, BAT_OFF								43
-		overhead_zcockpit_switches[44] = ZcockpitSwitch(DataRefName::standby_bat_pos, overhead_switches[44].type);				// STANDBY_POWER_OFF=0, STANDBY_POWER_BAT=-1	44
-		overhead_zcockpit_switches[45] = ZcockpitSwitch(DataRefName::standby_bat_pos, overhead_switches[45].type);				// STANDBY_POWER_OFF=0, STANDBY_POWER_AUTO=1	45
-		overhead_zcockpit_switches[46] = ZcockpitSwitch(DataRefName::gpu_pos, overhead_switches[46].type);						// Center=0 GRD_PWR_DOWN=1						46 
-		overhead_zcockpit_switches[47] = ZcockpitSwitch(DataRefName::gpu_pos, overhead_switches[47].type);						// Center=0 GRD_PWR_UP=-1						47
+		overhead_zcockpit_switches[37] = ZcockpitSwitch(DataRefName::fuel_tank_pos_ctr2, overhead_switches[37].type, 0);				// FUEL_CTR_R_									37
+		overhead_zcockpit_switches[38] = ZcockpitSwitch(DataRefName::fuel_tank_pos_lft2, overhead_switches[38].type, 0);				// FUEL_FWD_1									38
+		overhead_zcockpit_switches[39] = ZcockpitSwitch(DataRefName::fuel_tank_pos_lft1, overhead_switches[39].type, 0);				// FUEL_AFT_1									39
+		overhead_zcockpit_switches[40] = ZcockpitSwitch(DataRefName::fuel_tank_pos_rgt1, overhead_switches[40].type, 0);				// FUEL_AFT_2									40
+		overhead_zcockpit_switches[41] = ZcockpitSwitch(DataRefName::yaw_dumper_pos, overhead_switches[41].type, 0);					// YAW_DAMPER									41
+		overhead_zcockpit_switches[42] = ZcockpitSwitch(DataRefName::cab_util_pos, overhead_switches[42].type, 0);					// CAB_UTIL										42
+		overhead_zcockpit_switches[43] = ZcockpitSwitch(DataRefName::battery_pos, overhead_switches[43].type, 0);						// BAT_ON, BAT_OFF								43
+		overhead_zcockpit_switches[44] = ZcockpitSwitch(DataRefName::standby_bat_pos, overhead_switches[44].type, 0);				// STANDBY_POWER_OFF=0, STANDBY_POWER_BAT=-1	44
+		overhead_zcockpit_switches[45] = ZcockpitSwitch(DataRefName::standby_bat_pos, overhead_switches[45].type, 0);				// STANDBY_POWER_OFF=0, STANDBY_POWER_AUTO=1	45
+		overhead_zcockpit_switches[46] = ZcockpitSwitch(DataRefName::gpu_pos, overhead_switches[46].type, 0);						// Center=0 GRD_PWR_DOWN=1						46 
+		overhead_zcockpit_switches[47] = ZcockpitSwitch(DataRefName::gpu_pos, overhead_switches[47].type, 0);						// Center=0 GRD_PWR_UP=-1						47
 
 		// ***** overhead_zcockpit_switches[48] = ZcockpitSwitch(DataRefName::, overhead_switches[].type  );//{ KEY_COMMAND_ELECTRICAL_BUS_TRANSFER_AUTO, KEY_COMMAND_ELECTRICAL_BUS_TRANSFER_OFF }, // 48
 
-		overhead_zcockpit_switches[49] = ZcockpitSwitch(DataRefName::gen2_pos, overhead_switches[49].type);						// GENERATOR_2_DOWN	=1									49
-		overhead_zcockpit_switches[50] = ZcockpitSwitch(DataRefName::gen2_pos, overhead_switches[50].type);						// GENERATOR_2_UP = -1									50
-		overhead_zcockpit_switches[51] = ZcockpitSwitch(DataRefName::apu_gen2_pos, overhead_switches[51].type);					// APU_GENERATOR_2_DOWN									51
-		overhead_zcockpit_switches[52] = ZcockpitSwitch(DataRefName::apu_gen2_pos, overhead_switches[52].type);					// APU_GENERATOR_2_UP									52
-		overhead_zcockpit_switches[53] = ZcockpitSwitch(DataRefName::apu_gen1_pos, overhead_switches[53].type);					// APU_GENERATOR_1_DOWN =1								53
-		overhead_zcockpit_switches[54] = ZcockpitSwitch(DataRefName::apu_gen1_pos, overhead_switches[54].type);					// APU_GENERATOR_1_UP = -1								54
-		overhead_zcockpit_switches[55] = ZcockpitSwitch(DataRefName::gen1_pos, overhead_switches[55].type);						// GENERATOR_1_DOWN	=1									55
-		overhead_zcockpit_switches[56] = ZcockpitSwitch(DataRefName::gen1_pos, overhead_switches[56].type);							// GENERATOR_1_UP = -1									56
-		overhead_zcockpit_switches[57] = ZcockpitSwitch(DataRefName::window_heat_l_side_pos, overhead_switches[57].type);			// L_SIDE_WINDOW_HEAT_ON=1, L_SIDE_WINDOW_HEAT_OFF=0	57
-		overhead_zcockpit_switches[58] = ZcockpitSwitch(DataRefName::window_heat_l_fwd_pos, overhead_switches[58].type);			// L_FWD_WINDOW_HEAT_ON=1, L_FWD_WINDOW_HEAT_OFF=0		58
-		overhead_zcockpit_switches[59] = ZcockpitSwitch(DataRefName::window_ovht_test, overhead_switches[59].type);				// WINDOW_HEAT_TEST_UP= -1								59
-		overhead_zcockpit_switches[60] = ZcockpitSwitch(DataRefName::window_heat_r_fwd_pos, overhead_switches[60].type);			// R_FWD_WINDOW_HEAT_ON=1, R_FWD_WINDOW_HEAT_OFF=0		60	
-		overhead_zcockpit_switches[61] = ZcockpitSwitch(DataRefName::window_heat_r_side_pos, overhead_switches[61].type);			// R_SIDE_WINDOW_HEAT_ON=1, R_SIDE_WINDOW_HEAT_OFF=0	61
-		overhead_zcockpit_switches[62] = ZcockpitSwitch(DataRefName::fo_probes_pos, overhead_switches[62].type);					// PROBE_B_HEAT_ON=1, PROBE_B_HEAT_OFF=0				62
-		overhead_zcockpit_switches[63] = ZcockpitSwitch(DataRefName::capt_probes_pos, overhead_switches[63].type);				// PROBE_A_HEAT_ON=1, PROBE_A_HEAT_OFF=0				63
-		overhead_zcockpit_switches[64] = ZcockpitSwitch(DataRefName::window_ovht_test, overhead_switches[64].type);				// WINDOW_HEAT_TEST_DOWN=1								64
+		overhead_zcockpit_switches[49] = ZcockpitSwitch(DataRefName::gen2_pos, overhead_switches[49].type, 0);						// GENERATOR_2_DOWN	=1									49
+		overhead_zcockpit_switches[50] = ZcockpitSwitch(DataRefName::gen2_pos, overhead_switches[50].type, 0);						// GENERATOR_2_UP = -1									50
+		overhead_zcockpit_switches[51] = ZcockpitSwitch(DataRefName::apu_gen2_pos, overhead_switches[51].type, 0);					// APU_GENERATOR_2_DOWN									51
+		overhead_zcockpit_switches[52] = ZcockpitSwitch(DataRefName::apu_gen2_pos, overhead_switches[52].type, 0);					// APU_GENERATOR_2_UP									52
+		overhead_zcockpit_switches[53] = ZcockpitSwitch(DataRefName::apu_gen1_pos, overhead_switches[53].type, 0);					// APU_GENERATOR_1_DOWN =1								53
+		overhead_zcockpit_switches[54] = ZcockpitSwitch(DataRefName::apu_gen1_pos, overhead_switches[54].type, 0);					// APU_GENERATOR_1_UP = -1								54
+		overhead_zcockpit_switches[55] = ZcockpitSwitch(DataRefName::gen1_pos, overhead_switches[55].type, 0);						// GENERATOR_1_DOWN	=1									55
+		overhead_zcockpit_switches[56] = ZcockpitSwitch(DataRefName::gen1_pos, overhead_switches[56].type, 0);							// GENERATOR_1_UP = -1									56
+		overhead_zcockpit_switches[57] = ZcockpitSwitch(DataRefName::window_heat_l_side_pos, overhead_switches[57].type, 0);			// L_SIDE_WINDOW_HEAT_ON=1, L_SIDE_WINDOW_HEAT_OFF=0	57
+		overhead_zcockpit_switches[58] = ZcockpitSwitch(DataRefName::window_heat_l_fwd_pos, overhead_switches[58].type, 0);			// L_FWD_WINDOW_HEAT_ON=1, L_FWD_WINDOW_HEAT_OFF=0		58
+		overhead_zcockpit_switches[59] = ZcockpitSwitch(DataRefName::window_ovht_test, overhead_switches[59].type, 0);				// WINDOW_HEAT_TEST_UP= -1								59
+		overhead_zcockpit_switches[60] = ZcockpitSwitch(DataRefName::window_heat_r_fwd_pos, overhead_switches[60].type, 0);			// R_FWD_WINDOW_HEAT_ON=1, R_FWD_WINDOW_HEAT_OFF=0		60	
+		overhead_zcockpit_switches[61] = ZcockpitSwitch(DataRefName::window_heat_r_side_pos, overhead_switches[61].type, 0);			// R_SIDE_WINDOW_HEAT_ON=1, R_SIDE_WINDOW_HEAT_OFF=0	61
+		overhead_zcockpit_switches[62] = ZcockpitSwitch(DataRefName::fo_probes_pos, overhead_switches[62].type, 0);					// PROBE_B_HEAT_ON=1, PROBE_B_HEAT_OFF=0				62
+		overhead_zcockpit_switches[63] = ZcockpitSwitch(DataRefName::capt_probes_pos, overhead_switches[63].type, 0);				// PROBE_A_HEAT_ON=1, PROBE_A_HEAT_OFF=0				63
+		overhead_zcockpit_switches[64] = ZcockpitSwitch(DataRefName::window_ovht_test, overhead_switches[64].type, 0);				// WINDOW_HEAT_TEST_DOWN=1								64
 
 
 
@@ -1026,7 +1026,7 @@ namespace zcockpit::cockpit::hardware
 		{
 			const auto dataref_name = overhead_zcockpit_switches[nswitch].dataref_name;
 			if (dataref_name != DataRefName::DataRefName_unused) {
-				overhead_zcockpit_switches[nswitch].hw_value = switch_value;
+				overhead_zcockpit_switches[nswitch].int_hw_value = switch_value;
 
 				if(common::SwitchType::pushbutton == interface_it_switch.type && switch_value == 1) 
 				{
@@ -1117,12 +1117,12 @@ namespace zcockpit::cockpit::hardware
 					gear_lever_up = state;
 					if(gear_lever_up == 0 && gear_lever_dn == 0) {
 						// gear off
-						mip_zcockpit_switches[nswitch].hw_value = switch_value;
+						mip_zcockpit_switches[nswitch].int_hw_value = switch_value;
 						aircraft_model.push_switch_change(mip_zcockpit_switches[nswitch]);
 					}
 					else if(gear_lever_up == 1) {
 						// gear up
-						mip_zcockpit_switches[nswitch].hw_value = switch_value;
+						mip_zcockpit_switches[nswitch].int_hw_value = switch_value;
 						aircraft_model.push_switch_change(mip_zcockpit_switches[nswitch]);
 					}
 				}
@@ -1132,17 +1132,17 @@ namespace zcockpit::cockpit::hardware
 					gear_lever_dn = state;
 					if(gear_lever_up == 0 && gear_lever_dn == 0) {
 						// gear off
-						mip_zcockpit_switches[nswitch].hw_value = switch_value;
+						mip_zcockpit_switches[nswitch].int_hw_value = switch_value;
 						aircraft_model.push_switch_change(mip_zcockpit_switches[nswitch]);
 					}
 					else if(gear_lever_dn == 1) {
 						// gear down
-						mip_zcockpit_switches[nswitch].hw_value = switch_value;
+						mip_zcockpit_switches[nswitch].int_hw_value = switch_value;
 						aircraft_model.push_switch_change(mip_zcockpit_switches[nswitch]);
 					}
 				}
 				else {
-					mip_zcockpit_switches[nswitch].hw_value = switch_value;
+					mip_zcockpit_switches[nswitch].int_hw_value = switch_value;
 					if(common::SwitchType::pushbutton == hw_switch.type && state == 1) {
 						aircraft_model.push_switch_change(mip_zcockpit_switches[nswitch]);
 
@@ -1357,7 +1357,7 @@ namespace zcockpit::cockpit::hardware
 			}
 			// Process LEDs
 //// TODO accessing mip_zcockpit_switches DOESN'T WORK
-//			if ( mip_zcockpit_switches[BATTERY_SWITCH].hw_value > 0) // 0: false  true: ON
+//			if ( mip_zcockpit_switches[BATTERY_SWITCH].int_hw_value > 0) // 0: false  true: ON
 //			{
 				//if ( aircraft_model.hw_switch_data.bright_test == 0)
 				//{
@@ -1429,7 +1429,7 @@ namespace zcockpit::cockpit::hardware
 			}
 			// Process LEDs
 //// TODO accessing mip_zcockpit_switches DOESN'T WORK
-//			if ( mip_zcockpit_switches[BATTERY_SWITCH].hw_value > 0)
+//			if ( mip_zcockpit_switches[BATTERY_SWITCH].int_hw_value > 0)
 //			{
 				//if ( aircraft_model.hw_switch_data.bright_test == 0)
 				//{

@@ -293,6 +293,13 @@ namespace zcockpit::cockpit {
 		gpws_terr,
 		gpws_gear,
 
+		rudder_trim,
+		aileron_trim,
+		instrument_brightness,
+		spd_ref_adjust,
+		n1_set_source,
+		n1_set_adjust,
+
 		//
 		// end of HARDWARE SWITCHES
 		//
@@ -388,6 +395,12 @@ namespace zcockpit::cockpit {
 		DataRefName::gpws_gear,
 		DataRefName::gpws_gear_pos,
 
+		DataRefName::rudder_trim,
+		DataRefName::aileron_trim,
+		DataRefName::instrument_brightness,
+		DataRefName::spd_ref_adjust,
+		DataRefName::n1_set_source,
+		DataRefName::n1_set_adjust,
 	};
 
 

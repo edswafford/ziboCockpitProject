@@ -97,7 +97,13 @@ namespace zcockpit::cockpit {
 		int gpws_terr_cover_pos{0}; 
 		int gpws_gear{0};
 		int gpws_gear_cover_pos{0};
+		int n1_set_source{0};
 
+		float rudder_trim{0.0};
+		float aileron_trim{0.0};
+		std::vector<float>  instrument_brightness{1.0};
+		float spd_ref_adjust{0.0};
+		float n1_set_adjust{0.0};
 	};
 
 
@@ -223,6 +229,25 @@ namespace zcockpit::cockpit {
 		SwitchCommands gpws_terr{2, std::vector<CommandRefName>{CommandRefName::gpws_terr, CommandRefName::gpws_terr}};
 		SwitchCommands gpws_gear{2, std::vector<CommandRefName>{CommandRefName::gpws_gear, CommandRefName::gpws_gear}};
 
+		SwitchCommands rudder_trim{2, std::vector<CommandRefName>{CommandRefName::rudder_trim_right, CommandRefName::rudder_trim_left}};
+		SwitchCommands aileron_trim{2, std::vector<CommandRefName>{CommandRefName::aileron_trim_right, CommandRefName::aileron_trim_left}};
 
+		SwitchCommands n1_set_source{2, std::vector<CommandRefName>{CommandRefName::n1_set_source_right, CommandRefName::n1_set_source_left}};
+		
+	};
+
+
+	struct SwitchValues
+	{
+		float max_value{1.0f};
+		float min_value{-1.0f};
+		float increment{0.1f};
+		float decrement{-0.1f};
+	};
+	struct Z737SwitchValue
+	{
+		SwitchValues instrument_brightness{1.0f, -1.0f, 0.1f, -0.1f};
+		SwitchValues spd_ref_adjust{1.0f, -1.0f, 0.1f, -0.1f};
+		SwitchValues n1_set_adjust{1.0f, -1.0f, 0.1f, -0.1f};
 	};
 }

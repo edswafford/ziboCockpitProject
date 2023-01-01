@@ -45,11 +45,12 @@ namespace zcockpit::cockpit {
 
 
 
-		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !convert_to_bool};
-		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !convert_to_bool};
-		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !convert_to_bool};
-		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !convert_to_bool};
-		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::rudder_trim] = {"sim/flightmodel2/controls/rudder_trim", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::aileron_trim] = {"sim/flightmodel2/controls/aileron_trim", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::instrument_brightness] = {"laminar/B738/electric/instrument_brightness", XplaneType::type_FloatArray, !convert_to_bool};
+		data_ref_strings[DataRefName::spd_ref_adjust] = {"laminar/B738/toggle_switch/spd_ref_adjust", XplaneType::type_Float, !convert_to_bool};
+		data_ref_strings[DataRefName::n1_set_adjust] = {"laminar/B738/toggle_switch/n1_set_adjust", XplaneType::type_Float, !convert_to_bool};
+
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !convert_to_bool};
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !convert_to_bool};
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !convert_to_bool};
@@ -118,21 +119,22 @@ namespace zcockpit::cockpit {
 		data_ref_strings[DataRefName::lower_du_capt] = {"laminar/B738/toggle_switch/lower_du_capt", XplaneType::type_Float, !convert_to_bool};
 		data_ref_strings[DataRefName::lower_du_fo] = {"laminar/B738/toggle_switch/lower_du_fo", XplaneType::type_Float, !convert_to_bool};
 
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !bool_annun};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !bool_annun};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !bool_annun};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !bool_annun};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !bool_annun};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !bool_annun};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !bool_annun};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !bool_annun};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !bool_annun};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !bool_annun};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !bool_annun};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !bool_annun};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !bool_annun};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !bool_annun};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !bool_annun};
+		data_ref_strings[DataRefName::n1_set_source] = { "laminar/B738/toggle_switch/n1_set_source", XplaneType::type_Float, !convert_to_bool};
+
+		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
+		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
 
 
 		//
@@ -483,11 +485,13 @@ namespace zcockpit::cockpit {
 		command_ref_strings[CommandRefName::gpws_terr] = {"laminar/B738/toggle_switch/gpws_terr"};
 		command_ref_strings[CommandRefName::gpws_gear] = {"laminar/B738/toggle_switch/gpws_gear"};
 
+		command_ref_strings[CommandRefName::rudder_trim_left] = {"sim/flight_controls/rudder_trim_left"};
+		command_ref_strings[CommandRefName::rudder_trim_right] = {"sim/flight_controls/rudder_trim_right"};
+		command_ref_strings[CommandRefName::aileron_trim_left] = {"sim/flight_controls/aileron_trim_left"};
+		command_ref_strings[CommandRefName::aileron_trim_right] = {"sim/flight_controls/aileron_trim_right"};
 
-		//command_ref_strings[CommandRefName::] = {""};
-		//command_ref_strings[CommandRefName::] = {""};
-		//command_ref_strings[CommandRefName::] = {""};
-		//command_ref_strings[CommandRefName::] = {""};
+		command_ref_strings[CommandRefName::n1_set_source_left] = {"laminar/B738/toggle_switch/n1_set_source_left"};
+		command_ref_strings[CommandRefName::n1_set_source_right] = {"laminar/B738/toggle_switch/n1_set_source_right"};
 
 		//command_ref_strings[CommandRefName::] = {""};
 

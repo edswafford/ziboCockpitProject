@@ -271,144 +271,141 @@ namespace zcockpit::cockpit::hardware
 		}
 
 
-		//// Rudder Trim
-		//if(mastercard_input(54, &rudderLeft) && rudderLeft)
-		//{ 
-		//	//    &iflyCmd = 600
-		//	sendMessageInt(KEY_COMMAND_FLTCTRL_RUDDER_TRIM_DEC, 0);
-		//}
+		// Rudder Trim
+		if(mastercard_input(54, &rudderLeft) && rudderLeft)
+		{ 
+			aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[33]); //RUDDER_TRIM_DEC
+		}
 
-		//if(mastercard_input(57, &rudderRight) && rudderRight)
-		//{
-		//	//    &iflyCmd = 601
-		//	sendMessageInt(KEY_COMMAND_FLTCTRL_RUDDER_TRIM_INC, 0);
-		//}
+		if(mastercard_input(57, &rudderRight) && rudderRight)
+		{
+			aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[34]); //RUDDER_TRIM_INC
+		}
 
-		//// Aileron Trim
-		//if(mastercard_input(55, &aileronLeft) && aileronLeft)
-		//{
-		//	//   &iflyCmd = 602
-		//	sendMessageInt(KEY_COMMAND_FLTCTRL_AILERON_TRIM_DEC, 0);
-		//}
+		// Aileron Trim
+		if(mastercard_input(55, &aileronLeft) && aileronLeft)
+		{
+			aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[35]); //AILERON_TRIM_DEC
+		}
 
-		//if(mastercard_input(56, &aileronRight) && aileronRight)
-		//{
-		//	//    &iflyCmd = 603
-		//	sendMessageInt(KEY_COMMAND_FLTCTRL_AILERON_TRIM_INC, 0);
-		//}
+		if(mastercard_input(56, &aileronRight) && aileronRight)
+		{
+			aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[36]); //AILERON_TRIM_INC
+
+		}
 
 		// Encoders
 		double value = 1.0;
-		//if(mastercard_encoder(31, &value, 1.0, 1.0) > 0)
-		//{
-		//	LOG() << "value " << value;
-		//	if(value > 0)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_INSTRUMENT_FO_INBD_DU_BRIGHTNESS_DEC, 0);
-		//	}
-		//	else
-		//	{
-		//		sendMessageInt(KEY_COMMAND_INSTRUMENT_FO_INBD_DU_BRIGHTNESS_INC, 0);
-		//	}
-		//}
+		if(mastercard_encoder(31, &value, 1.0, 1.0) > 0)
+		{
+			LOG() << "value " << value;
+			if(value > 0)
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[37]); // FO_INBD_DU_BRIGHTNESS_DEC
+			}
+			else
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[38]); // FO_INBD_DU_BRIGHTNESS_INC
+			}
+		}
 
-		//value = 1.0;
-		//if(mastercard_encoder(33, &value, 1.0, 1.0) > 0)
-		//{
-		//	LOG() << "value " << value;
-		//	if(value > 0)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_INSTRUMENT_FO_OUTBD_DU_BRIGHTNESS_DEC, 0);
-		//	}
-		//	else
-		//	{
-		//		sendMessageInt(KEY_COMMAND_INSTRUMENT_FO_OUTBD_DU_BRIGHTNESS_INC, 0);
-		//	}
-		//}
+		value = 1.0;
+		if(mastercard_encoder(33, &value, 1.0, 1.0) > 0)
+		{
+			LOG() << "value " << value;
+			if(value > 0)
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[39]); // FO_OUTBD_DU_BRIGHTNESS_DEC
+			}
+			else
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[40]); // FO_OUTBD_DU_BRIGHTNESS_INC
+			}
+		}
 
-		//value = 1.0;
-		//if(mastercard_encoder(36, &value, 1.0, 1.0) > 0)
-		//{
-		//	LOG() << "value " << value;
-		//	if(value > 0)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_INSTRUMENT_CAPT_INBD_DU_BRIGHTNESS_INC, 0);
-		//	}
-		//	else
-		//	{
-		//		sendMessageInt(KEY_COMMAND_INSTRUMENT_CAPT_INBD_DU_BRIGHTNESS_DEC, 0);
-		//	}
-		//}
-		//value = 1.0;
-		//if(mastercard_encoder(42, &value, 1.0, 1.0) > 0)
-		//{
-		//	LOG() << "value " << value;
-		//	if(value > 0)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_INSTRUMENT_CAPT_OUTBD_DU_BRIGHTNESS_DEC, 0);
-		//	}
-		//	else
-		//	{
-		//		sendMessageInt(KEY_COMMAND_INSTRUMENT_CAPT_OUTBD_DU_BRIGHTNESS_INC, 0);
-		//	}
-		//}
+		value = 1.0;
+		if(mastercard_encoder(36, &value, 1.0, 1.0) > 0)
+		{
+			LOG() << "value " << value;
+			if(value > 0)
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[41]); // CAPT_INBD_DU_BRIGHTNESS_INC
+			}
+			else
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[42]); //CAPT_INBD_DU_BRIGHTNESS_DEC
+			}
+		}
+		value = 1.0;
+		if(mastercard_encoder(42, &value, 1.0, 1.0) > 0)
+		{
+			LOG() << "value " << value;
+			if(value > 0)
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[43]); // CAPT_OUTBD_DU_BRIGHTNESS_DEC
+			}
+			else
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[44]); // CAPT_OUTBD_DU_BRIGHTNESS_INC
+			}
+		}
 
-		//value = 1.0;
-		//if(mastercard_encoder(40, &value, 1.0, 1.0) > 0)
-		//{
-		//	LOG() << "value " << value;
-		//	if(value > 0)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_INSTRUMENT_LOWER_DU_BRIGHTNESS_DEC, 0);
-		//	}
-		//	else
-		//	{
-		//		sendMessageInt(KEY_COMMAND_INSTRUMENT_LOWER_DU_BRIGHTNESS_INC, 0);
-		//	}
-		//}
-		//value = 1.0;
-		//if(mastercard_encoder(38, &value, 1.0, 1.0) > 0)
-		//{
-		//	LOG() << "value " << value;
-		//	if(value > 0)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_INSTRUMENT_UPPER_DU_BRIGHTNESS_INC, 0);
-		//	}
-		//	else
-		//	{
-		//		sendMessageInt(KEY_COMMAND_INSTRUMENT_UPPER_DU_BRIGHTNESS_DEC, 0);
-		//	}
-		//}
+		value = 1.0;
+		if(mastercard_encoder(40, &value, 1.0, 1.0) > 0)
+		{
+			LOG() << "value " << value;
+			if(value > 0)
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[45]); // LOWER_DU_BRIGHTNESS_DEC
+			}
+			else
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[46]); // LOWER_DU_BRIGHTNESS_INC
+			}
+		}
+		value = 1.0;
+		if(mastercard_encoder(38, &value, 1.0, 1.0) > 0)
+		{
+			LOG() << "value " << value;
+			if(value > 0)
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[47]); // UPPER_DU_BRIGHTNESS_INC
+			}
+			else
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[48]); // UPPER_DU_BRIGHTNESS_DEC
+			}
+		}
 
-		//// Speed Ref  (auto, V1, Vr, WT, Vref ...
-		//value = 1.0;
-		//if(mastercard_encoder(45, &value, 1.0, 1.0) > 0)
-		//{
-		//	LOG() << "value " << value;
-		//	if(value > 0)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_INSTRUMENT_LOWER_SPD_REF_INC, 0);
-		//	}
-		//	else
-		//	{
-		//		sendMessageInt(KEY_COMMAND_INSTRUMENT_LOWER_SPD_REF_DEC, 0);
-		//	}
-		//}
+		// Speed Ref  (auto, V1, Vr, WT, Vref ...
+		value = 1.0;
+		if(mastercard_encoder(45, &value, 1.0, 1.0) > 0)
+		{
+			LOG() << "value " << value;
+			if(value > 0)
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[49]); // SPD_REF_INC
+			}
+			else
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[50]); // SPD_REF_DEC
+			}
+		}
 
-		//// N1 Set
-		//value = 1.0;
-		//if(mastercard_encoder(47, &value, 1.0, 1.0) > 0)
-		//{
-		//	LOG() << "value " << value;
-		//	if(value > 0)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_ENGAPU_N1_SET_INC, 0);
-		//	}
-		//	else
-		//	{
-		//		sendMessageInt(KEY_COMMAND_ENGAPU_N1_SET_DEC, 0);
-		//	}
-		//}
+		// N1 Set
+		value = 1.0;
+		if(mastercard_encoder(47, &value, 1.0, 1.0) > 0)
+		{
+			LOG() << "value " << value;
+			if(value > 0)
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[51]); // N1_SET_INC
+			}
+			else
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[52]); // N1_SET_DEC
+			}
+		}
 	}
 
 
@@ -426,79 +423,125 @@ namespace zcockpit::cockpit::hardware
 	}
 
 	
-	constexpr int XPLANE_OUTBOARD_PFD = -1;
-	constexpr int XPLANE_NORMAL = 0;
-	constexpr int XPLANE_ENG_PRIMARY = 1;
-	constexpr int XPLANE_PFD = 2;
-	constexpr int XPLANE_MFD = 3;
 
-	constexpr int XPLANE_LOWER_ENG_PRIMARY = -1;
-	constexpr int XPLANE_LOWER_PFD = 0;
-	constexpr int XPLANE_LOWER_ND = 1;
-
-	constexpr int AP_DISENGAGE_LIGHT_TEST_1 = 1;
-	constexpr int AP_DISENGAGE_LIGHT_TEST_2 = -1;
 
 	void MipIOCard::initialize_switches()
 	{
-		iocard_mip_zcockpit_switches[0]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, 0, XPLANE_OUTBOARD_PFD);
-		iocard_mip_zcockpit_switches[1]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, 0, XPLANE_NORMAL);
-		iocard_mip_zcockpit_switches[2]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, 0, XPLANE_ENG_PRIMARY);
-		iocard_mip_zcockpit_switches[3]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, 0, XPLANE_PFD);
-		iocard_mip_zcockpit_switches[4]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, 0, XPLANE_MFD);
+		constexpr int XPLANE_OUTBOARD_PFD = -1;
+		constexpr int XPLANE_NORMAL = 0;
+		constexpr int XPLANE_ENG_PRIMARY = 1;
+		constexpr int XPLANE_PFD = 2;
+		constexpr int XPLANE_MFD = 3;
 
-		iocard_mip_zcockpit_switches[5]  = ZcockpitSwitch(DataRefName::lower_du_capt, common::SwitchType::rotary, 0, XPLANE_LOWER_ENG_PRIMARY);
-		iocard_mip_zcockpit_switches[6]  = ZcockpitSwitch(DataRefName::lower_du_capt, common::SwitchType::rotary, 0, XPLANE_LOWER_PFD);
-		iocard_mip_zcockpit_switches[7]  = ZcockpitSwitch(DataRefName::lower_du_capt, common::SwitchType::rotary, 0, XPLANE_LOWER_ND);
+		constexpr int XPLANE_LOWER_ENG_PRIMARY = -1;
+		constexpr int XPLANE_LOWER_PFD = 0;
+		constexpr int XPLANE_LOWER_ND = 1;
 
-		iocard_mip_zcockpit_switches[8]  = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, 0, XPLANE_OUTBOARD_PFD);
-		iocard_mip_zcockpit_switches[9]  = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, 0, XPLANE_NORMAL);
-		iocard_mip_zcockpit_switches[10] = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, 0, XPLANE_ENG_PRIMARY);
-		iocard_mip_zcockpit_switches[11] = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, 0, XPLANE_PFD);
-		iocard_mip_zcockpit_switches[12] = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, 0, XPLANE_MFD);
+		constexpr int XPLANE_AP_DISENGAGE_LIGHT_TEST_1 = 1;
+		constexpr int XPLANE_AP_DISENGAGE_LIGHT_TEST_2 = -1;
 
-		iocard_mip_zcockpit_switches[13] = ZcockpitSwitch(DataRefName::lower_du_fo, common::SwitchType::rotary, 0,XPLANE_LOWER_ENG_PRIMARY);
-		iocard_mip_zcockpit_switches[14] = ZcockpitSwitch(DataRefName::lower_du_fo, common::SwitchType::rotary, 0,XPLANE_LOWER_PFD);
-		iocard_mip_zcockpit_switches[15] = ZcockpitSwitch(DataRefName::lower_du_fo, common::SwitchType::rotary, 0,XPLANE_LOWER_ND);
+		constexpr int XPLANE_ENG2_N1_SET = -2;
+		constexpr int XPLANE_ENG1_N1_SET = -1;
+		constexpr int XPLANE_AUTO_N1_SET = 0;
+		constexpr int XPLANE_BOTH_N1_SET = 1;
+
+		constexpr float XPLANE_RUDDER_TRIM_DEC = -0.019f;
+		constexpr float XPLANE_RUDDER_TRIM_INC = 0.019f;
+		constexpr float XPLANE_AILERON_TRIM_DEC = -0.019f;
+		constexpr float XPLANE_AILERON_TRIM_INC = 0.019f;
+
+		constexpr int XPLANE_CAPT_OUTBD_DU = 0;
+		constexpr int XPLANE_FO_INBD_DU = 1;
+		constexpr int XPLANE_CAPT_INBD_DU = 2;
+		constexpr int XPLANE_FO_OUTBD_DU = 3;
+		constexpr int XPLANE_UPPER_DU = 4;
+		constexpr int XPLANE_LOWER_DU = 15;
+					  
+		constexpr float XPLANE_BRIGHTNESS_DEC = -0.01f;
+		constexpr float XPLANE_BRIGHTNESS_INC = 0.01f;
+		
+		constexpr float XPLANE_SPD_REF_DEC = -0.01f;
+		constexpr float XPLANE_SPD_REF_INC = 0.01f;
+		constexpr float XPLANE_N1_SET_INC = 0.01f;
+	    constexpr float XPLANE_N1_SET_DEC= -0.01;
+
+	
+		iocard_mip_zcockpit_switches[0]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, XPLANE_OUTBOARD_PFD);
+		iocard_mip_zcockpit_switches[1]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, XPLANE_NORMAL);
+		iocard_mip_zcockpit_switches[2]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, XPLANE_ENG_PRIMARY);
+		iocard_mip_zcockpit_switches[3]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, XPLANE_PFD);
+		iocard_mip_zcockpit_switches[4]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, XPLANE_MFD);
+
+		iocard_mip_zcockpit_switches[5]  = ZcockpitSwitch(DataRefName::lower_du_capt, common::SwitchType::rotary, XPLANE_LOWER_ENG_PRIMARY);
+		iocard_mip_zcockpit_switches[6]  = ZcockpitSwitch(DataRefName::lower_du_capt, common::SwitchType::rotary, XPLANE_LOWER_PFD);
+		iocard_mip_zcockpit_switches[7]  = ZcockpitSwitch(DataRefName::lower_du_capt, common::SwitchType::rotary, XPLANE_LOWER_ND);
+
+		iocard_mip_zcockpit_switches[8]  = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, XPLANE_OUTBOARD_PFD);
+		iocard_mip_zcockpit_switches[9]  = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, XPLANE_NORMAL);
+		iocard_mip_zcockpit_switches[10] = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, XPLANE_ENG_PRIMARY);
+		iocard_mip_zcockpit_switches[11] = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, XPLANE_PFD);
+		iocard_mip_zcockpit_switches[12] = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, XPLANE_MFD);
+
+		iocard_mip_zcockpit_switches[13] = ZcockpitSwitch(DataRefName::lower_du_fo, common::SwitchType::rotary,XPLANE_LOWER_ENG_PRIMARY);
+		iocard_mip_zcockpit_switches[14] = ZcockpitSwitch(DataRefName::lower_du_fo, common::SwitchType::rotary,XPLANE_LOWER_PFD);
+		iocard_mip_zcockpit_switches[15] = ZcockpitSwitch(DataRefName::lower_du_fo, common::SwitchType::rotary,XPLANE_LOWER_ND);
 
 
 		// Pushbuttons
-		iocard_mip_zcockpit_switches[16] = ZcockpitSwitch(DataRefName::chrono_fo_et_mode_pb, common::SwitchType::pushbutton, 0, 1);	// FO clock
-		iocard_mip_zcockpit_switches[17] = ZcockpitSwitch(DataRefName::fire_bell_light2_pb, common::SwitchType::pushbutton, 0, 1);	// FO Fire Warning
-		iocard_mip_zcockpit_switches[18] = ZcockpitSwitch(DataRefName::master_caution2_pb, common::SwitchType::pushbutton, 0, 1);	// FO Master Caution
-		iocard_mip_zcockpit_switches[19] = ZcockpitSwitch(DataRefName::fo_six_pack_pb, common::SwitchType::pushbutton, 0, 1);		// FO Six pack
+		iocard_mip_zcockpit_switches[16] = ZcockpitSwitch(DataRefName::chrono_fo_et_mode_pb, common::SwitchType::pushbutton, 1);	// FO clock
+		iocard_mip_zcockpit_switches[17] = ZcockpitSwitch(DataRefName::fire_bell_light2_pb, common::SwitchType::pushbutton, 1);	// FO Fire Warning
+		iocard_mip_zcockpit_switches[18] = ZcockpitSwitch(DataRefName::master_caution2_pb, common::SwitchType::pushbutton, 1);	// FO Master Caution
+		iocard_mip_zcockpit_switches[19] = ZcockpitSwitch(DataRefName::fo_six_pack_pb, common::SwitchType::pushbutton, 1);		// FO Six pack
 
-		//iocard_mip_zcockpit_switches[20]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, 0, );
-		//iocard_mip_zcockpit_switches[21]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, 0, );
-		//iocard_mip_zcockpit_switches[22]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, 0, );
-		//iocard_mip_zcockpit_switches[23]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, 0, );
+		iocard_mip_zcockpit_switches[20]  = ZcockpitSwitch(DataRefName::n1_set_source, common::SwitchType::rotary, XPLANE_ENG2_N1_SET);
+		iocard_mip_zcockpit_switches[21]  = ZcockpitSwitch(DataRefName::n1_set_source, common::SwitchType::rotary, XPLANE_ENG1_N1_SET);
+		iocard_mip_zcockpit_switches[22]  = ZcockpitSwitch(DataRefName::n1_set_source, common::SwitchType::rotary, XPLANE_AUTO_N1_SET);
+		iocard_mip_zcockpit_switches[23]  = ZcockpitSwitch(DataRefName::n1_set_source, common::SwitchType::rotary, XPLANE_BOTH_N1_SET);
 
-		iocard_mip_zcockpit_switches[24]  = ZcockpitSwitch(DataRefName::ap_light_fo, common::SwitchType::spring_loaded, 0, 1);	// FO AP warning
-		iocard_mip_zcockpit_switches[25]  = ZcockpitSwitch(DataRefName::at_light_fo, common::SwitchType::spring_loaded, 0, 1);	// FO AT Warning 
-		iocard_mip_zcockpit_switches[26]  = ZcockpitSwitch(DataRefName::fms_light_fo, common::SwitchType::spring_loaded, 0, 1);	// FO FMS warning
+		iocard_mip_zcockpit_switches[24]  = ZcockpitSwitch(DataRefName::ap_light_fo, common::SwitchType::spring_loaded, 1);	// FO AP warning
+		iocard_mip_zcockpit_switches[25]  = ZcockpitSwitch(DataRefName::at_light_fo, common::SwitchType::spring_loaded, 1);	// FO AT Warning 
+		iocard_mip_zcockpit_switches[26]  = ZcockpitSwitch(DataRefName::fms_light_fo, common::SwitchType::spring_loaded, 1);	// FO FMS warning
 
-		iocard_mip_zcockpit_switches[27]  = ZcockpitSwitch(DataRefName::ap_discon_test2, common::SwitchType::spring_loaded, 0, AP_DISENGAGE_LIGHT_TEST_2);
-		iocard_mip_zcockpit_switches[28]  = ZcockpitSwitch(DataRefName::ap_discon_test2, common::SwitchType::spring_loaded, 0, AP_DISENGAGE_LIGHT_TEST_1);
-
-
-		iocard_mip_zcockpit_switches[29]  = ZcockpitSwitch(DataRefName::gpws_test, common::SwitchType::pushbutton, 0, 1); // GPWS Test
-		iocard_mip_zcockpit_switches[30]  = ZcockpitSwitch(DataRefName::gpws_flap, common::SwitchType::toggle, 0, 1);
-		iocard_mip_zcockpit_switches[31]  = ZcockpitSwitch(DataRefName::gpws_terr, common::SwitchType::toggle, 0, 1);
-		iocard_mip_zcockpit_switches[32]  = ZcockpitSwitch(DataRefName::gpws_gear, common::SwitchType::toggle, 0, 1);
+		iocard_mip_zcockpit_switches[27]  = ZcockpitSwitch(DataRefName::ap_discon_test2, common::SwitchType::spring_loaded, XPLANE_AP_DISENGAGE_LIGHT_TEST_2);
+		iocard_mip_zcockpit_switches[28]  = ZcockpitSwitch(DataRefName::ap_discon_test2, common::SwitchType::spring_loaded, XPLANE_AP_DISENGAGE_LIGHT_TEST_1);
 
 
+		iocard_mip_zcockpit_switches[29]  = ZcockpitSwitch(DataRefName::gpws_test, common::SwitchType::pushbutton, 1); // GPWS Test
+		iocard_mip_zcockpit_switches[30]  = ZcockpitSwitch(DataRefName::gpws_flap, common::SwitchType::toggle, 1);
+		iocard_mip_zcockpit_switches[31]  = ZcockpitSwitch(DataRefName::gpws_terr, common::SwitchType::toggle, 1);
+		iocard_mip_zcockpit_switches[32]  = ZcockpitSwitch(DataRefName::gpws_gear, common::SwitchType::toggle, 1);
 
-		//iocard_mip_zcockpit_switches[10]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, 0, );
-		//iocard_mip_zcockpit_switches[11]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, 0, );
-		//iocard_mip_zcockpit_switches[12]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, 0, );
-		//iocard_mip_zcockpit_switches[13]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, 0, );
-		//iocard_mip_zcockpit_switches[14]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, 0, );
-		//iocard_mip_zcockpit_switches[15]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, 0, );
-		//iocard_mip_zcockpit_switches[16]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, 0, );
-		//iocard_mip_zcockpit_switches[17]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, 0, );
-		//iocard_mip_zcockpit_switches[18]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, 0, );
-		//iocard_mip_zcockpit_switches[19]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, 0, );
 
+
+		iocard_mip_zcockpit_switches[33]  = ZcockpitSwitch(DataRefName::rudder_trim, common::SwitchType::spring_loaded, XPLANE_RUDDER_TRIM_DEC);
+		iocard_mip_zcockpit_switches[34]  = ZcockpitSwitch(DataRefName::rudder_trim, common::SwitchType::spring_loaded, XPLANE_RUDDER_TRIM_INC);
+		iocard_mip_zcockpit_switches[35]  = ZcockpitSwitch(DataRefName::aileron_trim, common::SwitchType::spring_loaded,XPLANE_AILERON_TRIM_DEC);
+		iocard_mip_zcockpit_switches[36]  = ZcockpitSwitch(DataRefName::aileron_trim, common::SwitchType::spring_loaded,XPLANE_AILERON_TRIM_INC);
+
+		iocard_mip_zcockpit_switches[37]  = ZcockpitSwitch(DataRefName::instrument_brightness, common::SwitchType::encoder, XPLANE_BRIGHTNESS_DEC, 0, XPLANE_FO_INBD_DU);
+		iocard_mip_zcockpit_switches[38]  = ZcockpitSwitch(DataRefName::instrument_brightness, common::SwitchType::encoder, XPLANE_BRIGHTNESS_INC, 0, XPLANE_FO_INBD_DU);
+		iocard_mip_zcockpit_switches[39]  = ZcockpitSwitch(DataRefName::instrument_brightness, common::SwitchType::encoder, XPLANE_BRIGHTNESS_DEC, 0, XPLANE_FO_OUTBD_DU);
+		iocard_mip_zcockpit_switches[40]  = ZcockpitSwitch(DataRefName::instrument_brightness, common::SwitchType::encoder, XPLANE_BRIGHTNESS_INC, 0, XPLANE_FO_OUTBD_DU);
+		iocard_mip_zcockpit_switches[41]  = ZcockpitSwitch(DataRefName::instrument_brightness, common::SwitchType::encoder, XPLANE_BRIGHTNESS_INC, 0, XPLANE_CAPT_INBD_DU);
+		iocard_mip_zcockpit_switches[42]  = ZcockpitSwitch(DataRefName::instrument_brightness, common::SwitchType::encoder, XPLANE_BRIGHTNESS_DEC, 0, XPLANE_CAPT_INBD_DU);
+		iocard_mip_zcockpit_switches[43]  = ZcockpitSwitch(DataRefName::instrument_brightness, common::SwitchType::encoder, XPLANE_BRIGHTNESS_DEC, 0, XPLANE_CAPT_OUTBD_DU);
+		iocard_mip_zcockpit_switches[44]  = ZcockpitSwitch(DataRefName::instrument_brightness, common::SwitchType::encoder, XPLANE_BRIGHTNESS_INC, 0, XPLANE_CAPT_OUTBD_DU);
+		iocard_mip_zcockpit_switches[45]  = ZcockpitSwitch(DataRefName::instrument_brightness, common::SwitchType::encoder, XPLANE_BRIGHTNESS_DEC, 0, XPLANE_LOWER_DU);
+		iocard_mip_zcockpit_switches[46]  = ZcockpitSwitch(DataRefName::instrument_brightness, common::SwitchType::encoder, XPLANE_BRIGHTNESS_INC, 0, XPLANE_LOWER_DU);
+		iocard_mip_zcockpit_switches[47]  = ZcockpitSwitch(DataRefName::instrument_brightness, common::SwitchType::encoder, XPLANE_BRIGHTNESS_INC, 0, XPLANE_UPPER_DU);
+		iocard_mip_zcockpit_switches[48]  = ZcockpitSwitch(DataRefName::instrument_brightness, common::SwitchType::encoder, XPLANE_BRIGHTNESS_DEC, 0, XPLANE_UPPER_DU);
+		iocard_mip_zcockpit_switches[49]  = ZcockpitSwitch(DataRefName::instrument_brightness, common::SwitchType::encoder, XPLANE_SPD_REF_INC, 0);
+		iocard_mip_zcockpit_switches[50]  = ZcockpitSwitch(DataRefName::instrument_brightness, common::SwitchType::encoder, XPLANE_SPD_REF_DEC, 0);
+		iocard_mip_zcockpit_switches[51]  = ZcockpitSwitch(DataRefName::instrument_brightness, common::SwitchType::encoder, XPLANE_N1_SET_INC, 0);
+		iocard_mip_zcockpit_switches[52]  = ZcockpitSwitch(DataRefName::instrument_brightness, common::SwitchType::encoder, XPLANE_N1_SET_DEC, 0);
+																																				  
+		//iocard_mip_zcockpit_switches[43]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, );
+		//iocard_mip_zcockpit_switches[44]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, );
+		//iocard_mip_zcockpit_switches[45]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, );
+		//iocard_mip_zcockpit_switches[46]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, );
+		//iocard_mip_zcockpit_switches[47]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, );
+		//iocard_mip_zcockpit_switches[48]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, );
+		//iocard_mip_zcockpit_switches[49]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, );
 
 
 //		iocard_mip_zcockpit_switches[0]  = ZcockpitSwitch();										// no connection	0

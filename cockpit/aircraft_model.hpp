@@ -109,6 +109,8 @@ namespace zcockpit::cockpit {
 		Z737SwitchData hw_switch_data{};
 		Z737SwitchData xplane_switch_data{};
 		Z737SwitchCmd z737SwitchCmd{};
+		Z737SwitchValue z737SwitchValue{};
+
 	private:
 		bool z738_available{ false };
 
