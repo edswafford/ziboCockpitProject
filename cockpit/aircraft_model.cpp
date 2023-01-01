@@ -276,11 +276,12 @@ namespace zcockpit::cockpit {
 		{
 			const ZCockpitSwitchData switch_data = std::get<ZCockpitSwitchData>(z_cockpit_data[dataref_name]);
 			if(switch_data.operation){
-				if(typeid(switch_data.operation) == typeid(SwitchCommands))
+				if(switch_data.operation_type == OperationType::Command)
 				{
 					return process_hw_switch_commands(sw_data, switch_data);
 				}
-				else if(typeid(switch_data.operation) == typeid(SwitchValues)) 
+				else if(switch_data.operation_type == OperationType::Value)
+
 				{
 					return process_hw_switch_values(sw_data, switch_data);
 				}

@@ -16,13 +16,18 @@
 #include "queue.hpp"
 #include "hardware/zcockpit_switch.hpp"
 
+using namespace zcockpit::common;
 
 namespace zcockpit::cockpit {
 	struct ZCockpitSwitchData
 	{
 		common::ZCockpitType hw_type;
+		common::OperationType operation_type;
 		void* xplane_data;
 		void* operation;
+		ZCockpitSwitchData(ZCockpitType hw_type_, void* xplane_data_, void* operation_, OperationType operation_type_ = OperationType::Command) :
+			hw_type(hw_type_), operation_type(operation_type_), xplane_data(xplane_data_), operation(operation_)
+		{}
 	};
 	struct ZCockpitInData
 	{

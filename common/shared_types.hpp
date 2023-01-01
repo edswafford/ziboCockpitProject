@@ -79,16 +79,22 @@ namespace zcockpit::common
 	};
 
 		enum class ZCockpitType : unsigned {
-		// Data of a type the current XPLM doesn't do. 
-		ZUnknown = 0,
-		ZInt = 1,
-		ZFloat = 2,
-		ZDouble = 4,
-		ZVectorFloat = 8,
-		ZVectorInt = 16,
-		ZString = 32,
-		ZBool = 64,
-	};
+			// Data of a type the current XPLM doesn't do. 
+			ZUnknown = 0,
+			ZInt = 1,
+			ZFloat = 2,
+			ZDouble = 4,
+			ZVectorFloat = 8,
+			ZVectorInt = 16,
+			ZString = 32,
+			ZBool = 64,
+		};
+
+		enum class OperationType : unsigned
+		{
+			Command,
+			Value
+		};
 
 	constexpr const char* XplaneTypeToString(const XplaneType type) noexcept
 	{

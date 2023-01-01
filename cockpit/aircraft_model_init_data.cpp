@@ -88,11 +88,11 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::rudder_trim] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.rudder_trim,				&z737SwitchCmd.rudder_trim);
 		z_cockpit_data[DataRefName::aileron_trim] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.aileron_trim,				&z737SwitchCmd.aileron_trim);
 
-		z_cockpit_data[DataRefName::instrument_brightness] = ZCockpitSwitchData(ZCockpitType::ZVectorFloat,	&xplane_switch_data.instrument_brightness,		&z737SwitchValue.instrument_brightness);
-		z_cockpit_data[DataRefName::spd_ref_adjust] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.spd_ref_adjust,				&z737SwitchValue.spd_ref_adjust);
+		z_cockpit_data[DataRefName::instrument_brightness] = ZCockpitSwitchData(ZCockpitType::ZVectorFloat,	&xplane_switch_data.instrument_brightness,		&z737SwitchValue.instrument_brightness, OperationType::Value);
+		z_cockpit_data[DataRefName::spd_ref_adjust] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.spd_ref_adjust,				&z737SwitchValue.spd_ref_adjust, OperationType::Value);
 
 		z_cockpit_data[DataRefName::n1_set_source] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.n1_set_source,				&z737SwitchCmd.n1_set_source);
-		z_cockpit_data[DataRefName::n1_set_adjust] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.n1_set_adjust,				&z737SwitchValue.n1_set_adjust);
+		z_cockpit_data[DataRefName::n1_set_adjust] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.n1_set_adjust,				&z737SwitchValue.n1_set_adjust, OperationType::Value);
 
 
 		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
@@ -129,7 +129,7 @@ namespace zcockpit::cockpit {
 
 //NOT USED		z_cockpit_data[DataRefName::cover_position] = ZCockpitSwitchData(ZCockpitType::ZVectorFloat, &xplane_switch_data.cover_position);
 
-		z_cockpit_data[DataRefName::guarded_covers] = ZCockpitSwitchData(ZCockpitType::ZFloat, &xplane_switch_data.guarded_covers, &z737SwitchValue.guarded_covers);
+		z_cockpit_data[DataRefName::guarded_covers] = ZCockpitSwitchData(ZCockpitType::ZFloat, &xplane_switch_data.guarded_covers, &z737SwitchValue.guarded_covers, OperationType::Value);
 
 		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd. );
 
