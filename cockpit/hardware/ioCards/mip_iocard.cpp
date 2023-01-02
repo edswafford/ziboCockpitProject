@@ -272,14 +272,25 @@ namespace zcockpit::cockpit::hardware
 
 
 		// Rudder Trim
-		if(mastercard_input(54, &rudderLeft) && rudderLeft)
+		if(mastercard_input(54, &rudderLeft))
 		{ 
-			aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[33]); //RUDDER_TRIM_DEC
+			if (rudderLeft) {
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[34]); //RUDDER_TRIM_DEC
+			}
+			else {
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[33]); //RUDDER_TRIM Retuen
+			}
 		}
 
-		if(mastercard_input(57, &rudderRight) && rudderRight)
+		if(mastercard_input(57, &rudderRight))
 		{
-			aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[34]); //RUDDER_TRIM_INC
+			if (rudderRight) {
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[35]); //RUDDER_TRIM_INC
+			}
+			else
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[33]); //RUDDER_TRIM Return
+			}
 		}
 
 		// Aileron Trim
@@ -513,9 +524,11 @@ namespace zcockpit::cockpit::hardware
 
 
 
-		iocard_mip_zcockpit_switches[33]  = ZcockpitSwitch(DataRefName::rudder_trim, common::SwitchType::spring_loaded, XPLANE_RUDDER_TRIM_DEC);
-		iocard_mip_zcockpit_switches[34]  = ZcockpitSwitch(DataRefName::rudder_trim, common::SwitchType::spring_loaded, XPLANE_RUDDER_TRIM_INC);
-		iocard_mip_zcockpit_switches[35]  = ZcockpitSwitch(DataRefName::aileron_trim, common::SwitchType::spring_loaded,XPLANE_AILERON_TRIM_DEC);
+		iocard_mip_zcockpit_switches[33] = ZcockpitSwitch(DataRefName::rudder_trim, common::SwitchType::spring_loaded, 0);
+		iocard_mip_zcockpit_switches[34]  = ZcockpitSwitch(DataRefName::rudder_trim, common::SwitchType::spring_loaded, XPLANE_RUDDER_TRIM_DEC);
+		iocard_mip_zcockpit_switches[35]  = ZcockpitSwitch(DataRefName::rudder_trim, common::SwitchType::spring_loaded, XPLANE_RUDDER_TRIM_INC);
+
+//		iocard_mip_zcockpit_switches[35]  = ZcockpitSwitch(DataRefName::aileron_trim, common::SwitchType::spring_loaded,XPLANE_AILERON_TRIM_DEC);
 		iocard_mip_zcockpit_switches[36]  = ZcockpitSwitch(DataRefName::aileron_trim, common::SwitchType::spring_loaded,XPLANE_AILERON_TRIM_INC);
 
 		iocard_mip_zcockpit_switches[37]  = ZcockpitSwitch(DataRefName::instrument_brightness, common::SwitchType::encoder, XPLANE_BRIGHTNESS_DEC, 0, XPLANE_FO_INBD_DU);
