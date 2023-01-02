@@ -536,9 +536,8 @@ namespace zcockpit::cockpit {
 									const ZCockpitSwitchData switch_data = std::get<ZCockpitSwitchData>(z_cockpit_data[ac_param.short_name]);
 									ref_id_to_dataref.emplace(std::pair(id, ac_param));
 									dataref_to_ref_id.emplace(ac_param.short_name, id);
-									const auto& items = data;
-									*static_cast<std::vector<float>*>(switch_data.xplane_data) = items;
-									return std::string("Vector Float size ") + std::to_string(items.size());
+									*static_cast<std::vector<float>*>(switch_data.xplane_data) = data;
+									return std::string("Vector Float size ") + std::to_string(data.size());
 								}
 
 
