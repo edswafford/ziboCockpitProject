@@ -532,9 +532,16 @@ namespace zcockpit::cockpit {
 						[this, ac_param, id, data_type](const std::vector<float>& data)
 						{
 							if (XplaneType::type_FloatArray == data_type) {
-								ref_id_to_dataref.emplace(std::pair(id, ac_param));
-								dataref_to_ref_id.emplace(ac_param.short_name, id);
-								const auto& items = (std::vector<float>&)data;
+								if (std::holds_alternative<ZCockpitSwitchData>(z_cockpit_data[ac_param.short_name])) {
+									const ZCockpitSwitchData switch_data = std::get<ZCockpitSwitchData>(z_cockpit_data[ac_param.short_name]);
+									ref_id_to_dataref.emplace(std::pair(id, ac_param));
+									dataref_to_ref_id.emplace(ac_param.short_name, id);
+									const auto& items = data;
+									*static_cast<std::vector<float>*>(switch_data.xplane_data) = items;
+									return std::string("Vector Float size ") + std::to_string(items.size());
+								}
+
+
 								return std::string("floatArray = nOT IMPLEMENYED");
 
 							}
