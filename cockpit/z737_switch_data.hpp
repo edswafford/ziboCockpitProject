@@ -92,11 +92,11 @@ namespace zcockpit::cockpit {
 		int gpws_test{0};
 		int gpws_test_pos{0};
 		int gpws_flap{0};
-		int gpws_flap_cover_pos{0};
+		int gpws_flap_pos{0};
 		int gpws_terr{0};
-		int gpws_terr_cover_pos{0}; 
+		int gpws_terr_pos{0}; 
 		int gpws_gear{0};
-		int gpws_gear_cover_pos{0};
+		int gpws_gear_pos{0};
 		int n1_set_source{0};
 
 		float rudder_trim{0.0};

@@ -256,6 +256,7 @@ namespace zcockpit::cockpit
 				std::vector<SubscribeData> packet_dataref;
 				int message_count = 0;
 				expected_number_of_dataref_subscriptions = 1;
+				int total_request = 1;
 				for (auto& param : requested_dataref_subscriptions) {
 					if(message_count >= 40) {
 						message_count = 0;
@@ -267,9 +268,12 @@ namespace zcockpit::cockpit
 						packet_dataref.clear();
 					}
 					packet_dataref.emplace_back(SubscribeData(param.first, param.second.xplane_type, param.second.is_rounded));
-					LOG() << message_count << " " << param.first;
+					LOG() << "# " << total_request << " " << message_count << " " << param.first;
 					message_count += 1;
+					total_request += 1;
 				}
+				LOG() << "COMPLETED SUBSCRIPTION REQUEST " << total_request - 1 << " of " << requested_dataref_subscriptions.size();
+
 				if (!packet_dataref.empty()) {
 					expected_number_of_dataref_subscriptions += packet_dataref.size();
 

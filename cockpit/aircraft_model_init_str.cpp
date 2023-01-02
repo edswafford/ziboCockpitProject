@@ -54,10 +54,6 @@ namespace zcockpit::cockpit {
 		data_ref_strings[DataRefName::spd_ref_adjust] = {"laminar/B738/toggle_switch/spd_ref_adjust", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::n1_set_adjust] = {"laminar/B738/toggle_switch/n1_set_adjust", XplaneType::type_Float, !round_up};
 
-		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !convert_to_bool};
-		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !convert_to_bool};
-		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !convert_to_bool};
-
 
 		data_ref_strings[DataRefName::land_lights_ret_left_pos] = { "laminar/B738/switch/land_lights_ret_left_pos", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::land_lights_ret_right_pos] = { "laminar/B738/switch/land_lights_ret_right_pos", XplaneType::type_Float, !round_up};
@@ -124,20 +120,6 @@ namespace zcockpit::cockpit {
 
 		data_ref_strings[DataRefName::n1_set_source] = { "laminar/B738/toggle_switch/n1_set_source", XplaneType::type_Float, !round_up};
 
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
-		//data_ref_strings[DataRefName::] = { "", XplaneType::type_Float, !convert_to_bool};
 
 
 		//
@@ -145,19 +127,19 @@ namespace zcockpit::cockpit {
 		//
 
 		// Capt
-		data_ref_strings[DataRefName::master_caution1_pb] ={"master_caution1_pb", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::capt_six_pack_pb] = {"capt_six_pack_pb", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::chrono_capt_et_mode_pb] = {"chrono_capt_et_mode_pb", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::fire_bell_light1_pb] = {"fire_bell_light1_pb", XplaneType::type_Float, !round_up};
-		// FO
-		data_ref_strings[DataRefName::master_caution2_pb] ={"master_caution2_pb", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::fo_six_pack_pb] = {"fo_six_pack_pb", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::chrono_fo_et_mode_pb] = {"chrono_fo_et_mode_pb", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::fire_bell_light2_pb] = {"fire_bell_light2_pb", XplaneType::type_Float, !round_up};
+		//data_ref_strings[DataRefName::master_caution1_pb] ={"master_caution1_pb", XplaneType::type_Float, !round_up};
+		//data_ref_strings[DataRefName::capt_six_pack_pb] = {"capt_six_pack_pb", XplaneType::type_Float, !round_up};
+		//data_ref_strings[DataRefName::chrono_capt_et_mode_pb] = {"chrono_capt_et_mode_pb", XplaneType::type_Float, !round_up};
+		//data_ref_strings[DataRefName::fire_bell_light1_pb] = {"fire_bell_light1_pb", XplaneType::type_Float, !round_up};
+		//// FO
+		//data_ref_strings[DataRefName::master_caution2_pb] ={"master_caution2_pb", XplaneType::type_Float, !round_up};
+		//data_ref_strings[DataRefName::fo_six_pack_pb] = {"fo_six_pack_pb", XplaneType::type_Float, !round_up};
+		//data_ref_strings[DataRefName::chrono_fo_et_mode_pb] = {"chrono_fo_et_mode_pb", XplaneType::type_Float, !round_up};
+		//data_ref_strings[DataRefName::fire_bell_light2_pb] = {"fire_bell_light2_pb", XplaneType::type_Float, !round_up};
 
 
-		data_ref_strings[DataRefName::MFD_ENG_pb] = {"MFD_ENG_pb", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::MFD_SYS_pb] = {"MFD_SYS_pb", XplaneType::type_Float, !round_up};
+		//data_ref_strings[DataRefName::MFD_ENG_pb] = {"MFD_ENG_pb", XplaneType::type_Float, !round_up};
+		//data_ref_strings[DataRefName::MFD_SYS_pb] = {"MFD_SYS_pb", XplaneType::type_Float, !round_up};
 
 
 

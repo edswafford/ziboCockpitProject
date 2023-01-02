@@ -6,6 +6,8 @@
 #include "network/connection.hpp"
 #include "network/udp.hpp"
 
+#include <ranges>
+#include <utility>
 
 extern logger LOG;
 
@@ -26,8 +28,12 @@ namespace zcockpit::cockpit {
 		initialize_ref_strings();
 		initialize_zcockpit_data();
 
+		constexpr auto enum_range = [](auto front, auto back) {
+		  return std::views::iota(std::to_underlying(front), std::to_underlying(back)) 
+		       | std::views::transform([](auto e) { return decltype(front)(e); }); 
+		};
 
-		for(auto& data_ref_name : data_ref_name_list) {
+		for(const auto data_ref_name : enum_range(DataRefName::acf_tailnum, DataRefName::DataRefName_unused)  ) {
 			const DataRefString data_ref_def = data_ref_strings[data_ref_name];
 			if(data_ref_def.dataref_name[0] == 0) {
 				LOG() << "DataRef Defination Xplane string is empty, DataRefName Index " << static_cast<int>(data_ref_name);
@@ -35,7 +41,19 @@ namespace zcockpit::cockpit {
 			}
 			dataref_subscriptions.emplace(data_ref_strings[data_ref_name].dataref_name, 
 				DataRefParameter(data_ref_name, data_ref_strings[data_ref_name].type, data_ref_strings[data_ref_name].is_rounded));
+
+			LOG() << "DATAREF " << static_cast<int>(data_ref_name) << " :: " << data_ref_strings[data_ref_name].dataref_name;
 		}
+
+		//for(auto& data_ref_name : data_ref_name_list) {
+		//	const DataRefString data_ref_def = data_ref_strings[data_ref_name];
+		//	if(data_ref_def.dataref_name[0] == 0) {
+		//		LOG() << "DataRef Defination Xplane string is empty, DataRefName Index " << static_cast<int>(data_ref_name);
+		//		continue;
+		//	}
+		//	dataref_subscriptions.emplace(data_ref_strings[data_ref_name].dataref_name, 
+		//		DataRefParameter(data_ref_name, data_ref_strings[data_ref_name].type, data_ref_strings[data_ref_name].is_rounded));
+		//}
 
 		for(auto& command_ref_name : command_ref_name_list) {
 			auto cmdref_name = command_ref_strings[command_ref_name].cmdref_name;
@@ -453,6 +471,10 @@ namespace zcockpit::cockpit {
 										*(static_cast<int*>(switch_data.xplane_data)) = static_cast<int>(scaled_data);
 										return std::string("Switch float = ") + std::to_string(data) + " scaled to " + std::to_string(scaled_data);
 
+									}
+									else if (switch_data.hw_type == ZCockpitType::ZFloat) {
+										*static_cast<float*>(switch_data.xplane_data) = data;
+										return std::string("Switch float = ") + std::to_string(data);
 									}
 									else {
 										LOG() << "ERROR: expected type float for " << data_ref_strings[ac_param.short_name].dataref_name;
