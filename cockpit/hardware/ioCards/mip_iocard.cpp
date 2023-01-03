@@ -59,6 +59,122 @@ namespace zcockpit::cockpit::hardware
 		}
 		return nullptr;
 	}
+
+	void MipIOCard::processEncoders()
+	{
+		double value = 1.0;
+		if(mastercard_encoder(31, &value, 1.0, 1.0) > 0)
+		{
+			LOG() << "value " << value;
+			if(value > 0)
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[37]); // FO_INBD_DU_BRIGHTNESS_DEC
+			}
+			else
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[38]); // FO_INBD_DU_BRIGHTNESS_INC
+			}
+		}
+
+		value = 1.0;
+		if(mastercard_encoder(33, &value, 1.0, 1.0) > 0)
+		{
+			LOG() << "value " << value;
+			if(value > 0)
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[39]); // FO_OUTBD_DU_BRIGHTNESS_DEC
+			}
+			else
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[40]); // FO_OUTBD_DU_BRIGHTNESS_INC
+			}
+		}
+
+		value = 1.0;
+		if(mastercard_encoder(36, &value, 1.0, 1.0) > 0)
+		{
+			LOG() << "value " << value;
+			if(value > 0)
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[41]); // CAPT_INBD_DU_BRIGHTNESS_INC
+			}
+			else
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[42]); //CAPT_INBD_DU_BRIGHTNESS_DEC
+			}
+		}
+		value = 1.0;
+		if(mastercard_encoder(42, &value, 1.0, 1.0) > 0)
+		{
+			LOG() << "value " << value;
+			if(value > 0)
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[43]); // CAPT_OUTBD_DU_BRIGHTNESS_DEC
+			}
+			else
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[44]); // CAPT_OUTBD_DU_BRIGHTNESS_INC
+			}
+		}
+
+		value = 1.0;
+		if(mastercard_encoder(40, &value, 1.0, 1.0) > 0)
+		{
+			LOG() << "value " << value;
+			if(value > 0)
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[45]); // LOWER_DU_BRIGHTNESS_DEC
+			}
+			else
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[46]); // LOWER_DU_BRIGHTNESS_INC
+			}
+		}
+		value = 1.0;
+		if(mastercard_encoder(38, &value, 1.0, 1.0) > 0)
+		{
+			LOG() << "value " << value;
+			if(value > 0)
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[47]); // UPPER_DU_BRIGHTNESS_INC
+			}
+			else
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[48]); // UPPER_DU_BRIGHTNESS_DEC
+			}
+		}
+
+		// Speed Ref  (auto, V1, Vr, WT, Vref ...
+		value = 1.0;
+		if(mastercard_encoder(45, &value, 1.0, 1.0) > 0)
+		{
+			LOG() << "value " << value;
+			if(value > 0)
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[49]); // SPD_REF_INC
+			}
+			else
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[50]); // SPD_REF_DEC
+			}
+		}
+
+		// N1 Set
+		value = 1.0;
+		if(mastercard_encoder(47, &value, 1.0, 1.0) > 0)
+		{
+			LOG() << "value " << value;
+			if(value > 0)
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[51]); // N1_SET_INC
+			}
+			else
+			{
+				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[52]); // N1_SET_DEC
+			}
+		}		
+	}
+
 	void MipIOCard::processMIP()
 	{
 		static bool power_is_on = false;
@@ -315,118 +431,7 @@ namespace zcockpit::cockpit::hardware
 
 		}
 
-		// Encoders
-		double value = 1.0;
-		if(mastercard_encoder(31, &value, 1.0, 1.0) > 0)
-		{
-			LOG() << "value " << value;
-			if(value > 0)
-			{
-				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[37]); // FO_INBD_DU_BRIGHTNESS_DEC
-			}
-			else
-			{
-				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[38]); // FO_INBD_DU_BRIGHTNESS_INC
-			}
-		}
 
-		value = 1.0;
-		if(mastercard_encoder(33, &value, 1.0, 1.0) > 0)
-		{
-			LOG() << "value " << value;
-			if(value > 0)
-			{
-				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[39]); // FO_OUTBD_DU_BRIGHTNESS_DEC
-			}
-			else
-			{
-				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[40]); // FO_OUTBD_DU_BRIGHTNESS_INC
-			}
-		}
-
-		value = 1.0;
-		if(mastercard_encoder(36, &value, 1.0, 1.0) > 0)
-		{
-			LOG() << "value " << value;
-			if(value > 0)
-			{
-				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[41]); // CAPT_INBD_DU_BRIGHTNESS_INC
-			}
-			else
-			{
-				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[42]); //CAPT_INBD_DU_BRIGHTNESS_DEC
-			}
-		}
-		value = 1.0;
-		if(mastercard_encoder(42, &value, 1.0, 1.0) > 0)
-		{
-			LOG() << "value " << value;
-			if(value > 0)
-			{
-				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[43]); // CAPT_OUTBD_DU_BRIGHTNESS_DEC
-			}
-			else
-			{
-				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[44]); // CAPT_OUTBD_DU_BRIGHTNESS_INC
-			}
-		}
-
-		value = 1.0;
-		if(mastercard_encoder(40, &value, 1.0, 1.0) > 0)
-		{
-			LOG() << "value " << value;
-			if(value > 0)
-			{
-				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[45]); // LOWER_DU_BRIGHTNESS_DEC
-			}
-			else
-			{
-				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[46]); // LOWER_DU_BRIGHTNESS_INC
-			}
-		}
-		value = 1.0;
-		if(mastercard_encoder(38, &value, 1.0, 1.0) > 0)
-		{
-			LOG() << "value " << value;
-			if(value > 0)
-			{
-				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[47]); // UPPER_DU_BRIGHTNESS_INC
-			}
-			else
-			{
-				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[48]); // UPPER_DU_BRIGHTNESS_DEC
-			}
-		}
-
-		// Speed Ref  (auto, V1, Vr, WT, Vref ...
-		value = 1.0;
-		if(mastercard_encoder(45, &value, 1.0, 1.0) > 0)
-		{
-			LOG() << "value " << value;
-			if(value > 0)
-			{
-				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[49]); // SPD_REF_INC
-			}
-			else
-			{
-				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[50]); // SPD_REF_DEC
-			}
-		}
-
-		// N1 Set
-		value = 1.0;
-		if(mastercard_encoder(47, &value, 1.0, 1.0) > 0)
-		{
-			LOG() << "value " << value;
-			if(value > 0)
-			{
-				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[51]); // N1_SET_INC
-			}
-			else
-			{
-				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[52]); // N1_SET_DEC
-			}
-		}
 	}
 
 

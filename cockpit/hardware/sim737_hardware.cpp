@@ -145,6 +145,8 @@ namespace zcockpit::cockpit::hardware
 
 		// MIP IOCards
 		//
+		mip_iocard->processEncoders();  // update every cycle
+
 		if(current_cycle % FIVE_HZ == 0)
 		{
 			if(mip_iocard && mip_iocard->is_okay)
