@@ -145,13 +145,13 @@ namespace zcockpit::cockpit::hardware
 
 		// MIP IOCards
 		//
-		mip_iocard->processEncoders();  // update every cycle
-
-		if(current_cycle % FIVE_HZ == 0)
+		//if(current_cycle % FIVE_HZ == 0)
 		{
 			if(mip_iocard && mip_iocard->is_okay)
 			{
 				mip_iocard->receive_mastercard();
+
+				mip_iocard->processEncoders();  // update every cycle
 
 				// update inputs
 				mip_iocard->processMIP();
@@ -166,6 +166,10 @@ namespace zcockpit::cockpit::hardware
 					mip_iocard->close_down();
 				}
 			}
+		}
+
+		if(current_cycle % FIVE_HZ == 0) {
+			
 		}
 
 		else if(current_cycle % FIVE_HZ == 1)

@@ -1594,8 +1594,8 @@ namespace zcockpit::cockpit::hardware
 									/* something has changed */
 									//LOG() << "LIBIOCARDS: Rotary Encoder    Gray Type : card=" << card << " inputs " << input << "-" << input + 1 <<
 									//	"values = " << inputs[input][card] << " " << inputs[input + 1][card];
-									LOG() << "Encoder old " << inputs_old[input][card] << " " << inputs_old[input + 1][card] << " new " << inputs[input][card] <<
-										" " << inputs[input + 1][card];
+									LOG() << "Encoder old " << inputs_old[input + 1][card] << " " << inputs_old[input][card] << " new " << inputs[input][card + 1] <<
+										" " << inputs[input][card];
 
 
 									/* derive last encoder count */
@@ -1618,12 +1618,15 @@ namespace zcockpit::cockpit::hardware
 									}
 
 									/* backward */
-									if (((oldcount == 2) && (newcount == 3)) ||
+									else if (((oldcount == 2) && (newcount == 3)) ||
 										((oldcount == 3) && (newcount == 1)) ||
 										((oldcount == 1) && (newcount == 0)) ||
 										((oldcount == 0) && (newcount == 2)))
 									{
 										updown = -1;
+									}
+									else {
+										LOG() << "Encoder new value is an invalid gray code " << newcount;
 									}
 
 									if (updown != 0)
@@ -1631,11 +1634,20 @@ namespace zcockpit::cockpit::hardware
 										acceleration = get_acceleration(card, input, accelerator);
 										LOG() << "value = " << *value << " upDown " << updown << " accel " << acceleration << " oldCnt " << oldcount << " newCnt " << newcount;
 										*value = *value + (updown * acceleration * multiplier);
+
+										inputs_old[input][card] = inputs[input][card];
+										inputs_old[input + 1][card] = inputs[input + 1][card];
+
 										retval = 1;
 									}
 								}
-								inputs_old[input][card] = inputs[input][card];
-								inputs_old[input + 1][card] = inputs[input + 1][card];
+								else {
+									LOG() << "Encoder Nothing Changed:   old " << inputs_old[input + 1][card] << " " << inputs_old[input][card] << " new " << inputs[input][card + 1] <<
+										" " << inputs[input][card];
+
+									inputs_old[input][card] = inputs[input][card];
+									inputs_old[input + 1][card] = inputs[input + 1][card];
+								}
 							}
 
 							if (type == 3)
