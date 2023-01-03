@@ -1560,9 +1560,7 @@ namespace zcockpit::cockpit::hardware
 								{
 									/* something has changed */
 
-
-									printf("LIBIOCARDS: Rotary Encoder Optical Type : card=%i inputs=%i-%i values=%i %i \n",
-										card, input, input + 1, inputs[input][card], inputs[input + 1][card]);
+									//LOG() << "LIBIOCARDS: Rotary Encoder Optical Type card = " << card <<" inputs = " << input << "-" <<  input + 1 << " values= " << inputs[input][card] << " " << inputs[input + 1][card];
 
 
 									if (inputs[input + 1][card] == 1)
@@ -1630,7 +1628,7 @@ namespace zcockpit::cockpit::hardware
 									if (updown != 0)
 									{
 										const int acceleration = get_acceleration(card, input, accelerator);
-										//	LOG() << "value = " << *value << " upDown " << updown << " accel " << acceleration;
+										LOG() << "value = " << *value << " upDown " << updown << " accel " << acceleration;
 										*value = *value + (updown * acceleration * multiplier);
 										retval = 1;
 									}
@@ -1657,9 +1655,8 @@ namespace zcockpit::cockpit::hardware
 								{
 									/* something has changed */
 
+									LOG() << "LIBIOCARDS: Rotary Encoder Phased Type card = " << card <<" inputs = " << input << "-" <<  input + 1 << " values= " << inputs[input][card] << " " << inputs[input + 1][card];
 
-									printf("LIBIOCARDS: Rotary Encoder  Phased Type : card=%i inputs=%i-%i values=%i %i \n",
-										card, input, input + 1, inputs[input][card], inputs[input + 1][card]);
 
 									/* derive last encoder count */
 									obits[0] = inputs_old[input][card];
@@ -1698,11 +1695,11 @@ namespace zcockpit::cockpit::hardware
 							retval = -1;
 							if (type == 0)
 							{
-								printf("LIBIOCARDS: Invalid MASTERCARD input position detected: %i - %i \n", input, input + 2);
+								LOG() << "LIBIOCARDS: Invalid MASTERCARD input position detected: " <<  input << "-" << input + 2;
 							}
 							else
 							{
-								printf("LIBIOCARDS: Invalid MASTERCARD input position detected: %i - %i \n", input, input + 1);
+								LOG() << "LIBIOCARDS: Invalid MASTERCARD input position detected: " <<  input << "-" << input + 1;
 							}
 						}
 					} /* input encoder value not missing */
