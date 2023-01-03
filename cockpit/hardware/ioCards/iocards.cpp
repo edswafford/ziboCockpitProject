@@ -775,9 +775,9 @@ namespace zcockpit::cockpit::hardware
 	// are communicated either via TCP/IP or USB to X-Plane and IOCARDS
 	int IOCards::copyIOCardsData(void)
 	{
-		memcpy(inputs_old, inputs, sizeof(inputs));
-		memcpy(outputs_old, outputs, sizeof(outputs));
-		memcpy(displays_old, displays, sizeof(displays));
+//		memcpy(inputs_old, inputs, sizeof(inputs));
+//		memcpy(outputs_old, outputs, sizeof(outputs));
+//		memcpy(displays_old, displays, sizeof(displays));
 
 		return (0);
 	}
@@ -1113,6 +1113,7 @@ namespace zcockpit::cockpit::hardware
 									LOG() << "LIBIOCARDS: send output to MASTERCARD card output [" << card << "][" << firstoutput + channel << "] " << outputs[channel][card];
 								}
 							}
+							memcpy(outputs_old, outputs, sizeof(outputs));
 						}
 					}
 				}
@@ -1582,16 +1583,19 @@ namespace zcockpit::cockpit::hardware
 							if (type == 2)
 							{
 								/* 2 bit gray type encoder */
-
-								//LOG() << "Encoder old " << inputs_old[input][card] << " " << inputs_old[input + 1][card] << " new " << inputs[input][card] <<
-								//	" " << inputs[input + 1][card];
+								{
+									//LOG() << "Encoder old " << inputs_old[input][card] << " " << inputs_old[input + 1][card] << " new " << inputs[input][card] <<
+									//	" " << inputs[input + 1][card];
+								}
 								if (((inputs[input][card] != inputs_old[input][card]) ||
 									(inputs[input + 1][card] != inputs_old[input + 1][card]))
 									&& (inputs_old[input][card] != -1) && (inputs_old[input + 1][card] != -1))
 								{
 									/* something has changed */
-									LOG() << "LIBIOCARDS: Rotary Encoder    Gray Type : card=" << card << " inputs "<< input << "-" << input + 1 <<
-										"values = " << inputs[input][card] << " " << inputs[input + 1][card];
+									//LOG() << "LIBIOCARDS: Rotary Encoder    Gray Type : card=" << card << " inputs " << input << "-" << input + 1 <<
+									//	"values = " << inputs[input][card] << " " << inputs[input + 1][card];
+									LOG() << "Encoder old " << inputs_old[input][card] << " " << inputs_old[input + 1][card] << " new " << inputs[input][card] <<
+										" " << inputs[input + 1][card];
 
 
 									/* derive last encoder count */
@@ -1625,7 +1629,7 @@ namespace zcockpit::cockpit::hardware
 									if (updown != 0)
 									{
 										acceleration = get_acceleration(card, input, accelerator);
-										LOG() << "value = " << *value << " upDown " << updown << " accel " << acceleration;
+										LOG() << "value = " << *value << " upDown " << updown << " accel " << acceleration << " oldCnt " << oldcount << " newCnt " << newcount;
 										*value = *value + (updown * acceleration * multiplier);
 										retval = 1;
 									}

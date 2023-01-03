@@ -246,7 +246,7 @@ namespace zcockpit::cockpit {
 	struct Z737SwitchValue
 	{
 		SwitchValues guarded_covers{1.0f, 0.0, 1};
-		SwitchValues instrument_brightness{1.0f, -1.0f, 6};
+		SwitchValues instrument_brightness{1.0f, 0.0f, 6};
 		SwitchValues spd_ref_adjust{1.0f, -1.0f, 1};
 		SwitchValues n1_set_adjust{1.0f, -1.0f, 1};
 	};

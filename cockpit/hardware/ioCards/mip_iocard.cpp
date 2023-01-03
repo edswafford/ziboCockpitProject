@@ -62,9 +62,9 @@ namespace zcockpit::cockpit::hardware
 
 	void MipIOCard::processEncoders()
 	{
-		constexpr float XPLANE_BRIGHTNESS = 0.01f;
-		constexpr float XPLANE_SPD_REF = 0.01f;
-		constexpr float XPLANE_N1_SET = 0.01f;
+		constexpr float XPLANE_BRIGHTNESS = 0.05f;
+		constexpr float XPLANE_SPD_REF = 0.05f;
+		constexpr float XPLANE_N1_SET = 0.05f;
 
 		double value = 1.0;
 		if(mastercard_encoder(31, &value, 1.0, 1.0) > 0)
