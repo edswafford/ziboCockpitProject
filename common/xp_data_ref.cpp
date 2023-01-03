@@ -168,7 +168,6 @@ namespace zcockpit::common {
 				auto count = float_vals.size();
 				count = count >= size_? size_ : count;
 				XPLMSetDatavf(xplane_data_ref_, float_vals.data(), 0, count);
-
 				const auto values_copied = XPLMGetDatavf(xplane_data_ref_, &new_value_[0], 0, size_);
 				assert(size_ == values_copied);
 				if (is_bool_annum) {
@@ -178,6 +177,12 @@ namespace zcockpit::common {
 						}
 					}
 				}
+				LOG() << "Set VectorFloatXPDataRef count: " << count;
+				int i = 0;
+				for(auto& value : float_vals) {
+					LOG() << "    Value " << value  << " Xplane Changed Value " << new_value_[i++];
+				}
+
 			}
 			else {
 				LOG() << "ERROR: New DataRef value is NOT type std::vector<float> id " << xplane_data_ref_;
