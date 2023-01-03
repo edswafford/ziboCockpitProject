@@ -1592,8 +1592,8 @@ namespace zcockpit::cockpit::hardware
 									&& (inputs_old[input][card] != -1) && (inputs_old[input + 1][card] != -1))
 								{
 									/* something has changed */
-									LOG() << "LIBIOCARDS: Rotary Encoder    Gray Type : card=" << card << " inputs "<< input << "-" << input + 1 <<
-										"values = " << inputs[input][card] << " " << inputs[input + 1][card];
+									//LOG() << "LIBIOCARDS: Rotary Encoder    Gray Type : card=" << card << " inputs "<< input << "-" << input + 1 <<
+									//	"values = " << inputs[input][card] << " " << inputs[input + 1][card];
 
 
 									/* derive last encoder count */
