@@ -1460,9 +1460,12 @@ namespace zcockpit::cockpit::hardware
 	// 3: optical rotary encoder without the Encoder II card
 	int IOCards::mastercard_encoder(int input, double* value, double multiplier, double accelerator, int type/*=2*/, int card/*=0*/)
 	{
-
-		int updown = 0; // encoder direction
-		int retval = 0; // returns 1 if something changed, 0 if nothing changed and -1 if something went wrong
+		int oldcount, newcount; /* encoder integer counters */
+		int updown = 0; /* encoder direction */
+		int retval = 0; /* returns 1 if something changed, 0 if nothing changed and -1 if something went wrong */
+		int obits[2]; /* bit arrays for 2 bit gray encoder */
+		int nbits[2]; /* bit arrays for 2 bit gray encoder */
+		int acceleration;
 
 		if (value != nullptr)
 		{
@@ -1476,11 +1479,6 @@ namespace zcockpit::cockpit::hardware
 						if (((input >= 0) && (input < (NUM_INPUTS - 2)) && (type == 0)) ||
 							((input >= 0) && (input < (NUM_INPUTS - 1)) && (type > 0)))
 						{
-							int oldcount; // encoder integer counters
-							int newcount; // encoder integer counters 
-
-							int obits[2];
-							int nbits[2];
 							if (type == 0)
 							{
 								assert(false);
@@ -1626,7 +1624,7 @@ namespace zcockpit::cockpit::hardware
 
 									if (updown != 0)
 									{
-										const int acceleration = get_acceleration(card, input, accelerator);
+										acceleration = get_acceleration(card, input, accelerator);
 										LOG() << "value = " << *value << " upDown " << updown << " accel " << acceleration;
 										*value = *value + (updown * acceleration * multiplier);
 										retval = 1;
