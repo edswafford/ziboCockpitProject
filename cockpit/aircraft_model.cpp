@@ -227,12 +227,14 @@ namespace zcockpit::cockpit {
 					else if(xplane_values[index] < operation->min_value) {
 						xplane_values[index] = operation->min_value;
 					}
+					LOG() << "Vector Float index " << index << " increment " << sw_data.float_hw_value << " new value " << xplane_values[index];
 					common::var_t variant = xplane_values;
 					int data_ref_id = dataref_to_ref_id[dataref_name];
 					common::SetDataRef set_data_ref(data_ref_id, variant);
 					xplane_dataref.emplace_back(set_data_ref);
 					LOG() << "Send DataRef " << get_data_ref_string(dataref_name) << " id " << data_ref_id;
 				}
+				else
 				{
 					LOG() << "Expecting Switch Encoder, other types not supported";
 				}
@@ -646,7 +648,7 @@ namespace zcockpit::cockpit {
 				if(maybe_switch_data) {
 					hardware::ZcockpitSwitch switch_data = *maybe_switch_data;
 
-					LOG() << "Processing Switch " << get_data_ref_string(switch_data.dataref_name) << " value " << switch_data.int_hw_value;
+					LOG() << "Processing Switch " << get_data_ref_string(switch_data.dataref_name) << " value " << switch_data.int_hw_value << " or " << switch_data.float_hw_value;
 					auto commands = process_hw_switch(switch_data);
 					xplane_commands.insert(xplane_commands.end(), commands.begin(), commands.end());
 				}
