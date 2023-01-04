@@ -1582,6 +1582,7 @@ namespace zcockpit::cockpit::hardware
 
 							if (type == 2)
 							{
+								LOG() << "Encoder " << input << " and " << input + 1 << " = " << inputs[input][card] << " " << inputs[input+1][card];
 								/* 2 bit gray type encoder */
 								{
 									//LOG() << "Encoder old " << inputs_old[input][card] << " " << inputs_old[input + 1][card] << " new " << inputs[input][card] <<
@@ -1594,19 +1595,19 @@ namespace zcockpit::cockpit::hardware
 									/* something has changed */
 									//LOG() << "LIBIOCARDS: Rotary Encoder    Gray Type : card=" << card << " inputs " << input << "-" << input + 1 <<
 									//	"values = " << inputs[input][card] << " " << inputs[input + 1][card];
-									LOG() << "Encoder old " << inputs_old[input + 1][card] << " " << inputs_old[input][card] << " new " << inputs[input][card + 1] <<
+									LOG() << "Encoder old " << inputs_old[input + 1][card] << " " << inputs_old[input][card] << " new " << inputs[input+1][card] <<
 										" " << inputs[input][card];
 
 
 									/* derive last encoder count */
 									obits[0] = inputs_old[input][card];
-									obits[1] = inputs_old[input + 1][card];
-									oldcount = obits[0] + 2 * obits[1];
+									obits[1] = inputs_old[input + 1][card] < 1;
+									oldcount = obits[0] + obits[1];
 
 									/* derive new encoder count */
 									nbits[0] = inputs[input][card];
-									nbits[1] = inputs[input + 1][card];
-									newcount = nbits[0] + 2 * nbits[1];
+									nbits[1] = inputs[input + 1][card] < 1;
+									newcount = nbits[0] + nbits[1];
 
 									/* forward */
 									if (((oldcount == 0) && (newcount == 1)) ||
