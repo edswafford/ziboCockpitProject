@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "mip_iocard.hpp"
 #include "../sim737_hardware.hpp"
 #include "../DeleteMeHotkey.h"
@@ -62,81 +63,7 @@ namespace zcockpit::cockpit::hardware
 
 	void MipIOCard::processEncoders()
 	{
-		constexpr float XPLANE_BRIGHTNESS = 0.05f;
-		constexpr float XPLANE_SPD_REF = 0.05f;
-		constexpr float XPLANE_N1_SET = 0.05f;
-
-		double value = 0.0;
-		//if(mastercard_encoder(31, &value, 1.0, 1.0) > 0)
-		//{
-		//	LOG() << "value " << value;
-		//	auto sw = iocard_mip_zcockpit_switches[39]; // FO_INBD_DU_BRIGHTNESS
-		//	sw.float_hw_value = XPLANE_BRIGHTNESS * value;
-		//	aircraft_model.push_switch_change(sw); 
-		//}
-
-		//value = 0.0;
-		//if(mastercard_encoder(33, &value, 1.0, 1.0) > 0)
-		//{
-		//	LOG() << "value " << value;
-		//	auto sw = iocard_mip_zcockpit_switches[40]; // FO_OUTBD_DU_BRIGHTNESS
-		//	sw.float_hw_value = XPLANE_BRIGHTNESS * value;
-		//	aircraft_model.push_switch_change(sw);
-		//}
-
-		//value = 0.0;
-		//if(mastercard_encoder(36, &value, 1.0, 1.0) > 0)
-		//{
-		//	LOG() << "value " << value;
-		//	auto sw = iocard_mip_zcockpit_switches[41]; // CAPT_INBD_DU_BRIGHTNESS
-		//	sw.float_hw_value = XPLANE_BRIGHTNESS * value;
-		//	aircraft_model.push_switch_change(sw);
-		//}
-		value = 0.0;
-		if(mastercard_encoder(42, &value, 1.0, 1.0) > 0)
-		{
-			LOG() << "value " << value;
-			auto sw = iocard_mip_zcockpit_switches[42]; // CAPT_OUTBD_DU_BRIGHTNESS
-			sw.float_hw_value = XPLANE_BRIGHTNESS * value;
-			aircraft_model.push_switch_change(sw);
-		}
-
-		//value = 0.0;
-		//if(mastercard_encoder(40, &value, 1.0, 1.0) > 0)
-		//{
-		//	LOG() << "value " << value;
-		//	auto sw = iocard_mip_zcockpit_switches[43]; // LOWER_DU_BRIGHTNESS
-		//	sw.float_hw_value = XPLANE_BRIGHTNESS * value;
-		//	aircraft_model.push_switch_change(sw);
-		//}
-		//value = 0.0;
-		//if(mastercard_encoder(38, &value, 1.0, 1.0) > 0)
-		//{
-		//	LOG() << "value " << value;
-		//	auto sw = iocard_mip_zcockpit_switches[44]; // UPPER_DU_BRIGHTNESS
-		//	sw.float_hw_value = XPLANE_BRIGHTNESS * value;
-		//	aircraft_model.push_switch_change(sw);
-		//}
-
-		//// Speed Ref  (auto, V1, Vr, WT, Vref ...
-		//value = 0.0;
-		//if(mastercard_encoder(45, &value, 1.0, 1.0) > 0)
-		//{
-		//	LOG() << "value " << value;
-		//	auto sw = iocard_mip_zcockpit_switches[45]; // SPD_REF
-		//	sw.float_hw_value = XPLANE_BRIGHTNESS * value;
-		//	aircraft_model.push_switch_change(sw);
-		//}
-
-		//// N1 Set
-		//value = 0.0;
-		//if(mastercard_encoder(47, &value, 1.0, 1.0) > 0)
-		//{
-		//	LOG() << "value " << value;
-		//	auto sw = iocard_mip_zcockpit_switches[46]; // N1_SET_INC
-		//	sw.float_hw_value = XPLANE_BRIGHTNESS * value;
-		//	aircraft_model.push_switch_change(sw);
-		//}		
+		
 	}
 
 	void MipIOCard::processMIP()
@@ -393,6 +320,100 @@ namespace zcockpit::cockpit::hardware
 				aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[36]); //AILERON_TRIM return
 			}
 
+		}
+
+		//
+		// ENCODERS
+		//
+		constexpr float XPLANE_BRIGHTNESS = 0.05f;
+		constexpr double XLPANE_MIN_BRIGHTNESS_SCALER = -10.0f;
+		constexpr double XLPANE_MAX_BRIGHTNESS_SCALER = 10.0f;
+
+		constexpr float XPLANE_SPD_REF = 0.05f;
+		constexpr float XPLANE_N1_SET = 0.05f;
+		constexpr double XLPANE_MIN_SPD_REF_SCALER = -20.0f;
+		constexpr double XLPANE_MAX_SPD_REF_SCALER = 20.0f;
+		constexpr double XLPANE_MIN_N1_SET_SCALER = -20.0f;
+		constexpr double XLPANE_MAX_N1_SET_SCALER = 20.0f;
+
+		double value = 0.0;
+		if(mastercard_encoder(31, &value, 1.0, 1.0) > 0)
+		{
+			value = std::clamp(value, XLPANE_MIN_BRIGHTNESS_SCALER, XLPANE_MAX_BRIGHTNESS_SCALER);
+			LOG() << "value " << value;
+			auto sw = iocard_mip_zcockpit_switches[39]; // FO_INBD_DU_BRIGHTNESS
+			sw.float_hw_value = XPLANE_BRIGHTNESS * static_cast<float>(value);
+			aircraft_model.push_switch_change(sw); 
+		}
+
+		value = 0.0;
+		if(mastercard_encoder(33, &value, 1.0, 1.0) > 0)
+		{
+			value = std::clamp(value, XLPANE_MIN_BRIGHTNESS_SCALER, XLPANE_MAX_BRIGHTNESS_SCALER);
+			LOG() << "value " << value;
+			auto sw = iocard_mip_zcockpit_switches[40]; // FO_OUTBD_DU_BRIGHTNESS
+			sw.float_hw_value = XPLANE_BRIGHTNESS * static_cast<float>(value);
+			aircraft_model.push_switch_change(sw);
+		}
+
+		value = 0.0;
+		if(mastercard_encoder(36, &value, 1.0, 1.0) > 0)
+		{
+			value = std::clamp(value, XLPANE_MIN_BRIGHTNESS_SCALER, XLPANE_MAX_BRIGHTNESS_SCALER);
+			LOG() << "value " << value;
+			auto sw = iocard_mip_zcockpit_switches[41]; // CAPT_INBD_DU_BRIGHTNESS
+			sw.float_hw_value = XPLANE_BRIGHTNESS * static_cast<float>(value);
+			aircraft_model.push_switch_change(sw);
+		}
+		value = 0.0;
+		if(mastercard_encoder(42, &value, 1.0, 1.0) > 0)
+		{
+			value = std::clamp(value, XLPANE_MIN_BRIGHTNESS_SCALER, XLPANE_MAX_BRIGHTNESS_SCALER);
+			LOG() << "value " << value;
+			auto sw = iocard_mip_zcockpit_switches[42]; // CAPT_OUTBD_DU_BRIGHTNESS
+			sw.float_hw_value = XPLANE_BRIGHTNESS * static_cast<float>(value);
+			aircraft_model.push_switch_change(sw);
+		}
+
+		value = 0.0;
+		if(mastercard_encoder(40, &value, 1.0, 1.0) > 0)
+		{
+			value = std::clamp(value, XLPANE_MIN_BRIGHTNESS_SCALER, XLPANE_MAX_BRIGHTNESS_SCALER);
+			LOG() << "value " << value;
+			auto sw = iocard_mip_zcockpit_switches[43]; // LOWER_DU_BRIGHTNESS
+			sw.float_hw_value = XPLANE_BRIGHTNESS * static_cast<float>(value);
+			aircraft_model.push_switch_change(sw);
+		}
+		value = 0.0;
+		if(mastercard_encoder(38, &value, 1.0, 1.0) > 0)
+		{
+			value = std::clamp(value, XLPANE_MIN_BRIGHTNESS_SCALER, XLPANE_MAX_BRIGHTNESS_SCALER);
+			LOG() << "value " << value;
+			auto sw = iocard_mip_zcockpit_switches[44]; // UPPER_DU_BRIGHTNESS
+			sw.float_hw_value = XPLANE_BRIGHTNESS * static_cast<float>(value);
+			aircraft_model.push_switch_change(sw);
+		}
+
+		// Speed Ref  (auto, V1, Vr, WT, Vref ...
+		value = 0.0;
+		if(mastercard_encoder(45, &value, 1.0, 1.0) > 0)
+		{
+			value = std::clamp(value, XLPANE_MIN_SPD_REF_SCALER, XLPANE_MAX_SPD_REF_SCALER);
+			LOG() << "value " << value;
+			auto sw = iocard_mip_zcockpit_switches[45]; // SPD_REF
+			sw.float_hw_value = XPLANE_BRIGHTNESS * static_cast<float>(value);
+			aircraft_model.push_switch_change(sw);
+		}
+
+		// N1 Set
+		value = 0.0;
+		if(mastercard_encoder(47, &value, 1.0, 1.0) > 0)
+		{
+			value = std::clamp(value, XLPANE_MIN_N1_SET_SCALER, XLPANE_MAX_N1_SET_SCALER);
+			LOG() << "value " << value;
+			auto sw = iocard_mip_zcockpit_switches[46]; // N1_SET_INC
+			sw.float_hw_value = XPLANE_BRIGHTNESS * static_cast<float>(value);
+			aircraft_model.push_switch_change(sw);
 		}
 
 
