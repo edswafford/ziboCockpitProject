@@ -149,22 +149,22 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(mip_iocard && mip_iocard->is_okay)
 			{
-				mip_iocard->receive_mastercard();
+				while (mip_iocard->receive_mastercard() > 0) {
 
-				mip_iocard->processEncoders();  // update every cycle
+					mip_iocard->processEncoders();  // update every cycle
 
-				// update inputs
-				mip_iocard->processMIP();
+					// update inputs
+					mip_iocard->processMIP();
 
+					// copy current to previous
+					if (mip_iocard->copyIOCardsData() < 0)
+					{
+						LOG() << "IOCards 2: closing down mip copy data < 0";
+						mip_iocard->close_down();
+					}
+				}
 				// send outputs
 				mip_iocard->send_mastercard();
-
-				// copy current to previous
-				if(mip_iocard->copyIOCardsData() < 0)
-				{
-					LOG() << "IOCards 2: closing down mip copy data < 0";
-					mip_iocard->close_down();
-				}
 			}
 		}
 

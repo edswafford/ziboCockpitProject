@@ -828,8 +828,9 @@ namespace zcockpit::cockpit::hardware
 	}
 
 
-	void IOCards::receive_mastercard(void)
+	int IOCards::receive_mastercard(void)
 	{
+		int ret = -1;
 		int result = 0;
 
 		/* PROTOCOL */
@@ -849,9 +850,11 @@ namespace zcockpit::cockpit::hardware
 
 
 		// check if we have a connected USB expander card
-		while (is_okay && inQueue.size() > 0)
+		if (is_okay && inQueue.size() > 0)
 		{
+			ret = inQueue.size();
 			if (const auto maybe_vector = inQueue.pop()) {
+
 				if (maybe_vector) {
 					auto recv_data = *maybe_vector;
 			
@@ -1034,8 +1037,10 @@ namespace zcockpit::cockpit::hardware
 						byteCnt++;
 					} // end while
 				} 
-			}
+			} // pop
+			LOG() << "READ IO: 43,42 " << inputs[43][0] << inputs[42][0];
 		} // is_okay
+		return ret;
 	}
 
 

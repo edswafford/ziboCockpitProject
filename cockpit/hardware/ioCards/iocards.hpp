@@ -98,7 +98,7 @@ namespace zcockpit::cockpit::hardware
 		void clear_buffers();
 
 		int receive_mastercard_synchronous();
-		void receive_mastercard(void);
+		int receive_mastercard(void);
 		void send_mastercard(void);
 
 		int mastercard_input(int input, int* value, int card = 0);

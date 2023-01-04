@@ -66,7 +66,7 @@ namespace zcockpit::cockpit::hardware
 		constexpr float XPLANE_SPD_REF = 0.05f;
 		constexpr float XPLANE_N1_SET = 0.05f;
 
-		double value = 1.0;
+		double value = 0.0;
 		//if(mastercard_encoder(31, &value, 1.0, 1.0) > 0)
 		//{
 		//	LOG() << "value " << value;
@@ -75,7 +75,7 @@ namespace zcockpit::cockpit::hardware
 		//	aircraft_model.push_switch_change(sw); 
 		//}
 
-		//value = 1.0;
+		//value = 0.0;
 		//if(mastercard_encoder(33, &value, 1.0, 1.0) > 0)
 		//{
 		//	LOG() << "value " << value;
@@ -84,7 +84,7 @@ namespace zcockpit::cockpit::hardware
 		//	aircraft_model.push_switch_change(sw);
 		//}
 
-		//value = 1.0;
+		//value = 0.0;
 		//if(mastercard_encoder(36, &value, 1.0, 1.0) > 0)
 		//{
 		//	LOG() << "value " << value;
@@ -92,7 +92,7 @@ namespace zcockpit::cockpit::hardware
 		//	sw.float_hw_value = XPLANE_BRIGHTNESS * value;
 		//	aircraft_model.push_switch_change(sw);
 		//}
-		value = 1.0;
+		value = 0.0;
 		if(mastercard_encoder(42, &value, 1.0, 1.0) > 0)
 		{
 			LOG() << "value " << value;
@@ -101,7 +101,7 @@ namespace zcockpit::cockpit::hardware
 			aircraft_model.push_switch_change(sw);
 		}
 
-		//value = 1.0;
+		//value = 0.0;
 		//if(mastercard_encoder(40, &value, 1.0, 1.0) > 0)
 		//{
 		//	LOG() << "value " << value;
@@ -109,7 +109,7 @@ namespace zcockpit::cockpit::hardware
 		//	sw.float_hw_value = XPLANE_BRIGHTNESS * value;
 		//	aircraft_model.push_switch_change(sw);
 		//}
-		//value = 1.0;
+		//value = 0.0;
 		//if(mastercard_encoder(38, &value, 1.0, 1.0) > 0)
 		//{
 		//	LOG() << "value " << value;
@@ -119,7 +119,7 @@ namespace zcockpit::cockpit::hardware
 		//}
 
 		//// Speed Ref  (auto, V1, Vr, WT, Vref ...
-		//value = 1.0;
+		//value = 0.0;
 		//if(mastercard_encoder(45, &value, 1.0, 1.0) > 0)
 		//{
 		//	LOG() << "value " << value;
@@ -129,7 +129,7 @@ namespace zcockpit::cockpit::hardware
 		//}
 
 		//// N1 Set
-		//value = 1.0;
+		//value = 0.0;
 		//if(mastercard_encoder(47, &value, 1.0, 1.0) > 0)
 		//{
 		//	LOG() << "value " << value;
