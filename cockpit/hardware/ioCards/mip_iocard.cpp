@@ -325,21 +325,22 @@ namespace zcockpit::cockpit::hardware
 		//
 		// ENCODERS
 		//
-		constexpr float XPLANE_BRIGHTNESS = 0.05f;
+		constexpr float XPLANE_BRIGHTNESS = 0.01f;
 		constexpr double XLPANE_MIN_BRIGHTNESS_SCALER = -10.0f;
 		constexpr double XLPANE_MAX_BRIGHTNESS_SCALER = 10.0f;
 
-		constexpr float XPLANE_SPD_REF = 0.05f;
-		constexpr float XPLANE_N1_SET = 0.05f;
-		constexpr double XLPANE_MIN_SPD_REF_SCALER = -20.0f;
-		constexpr double XLPANE_MAX_SPD_REF_SCALER = 20.0f;
-		constexpr double XLPANE_MIN_N1_SET_SCALER = -20.0f;
-		constexpr double XLPANE_MAX_N1_SET_SCALER = 20.0f;
+		constexpr float XPLANE_SPD_REF = 1.0f;
+		constexpr float XPLANE_N1_SET = 0.01f;
+		constexpr double XLPANE_MIN_SPD_REF_SCALER = -10.0f;
+		constexpr double XLPANE_MAX_SPD_REF_SCALER = 10.0f;
+		constexpr double XLPANE_MIN_N1_SET_SCALER = -10.0f;
+		constexpr double XLPANE_MAX_N1_SET_SCALER = 10.0f;
 
 		double value = 0.0;
 		if(mastercard_encoder(31, &value, 1.0, 1.0) > 0)
 		{
-			value = std::clamp(value, XLPANE_MIN_BRIGHTNESS_SCALER, XLPANE_MAX_BRIGHTNESS_SCALER);
+			// direction is opposite
+			value = -std::clamp(value, XLPANE_MIN_BRIGHTNESS_SCALER, XLPANE_MAX_BRIGHTNESS_SCALER);
 			LOG() << "value " << value;
 			auto sw = iocard_mip_zcockpit_switches[39]; // FO_INBD_DU_BRIGHTNESS
 			sw.float_hw_value = XPLANE_BRIGHTNESS * static_cast<float>(value);
@@ -349,7 +350,8 @@ namespace zcockpit::cockpit::hardware
 		value = 0.0;
 		if(mastercard_encoder(33, &value, 1.0, 1.0) > 0)
 		{
-			value = std::clamp(value, XLPANE_MIN_BRIGHTNESS_SCALER, XLPANE_MAX_BRIGHTNESS_SCALER);
+			// direction is opposite
+			value = -std::clamp(value, XLPANE_MIN_BRIGHTNESS_SCALER, XLPANE_MAX_BRIGHTNESS_SCALER);
 			LOG() << "value " << value;
 			auto sw = iocard_mip_zcockpit_switches[40]; // FO_OUTBD_DU_BRIGHTNESS
 			sw.float_hw_value = XPLANE_BRIGHTNESS * static_cast<float>(value);
@@ -368,7 +370,8 @@ namespace zcockpit::cockpit::hardware
 		value = 0.0;
 		if(mastercard_encoder(42, &value, 1.0, 1.0) > 0)
 		{
-			value = std::clamp(value, XLPANE_MIN_BRIGHTNESS_SCALER, XLPANE_MAX_BRIGHTNESS_SCALER);
+			// direction is opposite
+			value = -std::clamp(value, XLPANE_MIN_BRIGHTNESS_SCALER, XLPANE_MAX_BRIGHTNESS_SCALER);
 			LOG() << "value " << value;
 			auto sw = iocard_mip_zcockpit_switches[42]; // CAPT_OUTBD_DU_BRIGHTNESS
 			sw.float_hw_value = XPLANE_BRIGHTNESS * static_cast<float>(value);
@@ -378,7 +381,8 @@ namespace zcockpit::cockpit::hardware
 		value = 0.0;
 		if(mastercard_encoder(40, &value, 1.0, 1.0) > 0)
 		{
-			value = std::clamp(value, XLPANE_MIN_BRIGHTNESS_SCALER, XLPANE_MAX_BRIGHTNESS_SCALER);
+			// direction is opposite
+			value = -std::clamp(value, XLPANE_MIN_BRIGHTNESS_SCALER, XLPANE_MAX_BRIGHTNESS_SCALER);
 			LOG() << "value " << value;
 			auto sw = iocard_mip_zcockpit_switches[43]; // LOWER_DU_BRIGHTNESS
 			sw.float_hw_value = XPLANE_BRIGHTNESS * static_cast<float>(value);
@@ -401,7 +405,7 @@ namespace zcockpit::cockpit::hardware
 			value = std::clamp(value, XLPANE_MIN_SPD_REF_SCALER, XLPANE_MAX_SPD_REF_SCALER);
 			LOG() << "value " << value;
 			auto sw = iocard_mip_zcockpit_switches[45]; // SPD_REF
-			sw.float_hw_value = XPLANE_BRIGHTNESS * static_cast<float>(value);
+			sw.float_hw_value = XPLANE_SPD_REF * static_cast<float>(value);
 			aircraft_model.push_switch_change(sw);
 		}
 
@@ -412,7 +416,7 @@ namespace zcockpit::cockpit::hardware
 			value = std::clamp(value, XLPANE_MIN_N1_SET_SCALER, XLPANE_MAX_N1_SET_SCALER);
 			LOG() << "value " << value;
 			auto sw = iocard_mip_zcockpit_switches[46]; // N1_SET_INC
-			sw.float_hw_value = XPLANE_BRIGHTNESS * static_cast<float>(value);
+			sw.float_hw_value = XPLANE_N1_SET * static_cast<float>(value);
 			aircraft_model.push_switch_change(sw);
 		}
 
@@ -462,11 +466,11 @@ namespace zcockpit::cockpit::hardware
 		constexpr float XPLANE_AILERON_TRIM_INC = 0.019f;
 
 		constexpr int XPLANE_CAPT_OUTBD_DU = 0;
-		constexpr int XPLANE_FO_INBD_DU = 1;
+		constexpr int XPLANE_FO_INBD_DU = 3;
 		constexpr int XPLANE_CAPT_INBD_DU = 2;
-		constexpr int XPLANE_FO_OUTBD_DU = 3;
+		constexpr int XPLANE_FO_OUTBD_DU = 1;
 		constexpr int XPLANE_UPPER_DU = 4;
-		constexpr int XPLANE_LOWER_DU = 15;
+		constexpr int XPLANE_LOWER_DU = 5;
 					  
 
 
@@ -533,7 +537,7 @@ namespace zcockpit::cockpit::hardware
 		iocard_mip_zcockpit_switches[43]  = ZcockpitSwitch(DataRefName::instrument_brightness, common::SwitchType::encoder, 0.0f, 0, XPLANE_LOWER_DU);
 		iocard_mip_zcockpit_switches[44]  = ZcockpitSwitch(DataRefName::instrument_brightness, common::SwitchType::encoder, 0.0f, 0, XPLANE_UPPER_DU);
 
-		iocard_mip_zcockpit_switches[45]  = ZcockpitSwitch(DataRefName::spd_ref, common::SwitchType::toggle, 0.0f, 0, 0);
+		iocard_mip_zcockpit_switches[45]  = ZcockpitSwitch(DataRefName::spd_ref_adjust, common::SwitchType::toggle, 0.0f, 0, 0);
 		iocard_mip_zcockpit_switches[46]  = ZcockpitSwitch(DataRefName::n1_set_adjust, common::SwitchType::toggle, 0.0f, 0, 0);
 																																				  
 		//iocard_mip_zcockpit_switches[43]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, );

@@ -102,8 +102,8 @@ namespace zcockpit::cockpit {
 		float rudder_trim{0.0};
 		float aileron_trim{0.0};
 		std::vector<float>  instrument_brightness{1.0};
-		float spd_ref_adjust{0.0};
-		float n1_set_adjust{0.0};
+		float spd_ref_adjust{80.0};
+		float n1_set_adjust{1.0};
 	};
 
 
@@ -247,7 +247,7 @@ namespace zcockpit::cockpit {
 	{
 		SwitchValues guarded_covers{1.0f, 0.0, 1};
 		SwitchValues instrument_brightness{1.0f, 0.0f, 6};
-		SwitchValues spd_ref_adjust{1.0f, -1.0f, 1};
-		SwitchValues n1_set_adjust{1.0f, -1.0f, 1};
+		SwitchValues spd_ref_adjust{250.0f, 80.0f, 1};
+		SwitchValues n1_set_adjust{ 1.03f, 0.70f, 1 };
 	};
 }
