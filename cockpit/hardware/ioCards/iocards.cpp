@@ -1649,8 +1649,23 @@ namespace zcockpit::cockpit::hardware
 									}
 								}
 								else {
+
+									obits[0] = inputs_old[input][card];
+									obits[1] = inputs_old[input + 1][card] < 1;
+									oldcount = obits[0] | obits[1];
+									oldcount = (inputs_old[input + 1][card] < 1);
+									oldcount |= (inputs_old[input][card]);
+
+
+									nbits[0] = inputs[input][card];
+									nbits[1] = inputs[input + 1][card] < 1;
+									newcount = nbits[0] | nbits[1];
+								    newcount = (inputs[input + 1][card] < 1);
+									newcount |= inputs[input][card];
+
 									LOG() << "Encoder Nothing Changed:   old " << inputs_old[input+1][card] << " " << inputs_old[input][card] << " new " << inputs[input+1][card] <<
 										" " << inputs[input][card] << " " << oldcount << ":" << newcount;
+
 
 									inputs_old[input][card] = inputs[input][card];
 									inputs_old[input + 1][card] = inputs[input + 1][card];
