@@ -1588,9 +1588,13 @@ namespace zcockpit::cockpit::hardware
 									//LOG() << "Encoder old " << inputs_old[input][card] << " " << inputs_old[input + 1][card] << " new " << inputs[input][card] <<
 									//	" " << inputs[input + 1][card];
 								}
-								if (((inputs[input][card] != inputs_old[input][card]) ||
-									(inputs[input + 1][card] != inputs_old[input + 1][card]))
-									&& (inputs_old[input][card] != -1) && (inputs_old[input + 1][card] != -1))
+
+								oldcount = (inputs_old[input + 1][card] < 1) | (inputs_old[input][card]);
+								newcount = (inputs[input + 1][card] < 1) | inputs[input][card];
+								if(oldcount != newcount && oldcount != -1)
+								//if (((inputs[input][card] != inputs_old[input][card]) ||
+								//	(inputs[input + 1][card] != inputs_old[input + 1][card]))
+								//	&& (inputs_old[input][card] != -1) && (inputs_old[input + 1][card] != -1))
 								{
 									/* something has changed */
 									//LOG() << "LIBIOCARDS: Rotary Encoder    Gray Type : card=" << card << " inputs " << input << "-" << input + 1 <<
@@ -1600,14 +1604,16 @@ namespace zcockpit::cockpit::hardware
 
 
 									/* derive last encoder count */
-									obits[0] = inputs_old[input][card];
-									obits[1] = inputs_old[input + 1][card] < 1;
-									oldcount = obits[0] + obits[1];
+									//obits[0] = inputs_old[input][card];
+									//obits[1] = inputs_old[input + 1][card] < 1;
+									//oldcount = obits[0] | obits[1];
+								//	oldcount = (inputs_old[input + 1][card] < 1) | (inputs_old[input][card]);
 
 									/* derive new encoder count */
-									nbits[0] = inputs[input][card];
-									nbits[1] = inputs[input + 1][card] < 1;
-									newcount = nbits[0] + nbits[1];
+									//nbits[0] = inputs[input][card];
+									//nbits[1] = inputs[input + 1][card] < 1;
+									//newcount = nbits[0] | nbits[1];
+								//	newcount = (inputs[input + 1][card] < 1) | inputs[input][card];
 
 									/* forward */
 									if (((oldcount == 0) && (newcount == 1)) ||
@@ -1643,8 +1649,8 @@ namespace zcockpit::cockpit::hardware
 									}
 								}
 								else {
-									LOG() << "Encoder Nothing Changed:   old " << inputs_old[input + 1][card] << " " << inputs_old[input][card] << " new " << inputs[input][card + 1] <<
-										" " << inputs[input][card];
+									//LOG() << "Encoder Nothing Changed:   old " << inputs_old[input + 1][card] << " " << inputs_old[input][card] << " new " << inputs[input][card + 1] <<
+									//	" " << inputs[input][card];
 
 									inputs_old[input][card] = inputs[input][card];
 									inputs_old[input + 1][card] = inputs[input + 1][card];
