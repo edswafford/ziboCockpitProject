@@ -97,6 +97,7 @@ namespace zcockpit::cockpit::hardware
 		// because nothing changed.  Therefore, the if statement is false and nothing is sent to Xplane.
 		//
 		//  Capt Main Panel DUs rotary switch only one can change --> use if--else if
+		int old_captPFD = captPFD;
 		if(mastercard_input(1, &captOutboardPFD) && captOutboardPFD)
 		{
 			aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[0]);
@@ -113,7 +114,7 @@ namespace zcockpit::cockpit::hardware
 		{
 			aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[3]);
 		}
-		else if(captOutboardPFD == 0 && captNormal == 0 && captEngPrimary == 0 && captPFD == 0)
+		else if(old_captPFD && captPFD == 0)
 		{
 			// MFD 
 			aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[4]);
@@ -140,7 +141,7 @@ namespace zcockpit::cockpit::hardware
 
 
 		//  FO Main Panel DUs rotary switch only one can change --> use if--else if
-		if(mastercard_input(13, &foOutboardPFD) && foOutboardPFD)
+		if(mastercard_input(8, &foOutboardPFD) && foOutboardPFD)
 		{
 			aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[8]);
 		}
@@ -165,21 +166,21 @@ namespace zcockpit::cockpit::hardware
 		auto delayIsOver = Sim737Hardware::has_run_for_one_second();
 
 		//  FO Lower DUs rotary switch only one can change --> use if--else if
-		if(mastercard_input(15, &foEngPrimaryLowerDU) && foEngPrimaryLowerDU)
+		if(mastercard_input(13, &foEngPrimaryLowerDU) && foEngPrimaryLowerDU)
 		{
 			if(delayIsOver)
 			{
 			aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[13]);
 			}
 		}
-		else if(mastercard_input(16, &foPFDLowerDU))
+		else if(mastercard_input(14, &foPFDLowerDU))
 		{
 			if(delayIsOver)
 			{
 			aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[14]);
 			}
 		}
-		else if(mastercard_input(14, &foNDLowerDU))
+		else if(mastercard_input(15, &foNDLowerDU))
 		{
 			if(delayIsOver)
 			{

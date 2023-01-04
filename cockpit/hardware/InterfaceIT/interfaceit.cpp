@@ -271,7 +271,7 @@ namespace zcockpit::cockpit::hardware
 
 
 
-		constexpr InterfaceITSwitch InterfaceIT::mip_switches[] = {
+		const InterfaceITSwitch InterfaceIT::mip_switches[] = {
 			{common::SwitchType::unused, 0, 0 }, // 0
 
 			{common::SwitchType::rotary, 0, XPLANE_SPD_REF_MODE_AUTO}, // 1
