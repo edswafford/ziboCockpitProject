@@ -15,7 +15,6 @@ namespace zcockpit::cockpit::hardware
 		explicit MipIOCard(AircraftModel& ac_model, const std::string& device_bus_addr);
 
 		[[nodiscard]] static std::unique_ptr<MipIOCard> create_iocard(AircraftModel& ac_model, const std::string& bus_address);
-		void processEncoders();
 
 		void processMIP();
 		void updateRelays(int state);

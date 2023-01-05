@@ -94,7 +94,8 @@ namespace zcockpit::cockpit {
 				int direction = 1;
 				CommandRefName command_ref_name = commands->names[0];
 				const auto cmd_ref_string = get_cmd_ref_string(command_ref_name);
-				if (hw_value <= xplane_value) {
+
+				if (hw_value <= xplane_value && commands->size == 2) {
 					// send decrease command
 					command_ref_name = commands->names[1];
 					direction = -1;
@@ -187,6 +188,10 @@ namespace zcockpit::cockpit {
 			float xplane_value = *(static_cast<float*>(switch_data.xplane_data));
 			const float float_hw_value = sw_data.float_hw_value;
 			if(sw_data.switch_type == SwitchType::encoder) {
+				if (dataref_name == DataRefName::n1_set_adjust) {
+					LOG() << "N1 set xp = " << xplane_value << " hw = " << float_hw_value;
+				}
+
 				xplane_value += float_hw_value;
 				if(xplane_value > operation->max_value) {
 						xplane_value = operation->max_value;
@@ -194,13 +199,15 @@ namespace zcockpit::cockpit {
 				else if(xplane_value < operation->min_value) {
 					xplane_value = operation->min_value;
 				}
+				*(static_cast<float*>(switch_data.xplane_data)) = xplane_value;
+
 				common::var_t variant = xplane_value;
 				int data_ref_id = dataref_to_ref_id[dataref_name];
 				common::SetDataRef set_data_ref(data_ref_id, variant);
 				xplane_dataref.emplace_back(set_data_ref);
 				LOG() << "Send DataRef " << get_data_ref_string(dataref_name) << " id " << data_ref_id;
 			}
-			if(float_hw_value != xplane_value) {
+			else if(float_hw_value != xplane_value) {
 				if(dataref_to_ref_id.contains(dataref_name)){
 					// change xplane_value so send change multiple times
 					*(static_cast<float*>(switch_data.xplane_data)) = float_hw_value;
@@ -384,7 +391,7 @@ namespace zcockpit::cockpit {
 							const ZCockpitSwitchData switch_data = std::get<ZCockpitSwitchData>(z_cockpit_data[ac_param.short_name]);
 							// record the xplane switch state
 							*(static_cast<std::vector<float>*>(switch_data.xplane_data)) = static_cast<std::vector<float>>(data);
-							LOG() << "Switch Data " << data_ref_strings[ac_param.short_name].dataref_name;
+							LOG() << "Switch Data name index " << (int)(ac_param.short_name)  << " = " << data[0];
 						}
 						else {
 							const ZCockpitInData in_data = std::get<ZCockpitInData>(z_cockpit_data[ac_param.short_name]);
@@ -476,7 +483,9 @@ namespace zcockpit::cockpit {
 									}
 									else if (switch_data.hw_type == ZCockpitType::ZFloat) {
 										*static_cast<float*>(switch_data.xplane_data) = data;
+										LOG() << "Float Data " << data_ref_strings[ac_param.short_name].dataref_name << " = " << data;
 										return std::string("Switch float = ") + std::to_string(data);
+
 									}
 									else {
 										LOG() << "ERROR: expected type float for " << data_ref_strings[ac_param.short_name].dataref_name;
