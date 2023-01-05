@@ -458,12 +458,12 @@ namespace zcockpit::cockpit {
 		command_ref_strings[CommandRefName::fo_probes_pos] = {"laminar/B738/toggle_switch/fo_probes_pos"};
 		command_ref_strings[CommandRefName::main_pnl_du_capt_left] = {"laminar/B738/toggle_switch/main_pnl_du_capt_left"};
 		command_ref_strings[CommandRefName::main_pnl_du_capt_right] = {"laminar/B738/toggle_switch/main_pnl_du_capt_right"};
-		command_ref_strings[CommandRefName::main_pnl_du_fo_left] = {"laminar/B738/toggle_switch/main_pnl_du_fo_left"};
-		command_ref_strings[CommandRefName::main_pnl_du_fo_right] = {"laminar/B738/toggle_switch/main_pnl_du_fo_right"};
+//		command_ref_strings[CommandRefName::main_pnl_du_fo_left] = {"laminar/B738/toggle_switch/main_pnl_du_fo_left"};
+//		command_ref_strings[CommandRefName::main_pnl_du_fo_right] = {"laminar/B738/toggle_switch/main_pnl_du_fo_right"};
 		command_ref_strings[CommandRefName::lower_du_capt_left] = {"laminar/B738/toggle_switch/lower_du_capt_left"};
 		command_ref_strings[CommandRefName::lower_du_capt_right] = {"laminar/B738/toggle_switch/lower_du_capt_right"};
-		command_ref_strings[CommandRefName::lower_du_fo_left] = {"laminar/B738/toggle_switch/lower_du_fo_left"};
-		command_ref_strings[CommandRefName::lower_du_fo_right] = {"laminar/B738/toggle_switch/lower_du_fo_right"};
+//		command_ref_strings[CommandRefName::lower_du_fo_left] = {"laminar/B738/toggle_switch/lower_du_fo_left"};
+//		command_ref_strings[CommandRefName::lower_du_fo_right] = {"laminar/B738/toggle_switch/lower_du_fo_right"};
 
 		command_ref_strings[CommandRefName::gpws_test] = {"laminar/B738/push_button/gpws_test"};
 		command_ref_strings[CommandRefName::gpws_flap] = {"laminar/B738/toggle_switch/gpws_flap"};

@@ -648,7 +648,7 @@ namespace zcockpit::cockpit {
 				if(maybe_switch_data) {
 					hardware::ZcockpitSwitch switch_data = *maybe_switch_data;
 
-					LOG() << "Processing Switch " << get_data_ref_string(switch_data.dataref_name) << " value " << switch_data.int_hw_value << " or " << switch_data.float_hw_value;
+					LOG() << "Pop pending Switch changes " << get_data_ref_string(switch_data.dataref_name) << " value " << switch_data.int_hw_value << " or " << switch_data.float_hw_value;
 					auto commands = process_hw_switch(switch_data);
 					xplane_commands.insert(xplane_commands.end(), commands.begin(), commands.end());
 				}

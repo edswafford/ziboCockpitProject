@@ -678,7 +678,7 @@ namespace zcockpit::cockpit::hardware
 			readTransfer = nullptr;
 			std::lock_guard<std::mutex> lock(usb_mutex);
 			event_thread_failed = true;
-			LOG() << "read callback failed";
+			LOG() << "libusb: read callback failed";
 		}
 		else
 		{
@@ -686,7 +686,7 @@ namespace zcockpit::cockpit::hardware
 			if(length > 0){
 				std::vector<unsigned char> buffer(transfer->buffer, transfer->buffer + length);
 				inQueue.push(std::move(buffer));
-				LOG() << "Read callback pushed " << length << ", " << device_name;
+				LOG() << "libusb: Read callback pushed " << length << ", " << device_name;
 			}
 
 			std::lock_guard<std::mutex> lock(usb_mutex);
@@ -694,10 +694,10 @@ namespace zcockpit::cockpit::hardware
 				if(libusb_submit_transfer(readTransfer) < 0)
 				{
 					event_thread_failed = true;
-					LOG() << "Submit transfer read failed";
+					LOG() << "libusb: Submit transfer read failed";
 				}
 				else {
-					LOG() << "Submit transfer read succeded " << device_name;
+					LOG() << "libusb: Submit transfer read succeded " << device_name;
 				}
 			}
 		}
@@ -723,10 +723,10 @@ namespace zcockpit::cockpit::hardware
 			writeTransfer = nullptr;
 			std::lock_guard<std::mutex> lock(usb_mutex);
 			event_thread_failed = true;
-			LOG() << "write callback failed";
+			LOG() << "libusb: write callback failed";
 		}
 		else {
-			LOG() << "write callback completed " << device_name << " queue size = " << outQueue.size();
+			LOG() << "libusb: write callback completed " << device_name << " queue size = " << outQueue.size();
 
 			if (outQueue.size() > 0) {
 				if (const auto maybe_vector = outQueue.pop()) {
@@ -742,9 +742,9 @@ namespace zcockpit::cockpit::hardware
 						{
 							event_thread_failed = true;
 							write_callback_running = false;
-							LOG() << "write submit transfer failed";
+							LOG() << "libusb: write submit transfer failed";
 						}
-						LOG() << "Write transfer succeded";
+						LOG() << "libusb: Write transfer succeded";
 
 					}
 					else {

@@ -76,9 +76,9 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::fo_probes_pos] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.fo_probes_pos,				&z737SwitchCmd.fo_probes_pos);
 
 		z_cockpit_data[DataRefName::main_pnl_du_capt] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.main_pnl_du_capt,				&z737SwitchCmd.main_pnl_du_capt);
-		z_cockpit_data[DataRefName::main_pnl_du_fo] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.main_pnl_du_fo,				&z737SwitchCmd.main_pnl_du_fo);
+		z_cockpit_data[DataRefName::main_pnl_du_fo] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.main_pnl_du_fo,				&z737SwitchValue.main_pnl_du_fo);
 		z_cockpit_data[DataRefName::lower_du_capt] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.lower_du_capt,				&z737SwitchCmd.lower_du_capt);
-		z_cockpit_data[DataRefName::lower_du_fo] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.lower_du_fo,				&z737SwitchCmd.lower_du_fo);
+		z_cockpit_data[DataRefName::lower_du_fo] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.lower_du_fo,				&z737SwitchValue.lower_du_fo);
 		
 		z_cockpit_data[DataRefName::gpws_test] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.gpws_test,				&z737SwitchCmd.gpws_test);
 		z_cockpit_data[DataRefName::gpws_flap] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.gpws_flap,				&z737SwitchCmd.gpws_flap);

@@ -219,10 +219,10 @@ namespace zcockpit::cockpit {
 		SwitchCommands fo_probes_pos{2,std::vector<CommandRefName>{CommandRefName::fo_probes_pos, CommandRefName::fo_probes_pos}};
 						  
 		SwitchCommands main_pnl_du_capt{2, std::vector<CommandRefName>{CommandRefName::main_pnl_du_capt_right, CommandRefName::main_pnl_du_capt_left}};
-		SwitchCommands main_pnl_du_fo{2, std::vector<CommandRefName>{CommandRefName::main_pnl_du_fo_right, CommandRefName::main_pnl_du_fo_left}};
+//		SwitchCommands main_pnl_du_fo{2, std::vector<CommandRefName>{CommandRefName::main_pnl_du_fo_right, CommandRefName::main_pnl_du_fo_left}};
 
 		SwitchCommands lower_du_capt{2, std::vector<CommandRefName>{CommandRefName::lower_du_capt_right, CommandRefName::lower_du_capt_left}};
-		SwitchCommands lower_du_fo{2, std::vector<CommandRefName>{CommandRefName::lower_du_fo_right, CommandRefName::lower_du_fo_left}};
+//		SwitchCommands lower_du_fo{2, std::vector<CommandRefName>{CommandRefName::lower_du_fo_right, CommandRefName::lower_du_fo_left}};
 
 		SwitchCommands gpws_test{1, std::vector<CommandRefName>{CommandRefName::gpws_test}};
 		SwitchCommands gpws_flap{2, std::vector<CommandRefName>{CommandRefName::gpws_flap, CommandRefName::gpws_flap}};
@@ -249,5 +249,8 @@ namespace zcockpit::cockpit {
 		SwitchValues instrument_brightness{1.0f, 0.0f, 6};
 		SwitchValues spd_ref_adjust{250.0f, 80.0f, 1};
 		SwitchValues n1_set_adjust{ 1.03f, 0.70f, 1 };
+
+		SwitchValues main_pnl_du_fo{3.0f, -1.0f, 1};
+		SwitchValues lower_du_fo{1.0f, -1.0f,1};
 	};
 }
