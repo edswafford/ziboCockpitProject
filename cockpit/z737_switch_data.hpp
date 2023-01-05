@@ -104,7 +104,7 @@ namespace zcockpit::cockpit {
 		std::vector<float>  instrument_brightness{1.0};
 		float spd_ref_adjust{80.0};
 		float n1_set_adjust{1.0};
-		int fire_bell_light2_pb{ 0 };
+		int pushbutton_always_0{ 0 };
 	};
 
 

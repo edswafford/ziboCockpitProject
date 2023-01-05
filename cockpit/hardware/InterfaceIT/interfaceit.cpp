@@ -177,7 +177,7 @@ namespace zcockpit::cockpit::hardware
 		mip_zcockpit_switches[17] = ZcockpitSwitch(DataRefName::master_caution1_pb, mip_switches[17].type, 0);			// MASTER_CAUTION				17
 		mip_zcockpit_switches[18] = ZcockpitSwitch(DataRefName::capt_six_pack_pb, mip_switches[18].type, 0);				// SixPack ANNUNCIATOR			18
 		mip_zcockpit_switches[19] = ZcockpitSwitch(DataRefName::chrono_capt_et_mode_pb, mip_switches[19].type, 0);	// CLOCK CAPT ET				19
-		mip_zcockpit_switches[20] = ZcockpitSwitch(DataRefName::fire_bell_light1_pb, mip_switches[20].type, 0);			// FIRE WARN LIGHT				20
+		mip_zcockpit_switches[20] = ZcockpitSwitch(DataRefName::fire_bell_light1_pb, mip_switches[20].type, 1);			// FIRE WARN LIGHT				20
 		mip_zcockpit_switches[21] = ZcockpitSwitch(DataRefName::bright_test, mip_switches[21].type, 0);							// Annun Bright/Test			21
 		mip_zcockpit_switches[22] = ZcockpitSwitch();																								// STAB Out of Trim				22
 		mip_zcockpit_switches[23] = ZcockpitSwitch(DataRefName::MFD_ENG_pb, mip_switches[23].type, 0);							// MFD_ENG						23
@@ -299,7 +299,7 @@ namespace zcockpit::cockpit::hardware
 			{common::SwitchType::pushbutton, 0, 1}, // XPLANE_WARNING_MASTER_CAUTION }, // 17
 			{common::SwitchType::pushbutton, 0, 1}, // XPLANE_WARNING_SYSTEM_ANNUNCIATOR }, // 18
 			{common::SwitchType::pushbutton, 0, 1}, // XPLANE_INSTRUMENT_CLOCK_CAPT_CHR }, // 19
-			{common::SwitchType::pushbutton, 0, 1}, // XPLANE_FIRE_MASTER_FIRE_WARN_LIGHT }, // 20
+			{common::SwitchType::spring_loaded, 0, 1}, // XPLANE_FIRE_MASTER_FIRE_WARN_LIGHT }, // 20
 
 			{common::SwitchType::toggle, XPLANE_MASTER_LIGHTS_BRT, XPLANE_MASTER_LIGHTS_TEST }, // 21   NOTE  DIM is not wired
 			{common::SwitchType::unused, 0, 0 }, //STAB Out of Trim	 22

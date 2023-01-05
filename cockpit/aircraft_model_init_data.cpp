@@ -106,12 +106,12 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::master_caution1_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.master_caution1_pb );
 		z_cockpit_data[DataRefName::capt_six_pack_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.capt_six_pack_pb );
 		z_cockpit_data[DataRefName::chrono_capt_et_mode_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.chrono_capt_et_mode_pb);
-		z_cockpit_data[DataRefName::fire_bell_light1_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.fire_bell_light1_pb );
+		z_cockpit_data[DataRefName::fire_bell_light1_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, &xplane_switch_data.pushbutton_always_0, &z737SwitchCmd.fire_bell_light1_pb );
 		// FO
 		z_cockpit_data[DataRefName::master_caution2_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.master_caution2_pb );
 		z_cockpit_data[DataRefName::fo_six_pack_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.fo_six_pack_pb );
 		z_cockpit_data[DataRefName::chrono_fo_et_mode_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.chrono_fo_et_mode_pb);
-		z_cockpit_data[DataRefName::fire_bell_light2_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, &xplane_switch_data.fire_bell_light2_pb, &z737SwitchCmd.fire_bell_light2_pb );
+		z_cockpit_data[DataRefName::fire_bell_light2_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, &xplane_switch_data.pushbutton_always_0, &z737SwitchCmd.fire_bell_light2_pb );
 
 
 
