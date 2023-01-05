@@ -82,7 +82,13 @@ namespace zcockpit::cockpit::hardware
 			// turn on relays;
 			updateRelays(1);
 		}
-
+		////static int val[72]{ -1 };
+		////for (int i = 0; i < 72; i++) {
+		////	int has_changed = mastercard_input(i, &val[i]);
+		////	if (has_changed == 1 && val[i] == 1) {
+		////		LOG() << "IOCards MIP pin " << i << " has changed == " << val[i];
+		////	}
+		////}
 		//
 		//
 		// All Switch values are initialized to zero. The function mastercard_input(pin_number, value) does two things
@@ -141,7 +147,7 @@ namespace zcockpit::cockpit::hardware
 
 
 		//  FO Main Panel DUs rotary switch only one can change --> use if--else if
-		if(mastercard_input(8, &foOutboardPFD) && foOutboardPFD)
+		if(mastercard_input(13, &foOutboardPFD) && foOutboardPFD)
 		{
 			aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[8]);
 		}
@@ -166,21 +172,21 @@ namespace zcockpit::cockpit::hardware
 		auto delayIsOver = Sim737Hardware::has_run_for_one_second();
 
 		//  FO Lower DUs rotary switch only one can change --> use if--else if
-		if(mastercard_input(13, &foEngPrimaryLowerDU) && foEngPrimaryLowerDU)
+		if(mastercard_input(15, &foEngPrimaryLowerDU) && foEngPrimaryLowerDU)
 		{
 			if(delayIsOver)
 			{
 			aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[13]);
 			}
 		}
-		else if(mastercard_input(14, &foPFDLowerDU))
+		else if(mastercard_input(16, &foPFDLowerDU) && foPFDLowerDU)
 		{
 			if(delayIsOver)
 			{
 			aircraft_model.push_switch_change(iocard_mip_zcockpit_switches[14]);
 			}
 		}
-		else if(mastercard_input(15, &foNDLowerDU))
+		else if(mastercard_input(14, &foNDLowerDU) && foNDLowerDU)
 		{
 			if(delayIsOver)
 			{
@@ -486,20 +492,20 @@ namespace zcockpit::cockpit::hardware
 		iocard_mip_zcockpit_switches[6]  = ZcockpitSwitch(DataRefName::lower_du_capt, common::SwitchType::rotary, XPLANE_LOWER_PFD);
 		iocard_mip_zcockpit_switches[7]  = ZcockpitSwitch(DataRefName::lower_du_capt, common::SwitchType::rotary, XPLANE_LOWER_ND);
 
-		iocard_mip_zcockpit_switches[8]  = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, XPLANE_OUTBOARD_PFD);
-		iocard_mip_zcockpit_switches[9]  = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, XPLANE_NORMAL);
-		iocard_mip_zcockpit_switches[10] = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, XPLANE_ENG_PRIMARY);
-		iocard_mip_zcockpit_switches[11] = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, XPLANE_PFD);
-		iocard_mip_zcockpit_switches[12] = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, XPLANE_MFD);
+		iocard_mip_zcockpit_switches[8]  = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, -1.0f);
+		iocard_mip_zcockpit_switches[9]  = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, 0.0f);
+		iocard_mip_zcockpit_switches[10] = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, 1.0f);
+		iocard_mip_zcockpit_switches[11] = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, 2.0f);
+		iocard_mip_zcockpit_switches[12] = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, 3.0f);
 
-		iocard_mip_zcockpit_switches[13] = ZcockpitSwitch(DataRefName::lower_du_fo, common::SwitchType::rotary,XPLANE_LOWER_ENG_PRIMARY);
-		iocard_mip_zcockpit_switches[14] = ZcockpitSwitch(DataRefName::lower_du_fo, common::SwitchType::rotary,XPLANE_LOWER_PFD);
-		iocard_mip_zcockpit_switches[15] = ZcockpitSwitch(DataRefName::lower_du_fo, common::SwitchType::rotary,XPLANE_LOWER_ND);
+		iocard_mip_zcockpit_switches[13] = ZcockpitSwitch(DataRefName::lower_du_fo, common::SwitchType::rotary,-1.0f);
+		iocard_mip_zcockpit_switches[14] = ZcockpitSwitch(DataRefName::lower_du_fo, common::SwitchType::rotary,0.0f);
+		iocard_mip_zcockpit_switches[15] = ZcockpitSwitch(DataRefName::lower_du_fo, common::SwitchType::rotary,1.0f);
 
 
 		// Pushbuttons
 		iocard_mip_zcockpit_switches[16] = ZcockpitSwitch(DataRefName::chrono_fo_et_mode_pb, common::SwitchType::pushbutton, 1);	// FO clock
-		iocard_mip_zcockpit_switches[17] = ZcockpitSwitch(DataRefName::fire_bell_light2_pb, common::SwitchType::pushbutton, 1);	// FO Fire Warning
+		iocard_mip_zcockpit_switches[17] = ZcockpitSwitch(DataRefName::fire_bell_light2_pb, common::SwitchType::spring_loaded, 1);	// FO Fire Warning
 		iocard_mip_zcockpit_switches[18] = ZcockpitSwitch(DataRefName::master_caution2_pb, common::SwitchType::pushbutton, 1);	// FO Master Caution
 		iocard_mip_zcockpit_switches[19] = ZcockpitSwitch(DataRefName::fo_six_pack_pb, common::SwitchType::pushbutton, 1);		// FO Six pack
 

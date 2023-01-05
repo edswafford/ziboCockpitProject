@@ -76,9 +76,9 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::fo_probes_pos] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.fo_probes_pos,				&z737SwitchCmd.fo_probes_pos);
 
 		z_cockpit_data[DataRefName::main_pnl_du_capt] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.main_pnl_du_capt,				&z737SwitchCmd.main_pnl_du_capt);
-		z_cockpit_data[DataRefName::main_pnl_du_fo] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.main_pnl_du_fo,				&z737SwitchValue.main_pnl_du_fo);
+		z_cockpit_data[DataRefName::main_pnl_du_fo] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.main_pnl_du_fo,				&z737SwitchValue.main_pnl_du_fo, OperationType::Value);
 		z_cockpit_data[DataRefName::lower_du_capt] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.lower_du_capt,				&z737SwitchCmd.lower_du_capt);
-		z_cockpit_data[DataRefName::lower_du_fo] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.lower_du_fo,				&z737SwitchValue.lower_du_fo);
+		z_cockpit_data[DataRefName::lower_du_fo] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.lower_du_fo,				&z737SwitchValue.lower_du_fo, OperationType::Value);
 		
 		z_cockpit_data[DataRefName::gpws_test] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.gpws_test,				&z737SwitchCmd.gpws_test);
 		z_cockpit_data[DataRefName::gpws_flap] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.gpws_flap,				&z737SwitchCmd.gpws_flap);
@@ -111,7 +111,7 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::master_caution2_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.master_caution2_pb );
 		z_cockpit_data[DataRefName::fo_six_pack_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.fo_six_pack_pb );
 		z_cockpit_data[DataRefName::chrono_fo_et_mode_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.chrono_fo_et_mode_pb);
-		z_cockpit_data[DataRefName::fire_bell_light2_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.fire_bell_light2_pb );
+		z_cockpit_data[DataRefName::fire_bell_light2_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, &xplane_switch_data.fire_bell_light2_pb, &z737SwitchCmd.fire_bell_light2_pb );
 
 
 
