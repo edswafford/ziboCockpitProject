@@ -166,47 +166,23 @@ namespace zcockpit::cockpit::hardware
 			}
 		}
 
-		if(current_cycle % FIVE_HZ == 0) {
-			
-		}
-
 		else if(current_cycle % FIVE_HZ == 1)
 		{
-			//if(this->forward_overhead_iocard->isOpen)
-			//{
-			//	status = HEALTHY_STATUS;
-			//	if(!this->forward_overhead_iocard->IsInitialized())
-			//	{
-			//		status = FAILED_STATUS;
-			//		LOG() << "IOCards 2: closing down fwd overhead failed init";
-			//	}
-			//	else
-			//	{
-			//		// update inputs
-			//		this->forward_overhead_iocard->fastProcessOvrHead();
+			if(forward_overhead_iocard && forward_overhead_iocard->is_okay)
+			{
 
-			//		// send outputs
-			//		if(this->forward_overhead_iocard->send_mastercard() < 0)
-			//		{
-			//			status = FAILED_STATUS;
-			//			LOG() << "IOCards 2: closing down fwd overhead send < 0";
-			//			this->forward_overhead_iocard->closeDown();
-			//		}
+				// send outputs
+				while(forward_overhead_iocard->receive_mastercard() > 0)
+				{
+					forward_overhead_iocard->processEncoders();
 
+					// update inputs
+					this->forward_overhead_iocard->fastProcessOvrHead();
 
-			//	}
-			//}
-			//else
-			//{
-			//	status = FAILED_STATUS;
-			//}
-
-			//if(status != iocards_fwd_overhead_status)
-			//{
-			//	iocards_fwd_overhead_status = status;
-			//	PostMessage(mainHwnd, WM_IOCARDS_FWD_OVERHEAD_HEALTH, iocards_fwd_overhead_status, NULL);
-			//	LOG() << "IOCards 2: fwd overhead status = " << status << " :: " << iocards_fwd_overhead_status;
-			//}
+				}
+				// send outputs
+				forward_overhead_iocard->send_mastercard();
+			}
 		}
 
 		else if(current_cycle % FIVE_HZ == 2)
