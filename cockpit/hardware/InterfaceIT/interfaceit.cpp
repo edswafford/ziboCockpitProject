@@ -1028,25 +1028,41 @@ namespace zcockpit::cockpit::hardware
 			if (dataref_name != DataRefName::DataRefName_unused) {
 				overhead_zcockpit_switches[nswitch].int_hw_value = switch_value;
 
-				if(common::SwitchType::pushbutton == interface_it_switch.type && switch_value == 1) 
-				{
-					aircraft_model.push_switch_change(overhead_zcockpit_switches[nswitch]);
-				}
-				if (common::SwitchType::toggle == interface_it_switch.type || common::SwitchType::spring_loaded == interface_it_switch.type) 
-				{
-					aircraft_model.push_switch_change(overhead_zcockpit_switches[nswitch]);
-				}
-				else if (common::SwitchType::rotary == interface_it_switch.type)
-				{
-					// for multi-way switches if one of the poles is One then others must be Zero
-					// we only want to use the pole that has changed to one
-					if (state == 1)
-					{
-					aircraft_model.push_switch_change(overhead_zcockpit_switches[nswitch]);
+				// Standby Bat Power
+				if (nswitch == 44 || nswitch == 45) {
+					// Switch is only off when both pins (44 && 45) are off
+					if (overhead_zcockpit_switches[44].int_hw_value == XPLANE_STANDBY_POWER_OFF &&
+						overhead_zcockpit_switches[45].int_hw_value == XPLANE_STANDBY_POWER_OFF) {
+						aircraft_model.push_switch_change(overhead_zcockpit_switches[nswitch]);
+						LOG() << "Switch Change: nswitch " << nswitch << " value " << switch_value;
+					}
+					else {
+						if (overhead_zcockpit_switches[nswitch].int_hw_value != XPLANE_STANDBY_POWER_OFF) {
+							aircraft_model.push_switch_change(overhead_zcockpit_switches[nswitch]);
+							LOG() << "Switch Change: nswitch " << nswitch << " value " << switch_value;
+						}
 					}
 				}
-				LOG() << "Switch Change: nswitch " << nswitch << " value " << switch_value;
-
+				else {
+					if (common::SwitchType::pushbutton == interface_it_switch.type && switch_value == 1)
+					{
+						aircraft_model.push_switch_change(overhead_zcockpit_switches[nswitch]);
+					}
+					if (common::SwitchType::toggle == interface_it_switch.type || common::SwitchType::spring_loaded == interface_it_switch.type)
+					{
+						aircraft_model.push_switch_change(overhead_zcockpit_switches[nswitch]);
+					}
+					else if (common::SwitchType::rotary == interface_it_switch.type)
+					{
+						// for multi-way switches if one of the poles is One then others must be Zero
+						// we only want to use the pole that has changed to one
+						if (state == 1)
+						{
+							aircraft_model.push_switch_change(overhead_zcockpit_switches[nswitch]);
+						}
+					}
+					LOG() << "Switch Change: nswitch " << nswitch << " value " << switch_value;
+				}
 			}
 
 
