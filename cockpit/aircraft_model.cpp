@@ -348,8 +348,17 @@ namespace zcockpit::cockpit {
 						if (std::holds_alternative<ZCockpitSwitchData>(z_cockpit_data[ac_param.short_name])) {
 							const ZCockpitSwitchData switch_data = std::get<ZCockpitSwitchData>(z_cockpit_data[ac_param.short_name]);
 							// record the xplane switch state
-							*(static_cast<int*>(switch_data.xplane_data)) = static_cast<int>(data);
-							LOG() << "Switch Data xplane in " << data_ref_strings[ac_param.short_name].dataref_name << " value " << data;
+							if(switch_data.hw_type == ZCockpitType::ZInt || switch_data.hw_type == ZCockpitType::ZBool) {
+								*(static_cast<int*>(switch_data.xplane_data)) = static_cast<int>(data);
+								LOG() << "Packet IN data: SwitchData  " << data_ref_strings[ac_param.short_name].dataref_name << " in data = " << data << " --> xplane_data = " << *(static_cast<int*>(switch_data.xplane_data)) ;
+							}
+							else if(switch_data.hw_type == ZCockpitType::ZFloat) {
+								*(static_cast<float*>(switch_data.xplane_data)) = data;
+								LOG() << "Packet IN data: SwitchData  " << data_ref_strings[ac_param.short_name].dataref_name << " in data = " << data << " --> xplane_data = " << *(static_cast<float*>(switch_data.xplane_data)) ;
+							}
+							else {
+								LOG() << "ERROR: Packet IN data: Type Conversion NOT Supported for SwitchData 'xplane_data' " << data_ref_strings[ac_param.short_name].dataref_name;
+							}
 						}
 						//
 						// Annunciators
@@ -472,18 +481,18 @@ namespace zcockpit::cockpit {
 									// record the xplane switch state
 									if (switch_data.hw_type == ZCockpitType::ZInt) {
 										*(static_cast<int*>(switch_data.xplane_data)) = static_cast<int>(data);
-										return std::string("Switch float = ") + std::to_string(data);
+										return std::string("Switch float to Int = ") + std::to_string(data) + " to " + std::to_string(static_cast<int>(data));
 									}
 									else if(DataRefName::landing_gear == ac_param.short_name) {
 										// Landing Gear needs to be scaled by 2.0  -- up=0, off=0.5, dn=1.0	-->	goes to up=0, off=1, dn=2
 										const float scaled_data = data * 2.0;
 										*(static_cast<int*>(switch_data.xplane_data)) = static_cast<int>(scaled_data);
-										return std::string("Switch float = ") + std::to_string(data) + " scaled to " + std::to_string(scaled_data);
+										return std::string("Switch float scaled  = ") + std::to_string(data) + " scaled to " + std::to_string(scaled_data);
 
 									}
 									else if (switch_data.hw_type == ZCockpitType::ZFloat) {
 										*static_cast<float*>(switch_data.xplane_data) = data;
-										LOG() << "Float Data " << data_ref_strings[ac_param.short_name].dataref_name << " = " << data;
+										LOG() << "Confirmation Float Data " << data_ref_strings[ac_param.short_name].dataref_name << " = " << data;
 										return std::string("Switch float = ") + std::to_string(data);
 
 									}
