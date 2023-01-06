@@ -188,9 +188,9 @@ namespace zcockpit::cockpit {
 			float xplane_value = *(static_cast<float*>(switch_data.xplane_data));
 			const float float_hw_value = sw_data.float_hw_value;
 			if(sw_data.switch_type == SwitchType::encoder) {
-				if (dataref_name == DataRefName::n1_set_adjust) {
-					LOG() << "N1 set xp = " << xplane_value << " hw = " << float_hw_value;
-				}
+				//if (dataref_name == DataRefName::spd_ref_adjust) {
+				//	LOG() << "spdref xp = " << xplane_value << " hw = " << float_hw_value;
+				//}
 
 				xplane_value += float_hw_value;
 				if(xplane_value > operation->max_value) {
@@ -654,7 +654,7 @@ namespace zcockpit::cockpit {
 	void AircraftModel::push_switch_change(hardware::ZcockpitSwitch switch_data)
 	{
 		pending_switch_changes.push(switch_data);
-		LOG() << "pushed switch change " << get_data_ref_string(switch_data.dataref_name) << " value " << switch_data.int_hw_value << " or " << switch_data.float_hw_value;
+		//LOG() << "pushed switch change " << get_data_ref_string(switch_data.dataref_name) << " value " << switch_data.int_hw_value << " or " << switch_data.float_hw_value;
 	}
 
 	std::vector<packet_data_t> AircraftModel::update_switch_values()
@@ -666,7 +666,7 @@ namespace zcockpit::cockpit {
 				if(maybe_switch_data) {
 					hardware::ZcockpitSwitch switch_data = *maybe_switch_data;
 
-					LOG() << "Pop pending Switch changes " << get_data_ref_string(switch_data.dataref_name) << " value " << switch_data.int_hw_value << " or " << switch_data.float_hw_value;
+					//LOG() << "Pop pending Switch changes " << get_data_ref_string(switch_data.dataref_name) << " value " << switch_data.int_hw_value << " or " << switch_data.float_hw_value;
 					auto commands = process_hw_switch(switch_data);
 					xplane_commands.insert(xplane_commands.end(), commands.begin(), commands.end());
 				}
