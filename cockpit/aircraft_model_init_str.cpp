@@ -41,12 +41,6 @@ namespace zcockpit::cockpit {
 		data_ref_strings[DataRefName::at_light_fo] = {"laminar/B738/push_button/at_light_fo", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::fms_light_fo] = {"laminar/B738/push_button/fms_light_fo", XplaneType::type_Float, !round_up};
 
-		data_ref_strings[DataRefName::gpws_test_pos] = {"laminar/B738/push_button/gpws_test_pos", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::gpws_flap_pos] = {"laminar/B738/toggle_switch/gpws_flap_pos", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::gpws_terr_pos] = {"laminar/B738/toggle_switch/gpws_terr_pos", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::gpws_gear_pos] = {"laminar/B738/toggle_switch/gpws_gear_pos", XplaneType::type_Float, !round_up};
-
-
 
 		data_ref_strings[DataRefName::rudder_trim] = {"sim/flightmodel2/controls/rudder_trim", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::aileron_trim] = {"sim/flightmodel2/controls/aileron_trim", XplaneType::type_Float, !round_up};

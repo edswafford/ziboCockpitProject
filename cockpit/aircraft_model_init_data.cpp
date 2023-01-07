@@ -339,11 +339,6 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::ac_tnsbus1_status] = ZCockpitInData(&z737InData.ac_tnsbus1_status, ZCockpitType::ZBool);
 		z_cockpit_data[DataRefName::ac_tnsbus2_status] = ZCockpitInData(&z737InData.ac_tnsbus2_status, ZCockpitType::ZBool);
 
-		z_cockpit_data[DataRefName::gpws_test_pos] = ZCockpitInData(&xplane_switch_data.gpws_test_pos,ZCockpitType::ZInt);
-		z_cockpit_data[DataRefName::gpws_flap_pos] = ZCockpitInData(&xplane_switch_data.gpws_flap_pos,ZCockpitType::ZInt);
-		z_cockpit_data[DataRefName::gpws_terr_pos] = ZCockpitInData(&xplane_switch_data.gpws_terr_pos,ZCockpitType::ZInt);
-		z_cockpit_data[DataRefName::gpws_gear_pos] = ZCockpitInData(&xplane_switch_data.gpws_gear_pos,ZCockpitType::ZInt);
-
 	}
 
 

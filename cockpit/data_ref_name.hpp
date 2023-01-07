@@ -284,10 +284,6 @@ namespace zcockpit::cockpit {
 		fire_bell_light2_pb,
 
 		gpws_test,
-		gpws_test_pos,
-		gpws_flap_pos,
-		gpws_terr_pos, 
-		gpws_gear_pos,
 
 		gpws_flap,
 		gpws_terr,
