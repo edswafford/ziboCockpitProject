@@ -121,8 +121,8 @@ namespace zcockpit::cockpit {
 		data_ref_strings[DataRefName::irs_left] = {"laminar/B738/toggle_switch/irs_left", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::irs_right] = {"laminar/B738/toggle_switch/irs_right", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::irs_dspl_sel] = {"laminar/B738/toggle_switch/irs_dspl_sel", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::starter1_pos] = {"laminar/B738/engine/starter1_pos", XplaneType::type_Int, !round_up};
-		data_ref_strings[DataRefName::starter2_pos] = {"laminar/B738/engine/starter2_pos", XplaneType::type_Int, !round_up};
+		data_ref_strings[DataRefName::starter1_pos] = {"laminar/B738/engine/starter1_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::starter2_pos] = {"laminar/B738/engine/starter2_pos", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::air_valve_manual] = {"laminar/B738/toggle_switch/air_valve_manual", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::flt_ctr_B_pos] = {"laminar/B738/switches/flt_ctr_B_pos", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::flt_ctr_A_pos] = {"laminar/B738/switches/flt_ctr_A_pos", XplaneType::type_Float, !round_up};

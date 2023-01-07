@@ -104,6 +104,7 @@ namespace zcockpit::cockpit::hardware
 		eng1_start_debounce = ENG_START_DEBOUNCE_COUNT;
 		eng2_start_debounce = ENG_START_DEBOUNCE_COUNT;
 
+		initialize_switches();
 	}
 
 	std::unique_ptr<ForwardOverheadIOCard> ForwardOverheadIOCard::create_iocard(AircraftModel& ac_model, const std::string& bus_address)
@@ -355,12 +356,12 @@ namespace zcockpit::cockpit::hardware
 		//
 		// Process Switches
 		//
-		LOG() << "Calling Forward";
+		//LOG() << "Calling Forward";
 //		process_master_card_inputs(constants::fwd_ovrHead_to_keycmd, constants::fwd_ovrhead_keycmd_size);
 
-		LOG() << "Calling Engine Start";
+		//LOG() << "Calling Engine Start";
 		process_master_card_inputs(engine_start_switches, NUMBER_OF_ENGINE_SWITCH_STATES);
-		LOG() << "Done forward";
+		//LOG() << "Done forward";
 
 		processOvrHead();
 

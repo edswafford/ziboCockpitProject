@@ -177,9 +177,12 @@ namespace zcockpit::cockpit::hardware
 					forward_overhead_iocard->processEncoders();
 
 					// update inputs
-					this->forward_overhead_iocard->fastProcessOvrHead();
+					forward_overhead_iocard->fastProcessOvrHead();
 
 				}
+				// update inputs
+				forward_overhead_iocard->fastProcessOvrHead();
+
 				// send outputs
 				forward_overhead_iocard->send_mastercard();
 			}
