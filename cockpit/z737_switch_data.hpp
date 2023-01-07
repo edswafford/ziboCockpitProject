@@ -104,6 +104,30 @@ namespace zcockpit::cockpit {
 		std::vector<float>  instrument_brightness{1.0};
 		float spd_ref_adjust{80.0};
 		float n1_set_adjust{1.0};
+		float air_valve_ctrl{0.0};
+		float dc_power{0.0};
+		float ac_power{0.0};
+		float l_pack_pos{0.0};
+		float r_pack_pos{0.0};
+		float isolation_valve_pos{0.0};
+		float position_light_pos{0.0};
+		float irs_left{0.0};
+		float irs_right{0.0};
+		float irs_dspl_sel{0.0};
+		float starter1_pos{0.0};
+		float starter2_pos{0.0};
+		float air_valve_manual{0.0};
+		float flt_ctr_B_pos{0.0};
+		float flt_ctr_A_pos{0.0};
+		float alt_flaps_ctrl{0.0};
+		float dspl_source{0.0};
+		float irs_source{0.0};
+		float vhf_nav_source{0.0};
+
+
+
+
+
 		int pushbutton_always_0{ 0 };
 	};
 
@@ -234,6 +258,29 @@ namespace zcockpit::cockpit {
 		SwitchCommands aileron_trim{2, std::vector<CommandRefName>{CommandRefName::aileron_trim_right, CommandRefName::aileron_trim_left}};
 
 		SwitchCommands n1_set_source{2, std::vector<CommandRefName>{CommandRefName::n1_set_source_right, CommandRefName::n1_set_source_left}};
+
+		SwitchCommands air_valve_ctrl{2, std::vector<CommandRefName>{CommandRefName::air_valve_ctrl_left, CommandRefName::air_valve_ctrl_right}};
+		SwitchCommands dc_power{2, std::vector<CommandRefName>{CommandRefName::dc_power_dn, CommandRefName::dc_power_up}};
+		SwitchCommands ac_power{2, std::vector<CommandRefName>{CommandRefName::ac_power_dn, CommandRefName::ac_power_up}};
+		SwitchCommands l_pack_pos{2, std::vector<CommandRefName>{CommandRefName::l_pack_dn, CommandRefName::l_pack_up}};
+		SwitchCommands r_pack_pos{2, std::vector<CommandRefName>{CommandRefName::r_pack_dn, CommandRefName::r_pack_up}};
+		SwitchCommands isolation_valve_pos{2, std::vector<CommandRefName>{CommandRefName::iso_valve_dn, CommandRefName::iso_valve_up}};
+		SwitchCommands position_light_pos{3, std::vector<CommandRefName>{CommandRefName::position_light_steady, CommandRefName::position_light_strobe, CommandRefName::position_light_off}};
+		SwitchCommands irs_left{2, std::vector<CommandRefName>{CommandRefName::irs_L_left, CommandRefName::irs_L_right}};
+		SwitchCommands irs_right{2, std::vector<CommandRefName>{CommandRefName::irs_R_left, CommandRefName::irs_R_right}};
+		SwitchCommands irs_dspl_sel{2, std::vector<CommandRefName>{CommandRefName::irs_dspl_sel_left, CommandRefName::irs_dspl_sel_right}};
+		SwitchCommands starter1_pos{4, std::vector<CommandRefName>{CommandRefName::eng1_start_off, CommandRefName::eng1_start_grd, CommandRefName::eng1_start_flt, CommandRefName::eng1_start_cont }};
+		SwitchCommands starter2_pos{4, std::vector<CommandRefName>{CommandRefName::eng2_start_off, CommandRefName::eng2_start_grd, CommandRefName::eng2_start_flt, CommandRefName::eng2_start_flt}};
+		SwitchCommands air_valve_manual{2, std::vector<CommandRefName>{CommandRefName::air_valve_manual_left, CommandRefName::air_valve_manual_right}};
+		SwitchCommands flt_ctr_B_pos{2, std::vector<CommandRefName>{CommandRefName::flt_ctr_B_up, CommandRefName::flt_ctr_B_dn}};
+		SwitchCommands flt_ctr_A_pos{2, std::vector<CommandRefName>{CommandRefName::flt_ctr_A_up, CommandRefName::flt_ctr_A_dn}};
+		SwitchCommands alt_flaps_ctrl{2, std::vector<CommandRefName>{CommandRefName::alt_flaps_ctrl_up, CommandRefName::alt_flaps_ctrl_dn}};
+		SwitchCommands dspl_source{2, std::vector<CommandRefName>{CommandRefName::dspl_source_left, CommandRefName::dspl_source_right}};
+		SwitchCommands irs_source{2, std::vector<CommandRefName>{CommandRefName::irs_source_left, CommandRefName::irs_source_right}};
+		SwitchCommands vhf_nav_source{2, std::vector<CommandRefName>{CommandRefName::vhf_nav_source_lft, CommandRefName::vhf_nav_source_rgt}};
+
+
+
 		
 	};
 

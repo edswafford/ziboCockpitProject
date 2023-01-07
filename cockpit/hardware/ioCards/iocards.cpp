@@ -1274,28 +1274,28 @@ namespace zcockpit::cockpit::hardware
 //		}
 //	}
 //
-//	#pragma optimize( "", off )  
-//	void IOCards::process_master_card_inputs(masterCard_input_state* switch_states[], int numberOfCmds, int card)
-//	{
-//		int* value;
-//		int retval;
-//		if (isOpen && isInitialized)
-//		{
-//			if ((card >= 0) && (card < MASTERCARDS))
-//			{
-//				for (auto i = 0; i < numberOfCmds; i++)
-//				{
-//					int input = switch_states[i]->input;
-//					if (inputs_old[input][card] != inputs[input][card])
-//					{
-//						switch_states[i]->has_changed = true;
-//						switch_states[i]->value = inputs[input][card];
-//					}
-//					inputs_old[input][card] = inputs[input][card];
-//				}
-//			}
-//		}
-//	}
+	#pragma optimize( "", off )  
+	void IOCards::process_master_card_inputs(masterCard_input_state* switch_states[], int numberOfCmds, int card)
+	{
+		int* value;
+		int retval;
+		if (is_okay)
+		{
+			if ((card >= 0) && (card < MASTERCARDS))
+			{
+				for (auto i = 0; i < numberOfCmds; i++)
+				{
+					int input = switch_states[i]->input;
+					if (inputs_old[input][card] != inputs[input][card])
+					{
+						switch_states[i]->has_changed = true;
+						switch_states[i]->value = inputs[input][card];
+					}
+					inputs_old[input][card] = inputs[input][card];
+				}
+			}
+		}
+	}
 	#pragma optimize( "", on )  
 
 	// fill output value for given output position on MASTERCARD

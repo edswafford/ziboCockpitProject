@@ -104,7 +104,7 @@ namespace zcockpit::cockpit::hardware
 		int mastercard_input(int input, int* value, int card = 0);
 		//void process_master_card_inputs(const OnOffKeyCommand keycmd[], int numberOfCmds, int card = 0);
 
-		//void process_master_card_inputs(masterCard_input_state* switch_states[], int numberOfCmds, int card = 0);
+		void process_master_card_inputs(masterCard_input_state* switch_states[], int numberOfCmds, int card = 0);
 
 		int mastercard_output(int output, int* value, int card = 0);
 		int mastercard_encoder(int input, double* value, double multiplier, double accelerator, int type = 2, int card = 0);

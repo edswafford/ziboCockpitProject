@@ -1,0 +1,185 @@
+data_ref_strings[DataRefName::wing_heat_pos] = {"laminar/B738/ice/wing_heat_pos", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::eng1_heat_pos] = {"laminar/B738/ice/eng1_heat_pos", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::eng2_heat_pos] = {"laminar/B738/ice/eng2_heat_pos", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::l_recirc_fan_pos] = {"laminar/B738/air/l_recirc_fan_pos", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::l_recirc_fan_pos] = {"laminar/B738/air/l_recirc_fan_pos", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::l_pack_pos] = {"laminar/B738/air/l_pack_pos", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::r_pack_pos] = {"laminar/B738/air/r_pack_pos", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::isolation_valve_pos] = {"laminar/B738/air/isolation_valve_pos", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::bleed_air_1_pos] = {"laminar/B738/toggle_switch/bleed_air_1_pos", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::bleed_air_2_pos] = {"laminar/B738/toggle_switch/bleed_air_2_pos", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::position_light_pos] = {"laminar/B738/toggle_switch/position_light_pos", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::irs_left] = {"laminar/B738/toggle_switch/irs_left", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::irs_right] = {"laminar/B738/toggle_switch/irs_right", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::irs_sys_dspl] = {"laminar/B738/toggle_switch/irs_sys_dspl", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::irs_sys_dspl] = {"laminar/B738/toggle_switch/irs_sys_dspl", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::pax_oxy_pos] = {"laminar/B738/one_way_switch/pax_oxy_pos", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::starter1_pos] = {"laminar/B738/engine/starter1_pos", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::starter2_pos] = {"laminar/B738/engine/starter2_pos", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::drive_disconnect1_pos] = {"laminar/B738/one_way_switch/drive_disconnect1_pos", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::drive_disconnect2_pos] = {"laminar/B738/one_way_switch/drive_disconnect2_pos", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::air_valve_ctrl] = {"laminar/B738/toggle_switch/air_valve_ctrl", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::air_valve_manual] = {"laminar/B738/toggle_switch/air_valve_manual", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::alt_flaps_pos] = {"laminar/B738/switches/alt_flaps_pos", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::flt_ctr_B_pos] = {"laminar/B738/switches/flt_ctr_B_pos", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::flt_ctr_A_cover_pos] = {"laminar/B738/switches/flt_ctr_A_cover_pos", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::alt_flaps_ctrl] = {"laminar/B738/toggle_switch/alt_flaps_ctrl", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::dspl_source] = {"laminar/B738/toggle_switch/dspl_source", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::irs_source] = {"laminar/B738/toggle_switch/irs_source", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::fmc_source] = {"laminar/B738/toggle_switch/fmc_source", XplaneType::type_Float, !round_up};
+data_ref_strings[DataRefName::vhf_nav_source] = {"laminar/B738/toggle_switch/vhf_nav_source", XplaneType::type_Float, !round_up};
+
+//command_ref_strings[CommandRefName::] = { "" };
+
+command_ref_strings[CommandRefName::wing_heat] = {"laminar/B738/toggle_switch/wing_heat"};
+command_ref_strings[CommandRefName::eng1_heat] = {"laminar/B738/toggle_switch/eng1_heat"};
+command_ref_strings[CommandRefName::eng2_heat] = {"laminar/B738/toggle_switch/eng2_heat"};
+command_ref_strings[CommandRefName::l_recirc_fan] = {"laminar/B738/toggle_switch/l_recirc_fan"};
+command_ref_strings[CommandRefName::r_recirc_fan] = {"laminar/B738/toggle_switch/r_recirc_fan"};
+command_ref_strings[CommandRefName::l_pack_dn] = {"laminar/B738/toggle_switch/l_pack_dn "};
+command_ref_strings[CommandRefName::l_pack_up] = {"laminar/B738/toggle_switch/l_pack_up"};
+command_ref_strings[CommandRefName::r_pack_dn] = {"laminar/B738/toggle_switch/r_pack_dn"};
+command_ref_strings[CommandRefName::r_pack_up] = {"laminar/B738/toggle_switch/r_pack_up"};
+command_ref_strings[CommandRefName::iso_valve_dn] = {"laminar/B738/toggle_switch/iso_valve_dn"};
+command_ref_strings[CommandRefName::iso_valve_up] = {"laminar/B738/toggle_switch/iso_valve_up"};
+command_ref_strings[CommandRefName::bleed_air_apu_pos] = {"laminar/B738/toggle_switch/bleed_air_apu_pos"};
+command_ref_strings[CommandRefName::bleed_air_apu_pos] = {"laminar/B738/toggle_switch/bleed_air_apu_pos"};
+command_ref_strings[CommandRefName::bleed_air_1] = {"laminar/B738/toggle_switch/bleed_air_1"};
+command_ref_strings[CommandRefName::bleed_air_2] = {"laminar/B738/toggle_switch/bleed_air_2"};
+command_ref_strings[CommandRefName::bleed_air_apu] = {"laminar/B738/toggle_switch/bleed_air_apu"};
+command_ref_strings[CommandRefName::bleed_trip_reset] = {"laminar/B738/push_button/bleed_trip_reset"};
+command_ref_strings[CommandRefName::position_light_steady] = {"laminar/B738/toggle_switch/position_light_steady"};
+command_ref_strings[CommandRefName::position_light_strobe] = {"laminar/B738/toggle_switch/position_light_strobe"};
+command_ref_strings[CommandRefName::position_light_off] = {"laminar/B738/toggle_switch/position_light_off"};
+command_ref_strings[CommandRefName::irs_L_left] = {"laminar/B738/toggle_switch/irs_L_left"};
+command_ref_strings[CommandRefName::irs_L_right] = {"laminar/B738/toggle_switch/irs_L_right"};
+command_ref_strings[CommandRefName::irs_R_left] = {"laminar/B738/toggle_switch/irs_R_left"};
+command_ref_strings[CommandRefName::irs_R_right] = {"laminar/B738/toggle_switch/irs_R_right"};
+command_ref_strings[CommandRefName::irs_sys_dspl] = {"laminar/B738/toggle_switch/irs_sys_dspl"};
+command_ref_strings[CommandRefName::irs_dspl_sel_left] = {"laminar/B738/toggle_switch/irs_dspl_sel_left"};
+command_ref_strings[CommandRefName::irs_dspl_sel_right] = {"laminar/B738/toggle_switch/irs_dspl_sel_right"};
+command_ref_strings[CommandRefName::pax_oxy_on] = {"laminar/B738/one_way_switch/pax_oxy_on"};
+command_ref_strings[CommandRefName::pax_oxy_norm] = {"laminar/B738/one_way_switch/pax_oxy_norm"};
+command_ref_strings[CommandRefName::eng1_start_off] = {"laminar/B738/rotary/eng1_start_off"};
+command_ref_strings[CommandRefName::eng1_start_grd] = {"laminar/B738/rotary/eng1_start_grd"};
+command_ref_strings[CommandRefName::eng1_start_flt] = {"laminar/B738/rotary/eng1_start_flt"};
+command_ref_strings[CommandRefName::eng1_start_cont] = {"laminar/B738/rotary/eng1_start_cont"};
+command_ref_strings[CommandRefName::eng2_start_off] = {"laminar/B738/rotary/eng2_start_off"};
+command_ref_strings[CommandRefName::eng2_start_grd] = {"laminar/B738/rotary/eng2_start_grd"};
+command_ref_strings[CommandRefName::eng2_start_flt] = {"laminar/B738/rotary/eng2_start_flt"};
+command_ref_strings[CommandRefName::eng2_start_flt] = {"laminar/B738/rotary/eng2_start_flt"};
+command_ref_strings[CommandRefName::drive_disconnect1] = {"laminar/B738/one_way_switch/drive_disconnect1"};
+command_ref_strings[CommandRefName::drive_disconnect1_off] = {"laminar/B738/one_way_switch/drive_disconnect1_off"};
+command_ref_strings[CommandRefName::drive_disconnect2] = {"laminar/B738/one_way_switch/drive_disconnect2"};
+command_ref_strings[CommandRefName::drive_disconnect2_off] = {"laminar/B738/one_way_switch/drive_disconnect2_off"};
+command_ref_strings[CommandRefName::air_valve_ctrl_right] = {"laminar/B738/toggle_switch/air_valve_ctrl_right"};
+command_ref_strings[CommandRefName::air_valve_ctrl_left] = {"laminar/B738/toggle_switch/air_valve_ctrl_left"};
+command_ref_strings[CommandRefName::air_valve_manual_left] = {"laminar/B738/toggle_switch/air_valve_manual_left"};
+command_ref_strings[CommandRefName::air_valve_manual_right] = {"laminar/B738/toggle_switch/air_valve_manual_right"};
+command_ref_strings[CommandRefName::alt_flaps] = {"laminar/B738/toggle_switch/alt_flaps"};
+command_ref_strings[CommandRefName::flt_ctr_B_up] = {"laminar/B738/toggle_switch/flt_ctr_B_up"};
+command_ref_strings[CommandRefName::flt_ctr_B_dn] = {"laminar/B738/toggle_switch/flt_ctr_B_dn"};
+command_ref_strings[CommandRefName::flt_ctr_A_up] = {"laminar/B738/toggle_switch/flt_ctr_A_up"};
+command_ref_strings[CommandRefName::flt_ctr_A_dn] = {"laminar/B738/toggle_switch/flt_ctr_A_dn"};
+command_ref_strings[CommandRefName::alt_flaps_ctrl_up] = {"laminar/B738/toggle_switch/alt_flaps_ctrl_up "};
+command_ref_strings[CommandRefName::alt_flaps_ctrl_dn] = {"laminar/B738/toggle_switch/alt_flaps_ctrl_dn"};
+command_ref_strings[CommandRefName::dspl_source_left] = {"laminar/B738/toggle_switch/dspl_source_left"};
+command_ref_strings[CommandRefName::dspl_source_right] = {"laminar/B738/toggle_switch/dspl_source_right"};
+command_ref_strings[CommandRefName::irs_source_left] = {"laminar/B738/toggle_switch/irs_source_left"};
+command_ref_strings[CommandRefName::irs_source_right] = {"laminar/B738/toggle_switch/irs_source_right"};
+command_ref_strings[CommandRefName::fmc_source_left] = {"laminar/B738/toggle_switch/fmc_source_left"};
+command_ref_strings[CommandRefName::fmc_source_right] = {"laminar/B738/toggle_switch/fmc_source_right"};
+command_ref_strings[CommandRefName::vhf_nav_source_lft] = {"laminar/B738/toggle_switch/vhf_nav_source_lft"};
+command_ref_strings[CommandRefName::vhf_nav_source_rgt] = {"laminar/B738/toggle_switch/vhf_nav_source_rgt"};
+
+
+
+
+
+
+air_valve_ctrl
+air_valve_ctrl_left
+air_valve_ctrl_right
+
+dc_power
+dc_power_dn
+dc_power_up
+
+ac_power
+ac_power_dn
+ac_power_up
+
+l_pack_pos
+l_pack_dn
+l_pack_up
+
+r_pack_pos
+r_pack_dn
+r_pack_up
+
+isolation_valve_pos
+iso_valve_dn
+iso_valve_up
+
+position_light_pos
+position_light_steady
+position_light_strobe
+position_light_off
+
+irs_left
+irs_L_left
+irs_L_right
+
+irs_right
+irs_R_left
+irs_R_right
+
+irs_dspl_sel
+irs_dspl_sel_left
+irs_dspl_sel_right
+
+starter1_pos
+eng1_start_off
+eng1_start_grd
+eng1_start_flt
+eng1_start_cont
+
+starter2_pos
+eng2_start_off
+eng2_start_grd
+eng2_start_flt
+eng2_start_flt
+
+
+air_valve_ctrl
+air_valve_ctrl_right
+air_valve_ctrl_left
+
+air_valve_manual
+air_valve_manual_left
+air_valve_manual_right
+
+flt_ctr_B_pos
+flt_ctr_B_up
+flt_ctr_B_dn
+
+flt_ctr_A_cover_pos
+flt_ctr_A_up
+flt_ctr_A_dn
+
+alt_flaps_ctrl
+alt_flaps_ctrl_up
+alt_flaps_ctrl_dn
+
+dspl_source
+dspl_source_left
+dspl_source_right
+
+irs_source
+irs_source_left
+irs_source_right
+
+vhf_nav_source
+vhf_nav_source_lft
+vhf_nav_source_rgt
+

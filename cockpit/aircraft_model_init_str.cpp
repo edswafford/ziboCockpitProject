@@ -111,14 +111,60 @@ namespace zcockpit::cockpit {
 		data_ref_strings[DataRefName::window_ovht_test] = { "laminar/B738/toggle_switch/window_ovht_test", XplaneType::type_Float, !round_up};		// dn=1 up=-1
 		data_ref_strings[DataRefName::capt_probes_pos] = { "laminar/B738/toggle_switch/capt_probes_pos", XplaneType::type_Float, !round_up};		// on=1 off=0
 		data_ref_strings[DataRefName::fo_probes_pos] = { "laminar/B738/toggle_switch/fo_probes_pos", XplaneType::type_Float, !round_up};			// on=1 off=0
-
 		data_ref_strings[DataRefName::main_pnl_du_capt] = {"laminar/B738/toggle_switch/main_pnl_du_capt", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::main_pnl_du_fo] = {"laminar/B738/toggle_switch/main_pnl_du_fo", XplaneType::type_Float, !round_up};
-
 		data_ref_strings[DataRefName::lower_du_capt] = {"laminar/B738/toggle_switch/lower_du_capt", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::lower_du_fo] = {"laminar/B738/toggle_switch/lower_du_fo", XplaneType::type_Float, !round_up};
-
 		data_ref_strings[DataRefName::n1_set_source] = { "laminar/B738/toggle_switch/n1_set_source", XplaneType::type_Float, !round_up};
+//NEW
+		data_ref_strings[DataRefName::air_valve_ctrl] = {"laminar/B738/toggle_switch/air_valve_ctrl", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::dc_power] = {"laminar/B738/knob/dc_power", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::ac_power] = {"laminar/B738/knob/ac_power", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::l_pack_pos] = {"laminar/B738/air/l_pack_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::r_pack_pos] = {"laminar/B738/air/r_pack_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::isolation_valve_pos] = {"laminar/B738/air/isolation_valve_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::position_light_pos] = {"laminar/B738/toggle_switch/position_light_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::irs_left] = {"laminar/B738/toggle_switch/irs_left", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::irs_right] = {"laminar/B738/toggle_switch/irs_right", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::irs_dspl_sel] = {"laminar/B738/toggle_switch/irs_dspl_sel", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::starter1_pos] = {"laminar/B738/engine/starter1_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::starter2_pos] = {"laminar/B738/engine/starter2_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::air_valve_manual] = {"laminar/B738/toggle_switch/air_valve_manual", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::flt_ctr_B_pos] = {"laminar/B738/switches/flt_ctr_B_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::flt_ctr_A_pos] = {"laminar/B738/switches/flt_ctr_A_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::alt_flaps_ctrl] = {"laminar/B738/toggle_switch/alt_flaps_ctrl", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::dspl_source] = {"laminar/B738/toggle_switch/dspl_source", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::irs_source] = {"laminar/B738/toggle_switch/irs_source", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::vhf_nav_source] = {"laminar/B738/toggle_switch/vhf_nav_source", XplaneType::type_Float, !round_up};
+
+
+
+//		data_ref_strings[DataRefName::spoiler_A_pos] = {"laminar/B738/switches/spoiler_A_pos", XplaneType::type_Float, !round_up};
+//		data_ref_strings[DataRefName::spoiler_B_pos] = {"laminar/B738/switches/spoiler_B_pos", XplaneType::type_Float, !round_up};
+//		data_ref_strings[DataRefName::wing_heat_pos] = {"laminar/B738/ice/wing_heat_pos", XplaneType::type_Float, !round_up};
+//		data_ref_strings[DataRefName::eng1_heat_pos] = {"laminar/B738/ice/eng1_heat_pos", XplaneType::type_Float, !round_up};
+//		data_ref_strings[DataRefName::eng2_heat_pos] = {"laminar/B738/ice/eng2_heat_pos", XplaneType::type_Float, !round_up};
+//		data_ref_strings[DataRefName::l_recirc_fan_pos] = {"laminar/B738/air/l_recirc_fan_pos", XplaneType::type_Float, !round_up};
+//		data_ref_strings[DataRefName::r_recirc_fan_pos] = {"laminar/B738/air/r_recirc_fan_pos", XplaneType::type_Float, !round_up};
+//		data_ref_strings[DataRefName::bleed_air_1_pos] = {"laminar/B738/toggle_switch/bleed_air_1_pos", XplaneType::type_Float, !round_up};
+//		data_ref_strings[DataRefName::bleed_air_2_pos] = {"laminar/B738/toggle_switch/bleed_air_2_pos", XplaneType::type_Float, !round_up};
+//		data_ref_strings[DataRefName::irs_sys_dspl] = {"laminar/B738/toggle_switch/irs_sys_dspl", XplaneType::type_Float, !round_up};
+//		data_ref_strings[DataRefName::pax_oxy_pos] = {"laminar/B738/one_way_switch/pax_oxy_pos", XplaneType::type_Float, !round_up};
+//		data_ref_strings[DataRefName::drive_disconnect1_pos] = {"laminar/B738/one_way_switch/drive_disconnect1_pos", XplaneType::type_Float, !round_up};
+//		data_ref_strings[DataRefName::drive_disconnect2_pos] = {"laminar/B738/one_way_switch/drive_disconnect2_pos", XplaneType::type_Float, !round_up};
+//		data_ref_strings[DataRefName::alt_flaps_pos] = {"laminar/B738/switches/alt_flaps_pos", XplaneType::type_Float, !round_up};
+
+
+		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
+		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
+		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
+		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
+		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
+
+
+
+
+
 
 
 
@@ -478,6 +524,79 @@ namespace zcockpit::cockpit {
 		command_ref_strings[CommandRefName::n1_set_source_left] = {"laminar/B738/toggle_switch/n1_set_source_left"};
 		command_ref_strings[CommandRefName::n1_set_source_right] = {"laminar/B738/toggle_switch/n1_set_source_right"};
 
+
+		command_ref_strings[CommandRefName::air_valve_ctrl_left] = { "laminar/B738/toggle_switch/air_valve_ctrl_left" };
+		command_ref_strings[CommandRefName::air_valve_ctrl_right] = { "laminar/B738/toggle_switch/air_valve_ctrl_right" };
+		command_ref_strings[CommandRefName::spoiler_A] = { "laminar/B738/toggle_switch/spoiler_A" };
+		command_ref_strings[CommandRefName::spoiler_B] = { "laminar/B738/toggle_switch/spoiler_B" };
+		command_ref_strings[CommandRefName::dc_power_dn] = { "laminar/B738/knob/dc_power_dn" };
+		command_ref_strings[CommandRefName::dc_power_up] = { "laminar/B738/knob/dc_power_up" };
+		command_ref_strings[CommandRefName::ac_power_dn] = { "laminar/B738/knob/ac_power_dn" };
+		command_ref_strings[CommandRefName::ac_power_up] = { "laminar/B738/knob/ac_power_up" };
+		command_ref_strings[CommandRefName::wing_heat] = {"laminar/B738/toggle_switch/wing_heat"};
+		command_ref_strings[CommandRefName::eng1_heat] = {"laminar/B738/toggle_switch/eng1_heat"};
+		command_ref_strings[CommandRefName::eng2_heat] = {"laminar/B738/toggle_switch/eng2_heat"};
+		command_ref_strings[CommandRefName::l_recirc_fan] = {"laminar/B738/toggle_switch/l_recirc_fan"};
+		command_ref_strings[CommandRefName::r_recirc_fan] = {"laminar/B738/toggle_switch/r_recirc_fan"};
+		command_ref_strings[CommandRefName::l_pack_dn] = {"laminar/B738/toggle_switch/l_pack_dn"};
+		command_ref_strings[CommandRefName::l_pack_up] = {"laminar/B738/toggle_switch/l_pack_up"};
+		command_ref_strings[CommandRefName::r_pack_dn] = {"laminar/B738/toggle_switch/r_pack_dn"};
+		command_ref_strings[CommandRefName::r_pack_up] = {"laminar/B738/toggle_switch/r_pack_up"};
+		command_ref_strings[CommandRefName::iso_valve_dn] = {"laminar/B738/toggle_switch/iso_valve_dn"};
+		command_ref_strings[CommandRefName::iso_valve_up] = {"laminar/B738/toggle_switch/iso_valve_up"};
+		command_ref_strings[CommandRefName::bleed_air_1] = {"laminar/B738/toggle_switch/bleed_air_1"};
+		command_ref_strings[CommandRefName::bleed_air_2] = {"laminar/B738/toggle_switch/bleed_air_2"};
+		command_ref_strings[CommandRefName::bleed_air_apu] = {"laminar/B738/toggle_switch/bleed_air_apu"};
+		command_ref_strings[CommandRefName::bleed_trip_reset] = {"laminar/B738/push_button/bleed_trip_reset"};
+		command_ref_strings[CommandRefName::position_light_steady] = {"laminar/B738/toggle_switch/position_light_steady"};
+		command_ref_strings[CommandRefName::position_light_strobe] = {"laminar/B738/toggle_switch/position_light_strobe"};
+		command_ref_strings[CommandRefName::position_light_off] = {"laminar/B738/toggle_switch/position_light_off"};
+		command_ref_strings[CommandRefName::irs_L_left] = {"laminar/B738/toggle_switch/irs_L_left"};
+		command_ref_strings[CommandRefName::irs_L_right] = {"laminar/B738/toggle_switch/irs_L_right"};
+		command_ref_strings[CommandRefName::irs_R_left] = {"laminar/B738/toggle_switch/irs_R_left"};
+		command_ref_strings[CommandRefName::irs_R_right] = {"laminar/B738/toggle_switch/irs_R_right"};
+		command_ref_strings[CommandRefName::irs_sys_dspl] = {"laminar/B738/toggle_switch/irs_sys_dspl"};
+		command_ref_strings[CommandRefName::irs_dspl_sel_left] = {"laminar/B738/toggle_switch/irs_dspl_sel_left"};
+		command_ref_strings[CommandRefName::irs_dspl_sel_right] = {"laminar/B738/toggle_switch/irs_dspl_sel_right"};
+		command_ref_strings[CommandRefName::pax_oxy_on] = {"laminar/B738/one_way_switch/pax_oxy_on"};
+		command_ref_strings[CommandRefName::pax_oxy_norm] = {"laminar/B738/one_way_switch/pax_oxy_norm"};
+		command_ref_strings[CommandRefName::eng1_start_off] = {"laminar/B738/rotary/eng1_start_off"};
+		command_ref_strings[CommandRefName::eng1_start_grd] = {"laminar/B738/rotary/eng1_start_grd"};
+		command_ref_strings[CommandRefName::eng1_start_flt] = {"laminar/B738/rotary/eng1_start_flt"};
+		command_ref_strings[CommandRefName::eng1_start_cont] = {"laminar/B738/rotary/eng1_start_cont"};
+		command_ref_strings[CommandRefName::eng2_start_off] = {"laminar/B738/rotary/eng2_start_off"};
+		command_ref_strings[CommandRefName::eng2_start_grd] = {"laminar/B738/rotary/eng2_start_grd"};
+		command_ref_strings[CommandRefName::eng2_start_flt] = {"laminar/B738/rotary/eng2_start_flt"};
+		command_ref_strings[CommandRefName::eng2_start_cont] = {"laminar/B738/rotary/eng2_start_cont"};
+		command_ref_strings[CommandRefName::drive_disconnect1] = {"laminar/B738/one_way_switch/drive_disconnect1"};
+		command_ref_strings[CommandRefName::drive_disconnect1_off] = {"laminar/B738/one_way_switch/drive_disconnect1_off"};
+		command_ref_strings[CommandRefName::drive_disconnect2] = {"laminar/B738/one_way_switch/drive_disconnect2"};
+		command_ref_strings[CommandRefName::drive_disconnect2_off] = {"laminar/B738/one_way_switch/drive_disconnect2_off"};
+		command_ref_strings[CommandRefName::air_valve_manual_left] = {"laminar/B738/toggle_switch/air_valve_manual_left"};
+		command_ref_strings[CommandRefName::air_valve_manual_right] = {"laminar/B738/toggle_switch/air_valve_manual_right"};
+		command_ref_strings[CommandRefName::alt_flaps] = {"laminar/B738/toggle_switch/alt_flaps"};
+		command_ref_strings[CommandRefName::flt_ctr_B_up] = {"laminar/B738/toggle_switch/flt_ctr_B_up"};
+		command_ref_strings[CommandRefName::flt_ctr_B_dn] = {"laminar/B738/toggle_switch/flt_ctr_B_dn"};
+		command_ref_strings[CommandRefName::flt_ctr_A_up] = {"laminar/B738/toggle_switch/flt_ctr_A_up"};
+		command_ref_strings[CommandRefName::flt_ctr_A_dn] = {"laminar/B738/toggle_switch/flt_ctr_A_dn"};
+		command_ref_strings[CommandRefName::alt_flaps_ctrl_up] = {"laminar/B738/toggle_switch/alt_flaps_ctrl_up"};
+		command_ref_strings[CommandRefName::alt_flaps_ctrl_dn] = {"laminar/B738/toggle_switch/alt_flaps_ctrl_dn"};
+		command_ref_strings[CommandRefName::dspl_source_left] = {"laminar/B738/toggle_switch/dspl_source_left"};
+		command_ref_strings[CommandRefName::dspl_source_right] = {"laminar/B738/toggle_switch/dspl_source_right"};
+		command_ref_strings[CommandRefName::irs_source_left] = {"laminar/B738/toggle_switch/irs_source_left"};
+		command_ref_strings[CommandRefName::irs_source_right] = {"laminar/B738/toggle_switch/irs_source_right"};
+		command_ref_strings[CommandRefName::vhf_nav_source_lft] = {"laminar/B738/toggle_switch/vhf_nav_source_lft"};
+		command_ref_strings[CommandRefName::vhf_nav_source_rgt] = {"laminar/B738/toggle_switch/vhf_nav_source_rgt"};
+
+
+
+
+
+
+		//command_ref_strings[CommandRefName::] = { "" };
+		//command_ref_strings[CommandRefName::] = { "" };
+		//command_ref_strings[CommandRefName::] = { "" };
+		//command_ref_strings[CommandRefName::] = { "" };
 		//command_ref_strings[CommandRefName::] = {""};
 
 
