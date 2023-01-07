@@ -107,8 +107,8 @@ namespace zcockpit::cockpit {
 		float irs_left{0.0};
 		float irs_right{0.0};
 		float irs_dspl_sel{0.0};
-		float starter1_pos{0.0};
-		float starter2_pos{0.0};
+		int starter1_pos{0};
+		int starter2_pos{0};
 		float air_valve_manual{0.0};
 		float flt_ctr_B_pos{0.0};
 		float flt_ctr_A_pos{0.0};

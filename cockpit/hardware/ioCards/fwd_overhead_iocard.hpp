@@ -7,17 +7,15 @@
 namespace zcockpit::cockpit::hardware
 {
 
-	const int NUMBER_OF_ENGINE_SWITCH_STATES = 6;
-	const int ENG_START_DEBOUNCE_COUNT = 1;
-	const int NUMBER_OF_ALTITUDE_DIGITS = 5;
+	constexpr int NUMBER_OF_ENGINE_SWITCH_STATES = 6;
+	constexpr int ENG_START_DEBOUNCE_COUNT = 1;
+	constexpr int NUMBER_OF_ALTITUDE_DIGITS = 5;
 
-	enum EngineStartStates
-	{
-		GND,
-		OFF,
-		CONT,
-		FLT,
-	};
+	constexpr int GND = 0;
+	constexpr int OFF = 1;
+	constexpr int CONT = 2;
+	constexpr int FLT = 3;
+;
 
 	class ForwardOverheadIOCard : public IOCards
 	{
@@ -48,6 +46,9 @@ namespace zcockpit::cockpit::hardware
 		static bool is_running(){return running;}
 		static std::string get_bus_addr(){return iocard_bus_addr;}
 	private:
+
+		void initialize_switches();
+
 		AircraftModel& aircraft_model;
 
 		static std::string iocard_bus_addr;
@@ -133,7 +134,10 @@ namespace zcockpit::cockpit::hardware
 		masterCard_input_state* engine_start_switches[NUMBER_OF_ENGINE_SWITCH_STATES];
 		int eng1_start_debounce;
 		int eng2_start_debounce;
-		EngineStartStates engine1_state;
-		EngineStartStates engine2_state;
+		int engine1_state{OFF};
+		int engine2_state{OFF};
+
+		ZcockpitSwitch iocard_fwd_overhead_zcockpit_switches[MASTERCARD_INPUT_SIZE]{};
+
 	};
 }

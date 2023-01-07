@@ -9,7 +9,6 @@ namespace zcockpit::cockpit::hardware
 	class MipIOCard : public IOCards
 	{
 	public:
-		static constexpr int MIP_SW_SIZE = 72;
 
 		MipIOCard() = delete;
 		explicit MipIOCard(AircraftModel& ac_model, const std::string& device_bus_addr);
@@ -28,7 +27,7 @@ namespace zcockpit::cockpit::hardware
 		static std::string iocard_bus_addr;
 		static bool running;
 
-		ZcockpitSwitch iocard_mip_zcockpit_switches[MIP_SW_SIZE]{};
+		ZcockpitSwitch iocard_mip_zcockpit_switches[MASTERCARD_INPUT_SIZE]{};
 
 
 		// Capt Main Panel DUs

@@ -38,6 +38,8 @@ namespace zcockpit::cockpit::hardware
 	{
 	public:
 
+		static constexpr int MASTERCARD_INPUT_SIZE = 72;
+
 		static constexpr int MAX_IOCARDS = 10;
 		static std::string devices;
 		static std::string mip_bus_addr;

@@ -103,8 +103,7 @@ namespace zcockpit::cockpit::hardware
 
 		eng1_start_debounce = ENG_START_DEBOUNCE_COUNT;
 		eng2_start_debounce = ENG_START_DEBOUNCE_COUNT;
-		engine1_state = OFF;
-		engine2_state = OFF;
+
 	}
 
 	std::unique_ptr<ForwardOverheadIOCard> ForwardOverheadIOCard::create_iocard(AircraftModel& ac_model, const std::string& bus_address)
@@ -331,6 +330,21 @@ namespace zcockpit::cockpit::hardware
 		//}
 	}
 
+	void ForwardOverheadIOCard::initialize_switches()
+	{
+		iocard_fwd_overhead_zcockpit_switches[0]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary, GND);
+		iocard_fwd_overhead_zcockpit_switches[1]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary, OFF);
+		iocard_fwd_overhead_zcockpit_switches[2]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary, CONT);
+		iocard_fwd_overhead_zcockpit_switches[3]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary, FLT);
+
+		iocard_fwd_overhead_zcockpit_switches[4]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary, GND);
+		iocard_fwd_overhead_zcockpit_switches[5]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary, OFF);
+		iocard_fwd_overhead_zcockpit_switches[6]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary, CONT);
+		iocard_fwd_overhead_zcockpit_switches[7]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary, FLT);
+
+
+	}
+
 	void ForwardOverheadIOCard::fastProcessOvrHead()
 	{
 		const unsigned char pwr = aircraft_model.z738_ac_power_is_on()? 1 : 0;
@@ -404,26 +418,31 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(eng1_start_debounce <= 0)
 			{
-	//			if(Ifly737::shareMemSDK->Engine_1_Start_Switch_Status != engine1_state)
+
+				auto starter_1 = static_cast<int*>(aircraft_model.get_z_cockpit_switch_data(DataRefName::starter1_pos));
+
+				if(starter_1 != nullptr && *starter_1 != engine1_state)
 				{
-					//switch(engine1_state)
-					//{
-					//	case GND:
-					//	sendMessageInt(KEY_COMMAND_ENGAPU_ENG_1_START_POS1, 0);
-					//		break;
+					switch(engine1_state)
+					{
+						case GND:
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[0]);
+							break;
 
-					//	case OFF:
-					//	sendMessageInt(KEY_COMMAND_ENGAPU_ENG_1_START_POS2, 0);
-					//		break;
+						case OFF:
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[1]);
+							break;
 
-					//	case CONT:
-					//	sendMessageInt(KEY_COMMAND_ENGAPU_ENG_1_START_POS3, 0);
-					//		break;
+						case CONT:
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[2]);
+							break;
 
-					//	case FLT:
-					//	sendMessageInt(KEY_COMMAND_ENGAPU_ENG_1_START_POS4, 0);
-					//		break;
-					//}
+						case FLT:
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[3]);
+							break;
+						default:
+							break;
+					}
 				}
 			}
 			else

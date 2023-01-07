@@ -118,6 +118,15 @@ namespace zcockpit::cockpit {
 		Z737SwitchCmd z737SwitchCmd{};
 		Z737SwitchValue z737SwitchValue{};
 
+		void* get_z_cockpit_switch_data(DataRefName dataref_name)
+		{
+			if (std::holds_alternative<ZCockpitSwitchData>(z_cockpit_data[dataref_name])) 
+			{
+				const ZCockpitSwitchData switch_data = std::get<ZCockpitSwitchData>(z_cockpit_data[dataref_name]);
+				return switch_data.xplane_data;
+			}
+			return nullptr;
+		}
 	private:
 		bool z738_available{ false };
 
