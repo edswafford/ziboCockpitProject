@@ -90,7 +90,7 @@ namespace zcockpit::cockpit {
 			if(switch_data.switch_type == common::SwitchType::multiposition) {
 				
 			}
-			else if(commands->size == 2 || switch_data.switch_type == common::SwitchType::spring_loaded) {
+			else if(commands->size >= 2 || switch_data.switch_type == common::SwitchType::spring_loaded) {
 				int direction = 1;
 				CommandRefName command_ref_name = commands->names[0];
 				const auto cmd_ref_string = get_cmd_ref_string(command_ref_name);
