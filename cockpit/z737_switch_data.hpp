@@ -89,14 +89,7 @@ namespace zcockpit::cockpit {
 		int ap_light_fo{0};
 		int at_light_fo{0};
 		int fms_light_fo{0};
-		int gpws_test{0};
-		int gpws_test_pos{0};
-		int gpws_flap{0};
-		int gpws_flap_pos{0};
-		int gpws_terr{0};
-		int gpws_terr_pos{0}; 
-		int gpws_gear{0};
-		int gpws_gear_pos{0};
+
 		int n1_set_source{0};
 
 		float rudder_trim{0.0};

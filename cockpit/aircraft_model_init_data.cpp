@@ -80,10 +80,10 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::lower_du_capt] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.lower_du_capt,				&z737SwitchCmd.lower_du_capt);
 		z_cockpit_data[DataRefName::lower_du_fo] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.lower_du_fo,				&z737SwitchValue.lower_du_fo, OperationType::Value);
 		
-		z_cockpit_data[DataRefName::gpws_test] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.gpws_test,				&z737SwitchCmd.gpws_test);
-		z_cockpit_data[DataRefName::gpws_flap] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.gpws_flap,				&z737SwitchCmd.gpws_flap);
-		z_cockpit_data[DataRefName::gpws_terr] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.gpws_terr,				&z737SwitchCmd.gpws_terr);
-		z_cockpit_data[DataRefName::gpws_gear] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.gpws_gear,				&z737SwitchCmd.gpws_gear);
+		z_cockpit_data[DataRefName::gpws_test] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.pushbutton_always_0,				&z737SwitchCmd.gpws_test);
+		z_cockpit_data[DataRefName::gpws_flap] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.pushbutton_always_0,				&z737SwitchCmd.gpws_flap);
+		z_cockpit_data[DataRefName::gpws_terr] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.pushbutton_always_0,				&z737SwitchCmd.gpws_terr);
+		z_cockpit_data[DataRefName::gpws_gear] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.pushbutton_always_0,				&z737SwitchCmd.gpws_gear);
 
 
 

@@ -1277,8 +1277,6 @@ namespace zcockpit::cockpit::hardware
 	#pragma optimize( "", off )  
 	void IOCards::process_master_card_inputs(masterCard_input_state* switch_states[], int numberOfCmds, int card)
 	{
-		int* value;
-		int retval;
 		if (is_okay)
 		{
 			if ((card >= 0) && (card < MASTERCARDS))
