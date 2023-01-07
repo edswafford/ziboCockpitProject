@@ -121,7 +121,7 @@ namespace zcockpit::cockpit {
 
 
 
-		int pushbutton_always_0{ 0 };
+		int always_0{ 0 };
 	};
 
 
