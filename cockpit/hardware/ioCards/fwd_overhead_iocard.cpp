@@ -386,28 +386,28 @@ namespace zcockpit::cockpit::hardware
 				// GND
 				mag_eng1_start = pwr != 0 ? 1 : 0;
 				engine1_state = GND;
-				LOG() << "Starter 2 = GND";
+				LOG() << "Starter 1 = GND";
 			}
 			else if(eng1_start_gnd.value == 0 && eng1_start_cont.value == 0 && eng1_start_flt.value == 0)
 			{
 				// OFF
 				mag_eng1_start = 0;
 				engine1_state = OFF;
-				LOG() << "Starter 2 = OFF";
+				LOG() << "Starter 1 = OFF";
 			}
 			else if(eng1_start_gnd.value == 0 && eng1_start_cont.value == 1 && eng1_start_flt.value == 0)
 			{
 				// CONT
 				mag_eng1_start = 0;
 				engine1_state = CONT;
-				LOG() << "Starter 2 = CONT";
+				LOG() << "Starter 1 = CONT";
 			}
 			else if(eng1_start_gnd.value == 0 && eng1_start_flt.value == 1)
 			{
 				// FLT
 				mag_eng1_start = 0;
 				engine1_state = FLT;
-				LOG() << "Starter 2 = FLT";
+				LOG() << "Starter 1 = FLT";
 			}
 			else
 			{
@@ -426,28 +426,29 @@ namespace zcockpit::cockpit::hardware
 
 				const auto starter_1 = static_cast<int*>(aircraft_model.get_z_cockpit_switch_data(DataRefName::starter1_pos));
 
-				if(starter_1 != nullptr && *starter_1 != engine1_state)
+				if(starter_1 != nullptr && *starter_1 != engine1_state && old_engine1_state != engine1_state)
 				{
+					old_engine1_state = engine1_state;
 					switch(engine1_state)
 					{
 						case GND:
 							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[0]);
-							LOG() << "Sending Switch change Starter 2 = " << iocard_fwd_overhead_zcockpit_switches[0].int_hw_value;
+							LOG() << "Sending Switch change Starter 1 = " << iocard_fwd_overhead_zcockpit_switches[0].int_hw_value;
 							break;
 
 						case OFF:
 							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[1]);
-							LOG() << "Sending Switch change Starter 2 = " << iocard_fwd_overhead_zcockpit_switches[1].int_hw_value;
+							LOG() << "Sending Switch change Starter 1 = " << iocard_fwd_overhead_zcockpit_switches[1].int_hw_value;
 							break;
 
 						case CONT:
 							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[2]);
-							LOG() << "Sending Switch change Starter 2 = " << iocard_fwd_overhead_zcockpit_switches[2].int_hw_value;
+							LOG() << "Sending Switch change Starter 1 = " << iocard_fwd_overhead_zcockpit_switches[2].int_hw_value;
 							break;
 
 						case FLT:
 							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[3]);
-							LOG() << "Sending Switch change Starter 2 = " << iocard_fwd_overhead_zcockpit_switches[3].int_hw_value;
+							LOG() << "Sending Switch change Starter 1 = " << iocard_fwd_overhead_zcockpit_switches[3].int_hw_value;
 							break;
 						default:
 							LOG() << "ERROR: invalid starter 1 state " << engine1_state;

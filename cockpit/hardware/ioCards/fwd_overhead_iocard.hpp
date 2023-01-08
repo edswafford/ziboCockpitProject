@@ -134,9 +134,10 @@ namespace zcockpit::cockpit::hardware
 		masterCard_input_state* engine_start_switches[NUMBER_OF_ENGINE_SWITCH_STATES];
 		int eng1_start_debounce;
 		int eng2_start_debounce;
-		int engine1_state{OFF};
-		int engine2_state{OFF};
-
+		int engine1_state{-1};
+		int old_engine1_state{ -1 };
+		int engine2_state{-1};
+		int old_engine2_state{ -1 };
 		ZcockpitSwitch iocard_fwd_overhead_zcockpit_switches[MASTERCARD_INPUT_SIZE]{};
 
 	};
