@@ -554,14 +554,13 @@ namespace zcockpit::cockpit {
 		command_ref_strings[CommandRefName::irs_dspl_sel_right] = {"laminar/B738/toggle_switch/irs_dspl_sel_right"};
 		command_ref_strings[CommandRefName::pax_oxy_on] = {"laminar/B738/one_way_switch/pax_oxy_on"};
 		command_ref_strings[CommandRefName::pax_oxy_norm] = {"laminar/B738/one_way_switch/pax_oxy_norm"};
-		command_ref_strings[CommandRefName::eng1_start_off] = {"laminar/B738/rotary/eng1_start_off"};
-		command_ref_strings[CommandRefName::eng1_start_grd] = {"laminar/B738/rotary/eng1_start_grd"};
-		command_ref_strings[CommandRefName::eng1_start_flt] = {"laminar/B738/rotary/eng1_start_flt"};
-		command_ref_strings[CommandRefName::eng1_start_cont] = {"laminar/B738/rotary/eng1_start_cont"};
-		command_ref_strings[CommandRefName::eng2_start_off] = {"laminar/B738/rotary/eng2_start_off"};
-		command_ref_strings[CommandRefName::eng2_start_grd] = {"laminar/B738/rotary/eng2_start_grd"};
-		command_ref_strings[CommandRefName::eng2_start_flt] = {"laminar/B738/rotary/eng2_start_flt"};
-		command_ref_strings[CommandRefName::eng2_start_cont] = {"laminar/B738/rotary/eng2_start_cont"};
+
+		command_ref_strings[CommandRefName::eng1_start_right] = {"laminar/B738/knob/eng1_start_right"};
+		command_ref_strings[CommandRefName::eng1_start_left] = {"laminar/B738/knob/eng1_start_left"};
+
+		command_ref_strings[CommandRefName::eng2_start_right] = {"laminar/B738/knob/eng2_start_right"};
+		command_ref_strings[CommandRefName::eng2_start_left] = {"laminar/B738/knob/eng2_start_left"};
+
 		command_ref_strings[CommandRefName::drive_disconnect1] = {"laminar/B738/one_way_switch/drive_disconnect1"};
 		command_ref_strings[CommandRefName::drive_disconnect1_off] = {"laminar/B738/one_way_switch/drive_disconnect1_off"};
 		command_ref_strings[CommandRefName::drive_disconnect2] = {"laminar/B738/one_way_switch/drive_disconnect2"};
