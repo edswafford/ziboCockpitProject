@@ -274,24 +274,24 @@ namespace zcockpit::cockpit::hardware
 		const InterfaceITSwitch InterfaceIT::mip_switches[] = {
 			{common::SwitchType::unused, 0, 0 }, // 0
 
-			{common::SwitchType::rotary, 0, XPLANE_SPD_REF_MODE_AUTO}, // 1
+			{common::SwitchType::rotary_2_commands, 0, XPLANE_SPD_REF_MODE_AUTO}, // 1
 
-			{common::SwitchType::rotary, 0, XPLANE_SPD_REF_MODE_VR }, // 2
-			{common::SwitchType::rotary, 0, XPLANE_SPD_REF_MODE_WT }, // 3
-			{common::SwitchType::rotary, 0, XPLANE_SPD_REF_MODE_VREF }, // 4
-			{common::SwitchType::rotary, 0, XPLANE_SPD_REF_MODE_BUG5 }, // 5
-			{common::SwitchType::rotary, 0, XPLANE_SPD_REF_MODE_SET }, // 6
-			{common::SwitchType::rotary, 0, XPLANE_SPD_REF_MODE_V1 }, // 7
+			{common::SwitchType::rotary_2_commands, 0, XPLANE_SPD_REF_MODE_VR }, // 2
+			{common::SwitchType::rotary_2_commands, 0, XPLANE_SPD_REF_MODE_WT }, // 3
+			{common::SwitchType::rotary_2_commands, 0, XPLANE_SPD_REF_MODE_VREF }, // 4
+			{common::SwitchType::rotary_2_commands, 0, XPLANE_SPD_REF_MODE_BUG5 }, // 5
+			{common::SwitchType::rotary_2_commands, 0, XPLANE_SPD_REF_MODE_SET }, // 6
+			{common::SwitchType::rotary_2_commands, 0, XPLANE_SPD_REF_MODE_V1 }, // 7
 
 			{common::SwitchType::unused, 0, 0}, // 8
 
-			{common::SwitchType::multiposition, 0, XPLANE_AUTO_BRAKE_RTO }, // 9
-			{common::SwitchType::multiposition, 0, XPLANE_AUTO_BRAKE_OFF }, // 10
-			{common::SwitchType::multiposition, 0, XPLANE_AUTO_BRAKE_1 }, // 11
+			{common::SwitchType::rotary_multi_commands, 0, XPLANE_AUTO_BRAKE_RTO }, // 9
+			{common::SwitchType::rotary_multi_commands, 0, XPLANE_AUTO_BRAKE_OFF }, // 10
+			{common::SwitchType::rotary_multi_commands, 0, XPLANE_AUTO_BRAKE_1 }, // 11
 
-			{common::SwitchType::multiposition, 0, XPLANE_AUTO_BRAKE_2 }, // 12
-			{common::SwitchType::multiposition, 0, XPLANE_AUTO_BRAKE_3 }, // 13
-			{common::SwitchType::multiposition, 0, XPLANE_AUTO_BRAKE_MAX }, // 14
+			{common::SwitchType::rotary_multi_commands, 0, XPLANE_AUTO_BRAKE_2 }, // 12
+			{common::SwitchType::rotary_multi_commands, 0, XPLANE_AUTO_BRAKE_3 }, // 13
+			{common::SwitchType::rotary_multi_commands, 0, XPLANE_AUTO_BRAKE_MAX }, // 14
 
 			{common::SwitchType::spring_loaded, XPLANE_FUEL_FLOW_RATE, XPLANE_FUEL_FLOW_USED }, // 15
 			{common::SwitchType::spring_loaded, XPLANE_FUEL_FLOW_RATE, XPLANE_FUEL_FLOW_RESET }, // 16
@@ -308,10 +308,10 @@ namespace zcockpit::cockpit::hardware
 			{common::SwitchType::spring_loaded, 0, 1}, // KEY_COMMAND_AUTOMATICFLIGHT_AUTOPILOT_DIS_LIGHT }, // 25
 			{common::SwitchType::spring_loaded, 0, 1}, // KEY_COMMAND_AUTOMATICFLIGHT_AUTOTHROTTLE_DIS_LIGHT }, // 26
 			{common::SwitchType::spring_loaded, 0, 1}, // KEY_COMMAND_FMS_FMC_ALERT_LIGHT }, // 27
-			{common::SwitchType::multiposition, XPLANE_GEAR_LEVER_OFF, XPLANE_GEAR_LEVER_UP }, // 28
+			{common::SwitchType::rotary_multi_commands, XPLANE_GEAR_LEVER_OFF, XPLANE_GEAR_LEVER_UP }, // 28
 			{common::SwitchType::spring_loaded, 0, AP_DISENGAGE_LIGHT_TEST_2}, // KEY_COMMAND_AUTOMATICFLIGHT_DISENGAGE_LIGHT_TEST_2 }, // 29
 			{common::SwitchType::spring_loaded, 0, AP_DISENGAGE_LIGHT_TEST_1}, // KEY_COMMAND_AUTOMATICFLIGHT_DISENGAGE_LIGHT_TEST_1 }, // 30
-			{common::SwitchType::multiposition, XPLANE_GEAR_LEVER_OFF, XPLANE_GEAR_LEVER_DN}, // 31
+			{common::SwitchType::rotary_multi_commands, XPLANE_GEAR_LEVER_OFF, XPLANE_GEAR_LEVER_DN}, // 31
 			{common::SwitchType::unused, 0, 0 },  // 0 no connection   32
 		};
 
@@ -1052,7 +1052,7 @@ namespace zcockpit::cockpit::hardware
 					{
 						aircraft_model.push_switch_change(overhead_zcockpit_switches[nswitch]);
 					}
-					else if (common::SwitchType::rotary == interface_it_switch.type)
+					else if (common::SwitchType::rotary_2_commands == interface_it_switch.type)
 					{
 						// for multi-way switches if one of the poles is One then others must be Zero
 						// we only want to use the pole that has changed to one
@@ -1167,7 +1167,7 @@ namespace zcockpit::cockpit::hardware
 					{
 						aircraft_model.push_switch_change(mip_zcockpit_switches[nswitch]);
 					}
-					else if ((common::SwitchType::rotary == hw_switch.type || common::SwitchType::multiposition == hw_switch.type) && state == 1)
+					else if ((common::SwitchType::rotary_2_commands == hw_switch.type || common::SwitchType::rotary_multi_commands == hw_switch.type) && state == 1)
 					{
 						// for multi-way switches if one of the poles is One then others must be Zero
 						// we only want to use the pole that has changed to one

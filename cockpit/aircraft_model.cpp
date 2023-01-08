@@ -87,8 +87,8 @@ namespace zcockpit::cockpit {
 		if (commands != nullptr) {
 			const auto dataref_name = switch_data.dataref_name;
 
-			if(switch_data.switch_type == common::SwitchType::multiposition) {
-				
+			if(switch_data.switch_type == common::SwitchType::rotary_multi_commands) {
+				LOG() << "Error: unexpected switch type:  rotary_multi_commands";	
 			}
 			else if(commands->size >= 2 || switch_data.switch_type == common::SwitchType::spring_loaded) {
 				int direction = 1;
@@ -134,7 +134,7 @@ namespace zcockpit::cockpit {
 					}
 					//
 					// Rotary
-					else if (switch_data.switch_type == common::SwitchType::rotary) {
+					else if (switch_data.switch_type == common::SwitchType::rotary_2_commands) {
 						if (!rotary_switch_value.contains(dataref_name)) {
 							// initialize to current xplane value -- so we can sync to Hardware 
 							rotary_switch_value[dataref_name] = xplane_value;
@@ -272,7 +272,7 @@ namespace zcockpit::cockpit {
 					}
 				}
 			}
-			else if(sw_type == common::SwitchType::multiposition) {
+			else if(sw_type == common::SwitchType::rotary_multi_commands) {
 				if(int_hw_value < commands->size) {
 					const CommandRefName command_ref_name = commands->names[int_hw_value];
 					if(cmdref_to_ref_id.contains(command_ref_name)){
@@ -282,7 +282,7 @@ namespace zcockpit::cockpit {
 					}
 				}
 			}
-			else if(sw_type == common::SwitchType::rotary || sw_type == common::SwitchType::toggle || sw_type == common::SwitchType::spring_loaded)
+			else if(sw_type == common::SwitchType::rotary_2_commands || sw_type == common::SwitchType::toggle || sw_type == common::SwitchType::spring_loaded)
 			{
 				const int xplane_value = *(static_cast<int*>(switch_data.xplane_data));
 				if (int_hw_value != xplane_value || (sw_type == common::SwitchType::spring_loaded && int_hw_value == sw_data.spring_loaded_return_value)) {

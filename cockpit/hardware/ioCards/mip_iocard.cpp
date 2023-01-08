@@ -533,25 +533,25 @@ namespace zcockpit::cockpit::hardware
 
 
 	
-		iocard_mip_zcockpit_switches[0]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, XPLANE_OUTBOARD_PFD);
-		iocard_mip_zcockpit_switches[1]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, XPLANE_NORMAL);
-		iocard_mip_zcockpit_switches[2]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, XPLANE_ENG_PRIMARY);
-		iocard_mip_zcockpit_switches[3]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, XPLANE_PFD);
-		iocard_mip_zcockpit_switches[4]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary, XPLANE_MFD);
+		iocard_mip_zcockpit_switches[0]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary_2_commands, XPLANE_OUTBOARD_PFD);
+		iocard_mip_zcockpit_switches[1]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary_2_commands, XPLANE_NORMAL);
+		iocard_mip_zcockpit_switches[2]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary_2_commands, XPLANE_ENG_PRIMARY);
+		iocard_mip_zcockpit_switches[3]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary_2_commands, XPLANE_PFD);
+		iocard_mip_zcockpit_switches[4]  = ZcockpitSwitch(DataRefName::main_pnl_du_capt, common::SwitchType::rotary_2_commands, XPLANE_MFD);
 
-		iocard_mip_zcockpit_switches[5]  = ZcockpitSwitch(DataRefName::lower_du_capt, common::SwitchType::rotary, XPLANE_LOWER_ENG_PRIMARY);
-		iocard_mip_zcockpit_switches[6]  = ZcockpitSwitch(DataRefName::lower_du_capt, common::SwitchType::rotary, XPLANE_LOWER_PFD);
-		iocard_mip_zcockpit_switches[7]  = ZcockpitSwitch(DataRefName::lower_du_capt, common::SwitchType::rotary, XPLANE_LOWER_ND);
+		iocard_mip_zcockpit_switches[5]  = ZcockpitSwitch(DataRefName::lower_du_capt, common::SwitchType::rotary_2_commands, XPLANE_LOWER_ENG_PRIMARY);
+		iocard_mip_zcockpit_switches[6]  = ZcockpitSwitch(DataRefName::lower_du_capt, common::SwitchType::rotary_2_commands, XPLANE_LOWER_PFD);
+		iocard_mip_zcockpit_switches[7]  = ZcockpitSwitch(DataRefName::lower_du_capt, common::SwitchType::rotary_2_commands, XPLANE_LOWER_ND);
 
-		iocard_mip_zcockpit_switches[8]  = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, -1.0f);
-		iocard_mip_zcockpit_switches[9]  = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, 0.0f);
-		iocard_mip_zcockpit_switches[10] = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, 1.0f);
-		iocard_mip_zcockpit_switches[11] = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, 2.0f);
-		iocard_mip_zcockpit_switches[12] = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary, 3.0f);
+		iocard_mip_zcockpit_switches[8]  = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary_2_commands, -1.0f);
+		iocard_mip_zcockpit_switches[9]  = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary_2_commands, 0.0f);
+		iocard_mip_zcockpit_switches[10] = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary_2_commands, 1.0f);
+		iocard_mip_zcockpit_switches[11] = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary_2_commands, 2.0f);
+		iocard_mip_zcockpit_switches[12] = ZcockpitSwitch(DataRefName::main_pnl_du_fo, common::SwitchType::rotary_2_commands, 3.0f);
 
-		iocard_mip_zcockpit_switches[13] = ZcockpitSwitch(DataRefName::lower_du_fo, common::SwitchType::rotary,-1.0f);
-		iocard_mip_zcockpit_switches[14] = ZcockpitSwitch(DataRefName::lower_du_fo, common::SwitchType::rotary,0.0f);
-		iocard_mip_zcockpit_switches[15] = ZcockpitSwitch(DataRefName::lower_du_fo, common::SwitchType::rotary,1.0f);
+		iocard_mip_zcockpit_switches[13] = ZcockpitSwitch(DataRefName::lower_du_fo, common::SwitchType::rotary_2_commands,-1.0f);
+		iocard_mip_zcockpit_switches[14] = ZcockpitSwitch(DataRefName::lower_du_fo, common::SwitchType::rotary_2_commands,0.0f);
+		iocard_mip_zcockpit_switches[15] = ZcockpitSwitch(DataRefName::lower_du_fo, common::SwitchType::rotary_2_commands,1.0f);
 
 
 		// Pushbuttons
@@ -562,10 +562,10 @@ namespace zcockpit::cockpit::hardware
 		iocard_mip_zcockpit_switches[19] = ZcockpitSwitch(DataRefName::master_caution2_pb, common::SwitchType::pushbutton, 1);	// FO Master Caution
 		iocard_mip_zcockpit_switches[20] = ZcockpitSwitch(DataRefName::fo_six_pack_pb, common::SwitchType::pushbutton, 1);		// FO Six pack
 
-		iocard_mip_zcockpit_switches[21]  = ZcockpitSwitch(DataRefName::n1_set_source, common::SwitchType::rotary, XPLANE_ENG2_N1_SET);
-		iocard_mip_zcockpit_switches[22]  = ZcockpitSwitch(DataRefName::n1_set_source, common::SwitchType::rotary, XPLANE_ENG1_N1_SET);
-		iocard_mip_zcockpit_switches[23]  = ZcockpitSwitch(DataRefName::n1_set_source, common::SwitchType::rotary, XPLANE_AUTO_N1_SET);
-		iocard_mip_zcockpit_switches[24]  = ZcockpitSwitch(DataRefName::n1_set_source, common::SwitchType::rotary, XPLANE_BOTH_N1_SET);
+		iocard_mip_zcockpit_switches[21]  = ZcockpitSwitch(DataRefName::n1_set_source, common::SwitchType::rotary_2_commands, XPLANE_ENG2_N1_SET);
+		iocard_mip_zcockpit_switches[22]  = ZcockpitSwitch(DataRefName::n1_set_source, common::SwitchType::rotary_2_commands, XPLANE_ENG1_N1_SET);
+		iocard_mip_zcockpit_switches[23]  = ZcockpitSwitch(DataRefName::n1_set_source, common::SwitchType::rotary_2_commands, XPLANE_AUTO_N1_SET);
+		iocard_mip_zcockpit_switches[24]  = ZcockpitSwitch(DataRefName::n1_set_source, common::SwitchType::rotary_2_commands, XPLANE_BOTH_N1_SET);
 
 		iocard_mip_zcockpit_switches[25]  = ZcockpitSwitch(DataRefName::ap_light_fo, common::SwitchType::spring_loaded, 1);	// FO AP warning
 		iocard_mip_zcockpit_switches[26] = ZcockpitSwitch(DataRefName::ap_light_fo, common::SwitchType::spring_loaded, 0);	// FO AP warning
@@ -615,13 +615,13 @@ namespace zcockpit::cockpit::hardware
 		iocard_mip_zcockpit_switches[55]  = ZcockpitSwitch(DataRefName::gpws_gear, common::SwitchType::toggle, 1);
 		iocard_mip_zcockpit_switches[56] = ZcockpitSwitch(DataRefName::gpws_gear, common::SwitchType::toggle, 1);
 
-		//iocard_mip_zcockpit_switches[43]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, );
-		//iocard_mip_zcockpit_switches[44]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, );
-		//iocard_mip_zcockpit_switches[45]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, );
-		//iocard_mip_zcockpit_switches[46]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, );
-		//iocard_mip_zcockpit_switches[47]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, );
-		//iocard_mip_zcockpit_switches[48]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, );
-		//iocard_mip_zcockpit_switches[49]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary, );
+		//iocard_mip_zcockpit_switches[43]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary_2_commands, );
+		//iocard_mip_zcockpit_switches[44]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary_2_commands, );
+		//iocard_mip_zcockpit_switches[45]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary_2_commands, );
+		//iocard_mip_zcockpit_switches[46]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary_2_commands, );
+		//iocard_mip_zcockpit_switches[47]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary_2_commands, );
+		//iocard_mip_zcockpit_switches[48]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary_2_commands, );
+		//iocard_mip_zcockpit_switches[49]  = ZcockpitSwitch(DataRefName::, common::SwitchType::rotary_2_commands, );
 
 
 //		iocard_mip_zcockpit_switches[0]  = ZcockpitSwitch();										// no connection	0

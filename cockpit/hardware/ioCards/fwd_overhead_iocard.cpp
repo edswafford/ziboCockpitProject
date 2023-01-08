@@ -333,15 +333,15 @@ namespace zcockpit::cockpit::hardware
 
 	void ForwardOverheadIOCard::initialize_switches()
 	{
-		iocard_fwd_overhead_zcockpit_switches[0]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::multiposition, GND);
-		iocard_fwd_overhead_zcockpit_switches[1]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::multiposition, OFF);
-		iocard_fwd_overhead_zcockpit_switches[2]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::multiposition, CONT);
-		iocard_fwd_overhead_zcockpit_switches[3]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::multiposition, FLT);
+		iocard_fwd_overhead_zcockpit_switches[0]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, GND);
+		iocard_fwd_overhead_zcockpit_switches[1]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, OFF);
+		iocard_fwd_overhead_zcockpit_switches[2]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, CONT);
+		iocard_fwd_overhead_zcockpit_switches[3]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, FLT);
 
-		iocard_fwd_overhead_zcockpit_switches[4]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::multiposition, GND);
-		iocard_fwd_overhead_zcockpit_switches[5]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::multiposition, OFF);
-		iocard_fwd_overhead_zcockpit_switches[6]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::multiposition, CONT);
-		iocard_fwd_overhead_zcockpit_switches[7]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::multiposition, FLT);
+		iocard_fwd_overhead_zcockpit_switches[4]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary_multi_commands, GND);
+		iocard_fwd_overhead_zcockpit_switches[5]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary_multi_commands, OFF);
+		iocard_fwd_overhead_zcockpit_switches[6]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary_multi_commands, CONT);
+		iocard_fwd_overhead_zcockpit_switches[7]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary_multi_commands, FLT);
 
 
 	}
@@ -433,22 +433,18 @@ namespace zcockpit::cockpit::hardware
 					{
 						case GND:
 							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[0]);
-							LOG() << "Sending Switch change Starter 1 = " << iocard_fwd_overhead_zcockpit_switches[0].int_hw_value;
 							break;
 
 						case OFF:
 							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[1]);
-							LOG() << "Sending Switch change Starter 1 = " << iocard_fwd_overhead_zcockpit_switches[1].int_hw_value;
 							break;
 
 						case CONT:
 							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[2]);
-							LOG() << "Sending Switch change Starter 1 = " << iocard_fwd_overhead_zcockpit_switches[2].int_hw_value;
 							break;
 
 						case FLT:
 							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[3]);
-							LOG() << "Sending Switch change Starter 1 = " << iocard_fwd_overhead_zcockpit_switches[3].int_hw_value;
 							break;
 						default:
 							LOG() << "ERROR: invalid starter 1 state " << engine1_state;
@@ -518,26 +514,32 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(eng2_start_debounce <= 0)
 			{
-	//			if(Ifly737::shareMemSDK->Engine_2_Start_Switch_Status != engine2_state)
+				const auto starter_2 = static_cast<int*>(aircraft_model.get_z_cockpit_switch_data(DataRefName::starter2_pos));
+
+				if(starter_2 != nullptr && *starter_2 != engine2_state && old_engine2_state != engine2_state)
 				{
-					//switch(engine2_state)
-					//{
-					//	case GND:
-					//	sendMessageInt(KEY_COMMAND_ENGAPU_ENG_2_START_POS1, 0);
-					//		break;
+					old_engine2_state = engine2_state;
+					switch(engine2_state)
+					{
+						case GND:
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[4]);
+							break;
 
-					//	case OFF:
-					//	sendMessageInt(KEY_COMMAND_ENGAPU_ENG_2_START_POS2, 0);
-					//		break;
+						case OFF:
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[5]);
+							break;
 
-					//	case CONT:
-					//	sendMessageInt(KEY_COMMAND_ENGAPU_ENG_2_START_POS3, 0);
-					//		break;
+						case CONT:
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[6]);
+							break;
 
-					//	case FLT:
-					//	sendMessageInt(KEY_COMMAND_ENGAPU_ENG_2_START_POS4, 0);
-					//		break;
-					//}
+						case FLT:
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[7]);
+							break;
+						default:
+							LOG() << "ERROR: invalid starter 2 state " << engine2_state;
+							break;
+					}
 				}
 			}
 			else

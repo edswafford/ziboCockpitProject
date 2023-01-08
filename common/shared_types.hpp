@@ -33,12 +33,12 @@ namespace zcockpit::common
 	 * When HW returns to zero Sends Command End
 	 * For these XPlane switches Command Once does not work
 	 *
-	 * ROTARY
+	 * ROTARY -- 2 Commnads
 	 * Sends Command Once for each position change
 	 * XPlane only has two command for this switch (UP/DN)
 	 * TODO We need to sync the hw with xplane because the does get out of sync
 	 *
-	 * MULTIPOSITION
+	 * ROTARY MULTI-COMMANDS
 	 * Send Command once for each position
 	 * Xplane has command for each position
 	 * Note: This switch can also get out of sync
@@ -48,8 +48,8 @@ namespace zcockpit::common
 		toggle,
 		pushbutton,
 		spring_loaded,
-		rotary,				// xplane only supports up or down
-		multiposition,		// xplane supports all positions
+		rotary_2_commands,				// xplane only supports up or down
+		rotary_multi_commands,		// xplane supports all positions
 		encoder,
 		other
 	};
