@@ -87,7 +87,7 @@ laminar/B738/rotary/eng2_start_grd
 laminar/B738/rotary/eng2_start_flt
 laminar/B738/rotary/eng2_start_flt
 
-laminar/B738/one_way_switch/drive_disconnect1_pos 0= not disconnected 0ne way switch
+laminar/B738/one_way_switch/drive_disconnect1_pos 0= not disconnected 1=disconnected  --  0ne way switch
 laminar/B738/one_way_switch/drive_disconnect2_pos
 laminar/B738/one_way_switch/drive_disconnect1 once -- disconnects gen 
 laminar/B738/one_way_switch/drive_disconnect1_off  -- set switch back to off position

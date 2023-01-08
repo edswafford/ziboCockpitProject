@@ -133,20 +133,20 @@ namespace zcockpit::cockpit {
 
 
 
-//		data_ref_strings[DataRefName::spoiler_A_pos] = {"laminar/B738/switches/spoiler_A_pos", XplaneType::type_Float, !round_up};
-//		data_ref_strings[DataRefName::spoiler_B_pos] = {"laminar/B738/switches/spoiler_B_pos", XplaneType::type_Float, !round_up};
-//		data_ref_strings[DataRefName::wing_heat_pos] = {"laminar/B738/ice/wing_heat_pos", XplaneType::type_Float, !round_up};
-//		data_ref_strings[DataRefName::eng1_heat_pos] = {"laminar/B738/ice/eng1_heat_pos", XplaneType::type_Float, !round_up};
-//		data_ref_strings[DataRefName::eng2_heat_pos] = {"laminar/B738/ice/eng2_heat_pos", XplaneType::type_Float, !round_up};
-//		data_ref_strings[DataRefName::l_recirc_fan_pos] = {"laminar/B738/air/l_recirc_fan_pos", XplaneType::type_Float, !round_up};
-//		data_ref_strings[DataRefName::r_recirc_fan_pos] = {"laminar/B738/air/r_recirc_fan_pos", XplaneType::type_Float, !round_up};
-//		data_ref_strings[DataRefName::bleed_air_1_pos] = {"laminar/B738/toggle_switch/bleed_air_1_pos", XplaneType::type_Float, !round_up};
-//		data_ref_strings[DataRefName::bleed_air_2_pos] = {"laminar/B738/toggle_switch/bleed_air_2_pos", XplaneType::type_Float, !round_up};
-//		data_ref_strings[DataRefName::irs_sys_dspl] = {"laminar/B738/toggle_switch/irs_sys_dspl", XplaneType::type_Float, !round_up};
-//		data_ref_strings[DataRefName::pax_oxy_pos] = {"laminar/B738/one_way_switch/pax_oxy_pos", XplaneType::type_Float, !round_up};
-//		data_ref_strings[DataRefName::drive_disconnect1_pos] = {"laminar/B738/one_way_switch/drive_disconnect1_pos", XplaneType::type_Float, !round_up};
-//		data_ref_strings[DataRefName::drive_disconnect2_pos] = {"laminar/B738/one_way_switch/drive_disconnect2_pos", XplaneType::type_Float, !round_up};
-//		data_ref_strings[DataRefName::alt_flaps_pos] = {"laminar/B738/switches/alt_flaps_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::spoiler_A_pos] = {"laminar/B738/switches/spoiler_A_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::spoiler_B_pos] = {"laminar/B738/switches/spoiler_B_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::wing_heat_pos] = {"laminar/B738/ice/wing_heat_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::eng1_heat_pos] = {"laminar/B738/ice/eng1_heat_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::eng2_heat_pos] = {"laminar/B738/ice/eng2_heat_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::l_recirc_fan_pos] = {"laminar/B738/air/l_recirc_fan_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::r_recirc_fan_pos] = {"laminar/B738/air/r_recirc_fan_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::bleed_air_1_pos] = {"laminar/B738/toggle_switch/bleed_air_1_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::bleed_air_2_pos] = {"laminar/B738/toggle_switch/bleed_air_2_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::irs_sys_dspl] = {"laminar/B738/toggle_switch/irs_sys_dspl", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::pax_oxy_pos] = {"laminar/B738/one_way_switch/pax_oxy_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::drive_disconnect1_pos] = {"laminar/B738/one_way_switch/drive_disconnect1_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::drive_disconnect2_pos] = {"laminar/B738/one_way_switch/drive_disconnect2_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::alt_flaps_pos] = {"laminar/B738/switches/alt_flaps_pos", XplaneType::type_Float, !round_up};
 
 
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};

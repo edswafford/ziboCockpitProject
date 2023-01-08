@@ -331,6 +331,8 @@ namespace zcockpit::cockpit::hardware
 		//}
 	}
 
+	constexpr int GENERATOR_DISCONNECT_UP = 1;
+	constexpr int GENERATOR_DISCONNECT_DOWN = 0;
 	void ForwardOverheadIOCard::initialize_switches()
 	{
 		iocard_fwd_overhead_zcockpit_switches[0]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, GND);
@@ -343,6 +345,8 @@ namespace zcockpit::cockpit::hardware
 		iocard_fwd_overhead_zcockpit_switches[6]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary_multi_commands, CONT);
 		iocard_fwd_overhead_zcockpit_switches[7]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary_multi_commands, FLT);
 
+		iocard_fwd_overhead_zcockpit_switches[8]  = ZcockpitSwitch(DataRefName::drive_disconnect1_pos, common::SwitchType::toggle, GENERATOR_DISCONNECT_UP);
+		iocard_fwd_overhead_zcockpit_switches[9]  = ZcockpitSwitch(DataRefName::drive_disconnect1_pos, common::SwitchType::toggle, GENERATOR_DISCONNECT_DOWN);
 
 	}
 
@@ -542,10 +546,13 @@ namespace zcockpit::cockpit::hardware
 
 
 		// Elec Gen 1 Disconnect
-		const int DEBOUNCE_MAX_COUNT = 3;
+		constexpr int DEBOUNCE_MAX_COUNT = 3;
 		static int gen1Disconnect = 1;
 		static int gen1Counter = 0;
-		static KEY_COMMAND lastGen1KeyCmd = KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_1_DISCONNECT_UP;
+
+
+
+		static int lastGenCmd = GENERATOR_DISCONNECT_UP;
 
 
 	//	if(Ifly737::LeftEngRunning())
@@ -569,18 +576,18 @@ namespace zcockpit::cockpit::hardware
 
 					if(disconnect_1 == 1)
 					{
-						if(lastGen1KeyCmd != KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_1_DISCONNECT_UP)
+						if(lastGenCmd != GENERATOR_DISCONNECT_UP)
 						{
-							lastGen1KeyCmd = KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_1_DISCONNECT_UP;
-			//				sendMessageInt(KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_1_DISCONNECT_UP, 0);
+							lastGenCmd = GENERATOR_DISCONNECT_UP;
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[8]);
 						}
 					}
 					else
 					{
-						if(lastGen1KeyCmd != KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_1_DISCONNECT_DOWN)
+						if(lastGenCmd != GENERATOR_DISCONNECT_DOWN)
 						{
-							lastGen1KeyCmd = KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_1_DISCONNECT_DOWN;
-		//					sendMessageInt(KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_1_DISCONNECT_DOWN, 0);
+							lastGenCmd = GENERATOR_DISCONNECT_DOWN;
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[9]);
 						}
 					}
 				}

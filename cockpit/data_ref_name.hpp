@@ -316,6 +316,21 @@ namespace zcockpit::cockpit {
 		irs_source,
 		vhf_nav_source,
 
+		spoiler_A_pos,
+		spoiler_B_pos,
+		wing_heat_pos,
+		eng1_heat_pos,
+		eng2_heat_pos,
+		l_recirc_fan_pos,
+		r_recirc_fan_pos,
+		bleed_air_1_pos,
+		bleed_air_2_pos,
+		irs_sys_dspl,
+		pax_oxy_pos,
+		drive_disconnect1_pos,
+		drive_disconnect2_pos,
+		alt_flaps_pos,
+
 
 
 		//
@@ -436,6 +451,20 @@ namespace zcockpit::cockpit {
 		DataRefName::irs_source,
 		DataRefName::vhf_nav_source,
 
+		DataRefName::spoiler_A_pos,
+		DataRefName::spoiler_B_pos,
+		DataRefName::wing_heat_pos,
+		DataRefName::eng1_heat_pos,
+		DataRefName::eng2_heat_pos,
+		DataRefName::l_recirc_fan_pos,
+		DataRefName::r_recirc_fan_pos,
+		DataRefName::bleed_air_1_pos,
+		DataRefName::bleed_air_2_pos,
+		DataRefName::irs_sys_dspl,
+		DataRefName::pax_oxy_pos,
+		DataRefName::drive_disconnect1_pos,
+		DataRefName::drive_disconnect2_pos,
+		DataRefName::alt_flaps_pos
 	};
 
 

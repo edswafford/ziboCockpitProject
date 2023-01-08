@@ -117,7 +117,20 @@ namespace zcockpit::cockpit {
 		float irs_source{0.0};
 		float vhf_nav_source{0.0};
 
-
+		float spoiler_A_pos{0.0};
+		float spoiler_B_pos{0.0};
+		float wing_heat_pos{0.0};
+		float eng1_heat_pos{0.0};
+		float eng2_heat_pos{0.0};
+		float l_recirc_fan_pos{0.0};
+		float r_recirc_fan_pos{0.0};
+		float bleed_air_1_pos{0.0};
+		float bleed_air_2_pos{0.0};
+		float irs_sys_dspl{0.0};
+		float pax_oxy_pos{0.0};
+		float drive_disconnect1_pos{0.0};
+		float drive_disconnect2_pos{0.0};
+		float alt_flaps_pos{0.0};
 
 
 
@@ -271,6 +284,23 @@ namespace zcockpit::cockpit {
 		SwitchCommands dspl_source{2, std::vector<CommandRefName>{CommandRefName::dspl_source_left, CommandRefName::dspl_source_right}};
 		SwitchCommands irs_source{2, std::vector<CommandRefName>{CommandRefName::irs_source_left, CommandRefName::irs_source_right}};
 		SwitchCommands vhf_nav_source{2, std::vector<CommandRefName>{CommandRefName::vhf_nav_source_lft, CommandRefName::vhf_nav_source_rgt}};
+
+		
+		SwitchCommands spoiler_A_pos{2, std::vector<CommandRefName>{CommandRefName::spoiler_A, CommandRefName::spoiler_A}};
+		SwitchCommands spoiler_B_pos{2, std::vector<CommandRefName>{CommandRefName::spoiler_B, CommandRefName::spoiler_B}};
+		SwitchCommands wing_heat_pos{2, std::vector<CommandRefName>{CommandRefName::wing_heat, CommandRefName::wing_heat}};
+		SwitchCommands eng1_heat_pos{2, std::vector<CommandRefName>{CommandRefName::eng1_heat, CommandRefName::eng1_heat}};
+		SwitchCommands eng2_heat_pos{2, std::vector<CommandRefName>{CommandRefName::eng2_heat, CommandRefName::eng2_heat}};
+		SwitchCommands l_recirc_fan_pos{2, std::vector<CommandRefName>{CommandRefName::l_recirc_fan, CommandRefName::l_recirc_fan}};
+		SwitchCommands r_recirc_fan_pos{2, std::vector<CommandRefName>{CommandRefName::r_recirc_fan, CommandRefName::r_recirc_fan}};
+		SwitchCommands bleed_air_1_pos{2, std::vector<CommandRefName>{CommandRefName::bleed_air_1, CommandRefName::bleed_air_1}};
+		SwitchCommands bleed_air_2_pos{2, std::vector<CommandRefName>{CommandRefName::bleed_air_2, CommandRefName::bleed_air_2}};
+		SwitchCommands irs_sys_dspl{2, std::vector<CommandRefName>{CommandRefName::irs_sys_dspl, CommandRefName::irs_sys_dspl}};
+		SwitchCommands pax_oxy_pos{2, std::vector<CommandRefName>{CommandRefName::pax_oxy_on, CommandRefName::pax_oxy_on}};
+		SwitchCommands pax_oxy_norm_pos{2, std::vector<CommandRefName>{CommandRefName::pax_oxy_norm, CommandRefName::pax_oxy_norm}};
+		SwitchCommands drive_disconnect1_pos{2, std::vector<CommandRefName>{CommandRefName::drive_disconnect1, CommandRefName::drive_disconnect1}};
+		SwitchCommands drive_disconnect2_pos{2, std::vector<CommandRefName>{CommandRefName::drive_disconnect2, CommandRefName::drive_disconnect2_off}};
+		SwitchCommands alt_flaps_pos{2, std::vector<CommandRefName>{CommandRefName::alt_flaps, CommandRefName::alt_flaps}};
 
 
 
