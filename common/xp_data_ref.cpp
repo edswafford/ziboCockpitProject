@@ -35,11 +35,11 @@ namespace zcockpit::common {
 		void FloatXPDataRef::update_new_value_from_xplane()
 		{
 			new_value_ = XPLMGetDataf(xplane_data_ref_);
-			//if(new_value_ != value_) {
-			//	LOG() << "id " << xplane_data_ref_ << "new value " << new_value_  << " is bool " << is_bool_annum;
-			//}
 			if(is_bool_annum) {
 				new_value_ = new_value_ == 0.0? 0.0 : 1.0;
+			}
+			if(new_value_ != value_) {
+				LOG() << "DataREF update_new_value_from_xplane::  id " << xplane_data_ref_ << "new value " << new_value_  << " old value " << value_  << " is bool " << is_bool_annum;
 			}
 		}
 		std::optional<common::var_t> FloatXPDataRef::get_changed_value()
@@ -47,7 +47,7 @@ namespace zcockpit::common {
 			
 			if (!common::almost_equal<float>(value_, new_value_))
 			{
-				LOG() << "id " << xplane_data_ref_ << " new value " << new_value_ << " : " << value_ ;
+				LOG() << "Float DataRef get_changed_value: id " << xplane_data_ref_ << " new value " << new_value_ << " old value " << value_ ;
 
 				value_ = new_value_;
 				return value_;
