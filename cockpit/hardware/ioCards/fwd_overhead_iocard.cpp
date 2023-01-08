@@ -386,28 +386,24 @@ namespace zcockpit::cockpit::hardware
 				// GND
 				mag_eng1_start = pwr != 0 ? 1 : 0;
 				engine1_state = GND;
-				LOG() << "Starter 1 = GND";
 			}
 			else if(eng1_start_gnd.value == 0 && eng1_start_cont.value == 0 && eng1_start_flt.value == 0)
 			{
 				// OFF
 				mag_eng1_start = 0;
 				engine1_state = OFF;
-				LOG() << "Starter 1 = OFF";
 			}
 			else if(eng1_start_gnd.value == 0 && eng1_start_cont.value == 1 && eng1_start_flt.value == 0)
 			{
 				// CONT
 				mag_eng1_start = 0;
 				engine1_state = CONT;
-				LOG() << "Starter 1 = CONT";
 			}
 			else if(eng1_start_gnd.value == 0 && eng1_start_flt.value == 1)
 			{
 				// FLT
 				mag_eng1_start = 0;
 				engine1_state = FLT;
-				LOG() << "Starter 1 = FLT";
 			}
 			else
 			{
@@ -477,28 +473,24 @@ namespace zcockpit::cockpit::hardware
 				// GND
 				mag_eng2_start = pwr != 0 ? 1 : 0;
 				engine2_state = GND;
-				LOG() << "Starter 2 = GND";
 			}
 			else if(eng2_start_gnd.value == 0 && eng2_start_cont.value == 0 && eng2_start_flt.value == 0)
 			{
 				// OFF
 				mag_eng2_start = 0;
 				engine2_state = OFF;
-				LOG() << "Starter 2 = OFF";
 			}
 			else if(eng2_start_gnd.value == 0 && eng2_start_cont.value == 1 && eng2_start_flt.value == 0)
 			{
 				// CONT
 				mag_eng2_start = 0;
 				engine2_state = CONT;
-				LOG() << "Starter 2 = CONT";
 			}
 			else if(eng2_start_gnd.value == 0 && eng2_start_flt.value == 1)
 			{
 				// FLT
 				mag_eng2_start = 0;
 				engine2_state = FLT;
-				LOG() << "Starter 2 = FLT";
 			}
 			else
 			{
