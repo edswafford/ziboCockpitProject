@@ -333,6 +333,10 @@ namespace zcockpit::cockpit::hardware
 
 	constexpr int GENERATOR_DISCONNECT_UP = 1;
 	constexpr int GENERATOR_DISCONNECT_DOWN = 0;
+	constexpr int OUTFLOW_VALVE_OPEN = 1;
+	constexpr int OUTFLOW_VALVE_MIDDLE = 0;
+	constexpr int OUTFLOW_VALVE_CLOSE = -1;
+
 	void ForwardOverheadIOCard::initialize_switches()
 	{
 		iocard_fwd_overhead_zcockpit_switches[0]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, GND);
@@ -347,6 +351,10 @@ namespace zcockpit::cockpit::hardware
 
 		iocard_fwd_overhead_zcockpit_switches[8]  = ZcockpitSwitch(DataRefName::drive_disconnect1_pos, common::SwitchType::toggle, GENERATOR_DISCONNECT_UP );
 		iocard_fwd_overhead_zcockpit_switches[9]  = ZcockpitSwitch(DataRefName::drive_disconnect1_pos, common::SwitchType::toggle, GENERATOR_DISCONNECT_DOWN);
+
+		iocard_fwd_overhead_zcockpit_switches[10]  = ZcockpitSwitch(DataRefName::air_valve_manual, common::SwitchType::spring_loaded, OUTFLOW_VALVE_OPEN);
+		iocard_fwd_overhead_zcockpit_switches[11]  = ZcockpitSwitch(DataRefName::air_valve_manual, common::SwitchType::spring_loaded, OUTFLOW_VALVE_MIDDLE);
+		iocard_fwd_overhead_zcockpit_switches[12]  = ZcockpitSwitch(DataRefName::air_valve_manual, common::SwitchType::spring_loaded, OUTFLOW_VALVE_CLOSE);
 
 	}
 
@@ -619,13 +627,13 @@ namespace zcockpit::cockpit::hardware
 		// pressurization manual valve
 		if(outflowOpen == 1)
 		{
-			//	sendMessageInt(KEY_COMMAND_AIRSYSTEM_OUTFLOW_VALVE_OPEN, 0);
+			aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[10]);  // OUTFLOW_VALVE_OPEN
 		}
 		if(mastercard_input(51, &outflowOpen))
 		{
 			if(outflowOpen == 0)
 			{
-				//			sendMessageInt(KEY_COMMAND_AIRSYSTEM_OUTFLOW_VALVE_MIDDLE, 0);
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[11]);  // OUTFLOW_VALVE_MIDDLE
 			}
 			LOG() << "outflow = " << outflowOpen;
 		}
@@ -633,13 +641,13 @@ namespace zcockpit::cockpit::hardware
 		// pressurization manual valve
 		if(outflowClosed == 1)
 		{
-			//	sendMessageInt(KEY_COMMAND_AIRSYSTEM_OUTFLOW_VALVE_CLOSE, 0);
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[12]);  // OUTFLOW_VALVE_CLOSE
 		}
 		if(mastercard_input(52, &outflowClosed))
 		{
 			if(outflowOpen == 0)
 			{
-				//			sendMessageInt(KEY_COMMAND_AIRSYSTEM_OUTFLOW_VALVE_MIDDLE, 0);
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[11]);  // OUTFLOW_VALVE_MIDDLE
 			}
 		}
 
