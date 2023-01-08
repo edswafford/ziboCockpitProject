@@ -298,7 +298,7 @@ namespace zcockpit::cockpit {
 		SwitchCommands irs_sys_dspl{2, std::vector<CommandRefName>{CommandRefName::irs_sys_dspl, CommandRefName::irs_sys_dspl}};
 		SwitchCommands pax_oxy_pos{2, std::vector<CommandRefName>{CommandRefName::pax_oxy_on, CommandRefName::pax_oxy_on}};
 		SwitchCommands pax_oxy_norm_pos{2, std::vector<CommandRefName>{CommandRefName::pax_oxy_norm, CommandRefName::pax_oxy_norm}};
-		SwitchCommands drive_disconnect1_pos{2, std::vector<CommandRefName>{CommandRefName::drive_disconnect1, CommandRefName::drive_disconnect1}};
+		SwitchCommands drive_disconnect1_pos{2, std::vector<CommandRefName>{CommandRefName::drive_disconnect1, CommandRefName::drive_disconnect1_off}};
 		SwitchCommands drive_disconnect2_pos{2, std::vector<CommandRefName>{CommandRefName::drive_disconnect2, CommandRefName::drive_disconnect2_off}};
 		SwitchCommands alt_flaps_pos{2, std::vector<CommandRefName>{CommandRefName::alt_flaps, CommandRefName::alt_flaps}};
 

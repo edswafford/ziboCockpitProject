@@ -345,7 +345,7 @@ namespace zcockpit::cockpit::hardware
 		iocard_fwd_overhead_zcockpit_switches[6]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary_multi_commands, CONT);
 		iocard_fwd_overhead_zcockpit_switches[7]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary_multi_commands, FLT);
 
-		iocard_fwd_overhead_zcockpit_switches[8]  = ZcockpitSwitch(DataRefName::drive_disconnect1_pos, common::SwitchType::toggle, GENERATOR_DISCONNECT_UP);
+		iocard_fwd_overhead_zcockpit_switches[8]  = ZcockpitSwitch(DataRefName::drive_disconnect1_pos, common::SwitchType::toggle, GENERATOR_DISCONNECT_UP );
 		iocard_fwd_overhead_zcockpit_switches[9]  = ZcockpitSwitch(DataRefName::drive_disconnect1_pos, common::SwitchType::toggle, GENERATOR_DISCONNECT_DOWN);
 
 	}
@@ -552,7 +552,7 @@ namespace zcockpit::cockpit::hardware
 
 
 
-		static int lastGenCmd = GENERATOR_DISCONNECT_UP;
+		static int lastGenCmd = -1;
 
 
 	//	if(Ifly737::LeftEngRunning())
@@ -574,7 +574,7 @@ namespace zcockpit::cockpit::hardware
 				{
 					gen1Counter = DEBOUNCE_MAX_COUNT;
 
-					if(disconnect_1 == 1)
+					if(disconnect_1 == 0)
 					{
 						if(lastGenCmd != GENERATOR_DISCONNECT_UP)
 						{
