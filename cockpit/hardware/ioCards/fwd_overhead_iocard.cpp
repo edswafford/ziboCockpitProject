@@ -333,9 +333,9 @@ namespace zcockpit::cockpit::hardware
 
 	constexpr int GENERATOR_DISCONNECT_UP = 1;
 	constexpr int GENERATOR_DISCONNECT_DOWN = 0;
-	constexpr int OUTFLOW_VALVE_OPEN = 1;
+	constexpr int OUTFLOW_VALVE_OPEN = -1;
 	constexpr int OUTFLOW_VALVE_MIDDLE = 0;
-	constexpr int OUTFLOW_VALVE_CLOSE = -1;
+	constexpr int OUTFLOW_VALVE_CLOSE = 1;
 
 	void ForwardOverheadIOCard::initialize_switches()
 	{
