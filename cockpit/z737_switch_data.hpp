@@ -262,8 +262,8 @@ namespace zcockpit::cockpit {
 		SwitchCommands irs_left{2, std::vector<CommandRefName>{CommandRefName::irs_L_left, CommandRefName::irs_L_right}};
 		SwitchCommands irs_right{2, std::vector<CommandRefName>{CommandRefName::irs_R_left, CommandRefName::irs_R_right}};
 		SwitchCommands irs_dspl_sel{2, std::vector<CommandRefName>{CommandRefName::irs_dspl_sel_left, CommandRefName::irs_dspl_sel_right}};
-		SwitchCommands starter1_pos{4, std::vector<CommandRefName>{CommandRefName::eng1_start_off, CommandRefName::eng1_start_grd, CommandRefName::eng1_start_flt, CommandRefName::eng1_start_cont }};
-		SwitchCommands starter2_pos{4, std::vector<CommandRefName>{CommandRefName::eng2_start_off, CommandRefName::eng2_start_grd, CommandRefName::eng2_start_flt, CommandRefName::eng2_start_flt}};
+		SwitchCommands starter1_pos{4, std::vector<CommandRefName>{ CommandRefName::eng1_start_grd, CommandRefName::eng1_start_off, CommandRefName::eng1_start_cont, CommandRefName::eng1_start_flt }};
+		SwitchCommands starter2_pos{4, std::vector<CommandRefName>{ CommandRefName::eng2_start_grd, CommandRefName::eng2_start_off, CommandRefName::eng2_start_cont, CommandRefName::eng2_start_flt}};
 		SwitchCommands air_valve_manual{2, std::vector<CommandRefName>{CommandRefName::air_valve_manual_left, CommandRefName::air_valve_manual_right}};
 		SwitchCommands flt_ctr_B_pos{2, std::vector<CommandRefName>{CommandRefName::flt_ctr_B_up, CommandRefName::flt_ctr_B_dn}};
 		SwitchCommands flt_ctr_A_pos{2, std::vector<CommandRefName>{CommandRefName::flt_ctr_A_up, CommandRefName::flt_ctr_A_dn}};
