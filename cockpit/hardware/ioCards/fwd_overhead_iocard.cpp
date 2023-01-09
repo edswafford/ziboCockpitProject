@@ -7,6 +7,38 @@ extern logger LOG;
 
 namespace zcockpit::cockpit::hardware
 {
+	constexpr int GND = 0;
+	constexpr int OFF = 1;
+	constexpr int CONT = 2;
+	constexpr int FLT = 3;
+	constexpr int GENERATOR_DISCONNECT_UP = 1;
+	constexpr int GENERATOR_DISCONNECT_DOWN = 0;
+	constexpr int OUTFLOW_VALVE_OPEN = -1;
+	constexpr int OUTFLOW_VALVE_MIDDLE = 0;
+	constexpr int OUTFLOW_VALVE_CLOSE = 1;
+	constexpr int ALTERNATE_FLAPS_ARM = 1;
+	constexpr int ALTERNATE_FLAPS_OFF = 0;
+	constexpr int FLIGHT_CONTROL_B_OFF = 0;
+	constexpr int FLIGHT_CONTROL_B_ON = 1;
+	constexpr int FLIGHT_CONTROL_B_STBYRUD = -1;
+	constexpr int FLIGHT_CONTROL_A_OFF = 0;
+	constexpr int FLIGHT_CONTROL_A_ON = 1;
+	constexpr int FLIGHT_CONTROL_A_STBYRUD = -1;
+
+	constexpr int ALTERNATE_FLAPS_CTRL_DN = 1;
+	constexpr int ALTERNATE_FLAPS_CTRL_OFF = 0;
+	constexpr int ALTERNATE_FLAPS_CTRL_UP = -1;
+
+	constexpr int INSTRUMENT_DISPLAYS_SOURCE_1 = -1; 
+	constexpr int INSTRUMENT_DISPLAYS_SOURCE_2 = 1;
+	constexpr int INSTRUMENT_DISPLAYS_SOURCE_AUTO = 0;
+	constexpr int FMS_IRS_TFR_R = 1;
+	constexpr int FMS_IRS_TFR_NORMAL = 0;
+	constexpr int FMS_IRS_TFR_L = -1;
+	constexpr int FMS_VHF_NAV_L = -1;
+	constexpr int FMS_VHF_NAV_NORMAL = 0;
+	constexpr int FMS_VHF_NAV_R = -1;
+;
 	std::string ForwardOverheadIOCard::iocard_bus_addr;
 	bool ForwardOverheadIOCard::running = false; 
 
@@ -14,95 +46,6 @@ namespace zcockpit::cockpit::hardware
 		: IOCards(deviceBusAddr, "fwdOverhead"), aircraft_model(ac_model)
 	{
 		ForwardOverheadIOCard::iocard_bus_addr = deviceBusAddr;
-
-		compMode_altn = 0;
-		compMode_auto = 0;
-		compMode_man = 0;
-		pos_steady = 0;
-		pos_strobe = 0;
-		outflowOpen = 0;
-		outflowClosed = 0;
-		dc_stbyPwr = 0;
-		dc_batBus = 0;
-		dc_bat = 0;
-		dc_auxBat = 0;
-		dc_tr1 = 0;
-		dc_tr2 = 0;
-		dc_tr3 = 0;
-		dc_test = 0;
-		disconnect_1 = 0;
-		elec_maint = 0;
-		ac_stbyPwr = 0;
-		ac_gndPwr = 0;
-		ac_gen1 = 0;
-		ac_gen2 = 0;
-		ac_apuGen = 0;
-		ac_test = 0;
-		ac_inv = 0;
-		start_1_gnd = 0;
-		start_1_cont = 0;
-		start_1_flt = 0;
-		start_2_gnd = 0;
-		start_2_cont = 0;
-		start_2_flt = 0;
-		wing_aitiIce = 0;
-		eng1_antiIce = 0;
-		eng2_antiIce = 0;
-		lRecirc_fan = 0;
-		rRecirc_fan = 0;
-		leftPack_off = 0;
-		left_pack_high = 0;
-		isolationClose = 0;
-		isolationOpen = 0;
-		right_pack_off = 0;
-		right_pack_hi = 0;
-		eng_1_bleed = 0;
-		apu_bleed = 0;
-		eng_2_bleed = 0;
-		ovht_test = 0;
-		trip_reset = 0;
-		fltctrl_a_stby = 0;
-		fltctrl_a_on = 0;
-		fltctrl_b_stby = 0;
-		fltctrl_b_on = 0;
-		flap_Arm = 0;
-		altFlapUp = 0;
-		altFlapDn = 0;
-		spoiler_a = 0;
-		spoiler_b = 0;
-		wiper_l_pk = 0;
-		wiper_l_int = 0;
-		wiper_l_low = 0;
-		wiper_r_pk = 0;
-		wiper_r_int = 0;
-		wiper_r_low = 0;
-		vhfNavBoth1 = 0;
-		vhfNavBoth2 = 0;
-		irsBothLeft = 0;
-		irsBothRight = 0;
-		displaySrc1 = 0;
-		displaySrcAuto = 0;
-
-		mag_eng1_start = 0;
-		mag_eng2_start = 0;
-
-		eng1_start_gnd = masterCard_input_state{27, 0, false};
-		eng1_start_cont = masterCard_input_state{28, 0, false};
-		eng1_start_flt = masterCard_input_state{29, 0, false};
-
-		eng2_start_gnd = masterCard_input_state{30, 0, false};
-		eng2_start_cont = masterCard_input_state{31, 0, false};
-		eng2_start_flt = masterCard_input_state{32, 0, false};
-
-		engine_start_switches[0] = &eng1_start_gnd;
-		engine_start_switches[1] = &eng1_start_cont;
-		engine_start_switches[2] = &eng1_start_flt;
-		engine_start_switches[3] = &eng2_start_gnd;
-		engine_start_switches[4] = &eng2_start_cont;
-		engine_start_switches[5] = &eng2_start_flt;
-
-		eng1_start_debounce = ENG_START_DEBOUNCE_COUNT;
-		eng2_start_debounce = ENG_START_DEBOUNCE_COUNT;
 
 		initialize_switches();
 	}
@@ -331,11 +274,6 @@ namespace zcockpit::cockpit::hardware
 		//}
 	}
 
-	constexpr int GENERATOR_DISCONNECT_UP = 1;
-	constexpr int GENERATOR_DISCONNECT_DOWN = 0;
-	constexpr int OUTFLOW_VALVE_OPEN = -1;
-	constexpr int OUTFLOW_VALVE_MIDDLE = 0;
-	constexpr int OUTFLOW_VALVE_CLOSE = 1;
 
 	void ForwardOverheadIOCard::initialize_switches()
 	{
@@ -355,6 +293,33 @@ namespace zcockpit::cockpit::hardware
 		iocard_fwd_overhead_zcockpit_switches[10]  = ZcockpitSwitch(DataRefName::air_valve_manual, common::SwitchType::spring_loaded, OUTFLOW_VALVE_OPEN);
 		iocard_fwd_overhead_zcockpit_switches[11]  = ZcockpitSwitch(DataRefName::air_valve_manual, common::SwitchType::spring_loaded, OUTFLOW_VALVE_MIDDLE);
 		iocard_fwd_overhead_zcockpit_switches[12]  = ZcockpitSwitch(DataRefName::air_valve_manual, common::SwitchType::spring_loaded, OUTFLOW_VALVE_CLOSE);
+
+		iocard_fwd_overhead_zcockpit_switches[12]  = ZcockpitSwitch(DataRefName::alt_flaps_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_ARM );
+		iocard_fwd_overhead_zcockpit_switches[13]  = ZcockpitSwitch(DataRefName::alt_flaps_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_OFF);
+
+		iocard_fwd_overhead_zcockpit_switches[14]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::toggle, FLIGHT_CONTROL_B_ON);
+		iocard_fwd_overhead_zcockpit_switches[15]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::toggle, FLIGHT_CONTROL_B_OFF );
+		iocard_fwd_overhead_zcockpit_switches[16]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::toggle, FLIGHT_CONTROL_B_STBYRUD );
+
+		iocard_fwd_overhead_zcockpit_switches[17]  = ZcockpitSwitch(DataRefName::flt_ctr_A_pos, common::SwitchType::toggle, FLIGHT_CONTROL_A_ON);
+		iocard_fwd_overhead_zcockpit_switches[18]  = ZcockpitSwitch(DataRefName::flt_ctr_A_pos, common::SwitchType::toggle, FLIGHT_CONTROL_A_OFF );
+		iocard_fwd_overhead_zcockpit_switches[19]  = ZcockpitSwitch(DataRefName::flt_ctr_A_pos, common::SwitchType::toggle, FLIGHT_CONTROL_A_STBYRUD );
+
+		iocard_fwd_overhead_zcockpit_switches[20]  = ZcockpitSwitch(DataRefName::alt_flaps_ctrl, common::SwitchType::toggle, ALTERNATE_FLAPS_CTRL_DN);
+		iocard_fwd_overhead_zcockpit_switches[21]  = ZcockpitSwitch(DataRefName::alt_flaps_ctrl, common::SwitchType::toggle, ALTERNATE_FLAPS_CTRL_OFF );
+		iocard_fwd_overhead_zcockpit_switches[22]  = ZcockpitSwitch(DataRefName::alt_flaps_ctrl, common::SwitchType::toggle, ALTERNATE_FLAPS_CTRL_UP);
+
+		iocard_fwd_overhead_zcockpit_switches[23]  = ZcockpitSwitch(DataRefName::dspl_source, common::SwitchType::toggle, INSTRUMENT_DISPLAYS_SOURCE_1 );
+		iocard_fwd_overhead_zcockpit_switches[24]  = ZcockpitSwitch(DataRefName::dspl_source, common::SwitchType::toggle, INSTRUMENT_DISPLAYS_SOURCE_2);
+		iocard_fwd_overhead_zcockpit_switches[25]  = ZcockpitSwitch(DataRefName::dspl_source, common::SwitchType::toggle, INSTRUMENT_DISPLAYS_SOURCE_AUTO );
+																				 
+		iocard_fwd_overhead_zcockpit_switches[26]  = ZcockpitSwitch(DataRefName::irs_source, common::SwitchType::toggle, FMS_IRS_TFR_R);
+		iocard_fwd_overhead_zcockpit_switches[27]  = ZcockpitSwitch(DataRefName::irs_source, common::SwitchType::toggle, FMS_IRS_TFR_NORMAL );
+		iocard_fwd_overhead_zcockpit_switches[28]  = ZcockpitSwitch(DataRefName::irs_source, common::SwitchType::toggle, FMS_IRS_TFR_L);
+
+		iocard_fwd_overhead_zcockpit_switches[29]  = ZcockpitSwitch(DataRefName::vhf_nav_source, common::SwitchType::toggle, FMS_VHF_NAV_L );
+		iocard_fwd_overhead_zcockpit_switches[30]  = ZcockpitSwitch(DataRefName::vhf_nav_source, common::SwitchType::toggle, FMS_VHF_NAV_NORMAL);
+		iocard_fwd_overhead_zcockpit_switches[31]  = ZcockpitSwitch(DataRefName::vhf_nav_source, common::SwitchType::toggle, FMS_VHF_NAV_R );
 
 	}
 
@@ -616,14 +581,6 @@ namespace zcockpit::cockpit::hardware
 
 	void ForwardOverheadIOCard::processOvrHead()
 	{
-		//
-		// The outflow valve is spring loaded and must to held open
-		// for this to work we need to keep sending the open/close command for ifly
-		// unil the switch is released
-		// 135 KEY_COMMAND_AIRSYSTEM_OUTFLOW_VALVE_CLOSE
-		// 136 KEY_COMMAND_AIRSYSTEM_OUTFLOW_VALVE_MIDDLE
-		// 137 KEY_COMMAND_AIRSYSTEM_OUTFLOW_VALVE_OPEN
-
 		// pressurization manual valve
 		if(outflowOpen == 1)
 		{
@@ -652,135 +609,117 @@ namespace zcockpit::cockpit::hardware
 		}
 
 
-		// KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_MASTER       584
-		//  KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_MASTER_OFF  585
-		//  KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_MASTER_ARM  586
 		// Flaps Master ARM switch position
 		if(mastercard_input(53, &flap_Arm))
 		{
-			//if(flap_Arm == 1)
-			//{
-			//	sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_MASTER, 1);
-			//	sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_MASTER_ARM, 1);
-			//	//flapDelay = DELAY 1 100
-			//}
-			//else
-			//{
-			//	sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_MASTER_OFF, 0);
-			//}
+			if(flap_Arm == 1)
+			{
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[12]);  // ALTERNATE_FLAPS_ARM
+			}
+			else
+			{
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[13]);  // ALTERNATE_FLAPS_OFF
+			}
 		}
 
 		// flight control B ON switch position
 		if(mastercard_input(54, &fltctrl_b_on))
 		{
-			//if(fltctrl_b_on == 1)
-			//{
-			//	sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_B_ON, 0);
-			//}
-			//else
-			//{
-			//	if(fltctrl_b_stby != 1)
-			//	{
-			//		sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_B_OFF, 0);
-			//	}
-			//}
+			if(fltctrl_b_on == 1)
+			{
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[14]);  // FLIGHT_CONTROL_B_ON
+			}
+			else
+			{
+				if(fltctrl_b_stby != 1)
+				{
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[15]);  // FLIGHT_CONTROL_B_OFF
+				}
+			}
 		}
 
-
-		// KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_B_STBYRUD 572
-		// KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_B_OFF     573
-		//	KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_B_ON      574
 		// flight control B STBY switch position
 		if(mastercard_input(55, &fltctrl_b_stby))
 		{
-			//if(fltctrl_b_stby == 1)
-			//{
-			//	sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_B_STBYRUD, 0);
-			//}
-			//else
-			//{
-			//	if(fltctrl_b_on != 1)
-			//	{
-			//		sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_B_OFF, 0);
-			//	}
-			//}
+			if(fltctrl_b_stby == 1)
+			{
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[16]);  // FLIGHT_CONTROL_B_STBYRUD
+		}
+			else
+			{
+				if(fltctrl_b_on != 1)
+				{
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[15]);  // FLIGHT_CONTROL_B_OFF
+				}
+			}
 		}
 
 
-		// KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_A_STBYRUD 567
-		// KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_A_OFF     568
-		//	KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_A_ON      569
+
 		// flight control A STBY switch position
-		//if(mastercard_input(56, &fltctrl_a_stby))
-		//{
-		//	if(fltctrl_a_stby == 1)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_A_STBYRUD, 0);
-		//	}
-		//	else
-		//	{
-		//		if(fltctrl_a_on != 1)
-		//		{
-		//			sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_A_OFF, 0);
-		//		}
-		//	}
-		//}
+		if(mastercard_input(56, &fltctrl_a_stby))
+		{
+			if(fltctrl_a_stby == 1)
+			{
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[19]);  // FLIGHT_CONTROL_A_STBYRUD
+		}
+			else
+			{
+				if(fltctrl_a_on != 1)
+				{
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[18]);  // FLIGHT_CONTROL_A_OFF
+				}
+			}
+		}
 
-		//// flight control A ON switch position
-		//if(mastercard_input(57, &fltctrl_a_on))
-		//{
-		//	if(fltctrl_a_on == 1)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_A_ON, 0);
-		//	}
-		//	else
-		//	{
-		//		if(fltctrl_a_stby != 1)
-		//		{
-		//			sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_CONTROL_A_OFF, 0);
-		//		}
-		//	}
-		//}
-		//  KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_POS1  589
-		//  KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_POS2  590
-		//  KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_POS3  591
+		// flight control A ON switch position
+		if(mastercard_input(57, &fltctrl_a_on))
+		{
+			if(fltctrl_a_on == 1)
+			{
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[17]);  // FLIGHT_CONTROL_A_ON
+			}
+			else
+			{
+				if(fltctrl_a_stby != 1)
+				{
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[18]);  // FLIGHT_CONTROL_A_OFF
+				}
+			}
+		}
+
+
 		// Alternate Flaps UP switch position
-
 		// Alternate Flaps DOWN switch position
-		//if(mastercard_input(58, &altFlapDn))
-		//{
-		//	if(altFlapDn == 1)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_POS3, 0);
-		//	}
-		//	else
-		//	{
-		//		if(altFlapUp != 1)
-		//		{
-		//			sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_POS2, 0);
-		//		}
-		//	}
-		//}
-		//if(mastercard_input(59, &altFlapUp))
-		//{
-		//	if(altFlapUp == 1)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_POS1, 0);
-		//	}
-		//	else
-		//	{
-		//		if(altFlapDn != 1)
-		//		{
-		//			sendMessageInt(KEY_COMMAND_FLTCTRL_ALTERNATE_FLAPS_POS2, 0);
-		//		}
-		//	}
-		//}
+		if(mastercard_input(58, &altFlapDn))
+		{
+			if(altFlapDn == 1)
+			{
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[20]);  // ALTERNATE_FLAPS_CTRL_DN
+			}
+			else
+			{
+				if(altFlapUp != 1)
+				{
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[21]);  // ALTERNATE_FLAPS_CTRL_OFF
+				}
+			}
+		}
+		if(mastercard_input(59, &altFlapUp))
+		{
+			if(altFlapUp == 1)
+			{
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[22]);  // ALTERNATE_FLAPS_CTRL_UP
+			}
+			else
+			{
+				if(altFlapDn != 1)
+				{
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[21]);  // ALTERNATE_FLAPS_CTRL_OFF
+				}
+			}
+		}
 
-
-		// KEY_COMMAND_ANTIICE_RIGHT_WINDSHIELD_WIPER_PARK 180
-		// KEY_COMMAND_ANTIICE_RIGHT_WINDSHIELD_WIPER_INT  181
-		// KEY_COMMAND_ANTIICE_RIGHT_WINDSHIELD_WIPER_LOW  182
-		// KEY_COMMAND_ANTIICE_RIGHT_WINDSHIELD_WIPER_HIGH 183
 		// Right Wiper Park switch position
 		// 
 		//  NOTE  ******************************
@@ -819,112 +758,104 @@ namespace zcockpit::cockpit::hardware
 		//}
 
 
-		//	KEY_COMMAND_INSTRUMENT_DISPLAYS_SOURCE_1    713
-		// KEY_COMMAND_INSTRUMENT_DISPLAYS_SOURCE_AUTO 714
-		// KEY_COMMAND_INSTRUMENT_DISPLAYS_SOURCE_2    715
+
 		// Display Source 1 switch position
-		//if(mastercard_input(63, &displaySrc1))
-		//{
-		//	if(displaySrc1 == 1)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_INSTRUMENT_DISPLAYS_SOURCE_1, 0);
-		//	}
-		//	else
-		//	{
-		//		if(displaySrcAuto != 1)
-		//		{
-		//			sendMessageInt(KEY_COMMAND_INSTRUMENT_DISPLAYS_SOURCE_2, 0);
-		//		}
-		//	}
-		//}
+		if(mastercard_input(63, &displaySrc1))
+		{
+			if(displaySrc1 == 1)
+			{
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[23]);  // INSTRUMENT_DISPLAYS_SOURCE_1
+			}
+			else
+			{
+				if(displaySrcAuto != 1)
+				{
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[24]);  // INSTRUMENT_DISPLAYS_SOURCE_2
+				}
+			}
+		}
 
-		//// Display Source Auto switch position
-		//if(mastercard_input(64, &displaySrcAuto))
-		//{
-		//	if(displaySrcAuto == 1)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_INSTRUMENT_DISPLAYS_SOURCE_AUTO, 0);
-		//	}
-		//	else
-		//	{
-		//		if(displaySrc1 != 1)
-		//		{
-		//			sendMessageInt(KEY_COMMAND_INSTRUMENT_DISPLAYS_SOURCE_2, 0);
-		//		}
-		//	}
-		//}
-		//// IRS Both on Right switch position
-		//if(mastercard_input(65, &irsBothRight))
-		//{
-		//	if(irsBothRight == 1)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_FMS_IRS_TFR_R, 0);
-		//	}
-		//	else
-		//	{
-		//		if(irsBothLeft != 1)
-		//		{
-		//			sendMessageInt(KEY_COMMAND_FMS_IRS_TFR_NORMAL, 0);
-		//		}
-		//	}
-		//}
+		// Display Source Auto switch position
+		if(mastercard_input(64, &displaySrcAuto))
+		{
+			if(displaySrcAuto == 1)
+			{
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[25]);  // INSTRUMENT_DISPLAYS_SOURCE_AUTO
+			}
+			else
+			{
+				if(displaySrc1 != 1)
+				{
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[24]);  // INSTRUMENT_DISPLAYS_SOURCE_2
+				}
+			}
+		}
+		// IRS Both on Right switch position
+		if(mastercard_input(65, &irsBothRight))
+		{
+			if(irsBothRight == 1)
+			{
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[26]);  // FMS_IRS_TFR_R
+			}
+			else
+			{
+				if(irsBothLeft != 1)
+				{
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[27]);  // FMS_IRS_TFR_NORMAL
+				}
+			}
+		}
 
-		//// IRS Both on Left switch position
-		//if(mastercard_input(66, &irsBothLeft))
-		//{
-		//	if(irsBothLeft == 1)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_FMS_IRS_TFR_L, 0);
-		//	}
-		//	else
-		//	{
-		//		if(irsBothRight != 1)
-		//		{
-		//			sendMessageInt(KEY_COMMAND_FMS_IRS_TFR_NORMAL, 0);
-		//		}
-		//	}
-		//}
+		// IRS Both on Left switch position
+		if(mastercard_input(66, &irsBothLeft))
+		{
+			if(irsBothLeft == 1)
+			{
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[28]);  // FMS_IRS_TFR_L
+			}
+			else
+			{
+				if(irsBothRight != 1)
+				{
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[27]);  // FMS_IRS_TFR_NORMAL
+				}
+			}
+		}
 
-		//// KEY_COMMAND_FMS_VHF_NAV_1       949
-		//// KEY_COMMAND_FMS_VHF_NAV_NORMAL  950
-		//// KEY_COMMAND_FMS_VHF_NAV_2       951
-		//// VHF NAV Both on 1 switch position
-		//if(mastercard_input(67, &vhfNavBoth1))
-		//{
-		//	if(vhfNavBoth1 == 1)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_FMS_VHF_NAV_1, 0);
-		//	}
-		//	else
-		//	{
-		//		if(vhfNavBoth2 != 1)
-		//		{
-		//			sendMessageInt(KEY_COMMAND_FMS_VHF_NAV_NORMAL, 0);
-		//		}
-		//	}
-		//}
-		//// VHF NAV Both on 2 switch position
-		//if(mastercard_input(68, &vhfNavBoth2))
-		//{
-		//	if(vhfNavBoth2 == 1)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_FMS_VHF_NAV_2, 0);
-		//	}
-		//	else
-		//	{
-		//		if(vhfNavBoth1 != 1)
-		//		{
-		//			sendMessageInt(KEY_COMMAND_FMS_VHF_NAV_NORMAL, 0);
-		//		}
-		//	}
-		//}
 
-		//// KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_PARK  174
-		//// KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_INT   175
-		//// KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_LOW   176
-		//// KEY_COMMAND_ANTIICE_LEFT_WINDSHIELD_WIPER_HIGH  177
-		//// Left Wiper Park switch position
-		//// 
+		// VHF NAV Both on 1 switch position
+		if(mastercard_input(67, &vhfNavBoth1))
+		{
+			if(vhfNavBoth1 == 1)
+			{
+
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[29]);  // FMS_VHF_NAV_L
+			}
+			else
+			{
+				if(vhfNavBoth2 != 1)
+				{
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[30]);  // FMS_VHF_NAV_NORMAL
+				}
+			}
+		}
+		// VHF NAV Both on 2 switch position
+		if(mastercard_input(68, &vhfNavBoth2))
+		{
+			if(vhfNavBoth2 == 1)
+			{
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[31]);  // FMS_VHF_NAV_R
+			}
+			else
+			{
+				if(vhfNavBoth1 != 1)
+				{
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[30]);  // FMS_VHF_NAV_NORMAL
+				}
+			}
+		}
+
+
 		////  NOTE  ******************************
 		////
 		//// ONLY WORKS IN VC
