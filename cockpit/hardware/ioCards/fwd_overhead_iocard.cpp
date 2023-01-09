@@ -123,7 +123,7 @@ namespace zcockpit::cockpit::hardware
 		int constexpr AC_VOLTS_1 = 21;
 		int constexpr AC_VOLTS_10 = 22;
 		int constexpr AC_VOLTS_100 = 23;
-		const int ac_volts = aircraft_model.z737InData.ac_volt_value;
+		const int ac_volts = static_cast<float>(aircraft_model.z737InData.ac_volt_value);
 		const uint8_t ac_volt_hundreds = ac_volts/100;
 		const int ac_volt_remaining = (ac_volts - (ac_volt_hundreds * 100));
 		const uint8_t ac_volt_tens = ac_volt_remaining/10;
@@ -137,7 +137,7 @@ namespace zcockpit::cockpit::hardware
 		int constexpr AC_FREQ_1 = 16;
 		int constexpr AC_FREQ_10 = 17;
 		int constexpr AC_FREQ_100 = 18;
-		const int ac_freq = aircraft_model.z737InData.ac_freq_value;
+		const int ac_freq = static_cast<float>(aircraft_model.z737InData.ac_freq_value);
 		const uint8_t ac_freq_hundreds = ac_freq/100;
 		const int ac_freq_remaining = (ac_freq - (ac_freq_hundreds * 100));
 		const uint8_t ac_freq_tens = ac_freq_remaining/10;
@@ -149,7 +149,7 @@ namespace zcockpit::cockpit::hardware
 		// DC AMPS
 		int constexpr DC_AMPS_1 = 19;
 		int constexpr DC_AMPS_10 = 20;
-		const int dc_amps = aircraft_model.z737InData.dc_amp_value;
+		const int dc_amps = static_cast<float>(aircraft_model.z737InData.dc_amp_value);
 		const uint8_t dc_amp_tens = dc_amps/10;
 		const uint8_t dc_amp_ones = dc_amps - (dc_amp_tens * 10);
 		mastercard_send_display(dc_amp_ones, DC_AMPS_1);
@@ -158,14 +158,14 @@ namespace zcockpit::cockpit::hardware
 		// AC AMPS
 		int constexpr AC_AMPS_1 = 24;
 		int constexpr AC_AMPS_10 = 25;
-		const int ac_amps = aircraft_model.z737InData.ac_amp_value;
+		const int ac_amps = static_cast<float>(aircraft_model.z737InData.ac_amp_value);
 		const uint8_t ac_amp_tens = ac_amps/10;
 		mastercard_send_display(ac_amp_tens, AC_AMPS_10);
 
 		// DC Volts
 		int constexpr DC_VOLTS_1 = 26;
 		int constexpr DC_VOLTS_10 = 27;
-		const int dc_volts = aircraft_model.z737InData.dc_volt_value;
+		const int dc_volts = static_cast<float>(aircraft_model.z737InData.dc_volt_value);
 		const uint8_t dc_volt_tens = dc_volts/10;
 		const uint8_t dc_volt_ones = dc_volts - (dc_volt_tens * 10);
 		mastercard_send_display(dc_volt_ones, DC_VOLTS_1);

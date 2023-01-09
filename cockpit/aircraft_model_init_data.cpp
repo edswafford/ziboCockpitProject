@@ -175,11 +175,11 @@ namespace zcockpit::cockpit {
 		//
 		// IN Data
 
-		z_cockpit_data[DataRefName::ac_volt_value] = ZCockpitInData(&z737InData.ac_volt_value, ZCockpitType::ZInt);
-		z_cockpit_data[DataRefName::dc_volt_value] = ZCockpitInData(&z737InData.dc_volt_value, ZCockpitType::ZInt);
-		z_cockpit_data[DataRefName::ac_freq_value] = ZCockpitInData(&z737InData.ac_freq_value, ZCockpitType::ZInt);
-		z_cockpit_data[DataRefName::dc_amp_value] = ZCockpitInData(&z737InData.dc_amp_value, ZCockpitType::ZInt);
-		z_cockpit_data[DataRefName::ac_amp_value] = ZCockpitInData(&z737InData.ac_amp_value, ZCockpitType::ZInt);
+		z_cockpit_data[DataRefName::ac_volt_value] = ZCockpitInData(&z737InData.ac_volt_value, ZCockpitType::ZFloat);
+		z_cockpit_data[DataRefName::dc_volt_value] = ZCockpitInData(&z737InData.dc_volt_value, ZCockpitType::ZFloat);
+		z_cockpit_data[DataRefName::ac_freq_value] = ZCockpitInData(&z737InData.ac_freq_value, ZCockpitType::ZFloat);
+		z_cockpit_data[DataRefName::dc_amp_value] = ZCockpitInData(&z737InData.dc_amp_value, ZCockpitType::ZFloat);
+		z_cockpit_data[DataRefName::ac_amp_value] = ZCockpitInData(&z737InData.ac_amp_value, ZCockpitType::ZFloat);
 
 
 
