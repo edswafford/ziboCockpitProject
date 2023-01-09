@@ -117,6 +117,14 @@ namespace zcockpit::cockpit::hardware
 		selector = (selector + 1) % 6;
 	}
 
+	//  special value codes for display II card (set hasspecial to 1)
+	//   10 = Blank the digit			--> 0xf7 (also 0x0a)
+	//   11 = Put the "-" sign			--> 0xf8
+	//   12 = Put a Special 6			--> 0xf9
+	//   13 = Put a "t"					--> 0xfa
+	//   14 = Put a "d"					--> 0xfb
+	//   15 = Put a "_" (Underscore)	--> 0xfc (does not work; rather, has something to do with dimming...)
+	//
 	void ForwardOverheadIOCard::update_electrical_display()
 	{
 		// AC Volts
@@ -125,41 +133,63 @@ namespace zcockpit::cockpit::hardware
 		int constexpr AC_VOLTS_100 = 23;
 		const int ac_volts = static_cast<float>(aircraft_model.z737InData.ac_volt_value);
 		if(ac_volts != previous_ac_volts){
-		const uint8_t ac_volt_hundreds = ac_volts/100;
-			const int ac_volt_remaining = (ac_volts - (ac_volt_hundreds * 100));
-			const uint8_t ac_volt_tens = ac_volt_remaining/10;
-			const uint8_t ac_volt_ones = (ac_volt_remaining - (ac_volt_tens * 10));
-			mastercard_send_display(ac_volt_ones, AC_VOLTS_1);
-			mastercard_send_display(ac_volt_tens, AC_VOLTS_10);
-			mastercard_send_display(ac_volt_hundreds, AC_VOLTS_100);
 			previous_ac_volts = ac_volts;
+			if(ac_volts == 0) {
+				mastercard_send_display(0, AC_VOLTS_1);
+				mastercard_send_display(0xF7, AC_VOLTS_10);		// Blank
+				mastercard_send_display(0xF7, AC_VOLTS_100);		// Blank
+			}
+			else {
+				const uint8_t ac_volt_hundreds = ac_volts/100;
+				const int ac_volt_remaining = (ac_volts - (ac_volt_hundreds * 100));
+				const uint8_t ac_volt_tens = ac_volt_remaining/10;
+				const uint8_t ac_volt_ones = (ac_volt_remaining - (ac_volt_tens * 10));
+				mastercard_send_display(ac_volt_ones, AC_VOLTS_1);
+				mastercard_send_display(ac_volt_tens, AC_VOLTS_10);
+				mastercard_send_display(ac_volt_hundreds, AC_VOLTS_100);
+			}	
 		}
-
 		// AC Freq
 		int constexpr AC_FREQ_1 = 16;
 		int constexpr AC_FREQ_10 = 17;
 		int constexpr AC_FREQ_100 = 18;
 		const int ac_freq = static_cast<float>(aircraft_model.z737InData.ac_freq_value);
 		if(ac_freq != previous_ac_freq){
-			const uint8_t ac_freq_hundreds = ac_freq/100;
-			const int ac_freq_remaining = (ac_freq - (ac_freq_hundreds * 100));
-			const uint8_t ac_freq_tens = ac_freq_remaining/10;
-			const uint8_t ac_freq_ones = (ac_freq_remaining - (ac_freq_tens * 10));
-			mastercard_send_display(ac_freq_ones, AC_FREQ_1);
-			mastercard_send_display(ac_freq_tens, AC_FREQ_10);
-			mastercard_send_display(ac_freq_hundreds, AC_FREQ_100);
 			previous_ac_freq = ac_freq;
+			if(ac_freq == 0){
+				mastercard_send_display(0, AC_FREQ_1);
+				mastercard_send_display(0xF7, AC_FREQ_10);
+				mastercard_send_display(0xF7, AC_FREQ_100);}
+			else {
+				const uint8_t ac_freq_hundreds = ac_freq/100;
+				const int ac_freq_remaining = (ac_freq - (ac_freq_hundreds * 100));
+				const uint8_t ac_freq_tens = ac_freq_remaining/10;
+				const uint8_t ac_freq_ones = (ac_freq_remaining - (ac_freq_tens * 10));
+				mastercard_send_display(ac_freq_ones, AC_FREQ_1);
+				mastercard_send_display(ac_freq_tens, AC_FREQ_10);
+				mastercard_send_display(ac_freq_hundreds, AC_FREQ_100);
+			}
 		}
 		// DC AMPS
 		int constexpr DC_AMPS_1 = 19;
 		int constexpr DC_AMPS_10 = 20;
 		const int dc_amps = static_cast<float>(aircraft_model.z737InData.dc_amp_value);
 		if(dc_amps != previous_dc_amps){
-			const uint8_t dc_amp_tens = dc_amps/10;
-			const uint8_t dc_amp_ones = dc_amps - (dc_amp_tens * 10);
+			previous_dc_amps = dc_amps;
+			if(dc_amps == 0) {
+				mastercard_send_display(0, DC_AMPS_1);
+				mastercard_send_display(0xF7, DC_AMPS_10);				
+			}
+			uint8_t dc_amp_tens = dc_amps/10;
+			uint8_t dc_amp_ones = dc_amps - (dc_amp_tens * 10);
+			if(dc_amps < 0) {
+				if(dc_amps < -10) {
+					dc_amp_ones = 9;
+				}
+				dc_amp_tens = 0xF8;
+			}
 			mastercard_send_display(dc_amp_ones, DC_AMPS_1);
 			mastercard_send_display(dc_amp_tens, DC_AMPS_10);
-			previous_dc_amps = dc_amps;
 		}
 
 		// AC AMPS
@@ -167,11 +197,21 @@ namespace zcockpit::cockpit::hardware
 		int constexpr AC_AMPS_10 = 25;
 		const int ac_amps = static_cast<float>(aircraft_model.z737InData.ac_amp_value);
 		if(ac_amps != previous_ac_amps){
-			const uint8_t ac_amp_tens = ac_amps/10;
-			const uint8_t ac_amp_ones = ac_amps - (ac_amp_tens * 10);
+			previous_ac_amps = ac_amps;
+			if(ac_amps == 0) {
+				mastercard_send_display(0, AC_AMPS_1);
+				mastercard_send_display(0xF7, AC_AMPS_10);
+			}
+			uint8_t ac_amp_tens = ac_amps/10;
+			uint8_t ac_amp_ones = ac_amps - (ac_amp_tens * 10);
+			if(ac_amps < 0) {
+				if(ac_amps < -10) {
+					ac_amp_ones = 9;	
+				}
+				ac_amp_tens = 0xF8;  // minus sign
+			}
 			mastercard_send_display(ac_amp_ones, AC_AMPS_1);
 			mastercard_send_display(ac_amp_tens, AC_AMPS_10);
-			previous_ac_amps = ac_amps;
 		}
 
 		// DC Volts
@@ -179,11 +219,23 @@ namespace zcockpit::cockpit::hardware
 		int constexpr DC_VOLTS_10 = 27;
 		const int dc_volts = static_cast<float>(aircraft_model.z737InData.dc_volt_value);
 		if(dc_volts != previous_dc_volts){
-			const uint8_t dc_volt_tens = dc_volts/10;
-			const uint8_t dc_volt_ones = dc_volts - (dc_volt_tens * 10);
-			mastercard_send_display(dc_volt_ones, DC_VOLTS_1);
-			mastercard_send_display(dc_volt_tens, DC_VOLTS_10);
 			previous_dc_volts = dc_volts;
+			if(dc_volts == 0) {
+				mastercard_send_display(0, DC_VOLTS_1);
+				mastercard_send_display(0xF7, DC_VOLTS_10);
+			}
+			else {
+				uint8_t dc_volt_tens = dc_volts/10;
+				uint8_t dc_volt_ones = dc_volts - (dc_volt_tens * 10);
+				if(dc_volts < 0){
+					if(dc_volts < -10) {
+						dc_volt_ones = 9;
+					}
+					dc_volt_tens = 0xF8;  // minus sign
+				}
+				mastercard_send_display(dc_volt_ones, DC_VOLTS_1);
+				mastercard_send_display(dc_volt_tens, DC_VOLTS_10);
+			}
 		}
 	}
 
