@@ -38,6 +38,12 @@ namespace zcockpit::cockpit::hardware
 		int mag_eng1_start{0};
 		int mag_eng2_start{0};
 
+		int previous_ac_volts{-1};
+		int previous_ac_freq{-1};
+		int previous_dc_amps{-1};
+		int previous_ac_amps{-1};
+		int previous_dc_volts{-1};
+
 		static bool is_running(){return running;}
 		static std::string get_bus_addr(){return iocard_bus_addr;}
 	private:
