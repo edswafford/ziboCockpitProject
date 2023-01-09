@@ -174,6 +174,15 @@ namespace zcockpit::cockpit {
 
 		//
 		// IN Data
+
+		z_cockpit_data[DataRefName::ac_volt_value] = ZCockpitInData(&z737InData.ac_volt_value, ZCockpitType::ZInt);
+		z_cockpit_data[DataRefName::dc_volt_value] = ZCockpitInData(&z737InData.dc_volt_value, ZCockpitType::ZInt);
+		z_cockpit_data[DataRefName::ac_freq_value] = ZCockpitInData(&z737InData.ac_freq_value, ZCockpitType::ZInt);
+		z_cockpit_data[DataRefName::dc_amp_value] = ZCockpitInData(&z737InData.dc_amp_value, ZCockpitType::ZInt);
+		z_cockpit_data[DataRefName::ac_amp_value] = ZCockpitInData(&z737InData.ac_amp_value, ZCockpitType::ZInt);
+
+
+
 		z_cockpit_data[DataRefName::acf_tailnum] = ZCockpitInData(&z737InData.tail_number, ZCockpitType::ZBool);
 
 		z_cockpit_data[DataRefName::crossfeed] = ZCockpitInData(&z737InData.FUEL_annunXFEED_VALVE_OPEN, ZCockpitType::ZBool);

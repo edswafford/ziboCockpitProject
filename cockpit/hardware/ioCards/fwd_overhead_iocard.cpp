@@ -120,40 +120,56 @@ namespace zcockpit::cockpit::hardware
 	void ForwardOverheadIOCard::update_electrical_display()
 	{
 		// AC Volts
-		int const AC_VOLTS_1 = 21;
-		int const AC_VOLTS_10 = 22;
-		int const AC_VOLTS_100 = 23;
-		//mastercard_send_display(Ifly737::shareMemSDK->AC_VOLTS_1_Status, AC_VOLTS_1);
-		//mastercard_send_display(Ifly737::shareMemSDK->AC_VOLTS_10_Status, AC_VOLTS_10);
-		//mastercard_send_display(Ifly737::shareMemSDK->AC_VOLTS_100_Status, AC_VOLTS_100);
+		int constexpr AC_VOLTS_1 = 21;
+		int constexpr AC_VOLTS_10 = 22;
+		int constexpr AC_VOLTS_100 = 23;
+		const int ac_volts = aircraft_model.z737InData.ac_volt_value;
+		const uint8_t ac_volt_hundreds = ac_volts/100;
+		const int ac_volt_remaining = (ac_volts - (ac_volt_hundreds * 100));
+		const uint8_t ac_volt_tens = ac_volt_remaining/10;
+		const uint8_t ac_volt_ones = (ac_volt_remaining - (ac_volt_tens * 10));
+		mastercard_send_display(ac_volt_ones, AC_VOLTS_1);
+		mastercard_send_display(ac_volt_tens, AC_VOLTS_10);
+		mastercard_send_display(ac_volt_hundreds, AC_VOLTS_100);
 
 
-		//// AC Freq
-		//int const AC_FREQ_1 = 16;
-		//int const AC_FREQ_10 = 17;
-		//int const AC_FREQ_100 = 18;
-		//mastercard_send_display(Ifly737::shareMemSDK->CPS_FREQ_1_Status, AC_FREQ_1);
-		//mastercard_send_display(Ifly737::shareMemSDK->CPS_FREQ_10_Status, AC_FREQ_10);
-		//mastercard_send_display(Ifly737::shareMemSDK->CPS_FREQ_100_Status, AC_FREQ_100);
+		// AC Freq
+		int constexpr AC_FREQ_1 = 16;
+		int constexpr AC_FREQ_10 = 17;
+		int constexpr AC_FREQ_100 = 18;
+		const int ac_freq = aircraft_model.z737InData.ac_freq_value;
+		const uint8_t ac_freq_hundreds = ac_freq/100;
+		const int ac_freq_remaining = (ac_freq - (ac_freq_hundreds * 100));
+		const uint8_t ac_freq_tens = ac_freq_remaining/10;
+		const uint8_t ac_freq_ones = (ac_freq_remaining - (ac_freq_tens * 10));
+		mastercard_send_display(ac_freq_ones, AC_FREQ_1);
+		mastercard_send_display(ac_freq_tens, AC_FREQ_10);
+		mastercard_send_display(ac_freq_hundreds, AC_FREQ_100);
 
-		//// DC AMPS
-		//int const DC_AMPS_1 = 19;
-		//int const DC_AMPS_10 = 20;
+		// DC AMPS
+		int constexpr DC_AMPS_1 = 19;
+		int constexpr DC_AMPS_10 = 20;
+		const int dc_amps = aircraft_model.z737InData.dc_amp_value;
+		const uint8_t dc_amp_tens = dc_amps/10;
+		const uint8_t dc_amp_ones = dc_amps - (dc_amp_tens * 10);
+		mastercard_send_display(dc_amp_ones, DC_AMPS_1);
+		mastercard_send_display(dc_amp_tens, DC_AMPS_10);
 
-		//mastercard_send_display(Ifly737::shareMemSDK->DC_AMPS_1_Status, DC_AMPS_1);
-		//mastercard_send_display(Ifly737::shareMemSDK->DC_AMPS_10_Status, DC_AMPS_10);
+		// AC AMPS
+		int constexpr AC_AMPS_1 = 24;
+		int constexpr AC_AMPS_10 = 25;
+		const int ac_amps = aircraft_model.z737InData.ac_amp_value;
+		const uint8_t ac_amp_tens = ac_amps/10;
+		mastercard_send_display(ac_amp_tens, AC_AMPS_10);
 
-		//// AC AMPS
-		//int const AC_AMPS_1 = 24;
-		//int const AC_AMPS_10 = 25;
-		//mastercard_send_display(Ifly737::shareMemSDK->AC_AMPS_1_Status, AC_AMPS_1);
-		//mastercard_send_display(Ifly737::shareMemSDK->AC_AMPS_10_Status, AC_AMPS_10);
-
-		//// DC Volts
-		//int const DC_VOLTS_1 = 26;
-		//int const DC_VOLTS_10 = 27;
-		//mastercard_send_display(Ifly737::shareMemSDK->DC_VOLTS_1_Status, DC_VOLTS_1);
-		//mastercard_send_display(Ifly737::shareMemSDK->DC_VOLTS_10_Status, DC_VOLTS_10);
+		// DC Volts
+		int constexpr DC_VOLTS_1 = 26;
+		int constexpr DC_VOLTS_10 = 27;
+		const int dc_volts = aircraft_model.z737InData.dc_volt_value;
+		const uint8_t dc_volt_tens = dc_volts/10;
+		const uint8_t dc_volt_ones = dc_volts - (dc_volt_tens * 10);
+		mastercard_send_display(dc_volt_ones, DC_VOLTS_1);
+		mastercard_send_display(dc_volt_tens, DC_VOLTS_10);
 	}
 
 	void ForwardOverheadIOCard::update_landing_alt_display()
@@ -297,9 +313,9 @@ namespace zcockpit::cockpit::hardware
 		iocard_fwd_overhead_zcockpit_switches[12]  = ZcockpitSwitch(DataRefName::alt_flaps_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_ARM );
 		iocard_fwd_overhead_zcockpit_switches[13]  = ZcockpitSwitch(DataRefName::alt_flaps_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_OFF);
 
-		iocard_fwd_overhead_zcockpit_switches[14]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::toggle, FLIGHT_CONTROL_B_ON);
-		iocard_fwd_overhead_zcockpit_switches[15]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::toggle, FLIGHT_CONTROL_B_OFF );
-		iocard_fwd_overhead_zcockpit_switches[16]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::toggle, FLIGHT_CONTROL_B_STBYRUD );
+		iocard_fwd_overhead_zcockpit_switches[14]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::spring_loaded, FLIGHT_CONTROL_B_ON);
+		iocard_fwd_overhead_zcockpit_switches[15]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::spring_loaded, FLIGHT_CONTROL_B_OFF );
+		iocard_fwd_overhead_zcockpit_switches[16]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::spring_loaded, FLIGHT_CONTROL_B_STBYRUD );
 
 		iocard_fwd_overhead_zcockpit_switches[17]  = ZcockpitSwitch(DataRefName::flt_ctr_A_pos, common::SwitchType::toggle, FLIGHT_CONTROL_A_ON);
 		iocard_fwd_overhead_zcockpit_switches[18]  = ZcockpitSwitch(DataRefName::flt_ctr_A_pos, common::SwitchType::toggle, FLIGHT_CONTROL_A_OFF );

@@ -18,6 +18,11 @@ namespace zcockpit::cockpit {
 		bool WARN_annunPSEU{false};
 
 		//
+		int ac_volt_value{0};
+		int dc_volt_value{0};
+		int ac_freq_value{0};
+		int dc_amp_value{0};
+		int ac_amp_value{0};
 
 		char tail_number[40];
 

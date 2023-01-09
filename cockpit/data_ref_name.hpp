@@ -168,6 +168,13 @@ namespace zcockpit::cockpit {
 		ac_tnsbus1_status,
 		ac_tnsbus2_status,
 
+		// INPUTS
+		ac_volt_value,
+		dc_volt_value,
+		ac_freq_value,
+		dc_amp_value,
+		ac_amp_value,
+
 
 		//
 		// end of DataRef names
