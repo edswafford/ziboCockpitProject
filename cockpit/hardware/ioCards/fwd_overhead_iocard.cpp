@@ -136,8 +136,8 @@ namespace zcockpit::cockpit::hardware
 			previous_ac_volts = ac_volts;
 			if(ac_volts == 0) {
 				mastercard_send_display(0, AC_VOLTS_1);
-				mastercard_send_display(0xF7, AC_VOLTS_10);		// Blank
-				mastercard_send_display(0xF7, AC_VOLTS_100);		// Blank
+				mastercard_send_display(0xA, AC_VOLTS_10);		// Blank
+				mastercard_send_display(0xA, AC_VOLTS_100);		// Blank
 			}
 			else {
 				const uint8_t ac_volt_hundreds = ac_volts/100;
@@ -158,8 +158,8 @@ namespace zcockpit::cockpit::hardware
 			previous_ac_freq = ac_freq;
 			if(ac_freq == 0){
 				mastercard_send_display(0, AC_FREQ_1);
-				mastercard_send_display(0xF7, AC_FREQ_10);
-				mastercard_send_display(0xF7, AC_FREQ_100);}
+				mastercard_send_display(0xA, AC_FREQ_10);
+				mastercard_send_display(0xA, AC_FREQ_100);}
 			else {
 				const uint8_t ac_freq_hundreds = ac_freq/100;
 				const int ac_freq_remaining = (ac_freq - (ac_freq_hundreds * 100));
@@ -178,18 +178,20 @@ namespace zcockpit::cockpit::hardware
 			previous_dc_amps = dc_amps;
 			if(dc_amps == 0) {
 				mastercard_send_display(0, DC_AMPS_1);
-				mastercard_send_display(0xF7, DC_AMPS_10);				
+				mastercard_send_display(0xA, DC_AMPS_10);				
 			}
-			uint8_t dc_amp_tens = dc_amps/10;
-			uint8_t dc_amp_ones = dc_amps - (dc_amp_tens * 10);
-			if(dc_amps < 0) {
-				if(dc_amps < -10) {
-					dc_amp_ones = 9;
+			else {
+				uint8_t dc_amp_tens = dc_amps / 10;
+				uint8_t dc_amp_ones = dc_amps - (dc_amp_tens * 10);
+				if (dc_amps < 0) {
+					if (dc_amps < -10) {
+						dc_amp_ones = 9;
+					}
+					dc_amp_tens = 0xF8;
 				}
-				dc_amp_tens = 0xF8;
+				mastercard_send_display(dc_amp_ones, DC_AMPS_1);
+				mastercard_send_display(dc_amp_tens, DC_AMPS_10);
 			}
-			mastercard_send_display(dc_amp_ones, DC_AMPS_1);
-			mastercard_send_display(dc_amp_tens, DC_AMPS_10);
 		}
 
 		// AC AMPS
@@ -200,18 +202,20 @@ namespace zcockpit::cockpit::hardware
 			previous_ac_amps = ac_amps;
 			if(ac_amps == 0) {
 				mastercard_send_display(0, AC_AMPS_1);
-				mastercard_send_display(0xF7, AC_AMPS_10);
+				mastercard_send_display(0xA, AC_AMPS_10);
 			}
-			uint8_t ac_amp_tens = ac_amps/10;
-			uint8_t ac_amp_ones = ac_amps - (ac_amp_tens * 10);
-			if(ac_amps < 0) {
-				if(ac_amps < -10) {
-					ac_amp_ones = 9;	
+			else {
+				uint8_t ac_amp_tens = ac_amps / 10;
+				uint8_t ac_amp_ones = ac_amps - (ac_amp_tens * 10);
+				if (ac_amps < 0) {
+					if (ac_amps < -10) {
+						ac_amp_ones = 9;
+					}
+					ac_amp_tens = 0xF8;  // minus sign
 				}
-				ac_amp_tens = 0xF8;  // minus sign
+				mastercard_send_display(ac_amp_ones, AC_AMPS_1);
+				mastercard_send_display(ac_amp_tens, AC_AMPS_10);
 			}
-			mastercard_send_display(ac_amp_ones, AC_AMPS_1);
-			mastercard_send_display(ac_amp_tens, AC_AMPS_10);
 		}
 
 		// DC Volts
@@ -222,7 +226,7 @@ namespace zcockpit::cockpit::hardware
 			previous_dc_volts = dc_volts;
 			if(dc_volts == 0) {
 				mastercard_send_display(0, DC_VOLTS_1);
-				mastercard_send_display(0xF7, DC_VOLTS_10);
+				mastercard_send_display(0xA, DC_VOLTS_10);
 			}
 			else {
 				uint8_t dc_volt_tens = dc_volts/10;
