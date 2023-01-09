@@ -160,6 +160,8 @@ namespace zcockpit::cockpit::hardware
 		int constexpr AC_AMPS_10 = 25;
 		const int ac_amps = static_cast<float>(aircraft_model.z737InData.ac_amp_value);
 		const uint8_t ac_amp_tens = ac_amps/10;
+		const uint8_t ac_amp_ones = ac_amps - (ac_amp_tens * 10);
+		mastercard_send_display(ac_amp_ones, AC_AMPS_1);
 		mastercard_send_display(ac_amp_tens, AC_AMPS_10);
 
 		// DC Volts
