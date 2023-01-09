@@ -182,11 +182,11 @@ namespace zcockpit::cockpit {
 		//data_ref_strings[DataRefName::MFD_SYS_pb] = {"MFD_SYS_pb", XplaneType::type_Float, !round_up};
 
 		// INPUTS
-		data_ref_strings[DataRefName::ac_volt_value] = {"laminar/B738/ac_volt_value", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::dc_volt_value] = {"laminar/B738/dc_volt_value", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::ac_freq_value] = {"laminar/B738/ac_freq_value", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::dc_amp_value] = {"laminar/B738/dc_amp_value", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::ac_amp_value] = {"laminar/B738/ac_amp_value", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::ac_volt_value] = {"laminar/B738/ac_volt_value", XplaneType::type_Float, round_up};
+		data_ref_strings[DataRefName::dc_volt_value] = {"laminar/B738/dc_volt_value", XplaneType::type_Float, round_up};
+		data_ref_strings[DataRefName::ac_freq_value] = {"laminar/B738/ac_freq_value", XplaneType::type_Float, round_up};
+		data_ref_strings[DataRefName::dc_amp_value] = {"laminar/B738/dc_amp_value", XplaneType::type_Float, round_up};
+		data_ref_strings[DataRefName::ac_amp_value] = {"laminar/B738/ac_amp_value", XplaneType::type_Float, round_up};
 
 			//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};

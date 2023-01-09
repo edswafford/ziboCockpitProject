@@ -36,7 +36,7 @@ namespace zcockpit::common {
 		{
 			new_value_ = XPLMGetDataf(xplane_data_ref_);
 			if(is_bool_annum) {
-				new_value_ = new_value_ == 0.0? 0.0 : 1.0;
+				new_value_ = std::round(new_value_);
 			}
 			if(new_value_ != value_) {
 				LOG() << "DataREF update_new_value_from_xplane::  id " << xplane_data_ref_ << "new value " << new_value_  << " old value " << value_  << " is bool " << is_bool_annum;
@@ -144,9 +144,7 @@ namespace zcockpit::common {
 				assert(size_ == values_copied);
 				if (is_bool_annum) {
 					for (auto i = 0; i < size_; i++) {
-						if(is_bool_annum){
-							new_value_[i] = new_value_[i] == 0.0 ? 0.0 : 1.0;
-						}
+						new_value_[i] = std::round(new_value_[i]);
 					}
 				}
 			}
@@ -172,9 +170,7 @@ namespace zcockpit::common {
 				assert(size_ == values_copied);
 				if (is_bool_annum) {
 					for (auto i = 0; i < size_; i++) {
-						if(is_bool_annum){
-							new_value_[i] = new_value_[i] == 0.0 ? 0.0 : 1.0;
-						}
+						new_value_[i] = std::round(new_value_[i]);
 					}
 				}
 				LOG() << "Set VectorFloatXPDataRef count: " << count;
