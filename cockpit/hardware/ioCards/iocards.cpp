@@ -993,8 +993,8 @@ namespace zcockpit::cockpit::hardware
 												}
 												//if (index == 53 && card == 0)
 												{
-														LOG() << "reveive_mastercard: card:index =" << card << ":" << index << " slot=" << slot << " bit=" << bit << " bytecnt=" << byteCnt << " old="
-															<< inputs[index][card] << " new="  <<input[byteCnt][bit];
+														//LOG() << "reveive_mastercard: card:index =" << card << ":" << index << " slot=" << slot << " bit=" << bit << " bytecnt=" << byteCnt << " old="
+														//	<< inputs[index][card] << " new="  <<input[byteCnt][bit];
 
 												}
 												inputs[index][card] = input[byteCnt][bit];
@@ -1032,8 +1032,8 @@ namespace zcockpit::cockpit::hardware
 												int bit = (sumnine + readnine) % 8; /* present slots fill up subsequent bytes with their 9th bit data */
 												index = 9 * slot + 8;
 												
-												LOG() << "reveive_mastercard BIT 9: card:index =" << card << ":" << index << " slot=" << slot << " bit=" << bit << " bytecnt=" << byteCnt << " old="
-													<< inputs[index][card] << " new=" << input[byteCnt][bit];
+												//LOG() << "reveive_mastercard BIT 9: card:index =" << card << ":" << index << " slot=" << slot << " bit=" << bit << " bytecnt=" << byteCnt << " old="
+												//	<< inputs[index][card] << " new=" << input[byteCnt][bit];
 
 												inputs[index][card] = input[byteCnt][bit];
 											}

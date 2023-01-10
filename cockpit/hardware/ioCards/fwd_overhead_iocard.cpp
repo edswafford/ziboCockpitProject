@@ -778,30 +778,30 @@ namespace zcockpit::cockpit::hardware
 	void ForwardOverheadIOCard::processOvrHead()
 	{
 		// pressurization manual valve
-		if(outflowOpen == 1)
-		{
-			aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[10]);  // OUTFLOW_VALVE_OPEN
-		}
 		if(mastercard_input(51, &outflowOpen))
 		{
-			if(outflowOpen == 0)
+			if(outflowOpen == 1)
 			{
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[10]);  // OUTFLOW_VALVE_OPEN
+			}
+			else {
 				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[11]);  // OUTFLOW_VALVE_MIDDLE
 			}
-			LOG() << "outflow = " << outflowOpen;
+			LOG() << "outflowOpen Change = " << outflowOpen;
 		}
 
 		// pressurization manual valve
-		if(outflowClosed == 1)
-		{
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[12]);  // OUTFLOW_VALVE_CLOSE
-		}
 		if(mastercard_input(52, &outflowClosed))
 		{
-			if(outflowOpen == 0)
+			if(outflowClosed == 1)
 			{
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[12]);  // OUTFLOW_VALVE_CLOSE
+			}
+			else {
+
 				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[11]);  // OUTFLOW_VALVE_MIDDLE
 			}
+			LOG() << "outflowClosed Change = " << outflowClosed;
 		}
 
 
