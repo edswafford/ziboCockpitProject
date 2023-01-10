@@ -18,12 +18,13 @@ namespace zcockpit::cockpit {
 		bool WARN_annunPSEU{false};
 
 		//
-		float ac_volt_value{0};
-		float dc_volt_value{0};
-		float ac_freq_value{0};
-		float dc_amp_value{0};
-		float ac_amp_value{0};
-
+		float ac_volt_value{0.0f};
+		float dc_volt_value{0.0f};
+		float ac_freq_value{0.0f};
+		float dc_amp_value{0.0f};
+		float ac_amp_value{0.0f};
+		float max_allowable_altitude{0.0f};
+		float landing_alt{0.0f};
 		char tail_number[40];
 
 		bool FUEL_annunXFEED_VALVE_OPEN{false};

@@ -26,14 +26,11 @@ namespace zcockpit::cockpit::hardware
 
 		void update_electrical_display();
 
-		void update_landing_alt_display();
+		void update_landing_alt_display(bool use_xplane_value = true);
 
-		void update_flight_alt_display();
-
-		static bool is_display_blank(std::array<unsigned char, NUMBER_OF_ALTITUDE_DIGITS> digits);
+		void update_flight_alt_display(bool use_xplane_value = true);
 
 
-		static long convert_digits_to_long(std::array<unsigned char, NUMBER_OF_ALTITUDE_DIGITS> digits);
 		void processEncoders();
 		int mag_eng1_start{0};
 		int mag_eng2_start{0};
@@ -43,6 +40,11 @@ namespace zcockpit::cockpit::hardware
 		int previous_dc_amps{-1};
 		int previous_ac_amps{-1};
 		int previous_dc_volts{-1};
+		long
+		previous_landing_altitude{-90000};
+		long previous_flight_altitude{-90000};
+		long flight_altitude{-90000};
+		long landing_altitude{-90000};
 
 		static bool is_running(){return running;}
 		static std::string get_bus_addr(){return iocard_bus_addr;}

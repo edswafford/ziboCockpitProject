@@ -88,6 +88,7 @@ namespace zcockpit::common
 			ZVectorInt = 16,
 			ZString = 32,
 			ZBool = 64,
+			ZLong = 128,
 		};
 
 		enum class OperationType : unsigned

@@ -214,6 +214,10 @@ namespace zcockpit::cockpit {
 		vhf_nav_source_lft,
 		vhf_nav_source_rgt,
 
+		flt_alt_press_dn,
+		flt_alt_press_up,
+		land_alt_press_dn,
+		land_alt_press_up,
 
 		CommandRefName_unused,
 
@@ -420,6 +424,12 @@ namespace zcockpit::cockpit {
 		CommandRefName::irs_source_right,
 		CommandRefName::vhf_nav_source_lft,
 		CommandRefName::vhf_nav_source_rgt,
+
+		CommandRefName::flt_alt_press_dn,
+		CommandRefName::flt_alt_press_up,
+		CommandRefName::land_alt_press_dn,
+		CommandRefName::land_alt_press_up,
+
 	};
 
 	struct DataRefParameter

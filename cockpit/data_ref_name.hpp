@@ -174,7 +174,8 @@ namespace zcockpit::cockpit {
 		ac_freq_value,
 		dc_amp_value,
 		ac_amp_value,
-
+		max_allowable_altitude,
+		landing_alt,
 
 		//
 		// end of DataRef names
@@ -201,6 +202,9 @@ namespace zcockpit::cockpit {
 		ap_light_fo,
 		at_light_fo,
 		fms_light_fo,
+
+		flight_alt_pos,
+		landing_alt_pos,
 
 		// guards [11]
 		// [0] EEC #1			open = 1.0

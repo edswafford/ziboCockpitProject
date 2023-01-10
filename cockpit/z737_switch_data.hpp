@@ -89,6 +89,9 @@ namespace zcockpit::cockpit {
 		int ap_light_fo{0};
 		int at_light_fo{0};
 		int fms_light_fo{0};
+		long flight_alt_pos{0L};
+		long landing_alt_pos{0L};
+
 
 		int n1_set_source{0};
 
@@ -303,6 +306,8 @@ namespace zcockpit::cockpit {
 		SwitchCommands alt_flaps_pos{2, std::vector<CommandRefName>{CommandRefName::alt_flaps, CommandRefName::alt_flaps}};
 
 
+		SwitchCommands flight_alt_pos{2, std::vector<CommandRefName>{CommandRefName::flt_alt_press_dn, CommandRefName::flt_alt_press_up}};
+		SwitchCommands landing_alt_pos{2, std::vector<CommandRefName>{CommandRefName::land_alt_press_dn, CommandRefName::land_alt_press_up}};
 
 		
 	};

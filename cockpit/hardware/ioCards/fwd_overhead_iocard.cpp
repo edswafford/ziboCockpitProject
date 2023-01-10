@@ -1,4 +1,5 @@
 #include <array>
+#include <algorithm>
 #include "fwd_overhead_iocard.hpp"
 #include "../common/logger.hpp"
 #include "../DeleteMeHotkey.h"
@@ -128,11 +129,12 @@ namespace zcockpit::cockpit::hardware
 	void ForwardOverheadIOCard::update_electrical_display()
 	{
 		// AC Volts
-		int constexpr AC_VOLTS_1 = 21;
-		int constexpr AC_VOLTS_10 = 22;
-		int constexpr AC_VOLTS_100 = 23;
-		const int ac_volts = static_cast<float>(aircraft_model.z737InData.ac_volt_value);
+		const int ac_volts = static_cast<int>(aircraft_model.z737InData.ac_volt_value);
 		if(ac_volts != previous_ac_volts){
+			int constexpr AC_VOLTS_1 = 21;
+			int constexpr AC_VOLTS_10 = 22;
+			int constexpr AC_VOLTS_100 = 23;
+
 			previous_ac_volts = ac_volts;
 			if(ac_volts == 0) {
 				mastercard_send_display(0, AC_VOLTS_1);
@@ -150,11 +152,12 @@ namespace zcockpit::cockpit::hardware
 			}	
 		}
 		// AC Freq
-		int constexpr AC_FREQ_1 = 16;
-		int constexpr AC_FREQ_10 = 17;
-		int constexpr AC_FREQ_100 = 18;
-		const int ac_freq = static_cast<float>(aircraft_model.z737InData.ac_freq_value);
+		const int ac_freq = static_cast<int>(aircraft_model.z737InData.ac_freq_value);
 		if(ac_freq != previous_ac_freq){
+			int constexpr AC_FREQ_1 = 16;
+			int constexpr AC_FREQ_10 = 17;
+			int constexpr AC_FREQ_100 = 18;
+
 			previous_ac_freq = ac_freq;
 			if(ac_freq == 0){
 				mastercard_send_display(0, AC_FREQ_1);
@@ -171,20 +174,26 @@ namespace zcockpit::cockpit::hardware
 			}
 		}
 		// DC AMPS
-		int constexpr DC_AMPS_1 = 19;
-		int constexpr DC_AMPS_10 = 20;
-		const int dc_amps = static_cast<float>(aircraft_model.z737InData.dc_amp_value);
+		int dc_amps = static_cast<int>(aircraft_model.z737InData.dc_amp_value);
 		if(dc_amps != previous_dc_amps){
+			int constexpr DC_AMPS_1 = 19;
+			int constexpr DC_AMPS_10 = 20;
+
 			previous_dc_amps = dc_amps;
 			if(dc_amps == 0) {
 				mastercard_send_display(0, DC_AMPS_1);
 				mastercard_send_display(0xA, DC_AMPS_10);				
 			}
 			else {
+				bool is_negative = false;
+				if (dc_amps < 0) {
+					dc_amps = -dc_amps;
+					is_negative = true;
+				}
 				uint8_t dc_amp_tens = dc_amps / 10;
 				uint8_t dc_amp_ones = dc_amps - (dc_amp_tens * 10);
-				if (dc_amps < 0) {
-					if (dc_amps < -10) {
+				if(is_negative) {
+					if (dc_amps > 10) {
 						dc_amp_ones = 9;
 					}
 					dc_amp_tens = 0xF8;
@@ -195,20 +204,26 @@ namespace zcockpit::cockpit::hardware
 		}
 
 		// AC AMPS
-		int constexpr AC_AMPS_1 = 24;
-		int constexpr AC_AMPS_10 = 25;
-		const int ac_amps = static_cast<float>(aircraft_model.z737InData.ac_amp_value);
+		int ac_amps = static_cast<int>(aircraft_model.z737InData.ac_amp_value);
 		if(ac_amps != previous_ac_amps){
+			int constexpr AC_AMPS_1 = 24;
+			int constexpr AC_AMPS_10 = 25;
+
 			previous_ac_amps = ac_amps;
 			if(ac_amps == 0) {
 				mastercard_send_display(0, AC_AMPS_1);
 				mastercard_send_display(0xA, AC_AMPS_10);
 			}
 			else {
+				bool is_negative = false;
+				if (ac_amps < 0) {
+					ac_amps = -ac_amps;
+					is_negative = true;
+				}
 				uint8_t ac_amp_tens = ac_amps / 10;
 				uint8_t ac_amp_ones = ac_amps - (ac_amp_tens * 10);
-				if (ac_amps < 0) {
-					if (ac_amps < -10) {
+				if (is_negative) {
+					if (ac_amps > 10) {
 						ac_amp_ones = 9;
 					}
 					ac_amp_tens = 0xF8;  // minus sign
@@ -219,20 +234,26 @@ namespace zcockpit::cockpit::hardware
 		}
 
 		// DC Volts
-		int constexpr DC_VOLTS_1 = 26;
-		int constexpr DC_VOLTS_10 = 27;
-		const int dc_volts = static_cast<float>(aircraft_model.z737InData.dc_volt_value);
+		int dc_volts = static_cast<int>(aircraft_model.z737InData.dc_volt_value);
 		if(dc_volts != previous_dc_volts){
+			int constexpr DC_VOLTS_1 = 26;
+			int constexpr DC_VOLTS_10 = 27;
+
 			previous_dc_volts = dc_volts;
 			if(dc_volts == 0) {
 				mastercard_send_display(0, DC_VOLTS_1);
 				mastercard_send_display(0xA, DC_VOLTS_10);
 			}
 			else {
+				bool is_negative = false;
+				if (dc_volts < 0) {
+					dc_volts = -dc_volts;
+					is_negative = true;
+				}
 				uint8_t dc_volt_tens = dc_volts/10;
 				uint8_t dc_volt_ones = dc_volts - (dc_volt_tens * 10);
-				if(dc_volts < 0){
-					if(dc_volts < -10) {
+				if(is_negative){
+					if(dc_volts > 10) {
 						dc_volt_ones = 9;
 					}
 					dc_volt_tens = 0xF8;  // minus sign
@@ -243,122 +264,202 @@ namespace zcockpit::cockpit::hardware
 		}
 	}
 
-	void ForwardOverheadIOCard::update_landing_alt_display()
+	// Landing Altitude
+	void ForwardOverheadIOCard::update_landing_alt_display(bool use_xplane_value)
 	{
-		// Landing Altitude
-		int const LAND_ALT_1 = 5;
-		int const LAND_ALT_10 = 6;
-		int const LAND_ALT_100 = 7;
-		int const LAND_ALT_1000 = 8;
-		int const LAND_ALT_10_000 = 9;
-		//mastercard_send_display(ifly737->landing_altitude[0], LAND_ALT_1);
-		//mastercard_send_display(ifly737->landing_altitude[1], LAND_ALT_10);
-		//mastercard_send_display(ifly737->landing_altitude[2], LAND_ALT_100);
-		//mastercard_send_display(ifly737->landing_altitude[3], LAND_ALT_1000);
-		//unsigned char land_alt;// = ifly737->landing_altitude[4];
-		//if(land_alt == 11)
-		//{
-		//	land_alt = 0xf8;
-		//}
-	//	mastercard_send_display(land_alt, LAND_ALT_10_000);
+		if(use_xplane_value){
+			landing_altitude = static_cast<long>(aircraft_model.z737InData.landing_alt);
+		}
+		if(landing_altitude != previous_landing_altitude){
+			int constexpr LAND_ALT_1 = 5;
+			int constexpr LAND_ALT_10 = 6;
+			int constexpr LAND_ALT_100 = 7;
+			int constexpr LAND_ALT_1000 = 8;
+			int constexpr LAND_ALT_10_000 = 9;
+
+			previous_landing_altitude = landing_altitude;
+			if(landing_altitude == 0) {
+				mastercard_send_display(0, LAND_ALT_1);
+				mastercard_send_display(0xA, LAND_ALT_10);
+				mastercard_send_display(0xA, LAND_ALT_100);
+				mastercard_send_display(0xA, LAND_ALT_1000);
+				mastercard_send_display(0xA, LAND_ALT_10_000);
+			}
+			else {
+				bool is_negative = false;
+				if(landing_altitude < 0) {
+					landing_altitude = -landing_altitude;
+					is_negative = true;
+				}
+				const uint8_t land_alt_ten_thousands= landing_altitude / 10000;
+				int temp = landing_altitude - (land_alt_ten_thousands * 10000);
+				const uint8_t land_alt_one_thousands = temp / 1000;
+				temp = temp - (land_alt_one_thousands *1000);
+				const uint8_t land_alt_hundreds = temp / 100;
+				temp = temp - (land_alt_hundreds * 100);
+				const uint8_t land_alt_tens = temp/10;
+				const uint8_t land_alt_ones = (temp - (land_alt_tens * 10));
+				if(is_negative) {
+					if(landing_altitude > 1000) {
+						mastercard_send_display(land_alt_ones, LAND_ALT_1);
+						mastercard_send_display(land_alt_tens, LAND_ALT_10);
+						mastercard_send_display(land_alt_hundreds, LAND_ALT_100);
+						mastercard_send_display(land_alt_one_thousands, LAND_ALT_1000);
+						mastercard_send_display(0xF8, LAND_ALT_10_000);							
+					}
+					else if(landing_altitude > 100) {
+						mastercard_send_display(land_alt_ones, LAND_ALT_1);
+						mastercard_send_display(land_alt_tens, LAND_ALT_10);
+						mastercard_send_display(land_alt_hundreds, LAND_ALT_100);
+						mastercard_send_display(0xA, LAND_ALT_1000);
+						mastercard_send_display(0xF8, LAND_ALT_10_000);							
+					}
+					else if(landing_altitude > 10) {
+						mastercard_send_display(land_alt_ones, LAND_ALT_1);
+						mastercard_send_display(land_alt_tens, LAND_ALT_10);
+						mastercard_send_display(0xA, LAND_ALT_100);
+						mastercard_send_display(0xA, LAND_ALT_1000);
+						mastercard_send_display(0xF8, LAND_ALT_10_000);						
+					}
+					else {
+						mastercard_send_display(land_alt_ones, LAND_ALT_1);
+						mastercard_send_display(0xA, LAND_ALT_10);
+						mastercard_send_display(0xA, LAND_ALT_100);
+						mastercard_send_display(0xA, LAND_ALT_1000);
+						mastercard_send_display(0xF8, LAND_ALT_10_000);						
+					}
+				}
+				else {
+					mastercard_send_display(land_alt_ones, LAND_ALT_1);
+					mastercard_send_display(land_alt_tens, LAND_ALT_10);
+					mastercard_send_display(land_alt_hundreds, LAND_ALT_100);
+					mastercard_send_display(land_alt_one_thousands, LAND_ALT_1000);
+					mastercard_send_display(land_alt_ten_thousands, LAND_ALT_10_000);
+				}
+			}
+
+		}
 	}
 
 
-	void ForwardOverheadIOCard::update_flight_alt_display()
+	// Flight Altitude
+	void ForwardOverheadIOCard::update_flight_alt_display(bool use_xplane_value)
 	{
-		// Flight Altitude
-		int const FLT_ALT_1 = 0;
-		int const FLT_ALT_10 = 1;
-		int const FLT_ALT_100 = 2;
-		int const FLT_ALT_1000 = 3;
-		int const FLT_ALT_10_000 = 4;
+		if(use_xplane_value){
+			flight_altitude = static_cast<long>(aircraft_model.z737InData.max_allowable_altitude);
+		}
+		if(flight_altitude != previous_flight_altitude){
+			int constexpr FLT_ALT_1 = 0;
+			int constexpr FLT_ALT_10 = 1;
+			int constexpr FLT_ALT_100 = 2;
+			int constexpr FLT_ALT_1000 = 3;
+			int constexpr FLT_ALT_10_000 = 4;
 
-		//mastercard_send_display(ifly737->flight_altitude[0], FLT_ALT_1);
-		//mastercard_send_display(ifly737->flight_altitude[1], FLT_ALT_10);
-		//mastercard_send_display(ifly737->flight_altitude[2], FLT_ALT_100);
-		//mastercard_send_display(ifly737->flight_altitude[3], FLT_ALT_1000);
-		//unsigned char land_alt;// = ifly737->flight_altitude[4];
-		//if(land_alt == 11)
-		//{
-		//	land_alt = 0xf8;
-		//}
-		//mastercard_send_display(land_alt, FLT_ALT_10_000);
-	}
-
-	bool ForwardOverheadIOCard::is_display_blank(std::array<unsigned char, NUMBER_OF_ALTITUDE_DIGITS> digits)
-	{
-		for(auto i = 0; i < NUMBER_OF_ALTITUDE_DIGITS; i++)
-		{
-			if(digits[i] != 10)
-			{
-				return false;
+			previous_flight_altitude = flight_altitude;
+			if(flight_altitude == 0) {
+				mastercard_send_display(0,   FLT_ALT_1);
+				mastercard_send_display(0xA, FLT_ALT_10);
+				mastercard_send_display(0xA, FLT_ALT_100);
+				mastercard_send_display(0xA, FLT_ALT_1000);
+				mastercard_send_display(0xA, FLT_ALT_10_000);
+			}
+			else {
+				bool is_negative = false;
+				if(flight_altitude < 0) {
+					flight_altitude = -flight_altitude;
+					is_negative = true;
+				}
+				const uint8_t land_alt_ten_thousands= flight_altitude / 10000;
+				int temp = flight_altitude - (land_alt_ten_thousands * 10000);
+				const uint8_t land_alt_one_thousands = temp / 1000;
+				temp = temp - (land_alt_one_thousands *1000);
+				const uint8_t land_alt_hundreds = temp / 100;
+				temp = temp - (land_alt_hundreds * 100);
+				const uint8_t land_alt_tens = temp/10;
+				const uint8_t land_alt_ones = (temp - (land_alt_tens * 10));
+				if(is_negative) {
+					if(flight_altitude > 1000) {
+						mastercard_send_display(land_alt_ones, FLT_ALT_1);
+						mastercard_send_display(land_alt_tens, FLT_ALT_10);
+						mastercard_send_display(land_alt_hundreds, FLT_ALT_100);
+						mastercard_send_display(land_alt_one_thousands, FLT_ALT_1000);
+						mastercard_send_display(0xF8, FLT_ALT_10_000);							
+					}
+					else if(flight_altitude > 100) {
+						mastercard_send_display(land_alt_ones, FLT_ALT_1);
+						mastercard_send_display(land_alt_tens, FLT_ALT_10);
+						mastercard_send_display(land_alt_hundreds, FLT_ALT_100);
+						mastercard_send_display(0xA, FLT_ALT_1000);
+						mastercard_send_display(0xF8, FLT_ALT_10_000);							
+					}
+					else if(flight_altitude > 10) {
+						mastercard_send_display(land_alt_ones, FLT_ALT_1);
+						mastercard_send_display(land_alt_tens, FLT_ALT_10);
+						mastercard_send_display(0xA, FLT_ALT_100);
+						mastercard_send_display(0xA, FLT_ALT_1000);
+						mastercard_send_display(0xF8, FLT_ALT_10_000);						
+					}
+					else {
+						mastercard_send_display(land_alt_ones, FLT_ALT_1);
+						mastercard_send_display(0xA, FLT_ALT_10);
+						mastercard_send_display(0xA, FLT_ALT_100);
+						mastercard_send_display(0xA, FLT_ALT_1000);
+						mastercard_send_display(0xF8, FLT_ALT_10_000);						
+					}
+				}
+				else {
+					mastercard_send_display(land_alt_ones, FLT_ALT_1);
+					mastercard_send_display(land_alt_tens, FLT_ALT_10);
+					mastercard_send_display(land_alt_hundreds, FLT_ALT_100);
+					mastercard_send_display(land_alt_one_thousands, FLT_ALT_1000);
+					mastercard_send_display(land_alt_ten_thousands, FLT_ALT_10_000);
+				}
 			}
 		}
-		return true;
 	}
 
-	long ForwardOverheadIOCard::convert_digits_to_long(std::array<unsigned char, NUMBER_OF_ALTITUDE_DIGITS> digits)
-	{
-		long val = 0;
-		int scaling = 1;
-		for(int i = 0; i < NUMBER_OF_ALTITUDE_DIGITS; i++)
-		{
-			// LOG() << "Flt Alt [" << i << "] " << digits[i];
-			if(digits[i] >= 0 && digits[i] < 10)
-			{
-				val += digits[i] * scaling;
-			}
-			scaling *= 10;
-		}
 
-		// is last digit negative
-		if(digits[NUMBER_OF_ALTITUDE_DIGITS - 1] == 11)
-		{
-			val = -val;
-		}
-		return val;
-	}
-
+	// Encoders
 	void ForwardOverheadIOCard::processEncoders()
 	{
-		// Encoders
-
 		double value = 0.0;
-		//if(mastercard_encoder(0, &value, 1.0, 1.0) > 0)
-		//{
-		//	if(value > 0)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_AIRSYSTEM_FLT_ALT_INC, 0);
-		//	}
-		//	else
-		//	{
-		//		sendMessageInt(KEY_COMMAND_AIRSYSTEM_FLT_ALT_DEC, 0);
-		//	}
-		//}
 
-		//value = 0.0;
-		//if(mastercard_encoder(2, &value, 1.0, 1.0) > 0)
-		//{
-		//	if(value > 0)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_AIRSYSTEM_LDG_ALT_INC, 0);
-		//	}
-		//	else
-		//	{
-		//		sendMessageInt(KEY_COMMAND_AIRSYSTEM_LDG_ALT_DEC, 0);
-		//	}
-		//}
+		// Flight Altitude
+		if(mastercard_encoder(0, &value, 1.0, 0.1) > 0)
+		{
+			LOG() << "Flt Alt RAW value " << value;
+			value = std::clamp(value, -10.0, 10.0);
+			LOG() << "Flt Alt Clamp value " << value;
+			auto sw = iocard_fwd_overhead_zcockpit_switches[33]; // FLT ALT
+			sw.float_hw_value = 1 * static_cast<float>(value);
+			flight_altitude += static_cast<long>(sw.float_hw_value);
+			LOG() << "Flt Alt float value " << value;
+			aircraft_model.push_switch_change(sw);
+		}
+		// Landing Altitude
+		value = 0.0;
+		if(mastercard_encoder(2, &value, 50.0, 0.1) > 0)
+		{
+			LOG() << "Land Alt RAW value " << value;
+			value = std::clamp(value, -10.0, 10.0);
+			LOG() << "Land Alt Clamp value " << value;
+			auto sw = iocard_fwd_overhead_zcockpit_switches[34]; // LAND ALT
+			int new_val = (1 * static_cast<int>(value)) / 50;
+			sw.float_hw_value = new_val * 50;
+			landing_altitude += static_cast<long>(sw.float_hw_value);
+			LOG() << "Land Alt float value " << value;
+			aircraft_model.push_switch_change(sw);
+		}
 
-		//if(Ifly737::FltAltDisplayChanged())
-		//{
-		//	update_flight_alt_display();
-		//	Ifly737::FltAltDisplayChanged(false);
-		//}
-		//if(Ifly737::LandAltDisplayChanged())
-		//{
-		//	update_landing_alt_display();
-		//	Ifly737::LandAltDisplayChanged(false);
-		//}
+
+		if(previous_flight_altitude != flight_altitude)
+		{
+			update_flight_alt_display(false);
+		}
+		if(previous_landing_altitude != landing_altitude)
+		{
+			update_landing_alt_display(false);
+		}
 	}
 
 
@@ -407,6 +508,9 @@ namespace zcockpit::cockpit::hardware
 		iocard_fwd_overhead_zcockpit_switches[30]  = ZcockpitSwitch(DataRefName::vhf_nav_source, common::SwitchType::toggle, FMS_VHF_NAV_L );
 		iocard_fwd_overhead_zcockpit_switches[31]  = ZcockpitSwitch(DataRefName::vhf_nav_source, common::SwitchType::toggle, FMS_VHF_NAV_NORMAL);
 		iocard_fwd_overhead_zcockpit_switches[32]  = ZcockpitSwitch(DataRefName::vhf_nav_source, common::SwitchType::toggle, FMS_VHF_NAV_R );
+
+		iocard_fwd_overhead_zcockpit_switches[33]  = ZcockpitSwitch(DataRefName::flight_alt_pos, common::SwitchType::encoder, 0.0f, 0, 0);
+		iocard_fwd_overhead_zcockpit_switches[34]  = ZcockpitSwitch(DataRefName::landing_alt_pos, common::SwitchType::encoder, 0.0f, 0, 0);
 
 	}
 
