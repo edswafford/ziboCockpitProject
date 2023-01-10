@@ -149,7 +149,7 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(mip_iocard && mip_iocard->is_okay)
 			{
-				while (mip_iocard->receive_mastercard() > 0) {
+				if (mip_iocard->receive_mastercard() > 0) {
 
 					// update inputs
 					mip_iocard->processMIP();
@@ -170,9 +170,7 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(forward_overhead_iocard && forward_overhead_iocard->is_okay)
 			{
-
-				// send outputs
-				while(forward_overhead_iocard->receive_mastercard() > 0)
+				if(forward_overhead_iocard->receive_mastercard() > 0)
 				{
 					forward_overhead_iocard->processEncoders();
 
@@ -180,8 +178,6 @@ namespace zcockpit::cockpit::hardware
 					forward_overhead_iocard->fastProcessOvrHead();
 
 				}
-				// update inputs
-				forward_overhead_iocard->fastProcessOvrHead();
 
 				// send outputs
 				forward_overhead_iocard->send_mastercard();

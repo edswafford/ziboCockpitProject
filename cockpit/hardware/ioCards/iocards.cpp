@@ -850,11 +850,11 @@ namespace zcockpit::cockpit::hardware
 
 
 		// check if we have a connected USB expander card
-		if (is_okay && inQueue.size() > 0)
+		if (is_okay)
 		{
-			ret = inQueue.size();
-			if (const auto maybe_vector = inQueue.pop()) {
-
+			while (inQueue.size() > 0 ) {
+				ret = inQueue.size();
+				const auto maybe_vector = inQueue.pop();
 				if (maybe_vector) {
 					auto recv_data = *maybe_vector;
 			
@@ -991,6 +991,12 @@ namespace zcockpit::cockpit::hardware
 												//	LOG() << "index=" << index << " slot=" << slot << " bit=" << bit << " bytecnt=" << byteCnt << " old=" 
 												//		<< inputs[index][card] << " new="  <<input[byteCnt][bit];
 												}
+												//if (index == 53 && card == 0)
+												{
+														LOG() << "reveive_mastercard: card:index =" << card << ":" << index << " slot=" << slot << " bit=" << bit << " bytecnt=" << byteCnt << " old="
+															<< inputs[index][card] << " new="  <<input[byteCnt][bit];
+
+												}
 												inputs[index][card] = input[byteCnt][bit];
 											}
 										}
@@ -1025,6 +1031,10 @@ namespace zcockpit::cockpit::hardware
 											{
 												int bit = (sumnine + readnine) % 8; /* present slots fill up subsequent bytes with their 9th bit data */
 												index = 9 * slot + 8;
+												
+												LOG() << "reveive_mastercard BIT 9: card:index =" << card << ":" << index << " slot=" << slot << " bit=" << bit << " bytecnt=" << byteCnt << " old="
+													<< inputs[index][card] << " new=" << input[byteCnt][bit];
+
 												inputs[index][card] = input[byteCnt][bit];
 											}
 										}
@@ -1209,11 +1219,12 @@ namespace zcockpit::cockpit::hardware
 							/* something changed */
 							*value = inputs[input][card];
 							retval = 1;
+							
+							LOG() << "LIBIOCARDS: Pushbutton     : card=" << card << " input=" << input << " old value=" << inputs_old[input][card] << " new value=" << inputs[input][card];
 							//
 							// save value
 							inputs_old[input][card] = inputs[input][card];
 
-							// LOG() << "LIBIOCARDS: Pushbutton     : card=" << card << " input=" << input << " value=%" << inputs[input][card];
 						}
 						else
 						{
