@@ -93,13 +93,13 @@ namespace zcockpit::cockpit {
 			else if(commands->size >= 2 || switch_data.switch_type == common::SwitchType::spring_loaded) {
 				int direction = 1;
 				CommandRefName command_ref_name = commands->names[0];
-				const auto cmd_ref_string = get_cmd_ref_string(command_ref_name);
 
 				if (hw_value <= xplane_value && commands->size == 2) {
 					// send decrease command
 					command_ref_name = commands->names[1];
 					direction = -1;
 				}
+				const auto cmd_ref_string = get_cmd_ref_string(command_ref_name);
 
 				if (cmdref_to_ref_id.contains(command_ref_name)) {
 					auto cmd_ref_id = cmdref_to_ref_id[command_ref_name];
@@ -107,7 +107,7 @@ namespace zcockpit::cockpit {
 					// Toggle
 					if (switch_data.switch_type == common::SwitchType::toggle) {
 						xplane_commands.emplace_back(XplaneCommand(cmd_ref_id, XplaneCommand_enum::once));
-						LOG() << "Toggle Command once " << cmd_ref_string << " id " << cmd_ref_id;
+						LOG() << "Toggle Command once " << cmd_ref_string << " id " << cmd_ref_id << " hw == " << hw_value << " xp val = " << xplane_value;
 					}
 					//
 					// Spring Loaded

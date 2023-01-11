@@ -490,9 +490,9 @@ namespace zcockpit::cockpit::hardware
 		iocard_fwd_overhead_zcockpit_switches[13]  = ZcockpitSwitch(DataRefName::alt_flaps_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_ARM );
 		iocard_fwd_overhead_zcockpit_switches[14]  = ZcockpitSwitch(DataRefName::alt_flaps_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_OFF);
 
-		iocard_fwd_overhead_zcockpit_switches[15]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::spring_loaded, FLIGHT_CONTROL_B_ON);
-		iocard_fwd_overhead_zcockpit_switches[16]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::spring_loaded, FLIGHT_CONTROL_B_OFF );
-		iocard_fwd_overhead_zcockpit_switches[17]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::spring_loaded, FLIGHT_CONTROL_B_STBYRUD );
+		iocard_fwd_overhead_zcockpit_switches[15]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::toggle, FLIGHT_CONTROL_B_ON);
+		iocard_fwd_overhead_zcockpit_switches[16]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::toggle, FLIGHT_CONTROL_B_OFF );
+		iocard_fwd_overhead_zcockpit_switches[17]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::toggle, FLIGHT_CONTROL_B_STBYRUD );
 
 		iocard_fwd_overhead_zcockpit_switches[18]  = ZcockpitSwitch(DataRefName::flt_ctr_A_pos, common::SwitchType::toggle, FLIGHT_CONTROL_A_ON);
 		iocard_fwd_overhead_zcockpit_switches[19]  = ZcockpitSwitch(DataRefName::flt_ctr_A_pos, common::SwitchType::toggle, FLIGHT_CONTROL_A_OFF );
@@ -821,31 +821,32 @@ namespace zcockpit::cockpit::hardware
 		}
 
 		// flight control B ON switch position
-		if(mastercard_input(54, &fltctrl_b_on))
+		auto fltctrl_b_on_changed = mastercard_input(54, &fltctrl_b_on);
+		auto fltctrl_b_stby_changed = mastercard_input(55, &fltctrl_b_stby);
+		if (fltctrl_b_on_changed)
 		{
-			if(fltctrl_b_on == 1)
+			if (fltctrl_b_on == 1)
 			{
 				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[15]);  // FLIGHT_CONTROL_B_ON
 			}
 			else
 			{
-				if(fltctrl_b_stby != 1)
+				if (fltctrl_b_stby != 1)
 				{
 					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[16]);  // FLIGHT_CONTROL_B_OFF
 				}
 			}
 		}
-
 		// flight control B STBY switch position
-		if(mastercard_input(55, &fltctrl_b_stby))
+		if (fltctrl_b_stby_changed)
 		{
-			if(fltctrl_b_stby == 1)
+			if (fltctrl_b_stby == 1)
 			{
 				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[17]);  // FLIGHT_CONTROL_B_STBYRUD
-		}
+			}
 			else
 			{
-				if(fltctrl_b_on != 1)
+				if (fltctrl_b_on != 1)
 				{
 					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[16]);  // FLIGHT_CONTROL_B_OFF
 				}
