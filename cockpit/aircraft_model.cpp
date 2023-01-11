@@ -187,7 +187,7 @@ namespace zcockpit::cockpit {
 		if(switch_data.hw_type == ZCockpitType::ZFloat) {
 			float xplane_value = *(static_cast<float*>(switch_data.xplane_data));
 			const float float_hw_value = sw_data.float_hw_value;
-			if(sw_data.switch_type == SwitchType::encoder) {
+			if(sw_data.switch_type == SwitchType::delta_encoder) {
 				//if (dataref_name == DataRefName::spd_ref_adjust) {
 				//	LOG() << "spdref xp = " << xplane_value << " hw = " << float_hw_value;
 				//}
@@ -205,7 +205,14 @@ namespace zcockpit::cockpit {
 				int data_ref_id = dataref_to_ref_id[dataref_name];
 				common::SetDataRef set_data_ref(data_ref_id, variant);
 				xplane_dataref.emplace_back(set_data_ref);
-				LOG() << "Send DataRef " << get_data_ref_string(dataref_name) << " id " << data_ref_id;
+				LOG() << "Delta Encoder Send DataRef " << get_data_ref_string(dataref_name) << " id " << data_ref_id;
+			}
+			else if(sw_data.switch_type == SwitchType::raw_encoder) {
+				common::var_t variant = xplane_value;
+				int data_ref_id = dataref_to_ref_id[dataref_name];
+				common::SetDataRef set_data_ref(data_ref_id, variant);
+				xplane_dataref.emplace_back(set_data_ref);
+				LOG() << "Raw Encoder Send DataRef " << get_data_ref_string(dataref_name) << " id " << data_ref_id;
 			}
 			else if(float_hw_value != xplane_value) {
 				if(dataref_to_ref_id.contains(dataref_name)){
@@ -226,7 +233,7 @@ namespace zcockpit::cockpit {
 			xplane_values.resize(size);
 			const int index = sw_data.offset;
 			if(index < xplane_values.size()) {
-				if(sw_data.switch_type == SwitchType::encoder) {
+				if(sw_data.switch_type == SwitchType::delta_encoder) {
 					xplane_values[index] += sw_data.float_hw_value;
 					if(xplane_values[index] > operation->max_value) {
 						xplane_values[index] = operation->max_value;

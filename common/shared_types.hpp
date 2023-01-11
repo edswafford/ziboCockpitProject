@@ -50,7 +50,8 @@ namespace zcockpit::common
 		spring_loaded,
 		rotary_2_commands,				// xplane only supports up or down
 		rotary_multi_commands,		// xplane supports all positions
-		encoder,
+		delta_encoder,				// increment/decrement by delta
+		raw_encoder,				// sends the raw value
 		other
 	};
 

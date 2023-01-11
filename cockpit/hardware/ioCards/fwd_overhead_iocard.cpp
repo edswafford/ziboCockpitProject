@@ -530,8 +530,8 @@ namespace zcockpit::cockpit::hardware
 		iocard_fwd_overhead_zcockpit_switches[31]  = ZcockpitSwitch(DataRefName::vhf_nav_source, common::SwitchType::toggle, FMS_VHF_NAV_NORMAL);
 		iocard_fwd_overhead_zcockpit_switches[32]  = ZcockpitSwitch(DataRefName::vhf_nav_source, common::SwitchType::toggle, FMS_VHF_NAV_R );
 
-		iocard_fwd_overhead_zcockpit_switches[33]  = ZcockpitSwitch(DataRefName::max_allowable_altitude, common::SwitchType::encoder, 0.0f, 0, 0);
-		iocard_fwd_overhead_zcockpit_switches[34]  = ZcockpitSwitch(DataRefName::landing_alt, common::SwitchType::encoder, 0.0f, 0, 0);
+		iocard_fwd_overhead_zcockpit_switches[33]  = ZcockpitSwitch(DataRefName::max_allowable_altitude, common::SwitchType::raw_encoder, 0.0f, 0, 0);
+		iocard_fwd_overhead_zcockpit_switches[34]  = ZcockpitSwitch(DataRefName::landing_alt, common::SwitchType::raw_encoder, 0.0f, 0, 0);
 
 		iocard_fwd_overhead_zcockpit_switches[35]  = ZcockpitSwitch(DataRefName::alt_flaps_ctrl, common::SwitchType::spring_loaded, ALTERNATE_FLAPS_CTRL_OFF );
 
