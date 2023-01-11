@@ -348,7 +348,11 @@ namespace zcockpit::cockpit {
 						if (std::holds_alternative<ZCockpitSwitchData>(z_cockpit_data[ac_param.short_name])) {
 							ZCockpitSwitchData switch_data = std::get<ZCockpitSwitchData>(z_cockpit_data[ac_param.short_name]);
 							// record the xplane switch state
-							switch_data.fresh = true;
+							*switch_data.is_fresh = true;
+							if (ac_param.short_name == DataRefName::max_allowable_altitude)
+							{
+								LOG() << "flight altitude freshness " << switch_data.is_fresh;
+							}
 							if(switch_data.hw_type == ZCockpitType::ZInt || switch_data.hw_type == ZCockpitType::ZBool) {
 								*(static_cast<int*>(switch_data.xplane_data)) = static_cast<int>(data);
 								LOG() << "Packet IN data: SwitchData  " << data_ref_strings[ac_param.short_name].dataref_name << " in data = " << data << " --> xplane_data = " << *(static_cast<int*>(switch_data.xplane_data)) ;
@@ -477,9 +481,14 @@ namespace zcockpit::cockpit {
 								//
 								// Switches
 								if (std::holds_alternative<ZCockpitSwitchData>(z_cockpit_data[ac_param.short_name])) {
-									const ZCockpitSwitchData switch_data = std::get<ZCockpitSwitchData>(z_cockpit_data[ac_param.short_name]);
+									ZCockpitSwitchData switch_data = std::get<ZCockpitSwitchData>(z_cockpit_data[ac_param.short_name]);
 
 									// record the xplane switch state
+									*switch_data.is_fresh = true;
+									if (ac_param.short_name == DataRefName::max_allowable_altitude)
+									{
+										LOG() << "flight altitude freshness " << switch_data.is_fresh;
+									}
 									if (switch_data.hw_type == ZCockpitType::ZInt) {
 										*(static_cast<int*>(switch_data.xplane_data)) = static_cast<int>(data);
 										return std::string("Switch float to Int = ") + std::to_string(data) + " to " + std::to_string(static_cast<int>(data));
@@ -687,8 +696,16 @@ namespace zcockpit::cockpit {
 	{
 		if (std::holds_alternative<ZCockpitSwitchData>(z_cockpit_data[data_ref_name])) {
 			const ZCockpitSwitchData switch_data = std::get<ZCockpitSwitchData>(z_cockpit_data[data_ref_name]);
-			return switch_data.fresh;
+			return switch_data.is_fresh;
 		}
 		return false;
+	}
+	void AircraftModel::clear_freshness(DataRefName data_ref_name)
+	{
+		if (std::holds_alternative<ZCockpitSwitchData>(z_cockpit_data[data_ref_name])) {
+			const ZCockpitSwitchData switch_data = std::get<ZCockpitSwitchData>(z_cockpit_data[data_ref_name]);
+			*switch_data.is_fresh = false;
+		}
+
 	}
 }

@@ -367,10 +367,10 @@ namespace zcockpit::common {
 					const auto& data_ref = data_refs.at(id);
 					LOG() << "Setting dataref id " << id;
 					try{
-						//if (std::holds_alternative<float>(std::get<1>(param))) {
-						//	auto float_val = std::get<float>(std::get<1>(param));
-						//	LOG() << "XPDataREf: Setting DataRef id " << std::get<0>(param) << " new float value " << float_val;
-						//}
+						if (std::holds_alternative<float>(std::get<1>(param))) {
+							auto float_val = std::get<float>(std::get<1>(param));
+							LOG() << "XPDataREf: Setting DataRef id " << std::get<0>(param) << " new float value " << float_val;
+						}
 						//else if (std::holds_alternative<int>(std::get<1>(param))) {
 						//	auto int_val = std::get<int>(std::get<1>(param));
 						//	LOG() << "XPDataREf: Setting DataRef id " << std::get<0>(param) << " new int value " << int_val;

@@ -270,6 +270,7 @@ namespace zcockpit::cockpit::hardware
 		if(use_xplane_value){
 			if(aircraft_model.get_freshmess(DataRefName::landing_alt)) {
 				landing_altitude = static_cast<long>(aircraft_model.xplane_switch_data.landing_alt);
+				aircraft_model.clear_freshness(DataRefName::landing_alt);
 			}
 		}
 		if(landing_altitude != previous_landing_altitude){	
@@ -330,7 +331,7 @@ namespace zcockpit::cockpit::hardware
 				}
 				else {
 					if(landing_altitude >= 10000) {
-						mastercard_send_display(1, LAND_ALT_10);
+						mastercard_send_display(land_alt_tens, LAND_ALT_10);
 						mastercard_send_display(land_alt_hundreds, LAND_ALT_100);
 						mastercard_send_display(land_alt_one_thousands, LAND_ALT_1000);
 						mastercard_send_display(land_alt_ten_thousands, LAND_ALT_10_000);
@@ -366,6 +367,7 @@ namespace zcockpit::cockpit::hardware
 		if(use_xplane_value){
 			if(aircraft_model.get_freshmess(DataRefName::max_allowable_altitude)) {
 				flight_altitude = static_cast<long>(aircraft_model.xplane_switch_data.max_allowable_altitude);
+				aircraft_model.clear_freshness(DataRefName::max_allowable_altitude);
 			}
 
 		}
