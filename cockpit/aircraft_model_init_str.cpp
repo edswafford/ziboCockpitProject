@@ -148,6 +148,8 @@ namespace zcockpit::cockpit {
 		data_ref_strings[DataRefName::drive_disconnect2_pos] = {"laminar/B738/one_way_switch/drive_disconnect2_pos", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::alt_flaps_pos] = {"laminar/B738/switches/alt_flaps_pos", XplaneType::type_Float, !round_up};
 
+		data_ref_strings[DataRefName::max_allowable_altitude] = {"sim/cockpit/pressure/max_allowable_altitude", XplaneType::type_Float, round_up};
+		data_ref_strings[DataRefName::landing_alt] = {"laminar/B738/pressurization/knobs/landing_alt", XplaneType::type_Float, round_up};
 
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
@@ -188,8 +190,6 @@ namespace zcockpit::cockpit {
 		data_ref_strings[DataRefName::dc_amp_value] = {"laminar/B738/dc_amp_value", XplaneType::type_Float, round_up};
 		data_ref_strings[DataRefName::ac_amp_value] = {"laminar/B738/ac_amp_value", XplaneType::type_Float, round_up};
 
-		data_ref_strings[DataRefName::max_allowable_altitude] = {"sim/cockpit/pressure/max_allowable_altitude", XplaneType::type_Float, round_up};
-		data_ref_strings[DataRefName::landing_alt] = {"laminar/B738/pressurization/knobs/landing_alt", XplaneType::type_Float, round_up};
 
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
@@ -596,10 +596,6 @@ namespace zcockpit::cockpit {
 		command_ref_strings[CommandRefName::vhf_nav_source_lft] = {"laminar/B738/toggle_switch/vhf_nav_source_lft"};
 		command_ref_strings[CommandRefName::vhf_nav_source_rgt] = {"laminar/B738/toggle_switch/vhf_nav_source_rgt"};
 
-		command_ref_strings[CommandRefName::flt_alt_press_dn] = { "laminar/B738/knob/flt_alt_press_dn" };
-		command_ref_strings[CommandRefName::flt_alt_press_up] = { "laminar/B738/knob/flt_alt_press_up" };
-		command_ref_strings[CommandRefName::land_alt_press_dn] = { "laminar/B738/knob/land_alt_press_dn" };
-		command_ref_strings[CommandRefName::land_alt_press_up] = { "laminar/B738/knob/land_alt_press_up" };
 
 		//command_ref_strings[CommandRefName::] = { "" };
 		//command_ref_strings[CommandRefName::] = { "" };

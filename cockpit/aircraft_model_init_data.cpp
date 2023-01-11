@@ -164,8 +164,8 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::at_light_fo] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.at_light_fo,				&z737SwitchCmd.at_light_fo);
 		z_cockpit_data[DataRefName::fms_light_fo] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.fms_light_fo,				&z737SwitchCmd.fms_light_fo);
 
-		z_cockpit_data[DataRefName::flight_alt_pos] = ZCockpitSwitchData(ZCockpitType::ZLong,				&xplane_switch_data.flight_alt_pos,				&z737SwitchCmd.flight_alt_pos);
-		z_cockpit_data[DataRefName::landing_alt_pos] = ZCockpitSwitchData(ZCockpitType::ZLong,				&xplane_switch_data.landing_alt_pos,				&z737SwitchCmd.landing_alt_pos);
+		z_cockpit_data[DataRefName::max_allowable_altitude] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.max_allowable_altitude,				&z737SwitchValue.max_allowable_altitude);
+		z_cockpit_data[DataRefName::landing_alt] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.landing_alt,				&z737SwitchValue.landing_alt);
 
 
 //NOT USED		z_cockpit_data[DataRefName::cover_position] = ZCockpitSwitchData(ZCockpitType::ZVectorFloat, &xplane_switch_data.cover_position);
@@ -183,9 +183,6 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::ac_freq_value] = ZCockpitInData(&z737InData.ac_freq_value, ZCockpitType::ZFloat);
 		z_cockpit_data[DataRefName::dc_amp_value] = ZCockpitInData(&z737InData.dc_amp_value, ZCockpitType::ZFloat);
 		z_cockpit_data[DataRefName::ac_amp_value] = ZCockpitInData(&z737InData.ac_amp_value, ZCockpitType::ZFloat);
-
-		z_cockpit_data[DataRefName::max_allowable_altitude] = ZCockpitInData(&z737InData.max_allowable_altitude, ZCockpitType::ZFloat);
-		z_cockpit_data[DataRefName::landing_alt] = ZCockpitInData(&z737InData.landing_alt, ZCockpitType::ZFloat);
 
 
 		z_cockpit_data[DataRefName::acf_tailnum] = ZCockpitInData(&z737InData.tail_number, ZCockpitType::ZBool);

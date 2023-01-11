@@ -89,9 +89,9 @@ namespace zcockpit::cockpit {
 		int ap_light_fo{0};
 		int at_light_fo{0};
 		int fms_light_fo{0};
-		long flight_alt_pos{0L};
-		long landing_alt_pos{0L};
 
+		float max_allowable_altitude{0.0f};
+		float landing_alt{0.0f};
 
 		int n1_set_source{0};
 
@@ -305,11 +305,6 @@ namespace zcockpit::cockpit {
 		SwitchCommands drive_disconnect2_pos{2, std::vector<CommandRefName>{CommandRefName::drive_disconnect2, CommandRefName::drive_disconnect2_off}};
 		SwitchCommands alt_flaps_pos{2, std::vector<CommandRefName>{CommandRefName::alt_flaps, CommandRefName::alt_flaps}};
 
-
-		SwitchCommands flight_alt_pos{2, std::vector<CommandRefName>{CommandRefName::flt_alt_press_dn, CommandRefName::flt_alt_press_up}};
-		SwitchCommands landing_alt_pos{2, std::vector<CommandRefName>{CommandRefName::land_alt_press_dn, CommandRefName::land_alt_press_up}};
-
-		
 	};
 
 
@@ -328,5 +323,8 @@ namespace zcockpit::cockpit {
 
 		SwitchValues main_pnl_du_fo{3.0f, -1.0f, 1};
 		SwitchValues lower_du_fo{1.0f, -1.0f,1};
-	};
+
+		SwitchValues max_allowable_altitude{42000.0f, -1000.0f, 1};
+		SwitchValues landing_alt{13600.0f, -1000.0f, 1};
+	};				
 }

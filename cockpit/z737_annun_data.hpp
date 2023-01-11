@@ -23,8 +23,6 @@ namespace zcockpit::cockpit {
 		float ac_freq_value{0.0f};
 		float dc_amp_value{0.0f};
 		float ac_amp_value{0.0f};
-		float max_allowable_altitude{0.0f};
-		float landing_alt{0.0f};
 		char tail_number[40];
 
 		bool FUEL_annunXFEED_VALVE_OPEN{false};

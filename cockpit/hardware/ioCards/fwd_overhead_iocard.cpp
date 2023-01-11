@@ -268,7 +268,7 @@ namespace zcockpit::cockpit::hardware
 	void ForwardOverheadIOCard::update_landing_alt_display(bool use_xplane_value)
 	{
 		if(use_xplane_value){
-			landing_altitude = static_cast<long>(aircraft_model.z737InData.landing_alt);
+			landing_altitude = static_cast<long>(aircraft_model.xplane_switch_data.landing_alt);
 		}
 		if(landing_altitude != previous_landing_altitude){	
 			int constexpr LAND_ALT_1 = 5;
@@ -348,7 +348,7 @@ namespace zcockpit::cockpit::hardware
 	void ForwardOverheadIOCard::update_flight_alt_display(bool use_xplane_value)
 	{
 		if(use_xplane_value){
-			flight_altitude = static_cast<long>(aircraft_model.z737InData.max_allowable_altitude);
+			flight_altitude = static_cast<long>(aircraft_model.xplane_switch_data.max_allowable_altitude);
 		}
 		if(flight_altitude != previous_flight_altitude){
 			int constexpr FLT_ALT_1 = 0;
@@ -436,9 +436,9 @@ namespace zcockpit::cockpit::hardware
 			LOG() << "Flt Alt Clamp value " << value;
 			auto sw = iocard_fwd_overhead_zcockpit_switches[33]; // FLT ALT
 			int new_val = (1 * static_cast<float>(value)) / 500;
-			sw.float_hw_value = new_val / 500;
-			flight_altitude += static_cast<long>(sw.float_hw_value);
-			LOG() << "Flt Alt float value " << value;
+			flight_altitude += static_cast<long>(new_val / 500);
+			sw.float_hw_value =  static_cast<float>(flight_altitude);
+			LOG() << "Flt Alt float delta " << value << " value " << flight_altitude;
 			aircraft_model.push_switch_change(sw);
 		}
 		// Landing Altitude
@@ -450,9 +450,9 @@ namespace zcockpit::cockpit::hardware
 			LOG() << "Land Alt Clamp value " << value;
 			auto sw = iocard_fwd_overhead_zcockpit_switches[34]; // LAND ALT
 			int new_val = (1 * static_cast<int>(value)) / 50;
-			sw.float_hw_value = new_val * 50;
-			landing_altitude += static_cast<long>(sw.float_hw_value);
-			LOG() << "Land Alt float value " << value;
+			landing_altitude += static_cast<long>( new_val * 50);
+			sw.float_hw_value = static_cast<float>(landing_altitude);
+			LOG() << "Land Alt float delta " << value << " value " << landing_altitude;
 			aircraft_model.push_switch_change(sw);
 		}
 
@@ -514,8 +514,8 @@ namespace zcockpit::cockpit::hardware
 		iocard_fwd_overhead_zcockpit_switches[31]  = ZcockpitSwitch(DataRefName::vhf_nav_source, common::SwitchType::toggle, FMS_VHF_NAV_NORMAL);
 		iocard_fwd_overhead_zcockpit_switches[32]  = ZcockpitSwitch(DataRefName::vhf_nav_source, common::SwitchType::toggle, FMS_VHF_NAV_R );
 
-		iocard_fwd_overhead_zcockpit_switches[33]  = ZcockpitSwitch(DataRefName::flight_alt_pos, common::SwitchType::encoder, 0.0f, 0, 0);
-		iocard_fwd_overhead_zcockpit_switches[34]  = ZcockpitSwitch(DataRefName::landing_alt_pos, common::SwitchType::encoder, 0.0f, 0, 0);
+		iocard_fwd_overhead_zcockpit_switches[33]  = ZcockpitSwitch(DataRefName::max_allowable_altitude, common::SwitchType::encoder, 0.0f, 0, 0);
+		iocard_fwd_overhead_zcockpit_switches[34]  = ZcockpitSwitch(DataRefName::landing_alt, common::SwitchType::encoder, 0.0f, 0, 0);
 
 		iocard_fwd_overhead_zcockpit_switches[35]  = ZcockpitSwitch(DataRefName::alt_flaps_ctrl, common::SwitchType::spring_loaded, ALTERNATE_FLAPS_CTRL_OFF );
 
