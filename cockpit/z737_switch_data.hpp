@@ -282,11 +282,11 @@ namespace zcockpit::cockpit {
 		SwitchCommands starter2_pos{4, std::vector<CommandRefName>{ CommandRefName::eng2_start_grd, CommandRefName::eng2_start_off, CommandRefName::eng2_start_cont, CommandRefName::eng2_start_flt}};
 		SwitchCommands air_valve_manual{2, std::vector<CommandRefName>{CommandRefName::air_valve_manual_left, CommandRefName::air_valve_manual_right}};
 		SwitchCommands flt_ctr_B_pos{2, std::vector<CommandRefName>{CommandRefName::flt_ctr_B_dn, CommandRefName::flt_ctr_B_up}};
-		SwitchCommands flt_ctr_A_pos{2, std::vector<CommandRefName>{CommandRefName::flt_ctr_A_up, CommandRefName::flt_ctr_A_dn}};
+		SwitchCommands flt_ctr_A_pos{2, std::vector<CommandRefName>{CommandRefName::flt_ctr_A_dn, CommandRefName::flt_ctr_A_up}};
 		SwitchCommands alt_flaps_ctrl{2, std::vector<CommandRefName>{CommandRefName::alt_flaps_ctrl_up, CommandRefName::alt_flaps_ctrl_dn}};
-		SwitchCommands dspl_source{2, std::vector<CommandRefName>{CommandRefName::dspl_source_left, CommandRefName::dspl_source_right}};
-		SwitchCommands irs_source{2, std::vector<CommandRefName>{CommandRefName::irs_source_left, CommandRefName::irs_source_right}};
-		SwitchCommands vhf_nav_source{2, std::vector<CommandRefName>{CommandRefName::vhf_nav_source_lft, CommandRefName::vhf_nav_source_rgt}};
+		SwitchCommands dspl_source{2,    std::vector<CommandRefName>{CommandRefName::dspl_source_right, CommandRefName::dspl_source_left  }};
+		SwitchCommands irs_source{2,     std::vector<CommandRefName>{CommandRefName::irs_source_right,  CommandRefName::irs_source_left   }};
+		SwitchCommands vhf_nav_source{2, std::vector<CommandRefName>{CommandRefName::vhf_nav_source_rgt,CommandRefName::vhf_nav_source_lft}};
 
 		
 		SwitchCommands spoiler_A_pos{2, std::vector<CommandRefName>{CommandRefName::spoiler_A, CommandRefName::spoiler_A}};

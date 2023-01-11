@@ -28,7 +28,7 @@ namespace zcockpit::cockpit::hardware
 
 	constexpr int ALTERNATE_FLAPS_CTRL_DN = 1;
 	constexpr int ALTERNATE_FLAPS_CTRL_OFF = 0;
-	constexpr int ALTERNATE_FLAPS_CTRL_UP = -1;
+	constexpr int ALTERNATE_FLAPS_CTRL_UP = 1;
 
 	constexpr int INSTRUMENT_DISPLAYS_SOURCE_1 = -1; 
 	constexpr int INSTRUMENT_DISPLAYS_SOURCE_2 = 1;
@@ -38,7 +38,7 @@ namespace zcockpit::cockpit::hardware
 	constexpr int FMS_IRS_TFR_L = -1;
 	constexpr int FMS_VHF_NAV_L = -1;
 	constexpr int FMS_VHF_NAV_NORMAL = 0;
-	constexpr int FMS_VHF_NAV_R = -1;
+	constexpr int FMS_VHF_NAV_R = 1;
 ;
 	std::string ForwardOverheadIOCard::iocard_bus_addr;
 	bool ForwardOverheadIOCard::running = false; 
@@ -498,7 +498,7 @@ namespace zcockpit::cockpit::hardware
 		iocard_fwd_overhead_zcockpit_switches[19]  = ZcockpitSwitch(DataRefName::flt_ctr_A_pos, common::SwitchType::toggle, FLIGHT_CONTROL_A_OFF );
 		iocard_fwd_overhead_zcockpit_switches[20]  = ZcockpitSwitch(DataRefName::flt_ctr_A_pos, common::SwitchType::toggle, FLIGHT_CONTROL_A_STBYRUD );
 
-		iocard_fwd_overhead_zcockpit_switches[21]  = ZcockpitSwitch(DataRefName::alt_flaps_ctrl, common::SwitchType::toggle, ALTERNATE_FLAPS_CTRL_DN);
+		iocard_fwd_overhead_zcockpit_switches[21]  = ZcockpitSwitch(DataRefName::alt_flaps_ctrl, common::SwitchType::spring_loaded, ALTERNATE_FLAPS_CTRL_DN);
 		iocard_fwd_overhead_zcockpit_switches[22]  = ZcockpitSwitch(DataRefName::alt_flaps_ctrl, common::SwitchType::toggle, ALTERNATE_FLAPS_CTRL_OFF );
 		iocard_fwd_overhead_zcockpit_switches[23]  = ZcockpitSwitch(DataRefName::alt_flaps_ctrl, common::SwitchType::toggle, ALTERNATE_FLAPS_CTRL_UP);
 
@@ -516,6 +516,8 @@ namespace zcockpit::cockpit::hardware
 
 		iocard_fwd_overhead_zcockpit_switches[33]  = ZcockpitSwitch(DataRefName::flight_alt_pos, common::SwitchType::encoder, 0.0f, 0, 0);
 		iocard_fwd_overhead_zcockpit_switches[34]  = ZcockpitSwitch(DataRefName::landing_alt_pos, common::SwitchType::encoder, 0.0f, 0, 0);
+
+		iocard_fwd_overhead_zcockpit_switches[35]  = ZcockpitSwitch(DataRefName::alt_flaps_ctrl, common::SwitchType::spring_loaded, ALTERNATE_FLAPS_CTRL_OFF );
 
 	}
 
@@ -821,8 +823,8 @@ namespace zcockpit::cockpit::hardware
 		}
 
 		// flight control B ON switch position
-		auto fltctrl_b_on_changed = mastercard_input(54, &fltctrl_b_on);
-		auto fltctrl_b_stby_changed = mastercard_input(55, &fltctrl_b_stby);
+		const auto fltctrl_b_on_changed = mastercard_input(54, &fltctrl_b_on);
+		const auto fltctrl_b_stby_changed = mastercard_input(55, &fltctrl_b_stby);
 		if (fltctrl_b_on_changed)
 		{
 			if (fltctrl_b_on == 1)
@@ -856,7 +858,9 @@ namespace zcockpit::cockpit::hardware
 
 
 		// flight control A STBY switch position
-		if(mastercard_input(56, &fltctrl_a_stby))
+		const auto fltctrl_a_stby_changed = mastercard_input(56, &fltctrl_a_stby);
+		const auto fltctrl_a_on_changed = mastercard_input(57, &fltctrl_a_on);
+		if(fltctrl_a_stby_changed)
 		{
 			if(fltctrl_a_stby == 1)
 			{
@@ -870,9 +874,8 @@ namespace zcockpit::cockpit::hardware
 				}
 			}
 		}
-
 		// flight control A ON switch position
-		if(mastercard_input(57, &fltctrl_a_on))
+		if(fltctrl_a_on_changed)
 		{
 			if(fltctrl_a_on == 1)
 			{
@@ -890,7 +893,9 @@ namespace zcockpit::cockpit::hardware
 
 		// Alternate Flaps UP switch position
 		// Alternate Flaps DOWN switch position
-		if(mastercard_input(58, &altFlapDn))
+		const auto altFlapDn_changed = mastercard_input(58, &altFlapDn);
+		const auto altFlapUp_changed = mastercard_input(59, &altFlapUp);
+		if(altFlapDn_changed)
 		{
 			if(altFlapDn == 1)
 			{
@@ -900,11 +905,11 @@ namespace zcockpit::cockpit::hardware
 			{
 				if(altFlapUp != 1)
 				{
-					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[22]);  // ALTERNATE_FLAPS_CTRL_OFF
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[35]);  // ALTERNATE_FLAPS_CTRL_OFF
 				}
 			}
 		}
-		if(mastercard_input(59, &altFlapUp))
+		if(altFlapUp_changed)
 		{
 			if(altFlapUp == 1)
 			{
@@ -959,7 +964,9 @@ namespace zcockpit::cockpit::hardware
 
 
 		// Display Source 1 switch position
-		if(mastercard_input(63, &displaySrc1))
+		const auto displaySrc1_changed = mastercard_input(63, &displaySrc1);
+		const auto displaySrcAuto_changed = mastercard_input(64, &displaySrcAuto);
+		if(displaySrc1_changed)
 		{
 			if(displaySrc1 == 1)
 			{
@@ -975,7 +982,7 @@ namespace zcockpit::cockpit::hardware
 		}
 
 		// Display Source Auto switch position
-		if(mastercard_input(64, &displaySrcAuto))
+		if(displaySrcAuto_changed)
 		{
 			if(displaySrcAuto == 1)
 			{
@@ -989,8 +996,12 @@ namespace zcockpit::cockpit::hardware
 				}
 			}
 		}
+
+
 		// IRS Both on Right switch position
-		if(mastercard_input(65, &irsBothRight))
+		const auto irsBothRight_changed = mastercard_input(65, &irsBothRight);
+		const auto irsBothLeft_changed = mastercard_input(66, &irsBothLeft);
+		if(irsBothRight_changed)
 		{
 			if(irsBothRight == 1)
 			{
@@ -1006,7 +1017,7 @@ namespace zcockpit::cockpit::hardware
 		}
 
 		// IRS Both on Left switch position
-		if(mastercard_input(66, &irsBothLeft))
+		if(irsBothLeft_changed)
 		{
 			if(irsBothLeft == 1)
 			{
@@ -1023,7 +1034,9 @@ namespace zcockpit::cockpit::hardware
 
 
 		// VHF NAV Both on 1 switch position
-		if(mastercard_input(67, &vhfNavBoth1))
+		const auto vhfNavBoth1_changed = mastercard_input(67, &vhfNavBoth1);
+		const auto vhfNavBoth2_changed = mastercard_input(68, &vhfNavBoth2);
+		if(vhfNavBoth1_changed)
 		{
 			if(vhfNavBoth1 == 1)
 			{
@@ -1039,7 +1052,7 @@ namespace zcockpit::cockpit::hardware
 			}
 		}
 		// VHF NAV Both on 2 switch position
-		if(mastercard_input(68, &vhfNavBoth2))
+		if(vhfNavBoth2_changed)
 		{
 			if(vhfNavBoth2 == 1)
 			{
