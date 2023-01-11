@@ -283,7 +283,7 @@ namespace zcockpit::cockpit {
 		SwitchCommands air_valve_manual{2, std::vector<CommandRefName>{CommandRefName::air_valve_manual_left, CommandRefName::air_valve_manual_right}};
 		SwitchCommands flt_ctr_B_pos{2, std::vector<CommandRefName>{CommandRefName::flt_ctr_B_dn, CommandRefName::flt_ctr_B_up}};
 		SwitchCommands flt_ctr_A_pos{2, std::vector<CommandRefName>{CommandRefName::flt_ctr_A_dn, CommandRefName::flt_ctr_A_up}};
-		SwitchCommands alt_flaps_ctrl{2, std::vector<CommandRefName>{CommandRefName::alt_flaps_ctrl_up, CommandRefName::alt_flaps_ctrl_dn}};
+		SwitchCommands alt_flaps_ctrl{2, std::vector<CommandRefName>{CommandRefName::alt_flaps_ctrl_dn, CommandRefName::alt_flaps_ctrl_up}};
 		SwitchCommands dspl_source{2,    std::vector<CommandRefName>{CommandRefName::dspl_source_right, CommandRefName::dspl_source_left  }};
 		SwitchCommands irs_source{2,     std::vector<CommandRefName>{CommandRefName::irs_source_right,  CommandRefName::irs_source_left   }};
 		SwitchCommands vhf_nav_source{2, std::vector<CommandRefName>{CommandRefName::vhf_nav_source_rgt,CommandRefName::vhf_nav_source_lft}};

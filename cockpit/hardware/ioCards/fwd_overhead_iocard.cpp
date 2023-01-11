@@ -28,7 +28,7 @@ namespace zcockpit::cockpit::hardware
 
 	constexpr int ALTERNATE_FLAPS_CTRL_DN = 1;
 	constexpr int ALTERNATE_FLAPS_CTRL_OFF = 0;
-	constexpr int ALTERNATE_FLAPS_CTRL_UP = 1;
+	constexpr int ALTERNATE_FLAPS_CTRL_UP = -1;
 
 	constexpr int INSTRUMENT_DISPLAYS_SOURCE_1 = -1; 
 	constexpr int INSTRUMENT_DISPLAYS_SOURCE_2 = 1;
@@ -897,13 +897,14 @@ namespace zcockpit::cockpit::hardware
 		const auto altFlapUp_changed = mastercard_input(59, &altFlapUp);
 		if(altFlapDn_changed)
 		{
+			// Spring loaded
 			if(altFlapDn == 1)
 			{
 				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[21]);  // ALTERNATE_FLAPS_CTRL_DN
 			}
 			else
 			{
-				if(altFlapUp != 1)
+				if(altFlapDn_old != altFlapDn)
 				{
 					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[35]);  // ALTERNATE_FLAPS_CTRL_OFF
 				}
@@ -917,12 +918,14 @@ namespace zcockpit::cockpit::hardware
 			}
 			else
 			{
-				if(altFlapDn != 1)
+				if(altFlapUp_old != altFlapUp)
 				{
 					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[22]);  // ALTERNATE_FLAPS_CTRL_OFF
 				}
 			}
 		}
+		altFlapDn_old = altFlapDn;
+		altFlapUp_old = altFlapUp;
 
 		// Right Wiper Park switch position
 		// 

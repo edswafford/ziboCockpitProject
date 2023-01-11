@@ -67,6 +67,8 @@ namespace zcockpit::cockpit::hardware
 		int fltctrl_b_on{0};
 		int altFlapUp{0};
 		int altFlapDn{0};
+		int altFlapUp_old{ -1 };
+		int altFlapDn_old{ 0 };
 		int displaySrc1{0};
 		int displaySrcAuto{0};
 		int vhfNavBoth1{0};
