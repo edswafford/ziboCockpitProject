@@ -429,28 +429,28 @@ namespace zcockpit::cockpit::hardware
 		double value = 0.0;
 
 		// Flight Altitude
-		if(mastercard_encoder(0, &value, 500.0, 0.1) > 0)
+		if(mastercard_encoder(0, &value, 1.0, 0.1) > 0)
 		{
 			LOG() << "Flt Alt RAW value " << value;
 			value = std::clamp(value, -10000.0, 10000.0);
 			LOG() << "Flt Alt Clamp value " << value;
 			auto sw = iocard_fwd_overhead_zcockpit_switches[33]; // FLT ALT
-			int new_val = (1 * static_cast<float>(value)) / 500;
-			flight_altitude += static_cast<long>(new_val / 500);
+			int new_val = (1 * static_cast<int>(value)) * 500;
+			flight_altitude += static_cast<long>(new_val);
 			sw.float_hw_value =  static_cast<float>(flight_altitude);
 			LOG() << "Flt Alt float delta " << value << " value " << flight_altitude;
 			aircraft_model.push_switch_change(sw);
 		}
 		// Landing Altitude
 		value = 0.0;
-		if(mastercard_encoder(2, &value, 50.0, 0.1) > 0)
+		if(mastercard_encoder(2, &value, 1.0, 0.1) > 0)
 		{
 			LOG() << "Land Alt RAW value " << value;
 			value = std::clamp(value, -1000.0, 1000.0);
 			LOG() << "Land Alt Clamp value " << value;
 			auto sw = iocard_fwd_overhead_zcockpit_switches[34]; // LAND ALT
-			int new_val = (1 * static_cast<int>(value)) / 50;
-			landing_altitude += static_cast<long>( new_val * 50);
+			int new_val = (1 * static_cast<int>(value)) * 50;
+			landing_altitude += static_cast<long>( new_val );
 			sw.float_hw_value = static_cast<float>(landing_altitude);
 			LOG() << "Land Alt float delta " << value << " value " << landing_altitude;
 			aircraft_model.push_switch_change(sw);
@@ -525,8 +525,6 @@ namespace zcockpit::cockpit::hardware
 	{
 		const unsigned char pwr = aircraft_model.z738_ac_power_is_on()? 1 : 0;
 
-
-		update_displays();
 
 		//
 		// Process Switches

@@ -180,6 +180,8 @@ namespace zcockpit::cockpit::hardware
 				}
 
 				// send outputs
+				forward_overhead_iocard->update_displays();
+
 				forward_overhead_iocard->send_mastercard();
 			}
 		}
