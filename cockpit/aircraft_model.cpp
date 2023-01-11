@@ -208,11 +208,11 @@ namespace zcockpit::cockpit {
 				LOG() << "Delta Encoder Send DataRef " << get_data_ref_string(dataref_name) << " id " << data_ref_id;
 			}
 			else if(sw_data.switch_type == SwitchType::raw_encoder) {
-				common::var_t variant = xplane_value;
+				common::var_t variant = float_hw_value;
 				int data_ref_id = dataref_to_ref_id[dataref_name];
 				common::SetDataRef set_data_ref(data_ref_id, variant);
 				xplane_dataref.emplace_back(set_data_ref);
-				LOG() << "Raw Encoder Send DataRef " << get_data_ref_string(dataref_name) << " id " << data_ref_id;
+				LOG() << "Raw Encoder Send DataRef " << get_data_ref_string(dataref_name) << " id " << data_ref_id << " value " << float_hw_value;
 			}
 			else if(float_hw_value != xplane_value) {
 				if(dataref_to_ref_id.contains(dataref_name)){
