@@ -346,8 +346,9 @@ namespace zcockpit::cockpit {
 						//
 						// Switches
 						if (std::holds_alternative<ZCockpitSwitchData>(z_cockpit_data[ac_param.short_name])) {
-							const ZCockpitSwitchData switch_data = std::get<ZCockpitSwitchData>(z_cockpit_data[ac_param.short_name]);
+							ZCockpitSwitchData switch_data = std::get<ZCockpitSwitchData>(z_cockpit_data[ac_param.short_name]);
 							// record the xplane switch state
+							switch_data.fresh = true;
 							if(switch_data.hw_type == ZCockpitType::ZInt || switch_data.hw_type == ZCockpitType::ZBool) {
 								*(static_cast<int*>(switch_data.xplane_data)) = static_cast<int>(data);
 								LOG() << "Packet IN data: SwitchData  " << data_ref_strings[ac_param.short_name].dataref_name << " in data = " << data << " --> xplane_data = " << *(static_cast<int*>(switch_data.xplane_data)) ;
@@ -680,5 +681,14 @@ namespace zcockpit::cockpit {
 	{
 		return process_hw_switch( hardware::ZcockpitSwitch(DataRefName::guarded_covers, SwitchType::toggle, 1.0f));
 
+	}
+
+	bool AircraftModel::get_freshmess(DataRefName data_ref_name)
+	{
+		if (std::holds_alternative<ZCockpitSwitchData>(z_cockpit_data[data_ref_name])) {
+			const ZCockpitSwitchData switch_data = std::get<ZCockpitSwitchData>(z_cockpit_data[data_ref_name]);
+			return switch_data.fresh;
+		}
+		return false;
 	}
 }

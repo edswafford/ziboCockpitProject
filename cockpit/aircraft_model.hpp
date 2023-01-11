@@ -25,6 +25,7 @@ namespace zcockpit::cockpit {
 		common::OperationType operation_type;
 		void* xplane_data;
 		void* operation;
+		bool fresh{false};
 		ZCockpitSwitchData(ZCockpitType hw_type_, void* xplane_data_, void* operation_, OperationType operation_type_ = OperationType::Command) :
 			hw_type(hw_type_), operation_type(operation_type_), xplane_data(xplane_data_), operation(operation_)
 		{}
@@ -102,6 +103,7 @@ namespace zcockpit::cockpit {
 
 		[[nodiscard]] std::vector<common::packet_data_t> update_switch_values();
 		std::vector<common::packet_data_t> open_guards();
+		bool get_freshmess(DataRefName data_ref_name);
 
 
 		std::unordered_map<int, DataRefParameter> ref_id_to_dataref;

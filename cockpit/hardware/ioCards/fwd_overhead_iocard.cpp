@@ -268,7 +268,9 @@ namespace zcockpit::cockpit::hardware
 	void ForwardOverheadIOCard::update_landing_alt_display(bool use_xplane_value)
 	{
 		if(use_xplane_value){
-			landing_altitude = static_cast<long>(aircraft_model.xplane_switch_data.landing_alt);
+			if(aircraft_model.get_freshmess(DataRefName::landing_alt)) {
+				landing_altitude = static_cast<long>(aircraft_model.xplane_switch_data.landing_alt);
+			}
 		}
 		if(landing_altitude != previous_landing_altitude){	
 			int constexpr LAND_ALT_1 = 5;
@@ -300,43 +302,57 @@ namespace zcockpit::cockpit::hardware
 				const uint8_t land_alt_hundreds = temp / 100;
 				temp = temp - (land_alt_hundreds * 100);
 				const uint8_t land_alt_tens = temp/10;
-//				const uint8_t land_alt_ones = (temp - (land_alt_tens * 10));
 				if(is_negative) {
-					if(landing_altitude > 1000) {
-//						mastercard_send_display(land_alt_ones, LAND_ALT_1);
-						mastercard_send_display(land_alt_tens, LAND_ALT_10);
-						mastercard_send_display(land_alt_hundreds, LAND_ALT_100);
-						mastercard_send_display(land_alt_one_thousands, LAND_ALT_1000);
+					if(landing_altitude >= 1000) {
+						mastercard_send_display(0, LAND_ALT_10);
+						mastercard_send_display(0, LAND_ALT_100);
+						mastercard_send_display(1, LAND_ALT_1000);
 						mastercard_send_display(0xF8, LAND_ALT_10_000);							
 					}
-					else if(landing_altitude > 100) {
-//						mastercard_send_display(land_alt_ones, LAND_ALT_1);
+					else if(landing_altitude >= 100) {
 						mastercard_send_display(land_alt_tens, LAND_ALT_10);
 						mastercard_send_display(land_alt_hundreds, LAND_ALT_100);
 						mastercard_send_display(0xA, LAND_ALT_1000);
 						mastercard_send_display(0xF8, LAND_ALT_10_000);							
 					}
-					else if(landing_altitude > 10) {
-//						mastercard_send_display(land_alt_ones, LAND_ALT_1);
+					else if(landing_altitude >= 10) {
 						mastercard_send_display(land_alt_tens, LAND_ALT_10);
 						mastercard_send_display(0xA, LAND_ALT_100);
 						mastercard_send_display(0xA, LAND_ALT_1000);
 						mastercard_send_display(0xF8, LAND_ALT_10_000);						
 					}
 					else {
-//						mastercard_send_display(land_alt_ones, LAND_ALT_1);
 						mastercard_send_display(0xA, LAND_ALT_10);
 						mastercard_send_display(0xA, LAND_ALT_100);
 						mastercard_send_display(0xA, LAND_ALT_1000);
-						mastercard_send_display(0xF8, LAND_ALT_10_000);						
+						mastercard_send_display(0xA, LAND_ALT_10_000);						
 					}
 				}
 				else {
-//					mastercard_send_display(land_alt_ones, LAND_ALT_1);
-					mastercard_send_display(land_alt_tens, LAND_ALT_10);
-					mastercard_send_display(land_alt_hundreds, LAND_ALT_100);
-					mastercard_send_display(land_alt_one_thousands, LAND_ALT_1000);
-					mastercard_send_display(land_alt_ten_thousands, LAND_ALT_10_000);
+					if(landing_altitude >= 10000) {
+						mastercard_send_display(1, LAND_ALT_10);
+						mastercard_send_display(land_alt_hundreds, LAND_ALT_100);
+						mastercard_send_display(land_alt_one_thousands, LAND_ALT_1000);
+						mastercard_send_display(land_alt_ten_thousands, LAND_ALT_10_000);
+					}
+					else if(landing_altitude >= 1000) {
+						mastercard_send_display(land_alt_tens, LAND_ALT_10);
+						mastercard_send_display(land_alt_hundreds, LAND_ALT_100);
+						mastercard_send_display(land_alt_one_thousands, LAND_ALT_1000);
+						mastercard_send_display(0xA, LAND_ALT_10_000);
+					}
+					else if(landing_altitude >= 100) {
+						mastercard_send_display(land_alt_tens, LAND_ALT_10);
+						mastercard_send_display(land_alt_hundreds, LAND_ALT_100);
+						mastercard_send_display(0xA, LAND_ALT_1000);
+						mastercard_send_display(0xA, LAND_ALT_10_000);
+					}
+					else if(landing_altitude >= 10) {
+						mastercard_send_display(land_alt_tens, LAND_ALT_10);
+						mastercard_send_display(0xA, LAND_ALT_100);
+						mastercard_send_display(0XA, LAND_ALT_1000);
+						mastercard_send_display(0XA, LAND_ALT_10_000);
+					} 
 				}
 			}
 
@@ -348,7 +364,10 @@ namespace zcockpit::cockpit::hardware
 	void ForwardOverheadIOCard::update_flight_alt_display(bool use_xplane_value)
 	{
 		if(use_xplane_value){
-			flight_altitude = static_cast<long>(aircraft_model.xplane_switch_data.max_allowable_altitude);
+			if(aircraft_model.get_freshmess(DataRefName::max_allowable_altitude)) {
+				flight_altitude = static_cast<long>(aircraft_model.xplane_switch_data.max_allowable_altitude);
+			}
+
 		}
 		if(flight_altitude != previous_flight_altitude){
 			int constexpr FLT_ALT_1 = 0;
@@ -373,50 +392,45 @@ namespace zcockpit::cockpit::hardware
 					flight_altitude = -flight_altitude;
 					is_negative = true;
 				}
-				const uint8_t land_alt_ten_thousands= flight_altitude / 10000;
-				int temp = flight_altitude - (land_alt_ten_thousands * 10000);
-				const uint8_t land_alt_one_thousands = temp / 1000;
-				temp = temp - (land_alt_one_thousands *1000);
-				const uint8_t land_alt_hundreds = temp / 100;
-//				temp = temp - (land_alt_hundreds * 100);
-//				const uint8_t land_alt_tens = temp/10;
-//				const uint8_t land_alt_ones = (temp - (land_alt_tens * 10));
+
+
+				const uint8_t flight_alt_ten_thousands= flight_altitude / 10000;
+				int temp = flight_altitude - (flight_alt_ten_thousands * 10000);
+				const uint8_t  flight_alt_one_thousands = temp / 1000;
+				temp = temp - (flight_alt_one_thousands *1000);
+				const uint8_t  flight_alt_hundreds = temp / 100;
 				if(is_negative) {
-					if(flight_altitude > 1000) {
-//						mastercard_send_display(land_alt_ones, FLT_ALT_1);
-//						mastercard_send_display(land_alt_tens, FLT_ALT_10);
-						mastercard_send_display(land_alt_hundreds, FLT_ALT_100);
-						mastercard_send_display(land_alt_one_thousands, FLT_ALT_1000);
-						mastercard_send_display(0xF8, FLT_ALT_10_000);							
+					// always Blank
+					mastercard_send_display(0xF8, FLT_ALT_10_000);							
+
+					if(flight_altitude >= 1000) {
+						mastercard_send_display(0, FLT_ALT_100);
+						mastercard_send_display(1, FLT_ALT_1000);
 					}
-					else if(flight_altitude > 100) {
-//						mastercard_send_display(land_alt_ones, FLT_ALT_1);
-//						mastercard_send_display(land_alt_tens, FLT_ALT_10);
-						mastercard_send_display(land_alt_hundreds, FLT_ALT_100);
+					else if(flight_altitude >= 100) {
+						mastercard_send_display(flight_alt_hundreds, FLT_ALT_100);
 						mastercard_send_display(0xA, FLT_ALT_1000);
-						mastercard_send_display(0xF8, FLT_ALT_10_000);							
 					}
-					else if(flight_altitude > 10) {
-//						mastercard_send_display(land_alt_ones, FLT_ALT_1);
-//						mastercard_send_display(land_alt_tens, FLT_ALT_10);
+					else if(flight_altitude < 100) {
 						mastercard_send_display(0xA, FLT_ALT_100);
 						mastercard_send_display(0xA, FLT_ALT_1000);
-						mastercard_send_display(0xF8, FLT_ALT_10_000);						
-					}
-					else {
-//						mastercard_send_display(land_alt_ones, FLT_ALT_1);
-//						mastercard_send_display(0xA, FLT_ALT_10);
-						mastercard_send_display(0xA, FLT_ALT_100);
-						mastercard_send_display(0xA, FLT_ALT_1000);
-						mastercard_send_display(0xF8, FLT_ALT_10_000);						
 					}
 				}
 				else {
-//					mastercard_send_display(land_alt_ones, FLT_ALT_1);
-//					mastercard_send_display(land_alt_tens, FLT_ALT_10);
-					mastercard_send_display(land_alt_hundreds, FLT_ALT_100);
-					mastercard_send_display(land_alt_one_thousands, FLT_ALT_1000);
-					mastercard_send_display(land_alt_ten_thousands, FLT_ALT_10_000);
+					if(flight_altitude >= 10000){
+						mastercard_send_display(flight_alt_hundreds, FLT_ALT_100);
+						mastercard_send_display(flight_alt_one_thousands, FLT_ALT_1000);
+						mastercard_send_display(flight_alt_ten_thousands, FLT_ALT_10_000);
+					}
+					else if(flight_altitude >= 1000){
+						mastercard_send_display(flight_alt_hundreds, FLT_ALT_100);
+						mastercard_send_display(flight_alt_one_thousands, FLT_ALT_1000);
+						mastercard_send_display(0XA, FLT_ALT_10_000);
+					}else if(flight_altitude >= 100){
+						mastercard_send_display(flight_alt_hundreds, FLT_ALT_100);
+						mastercard_send_display(0XA, FLT_ALT_1000);
+						mastercard_send_display(0XA, FLT_ALT_10_000);
+					}
 				}
 			}
 		}
