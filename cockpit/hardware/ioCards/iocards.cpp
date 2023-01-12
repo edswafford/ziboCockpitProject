@@ -1269,12 +1269,14 @@ namespace zcockpit::cockpit::hardware
 							if (inputs[input][card] != 0)
 							{
 								aircraft_model.push_switch_change(command.on);
-
-								LOG() << "send to buffer " << input << " new " << inputs[input][card] << " old " << inputs_old[input][card];
+								LOG() << "PUSHING on command " << input << " new " << inputs[input][card] << " old " << inputs_old[input][card] << " " <<
+									aircraft_model.get_cmd_ref_string(command.on.dataref_name, 0);
 							}
 							else if (command.off.valid)
 							{
 								aircraft_model.push_switch_change(command.off);
+								LOG() << "PUSHING off command " << input << " new " << inputs[input][card] << " old " << inputs_old[input][card] << " " <<
+									aircraft_model.get_cmd_ref_string(command.on.dataref_name, 1);
 							}
 							inputs_old[input][card] = inputs[input][card];
 						}

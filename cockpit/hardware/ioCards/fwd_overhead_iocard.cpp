@@ -518,9 +518,10 @@ namespace zcockpit::cockpit::hardware
 
 	void ForwardOverheadIOCard::initialize_switches()
 	{
-		iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(17,
-			ZcockpitSwitch(DataRefName::drive_disconnect1_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_ARM),
-			ZcockpitSwitch(DataRefName::drive_disconnect1_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_OFF) ));
+		iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(53,
+			ZcockpitSwitch(DataRefName::alt_flaps_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_ARM),
+			ZcockpitSwitch(DataRefName::alt_flaps_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_OFF)
+		));
 
 
 		iocard_fwd_overhead_zcockpit_switches[0]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, GND);

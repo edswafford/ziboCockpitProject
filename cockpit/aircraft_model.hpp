@@ -97,6 +97,20 @@ namespace zcockpit::cockpit {
 			return "Unknown DataRefName";
 		}
 
+		const char* get_cmd_ref_string(const DataRefName param, int position) {
+			const ZCockpitSwitchData switch_data = std::get<ZCockpitSwitchData>(z_cockpit_data[param]);
+			if (switch_data.operation) {
+				if (switch_data.operation_type == OperationType::Command)
+				{
+					const auto commands = (static_cast<SwitchCommands*>(switch_data.operation));
+					if (commands != nullptr && commands->size > position) {
+						const CommandRefName command_ref_name = commands->names[position];
+						return command_ref_strings[command_ref_name].cmdref_name;
+					}
+				}
+			}
+		}
+
 
 		bool z738_is_available() const { return z738_available; }
 		bool z738_ac_power_is_on() const { return (z737InData.ac_tnsbus1_status || z737InData.ac_tnsbus2_status);}
