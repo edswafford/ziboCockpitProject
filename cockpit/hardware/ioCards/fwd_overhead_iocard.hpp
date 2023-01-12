@@ -20,7 +20,7 @@ namespace zcockpit::cockpit::hardware
 
 		[[nodiscard]] static std::unique_ptr<ForwardOverheadIOCard> create_iocard(AircraftModel& ac_model, const std::string& bus_address);
 
-		void fastProcessOvrHead();
+		void process_overhead();
 		void processOvrHead();
 		void update_displays();
 
@@ -31,7 +31,7 @@ namespace zcockpit::cockpit::hardware
 		void update_flight_alt_display(bool use_xplane_value = true);
 
 
-		void processEncoders();
+		void process_encoders();
 		int mag_eng1_start{0};
 		int mag_eng2_start{0};
 

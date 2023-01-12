@@ -62,7 +62,7 @@ namespace zcockpit::cockpit::hardware
 	}
 
 
-	void MipIOCard::processMIP()
+	void MipIOCard::process_mip()
 	{
 		static bool power_is_on = false;
 
@@ -70,13 +70,13 @@ namespace zcockpit::cockpit::hardware
 		{
 			power_is_on = false;
 			// turn off relays
-			updateRelays(0);
+			update_relays(0);
 		}
 		else if(!power_is_on && aircraft_model.z738_ac_power_is_on())
 		{
 			power_is_on = true;
 			// turn on relays;
-			updateRelays(1);
+			update_relays(1);
 		}
 		////static int val[72]{ -1 };
 		////for (int i = 0; i < 72; i++) {
@@ -378,10 +378,13 @@ namespace zcockpit::cockpit::hardware
 			}
 
 		}
+	}
 
-		//
-		// ENCODERS
-		//
+	//
+	// ENCODERS
+	//
+	void MipIOCard::process_encoders()
+	{
 		constexpr float XPLANE_BRIGHTNESS = 0.01f;
 		constexpr double XLPANE_MIN_BRIGHTNESS_SCALER = -10.0f;
 		constexpr double XLPANE_MAX_BRIGHTNESS_SCALER = 10.0f;
@@ -483,7 +486,7 @@ namespace zcockpit::cockpit::hardware
 
 
 
-	void MipIOCard::updateRelays(int state)
+	void MipIOCard::update_relays(int state)
 	{
 		mastercard_output(49, &state);  // relay #1 Lights left MIP
 		mastercard_output(50, &state);  // relay #2 CP flight power to center console

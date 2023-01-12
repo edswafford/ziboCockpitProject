@@ -148,19 +148,14 @@ namespace zcockpit::cockpit::hardware
 		if(current_cycle % FIVE_HZ == 0)
 		{
 			if(mip_iocard && mip_iocard->is_okay)
-			{
-				if (mip_iocard->receive_mastercard() > 0) {
-
-					// update inputs
-					mip_iocard->processMIP();
-
-					// copy current to previous
-					if (mip_iocard->copyIOCardsData() < 0)
-					{
-						LOG() << "IOCards 2: closing down mip copy data < 0";
-						mip_iocard->close_down();
-					}
+			{	int status;
+				while ((status = mip_iocard->receive_mastercard()) > 0) {
+					mip_iocard->process_encoders();
 				}
+				if(status >= 0) {
+					mip_iocard->process_mip();
+				}
+
 				// send outputs
 				mip_iocard->send_mastercard();
 			}
@@ -170,18 +165,17 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(forward_overhead_iocard && forward_overhead_iocard->is_okay)
 			{
-				if(forward_overhead_iocard->receive_mastercard() > 0)
+				int status;
+				while((status = forward_overhead_iocard->receive_mastercard()) > 0)
 				{
-					forward_overhead_iocard->processEncoders();
-
-					// update inputs
-					forward_overhead_iocard->fastProcessOvrHead();
-
+					forward_overhead_iocard->process_encoders();
+					// send outputs
+					forward_overhead_iocard->update_displays();
 				}
-
-				// send outputs
-				forward_overhead_iocard->update_displays();
-
+				if(status >= 0) {
+					// update inputs
+					forward_overhead_iocard->process_overhead();
+				}
 				forward_overhead_iocard->send_mastercard();
 			}
 		}

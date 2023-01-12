@@ -91,7 +91,7 @@ namespace zcockpit::cockpit::hardware
 		[[nodiscard]]bool is_usb_thread_healthy();
 
 
-		int copyIOCardsData(void);
+//		int copyIOCardsData(void);
 		void close_down();
 
 

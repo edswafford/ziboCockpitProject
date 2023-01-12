@@ -773,14 +773,14 @@ namespace zcockpit::cockpit::hardware
 	// saves a copy of all IOCARDS I/O states 
 	// this is needed because, at each step, only the modified values
 	// are communicated either via TCP/IP or USB to X-Plane and IOCARDS
-	int IOCards::copyIOCardsData(void)
-	{
+//	int IOCards::copyIOCardsData(void)
+//	{
 //		memcpy(inputs_old, inputs, sizeof(inputs));
 //		memcpy(outputs_old, outputs, sizeof(outputs));
 //		memcpy(displays_old, displays, sizeof(displays));
-
-		return (0);
-	}
+//
+//		return (0);
+//	}
 
 	void IOCards::close_down()
 	{
@@ -830,9 +830,6 @@ namespace zcockpit::cockpit::hardware
 
 	int IOCards::receive_mastercard(void)
 	{
-		int ret = -1;
-		int result = 0;
-
 		/* PROTOCOL */
 		/* Each Mastercard has 72 Inputs, distributed over 8 slots with 9 inputs
 		The first 8 inputs of each slot are read first, followed by an optional vector of the 9th input for each slot
@@ -848,208 +845,208 @@ namespace zcockpit::cockpit::hardware
 		Note also that the A/D converters will report continually, every 10msec or so, not only on value change!
 		*/
 
+		const int queue_size = inQueue.size();
+		if (queue_size <= 0) {
+			return queue_size;
+		}
 
-		// check if we have a connected USB expander card
-		if (is_okay)
-		{
-			while (inQueue.size() > 0 ) {
-				ret = inQueue.size();
-				const auto maybe_vector = inQueue.pop();
-				if (maybe_vector) {
-					auto recv_data = *maybe_vector;
-			
-					int byteCnt;
-					int input[8][8];
-					int index;
-					int card;
-					int slot;
-					/* fill the input array by bitshifting the first eight bytes */
-					for (byteCnt = 0; byteCnt < 8; byteCnt++)
+		const auto maybe_vector = inQueue.pop();
+		if (!maybe_vector) {
+			return -1;
+		}
+		else {
+			const auto recv_data = *maybe_vector;
+	
+			int byteCnt;
+			int input[8][8];
+			int index;
+			int card;
+			int slot;
+			/* fill the input array by bitshifting the first eight bytes */
+			for (byteCnt = 0; byteCnt < 8; byteCnt++)
+			{
+				int x = recv_data[byteCnt];
+				for (int bitCnt = 0; bitCnt < 8; bitCnt++)
+				{
+					if (x & 01)
 					{
-						int x = recv_data[byteCnt];
-						for (int bitCnt = 0; bitCnt < 8; bitCnt++)
-						{
-							if (x & 01)
-							{
-								input[byteCnt][bitCnt] = 1;
-							}
-							else
-							{
-								input[byteCnt][bitCnt] = 0;
-							}
-							x = x >> 1;
-						}
-						//LOG() << "LIBIOCARDS: Received " << input[byteCnt][7] << input[byteCnt][6] << input[byteCnt][5] << input[byteCnt][4]
-						//	<< input[byteCnt][3] << input[byteCnt][2] << input[byteCnt][1] << input[byteCnt][0];
-					}
-
-					/* examine first byte: bits 0-3: Mastercard, 4-6: A/D, 7: continuation */
-
-					/* determine whether an A/D converter is active and read its value */
-					axis = (recv_data[0] >> 4) & 7; /* extract the A/D number from bits 6-4 */
-
-					if (axis > 0)
-					{
-						const int axisval = recv_data[1];
-						axes[axis - 1] = axisval;
-					}
-
-					if (axis == 0)
-					{
-						/* no analog axis value: start slot indicator at second byte */
-						byteCnt = 1;
+						input[byteCnt][bitCnt] = 1;
 					}
 					else
 					{
-						/* axis value present in second byte: start slot indicator at third byte */
-						byteCnt = 2;
+						input[byteCnt][bitCnt] = 0;
 					}
+					x = x >> 1;
+				}
+				//LOG() << "LIBIOCARDS: Received " << input[byteCnt][7] << input[byteCnt][6] << input[byteCnt][5] << input[byteCnt][4]
+				//	<< input[byteCnt][3] << input[byteCnt][2] << input[byteCnt][1] << input[byteCnt][0];
+			}
+
+			/* examine first byte: bits 0-3: Mastercard, 4-6: A/D, 7: continuation */
+
+			/* determine whether an A/D converter is active and read its value */
+			axis = (recv_data[0] >> 4) & 7; /* extract the A/D number from bits 6-4 */
+
+			if (axis > 0)
+			{
+				const int axisval = recv_data[1];
+				axes[axis - 1] = axisval;
+			}
+
+			if (axis == 0)
+			{
+				/* no analog axis value: start slot indicator at second byte */
+				byteCnt = 1;
+			}
+			else
+			{
+				/* axis value present in second byte: start slot indicator at third byte */
+				byteCnt = 2;
+			}
 
 
-					if (input[0][7] == 0)
+			if (input[0][7] == 0)
+			{
+				/* OPTION #1 */
+				/* new transmission (first 8 byte packet) */
+
+				/* clean slot index data */
+				for (card = 0; card < MASTERCARDS; card++)
+				{
+					for (slot = 0; slot < 8; slot++)
 					{
-						/* OPTION #1 */
-						/* new transmission (first 8 byte packet) */
+						slotdata[slot][card] = 0;
+					}
+				}
 
-						/* clean slot index data */
-						for (card = 0; card < MASTERCARDS; card++)
+				/* fill slot index data with slot indices of first transmission */
+				int sumslots = 0;
+				int sumcards = 0;
+				for (card = 0; card < MASTERCARDS; card++)
+				{
+					if (input[0][card] == 1)
+					{
+						for (slot = 0; slot < 8; slot++)
 						{
-							for (slot = 0; slot < 8; slot++)
+							if (input[byteCnt + sumcards][slot] == 1)
 							{
-								slotdata[slot][card] = 0;
+								slotdata[slot][card] = 1;
+								sumslots++;
 							}
 						}
+						sumcards++;
+					}
+				}
 
-						/* fill slot index data with slot indices of first transmission */
-						int sumslots = 0;
-						int sumcards = 0;
-						for (card = 0; card < MASTERCARDS; card++)
+				//LOG() << "LIBIOCARDS: new transmission with " << sumcards << " cards and " << sumslots << " slots present.";
+
+				card = 0; //for (card = 0; card < MASTERCARDS; card++)
+				{
+					//LOG() << "card " << card << " slots: " <<
+					//    slotdata[7][card] << " " <<
+					//    slotdata[6][card] << " " <<
+					//    slotdata[5][card] << " " <<
+					//    slotdata[4][card] << " " <<
+					//    slotdata[3][card] << " " <<
+					//    slotdata[2][card] << " " <<
+					//    slotdata[1][card] << " " <<
+					//    slotdata[0][card];
+				}
+
+
+				/* augment byte count to position of first data packet */
+				byteCnt += sumcards;
+			}
+			else
+			{
+				/* OPTION #2 */
+				/* continuation of previous transmission (another 8 byte packet) */
+				LOG() << "option 2";
+			}
+
+			while ((byteCnt < 8) && (byteCnt >= 0))
+			{
+				/* read slotwise input data for first 8 bits of each slot */
+				int found = 0;
+				int readleft = 0;
+				for (card = 0; card < MASTERCARDS; card++)
+				{
+					for (slot = 0; slot < 8; slot++)
+					{
+						if (slotdata[slot][card] == 1)
 						{
-							if (input[0][card] == 1)
+							readleft++;
+							if (!found)
 							{
-								for (slot = 0; slot < 8; slot++)
+								found = 1;
+								slotdata[slot][card] = 2;
+								if (card < NCARDS)
 								{
-									if (input[byteCnt + sumcards][slot] == 1)
+									for (int bit = 0; bit < 8; bit++)
 									{
-										slotdata[slot][card] = 1;
-										sumslots++;
+										index = 9 * slot + bit;
+										if (inputs[index][card] != input[byteCnt][bit])
+										{
+										//	LOG() << "index=" << index << " slot=" << slot << " bit=" << bit << " bytecnt=" << byteCnt << " old=" 
+										//		<< inputs[index][card] << " new="  <<input[byteCnt][bit];
+										}
+										//if (index == 53 && card == 0)
+										{
+												//LOG() << "reveive_mastercard: card:index =" << card << ":" << index << " slot=" << slot << " bit=" << bit << " bytecnt=" << byteCnt << " old="
+												//	<< inputs[index][card] << " new="  <<input[byteCnt][bit];
+
+										}
+										inputs[index][card] = input[byteCnt][bit];
 									}
 								}
-								sumcards++;
-							}
-						}
-
-						//LOG() << "LIBIOCARDS: new transmission with " << sumcards << " cards and " << sumslots << " slots present.";
-
-						card = 0; //for (card = 0; card < MASTERCARDS; card++)
-						{
-							//LOG() << "card " << card << " slots: " <<
-							//    slotdata[7][card] << " " <<
-							//    slotdata[6][card] << " " <<
-							//    slotdata[5][card] << " " <<
-							//    slotdata[4][card] << " " <<
-							//    slotdata[3][card] << " " <<
-							//    slotdata[2][card] << " " <<
-							//    slotdata[1][card] << " " <<
-							//    slotdata[0][card];
-						}
-
-
-						/* augment byte count to position of first data packet */
-						byteCnt += sumcards;
-					}
-					else
-					{
-						/* OPTION #2 */
-						/* continuation of previous transmission (another 8 byte packet) */
-						LOG() << "option 2";
-					}
-
-					while ((byteCnt < 8) && (byteCnt >= 0))
-					{
-						/* read slotwise input data for first 8 bits of each slot */
-						int found = 0;
-						int readleft = 0;
-						for (card = 0; card < MASTERCARDS; card++)
-						{
-							for (slot = 0; slot < 8; slot++)
-							{
-								if (slotdata[slot][card] == 1)
+								else
 								{
-									readleft++;
-									if (!found)
-									{
-										found = 1;
-										slotdata[slot][card] = 2;
-										if (card < NCARDS)
-										{
-											for (int bit = 0; bit < 8; bit++)
-											{
-												index = 9 * slot + bit;
-												if (inputs[index][card] != input[byteCnt][bit])
-												{
-												//	LOG() << "index=" << index << " slot=" << slot << " bit=" << bit << " bytecnt=" << byteCnt << " old=" 
-												//		<< inputs[index][card] << " new="  <<input[byteCnt][bit];
-												}
-												//if (index == 53 && card == 0)
-												{
-														//LOG() << "reveive_mastercard: card:index =" << card << ":" << index << " slot=" << slot << " bit=" << bit << " bytecnt=" << byteCnt << " old="
-														//	<< inputs[index][card] << " new="  <<input[byteCnt][bit];
-
-												}
-												inputs[index][card] = input[byteCnt][bit];
-											}
-										}
-										else
-										{
-											// "LIBIOCARDS: card x sent input but is not defined
-										}
-									}
-								}
-							}
-						} // for cards (0-3)
-
-						/* read slotwise input data for last 9th bit of each slot */
-						if (readleft == 0)
-						{
-							int readnine = 0;
-							int sumnine = 0;
-							for (card = 0; card < MASTERCARDS; card++)
-							{
-								for (slot = 0; slot < 8; slot++)
-								{
-									if (slotdata[slot][card] == 3)
-									{
-										sumnine++;
-									}
-									if (slotdata[slot][card] == 2)
-									{
-										if (readnine < 8)
-										{
-											slotdata[slot][card] = 3;
-											if (card < NCARDS)
-											{
-												int bit = (sumnine + readnine) % 8; /* present slots fill up subsequent bytes with their 9th bit data */
-												index = 9 * slot + 8;
-												
-												//LOG() << "reveive_mastercard BIT 9: card:index =" << card << ":" << index << " slot=" << slot << " bit=" << bit << " bytecnt=" << byteCnt << " old="
-												//	<< inputs[index][card] << " new=" << input[byteCnt][bit];
-
-												inputs[index][card] = input[byteCnt][bit];
-											}
-										}
-										readnine++;
-									}
+									// "LIBIOCARDS: card x sent input but is not defined
 								}
 							}
 						}
-						// next byte
-						byteCnt++;
-					} // end while
-				} 
-			} // pop
-		} // is_okay
-		return ret;
+					}
+				} // for cards (0-3)
+
+				/* read slotwise input data for last 9th bit of each slot */
+				if (readleft == 0)
+				{
+					int readnine = 0;
+					int sumnine = 0;
+					for (card = 0; card < MASTERCARDS; card++)
+					{
+						for (slot = 0; slot < 8; slot++)
+						{
+							if (slotdata[slot][card] == 3)
+							{
+								sumnine++;
+							}
+							if (slotdata[slot][card] == 2)
+							{
+								if (readnine < 8)
+								{
+									slotdata[slot][card] = 3;
+									if (card < NCARDS)
+									{
+										int bit = (sumnine + readnine) % 8; /* present slots fill up subsequent bytes with their 9th bit data */
+										index = 9 * slot + 8;
+										
+										//LOG() << "reveive_mastercard BIT 9: card:index =" << card << ":" << index << " slot=" << slot << " bit=" << bit << " bytecnt=" << byteCnt << " old="
+										//	<< inputs[index][card] << " new=" << input[byteCnt][bit];
+
+										inputs[index][card] = input[byteCnt][bit];
+									}
+								}
+								readnine++;
+							}
+						}
+					}
+				}
+				// next byte
+				byteCnt++;
+			} // end while
+		} 
+		return queue_size;
 	}
 
 

@@ -440,7 +440,7 @@ namespace zcockpit::cockpit::hardware
 
 
 	// Encoders
-	void ForwardOverheadIOCard::processEncoders()
+	void ForwardOverheadIOCard::process_encoders()
 	{
 		double value = 0.0;
 
@@ -537,7 +537,7 @@ namespace zcockpit::cockpit::hardware
 
 	}
 
-	void ForwardOverheadIOCard::fastProcessOvrHead()
+	void ForwardOverheadIOCard::process_overhead()
 	{
 		const unsigned char pwr = aircraft_model.z738_ac_power_is_on()? 1 : 0;
 

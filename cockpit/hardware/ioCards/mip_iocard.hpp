@@ -15,12 +15,13 @@ namespace zcockpit::cockpit::hardware
 
 		[[nodiscard]] static std::unique_ptr<MipIOCard> create_iocard(AircraftModel& ac_model, const std::string& bus_address);
 
-		void processMIP();
-		void updateRelays(int state);
+		void process_mip();
+		void process_encoders();
 
 		static bool is_running(){return running;}
 		static std::string get_bus_addr(){return iocard_bus_addr;}
 	private:
+		void update_relays(int state);
 		void initialize_switches();
 
 		AircraftModel& aircraft_model;
