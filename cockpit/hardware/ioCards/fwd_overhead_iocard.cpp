@@ -448,10 +448,16 @@ namespace zcockpit::cockpit::hardware
 		if(mastercard_encoder(0, &value, 1.0, 0.1) > 0)
 		{
 			LOG() << "Flt Alt RAW value " << value;
-			value = std::clamp(value, -10000.0, 10000.0);
+			value = std::clamp(value, -10.0, 10.0);
 			LOG() << "Flt Alt Clamp value " << value;
 			const int new_val = (1 * static_cast<int>(value)) * 500;
 			flight_altitude += static_cast<long>(new_val);
+			if(flight_altitude < -1000.0) {
+				flight_altitude = -1000.0;
+			}
+			else if(flight_altitude > 42000.0) {
+				flight_altitude = 42000.0;
+			}
 			LOG() << "Flt Alt float delta " << value << " value " << flight_altitude;
 		}
 		// Landing Altitude
@@ -459,14 +465,17 @@ namespace zcockpit::cockpit::hardware
 		if(mastercard_encoder(2, &value, 1.0, 0.1) > 0)
 		{
 			LOG() << "Land Alt RAW value " << value;
-			value = std::clamp(value, -1000.0, 1000.0);
+			value = std::clamp(value, -10.0, 10.0);
 			LOG() << "Land Alt Clamp value " << value;
-			auto sw = iocard_fwd_overhead_zcockpit_switches[34]; // LAND ALT
-			int new_val = (1 * static_cast<int>(value)) * 50;
+			const int new_val = (1 * static_cast<int>(value)) * 50;
 			landing_altitude += static_cast<long>( new_val );
-			sw.float_hw_value = static_cast<float>(landing_altitude);
+			if(landing_altitude < -1000.0) {
+				landing_altitude = -1000.0;
+			}
+			else if(landing_altitude > 13600.0) {
+				landing_altitude = 13600.0;
+			}
 			LOG() << "Land Alt float delta " << value << " value " << landing_altitude;
-			aircraft_model.push_switch_change(sw);
 		}
 
 
