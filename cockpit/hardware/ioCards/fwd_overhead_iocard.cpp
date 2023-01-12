@@ -284,7 +284,8 @@ namespace zcockpit::cockpit::hardware
 			mastercard_send_display(0, LAND_ALT_1);
 			
 			previous_landing_altitude = landing_altitude;
-			if(landing_altitude == 0) {
+			long land_alt = landing_altitude;
+			if(land_alt == 0) {
 				mastercard_send_display(0xA, LAND_ALT_10);
 				mastercard_send_display(0xA, LAND_ALT_100);
 				mastercard_send_display(0xA, LAND_ALT_1000);
@@ -292,31 +293,31 @@ namespace zcockpit::cockpit::hardware
 			}
 			else {
 				bool is_negative = false;
-				if(landing_altitude < 0) {
-					landing_altitude = -landing_altitude;
+				if(land_alt < 0) {
+					land_alt = -land_alt;
 					is_negative = true;
 				}
-				const uint8_t land_alt_ten_thousands= landing_altitude / 10000;
-				int temp = landing_altitude - (land_alt_ten_thousands * 10000);
+				const uint8_t land_alt_ten_thousands= land_alt / 10000;
+				int temp = land_alt - (land_alt_ten_thousands * 10000);
 				const uint8_t land_alt_one_thousands = temp / 1000;
 				temp = temp - (land_alt_one_thousands *1000);
 				const uint8_t land_alt_hundreds = temp / 100;
 				temp = temp - (land_alt_hundreds * 100);
 				const uint8_t land_alt_tens = temp/10;
 				if(is_negative) {
-					if(landing_altitude >= 1000) {
+					if(land_alt >= 1000) {
 						mastercard_send_display(0, LAND_ALT_10);
 						mastercard_send_display(0, LAND_ALT_100);
 						mastercard_send_display(1, LAND_ALT_1000);
 						mastercard_send_display(0xF8, LAND_ALT_10_000);							
 					}
-					else if(landing_altitude >= 100) {
+					else if(land_alt >= 100) {
 						mastercard_send_display(land_alt_tens, LAND_ALT_10);
 						mastercard_send_display(land_alt_hundreds, LAND_ALT_100);
 						mastercard_send_display(0xA, LAND_ALT_1000);
 						mastercard_send_display(0xF8, LAND_ALT_10_000);							
 					}
-					else if(landing_altitude >= 10) {
+					else if(land_alt >= 10) {
 						mastercard_send_display(land_alt_tens, LAND_ALT_10);
 						mastercard_send_display(0xA, LAND_ALT_100);
 						mastercard_send_display(0xA, LAND_ALT_1000);
@@ -330,25 +331,25 @@ namespace zcockpit::cockpit::hardware
 					}
 				}
 				else {
-					if(landing_altitude >= 10000) {
+					if(land_alt >= 10000) {
 						mastercard_send_display(land_alt_tens, LAND_ALT_10);
 						mastercard_send_display(land_alt_hundreds, LAND_ALT_100);
 						mastercard_send_display(land_alt_one_thousands, LAND_ALT_1000);
 						mastercard_send_display(land_alt_ten_thousands, LAND_ALT_10_000);
 					}
-					else if(landing_altitude >= 1000) {
+					else if(land_alt >= 1000) {
 						mastercard_send_display(land_alt_tens, LAND_ALT_10);
 						mastercard_send_display(land_alt_hundreds, LAND_ALT_100);
 						mastercard_send_display(land_alt_one_thousands, LAND_ALT_1000);
 						mastercard_send_display(0xA, LAND_ALT_10_000);
 					}
-					else if(landing_altitude >= 100) {
+					else if(land_alt >= 100) {
 						mastercard_send_display(land_alt_tens, LAND_ALT_10);
 						mastercard_send_display(land_alt_hundreds, LAND_ALT_100);
 						mastercard_send_display(0xA, LAND_ALT_1000);
 						mastercard_send_display(0xA, LAND_ALT_10_000);
 					}
-					else if(landing_altitude >= 10) {
+					else if(land_alt >= 10) {
 						mastercard_send_display(land_alt_tens, LAND_ALT_10);
 						mastercard_send_display(0xA, LAND_ALT_100);
 						mastercard_send_display(0XA, LAND_ALT_1000);
@@ -380,24 +381,26 @@ namespace zcockpit::cockpit::hardware
 
 			// Tens and Ones positions are Always zero
 			mastercard_send_display(0,   FLT_ALT_1);
-			mastercard_send_display(0, FLT_ALT_10);
 
 			previous_flight_altitude = flight_altitude;
-			if(flight_altitude == 0) {
+			long flt_alt = flight_altitude;
+
+			if(flt_alt == 0) {
+				mastercard_send_display(0xA, FLT_ALT_10);
 				mastercard_send_display(0xA, FLT_ALT_100);
 				mastercard_send_display(0xA, FLT_ALT_1000);
 				mastercard_send_display(0xA, FLT_ALT_10_000);
 			}
 			else {
 				bool is_negative = false;
-				if(flight_altitude < 0) {
-					flight_altitude = -flight_altitude;
+				if(flt_alt < 0) {
+					flt_alt = -flt_alt;
 					is_negative = true;
 				}
 
 
-				const uint8_t flight_alt_ten_thousands= flight_altitude / 10000;
-				int temp = flight_altitude - (flight_alt_ten_thousands * 10000);
+				const uint8_t flight_alt_ten_thousands= flt_alt / 10000;
+				int temp = flt_alt - (flight_alt_ten_thousands * 10000);
 				const uint8_t  flight_alt_one_thousands = temp / 1000;
 				temp = temp - (flight_alt_one_thousands *1000);
 				const uint8_t  flight_alt_hundreds = temp / 100;
@@ -405,30 +408,36 @@ namespace zcockpit::cockpit::hardware
 					// always Blank
 					mastercard_send_display(0xF8, FLT_ALT_10_000);							
 
-					if(flight_altitude >= 1000) {
+					if(flt_alt >= 1000) {
+						mastercard_send_display(0, FLT_ALT_10);
 						mastercard_send_display(0, FLT_ALT_100);
 						mastercard_send_display(1, FLT_ALT_1000);
 					}
-					else if(flight_altitude >= 100) {
+					else if(flt_alt >= 100) {
+						mastercard_send_display(0, FLT_ALT_10);
 						mastercard_send_display(flight_alt_hundreds, FLT_ALT_100);
 						mastercard_send_display(0xA, FLT_ALT_1000);
 					}
-					else if(flight_altitude < 100) {
+					else if(flt_alt < 100) {
+						mastercard_send_display(0, FLT_ALT_10);
 						mastercard_send_display(0xA, FLT_ALT_100);
 						mastercard_send_display(0xA, FLT_ALT_1000);
 					}
 				}
 				else {
-					if(flight_altitude >= 10000){
+					if(flt_alt >= 10000){
+						mastercard_send_display(0, FLT_ALT_10);
 						mastercard_send_display(flight_alt_hundreds, FLT_ALT_100);
 						mastercard_send_display(flight_alt_one_thousands, FLT_ALT_1000);
 						mastercard_send_display(flight_alt_ten_thousands, FLT_ALT_10_000);
 					}
-					else if(flight_altitude >= 1000){
+					else if(flt_alt >= 1000){
+						mastercard_send_display(0, FLT_ALT_10);
 						mastercard_send_display(flight_alt_hundreds, FLT_ALT_100);
 						mastercard_send_display(flight_alt_one_thousands, FLT_ALT_1000);
 						mastercard_send_display(0XA, FLT_ALT_10_000);
-					}else if(flight_altitude >= 100){
+					}else if(flt_alt >= 100){
+						mastercard_send_display(0, FLT_ALT_10);
 						mastercard_send_display(flight_alt_hundreds, FLT_ALT_100);
 						mastercard_send_display(0XA, FLT_ALT_1000);
 						mastercard_send_display(0XA, FLT_ALT_10_000);
@@ -447,35 +456,36 @@ namespace zcockpit::cockpit::hardware
 		// Flight Altitude
 		if(mastercard_encoder(0, &value, 1.0, 0.1) > 0)
 		{
+			fresh_flight_altitude = true;
 			LOG() << "Flt Alt RAW value " << value;
-			value = std::clamp(value, -10.0, 10.0);
+			value = std::clamp(value, -1.0, 1.0);
 			LOG() << "Flt Alt Clamp value " << value;
-			const int new_val = (1 * static_cast<int>(value)) * 500;
-			flight_altitude += static_cast<long>(new_val);
+			LOG() << "Before Flt Alt float delta " << value << " flight_altitude " << flight_altitude;
+			flight_altitude += static_cast<long>(value*500);
 			if(flight_altitude < -1000.0) {
 				flight_altitude = -1000.0;
 			}
 			else if(flight_altitude > 42000.0) {
 				flight_altitude = 42000.0;
 			}
-			LOG() << "Flt Alt float delta " << value << " value " << flight_altitude;
+			LOG() << "After Flt Alt float delta " << value << " flight_altitude " << flight_altitude;
 		}
 		// Landing Altitude
 		value = 0.0;
 		if(mastercard_encoder(2, &value, 1.0, 0.1) > 0)
 		{
+			fresh_landing_altitude = true;
 			LOG() << "Land Alt RAW value " << value;
-			value = std::clamp(value, -10.0, 10.0);
+			value = std::clamp(value, -1.0, 1.0);
 			LOG() << "Land Alt Clamp value " << value;
-			const int new_val = (1 * static_cast<int>(value)) * 50;
-			landing_altitude += static_cast<long>( new_val );
+			landing_altitude += static_cast<long>( value*50 );
 			if(landing_altitude < -1000.0) {
 				landing_altitude = -1000.0;
 			}
 			else if(landing_altitude > 13600.0) {
 				landing_altitude = 13600.0;
 			}
-			LOG() << "Land Alt float delta " << value << " value " << landing_altitude;
+			LOG() << "Land Alt float delta " << value << " landing_altitude " << landing_altitude;
 		}
 
 
@@ -488,17 +498,21 @@ namespace zcockpit::cockpit::hardware
 			update_landing_alt_display(false);
 		}
 	}
-	auto ForwardOverheadIOCard::process_encoders() const->void
+	void ForwardOverheadIOCard::process_encoders()
 	{
-		auto sw = iocard_fwd_overhead_zcockpit_switches[33]; // FLT ALT
-		sw.float_hw_value =  static_cast<float>(flight_altitude);
-		LOG() << "Flt Alt  --> xplane " << flight_altitude;
-		aircraft_model.push_switch_change(sw);
-
-		sw = iocard_fwd_overhead_zcockpit_switches[34]; // LAND ALT
-		sw.float_hw_value = static_cast<float>(landing_altitude);
-		LOG() << "Land Alt float --> xplane " << landing_altitude;
-		aircraft_model.push_switch_change(sw);
+		if (fresh_flight_altitude) {
+			fresh_flight_altitude = false;
+			auto sw = iocard_fwd_overhead_zcockpit_switches[33]; // FLT ALT
+			sw.float_hw_value = static_cast<float>(flight_altitude);
+			LOG() << "process_encoders: push flt alt " << sw.float_hw_value << " should = " << flight_altitude;
+			aircraft_model.push_switch_change(sw);
+		}
+		if (fresh_landing_altitude) {
+			fresh_landing_altitude = false;
+			auto sw = iocard_fwd_overhead_zcockpit_switches[34]; // LAND ALT
+			sw.float_hw_value = static_cast<float>(landing_altitude);
+			aircraft_model.push_switch_change(sw);
+		}
 	}
 
 
@@ -570,7 +584,6 @@ namespace zcockpit::cockpit::hardware
 		process_master_card_inputs(engine_start_switches, NUMBER_OF_ENGINE_SWITCH_STATES);
 		//LOG() << "Done forward";
 
-		processOvrHead();
 
 		//
 		// Odd ball switches
@@ -806,11 +819,8 @@ namespace zcockpit::cockpit::hardware
 		// ran out of available inputs
 		// moved to rear overhead board which has spares
 		//
-	}
 
 
-	void ForwardOverheadIOCard::processOvrHead()
-	{
 		// pressurization manual valve
 		if(mastercard_input(51, &outflowOpen))
 		{

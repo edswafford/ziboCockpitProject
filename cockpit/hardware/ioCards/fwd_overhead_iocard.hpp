@@ -21,7 +21,6 @@ namespace zcockpit::cockpit::hardware
 		[[nodiscard]] static std::unique_ptr<ForwardOverheadIOCard> create_iocard(AircraftModel& ac_model, const std::string& bus_address);
 
 		void process_overhead();
-		void processOvrHead();
 		void update_displays();
 
 		void update_electrical_display();
@@ -32,7 +31,8 @@ namespace zcockpit::cockpit::hardware
 
 
 		void update_encoders();
-		auto process_encoders() const->void;
+		void process_encoders();
+
 		int mag_eng1_start{0};
 		int mag_eng2_start{0};
 
@@ -41,11 +41,12 @@ namespace zcockpit::cockpit::hardware
 		int previous_dc_amps{-1};
 		int previous_ac_amps{-1};
 		int previous_dc_volts{-1};
-		long
-		previous_landing_altitude{-90000};
-		long previous_flight_altitude{-90000};
-		long flight_altitude{-90000};
-		long landing_altitude{-90000};
+		long previous_landing_altitude{-1};
+		long previous_flight_altitude{-1};
+		long flight_altitude{0};
+		long landing_altitude{0};
+		bool fresh_flight_altitude{ false };
+		bool fresh_landing_altitude{ false };
 
 		static bool is_running(){return running;}
 		static std::string get_bus_addr(){return iocard_bus_addr;}
