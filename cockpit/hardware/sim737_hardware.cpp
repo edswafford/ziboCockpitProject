@@ -168,13 +168,15 @@ namespace zcockpit::cockpit::hardware
 				int status;
 				while((status = forward_overhead_iocard->receive_mastercard()) > 0)
 				{
-					forward_overhead_iocard->process_encoders();
-					// send outputs
-					forward_overhead_iocard->update_displays();
+					forward_overhead_iocard->update_encoders();
 				}
 				if(status >= 0) {
 					// update inputs
 					forward_overhead_iocard->process_overhead();
+					// send outputs
+					forward_overhead_iocard->update_displays();
+					// send encoders
+					forward_overhead_iocard->process_encoders();
 				}
 				forward_overhead_iocard->send_mastercard();
 			}

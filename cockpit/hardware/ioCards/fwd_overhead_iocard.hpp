@@ -31,7 +31,8 @@ namespace zcockpit::cockpit::hardware
 		void update_flight_alt_display(bool use_xplane_value = true);
 
 
-		void process_encoders();
+		void update_encoders();
+		auto process_encoders() const->void;
 		int mag_eng1_start{0};
 		int mag_eng2_start{0};
 

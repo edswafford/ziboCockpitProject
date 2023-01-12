@@ -440,7 +440,7 @@ namespace zcockpit::cockpit::hardware
 
 
 	// Encoders
-	void ForwardOverheadIOCard::process_encoders()
+	void ForwardOverheadIOCard::update_encoders()
 	{
 		double value = 0.0;
 
@@ -450,12 +450,9 @@ namespace zcockpit::cockpit::hardware
 			LOG() << "Flt Alt RAW value " << value;
 			value = std::clamp(value, -10000.0, 10000.0);
 			LOG() << "Flt Alt Clamp value " << value;
-			auto sw = iocard_fwd_overhead_zcockpit_switches[33]; // FLT ALT
-			int new_val = (1 * static_cast<int>(value)) * 500;
+			const int new_val = (1 * static_cast<int>(value)) * 500;
 			flight_altitude += static_cast<long>(new_val);
-			sw.float_hw_value =  static_cast<float>(flight_altitude);
 			LOG() << "Flt Alt float delta " << value << " value " << flight_altitude;
-			aircraft_model.push_switch_change(sw);
 		}
 		// Landing Altitude
 		value = 0.0;
@@ -481,6 +478,18 @@ namespace zcockpit::cockpit::hardware
 		{
 			update_landing_alt_display(false);
 		}
+	}
+	auto ForwardOverheadIOCard::process_encoders() const->void
+	{
+		auto sw = iocard_fwd_overhead_zcockpit_switches[33]; // FLT ALT
+		sw.float_hw_value =  static_cast<float>(flight_altitude);
+		LOG() << "Flt Alt  --> xplane " << flight_altitude;
+		aircraft_model.push_switch_change(sw);
+
+		sw = iocard_fwd_overhead_zcockpit_switches[34]; // LAND ALT
+		sw.float_hw_value = static_cast<float>(landing_altitude);
+		LOG() << "Land Alt float --> xplane " << landing_altitude;
+		aircraft_model.push_switch_change(sw);
 	}
 
 
