@@ -14,31 +14,6 @@ namespace zcockpit::cockpit::hardware
 		: IOCards(deviceBusAddr, "rearOverhead"), aircraft_model(ac_model)
 	{
 		RearOverheadIOCard::iocard_bus_addr = deviceBusAddr;
-
-		//l_IRU_Off = 0;
-		//l_IRU_Align = 0;
-		//l_IRU_Nav = 0;
-		//l_IRU_Att = 0;
-		//r_IRU_Off = 0;
-		//r_IRU_Align = 0;
-		//r_IRU_Nav = 0;
-		//r_IRU_Att = 0;
-		//l_IRU_SysDspl = 0;
-		//r_IRU_SysDspl = 0;
-		//IRU_DsplSelTst = 0;
-		//IRU_DsplSelTK = 0;
-		//IRU_DsplSelPos = 0;
-		//IRU_DsplSelWnd = 0;
-		//IRU_DsplSelHdg = 0;
-		//Pass_Oxygen = 0;
-	    L_EEC_ON = 1;
-	    R_EEC_ON = 1;
-		Airspd_Warn_1 = 1;
-		Airspd_Warn_2 = 0;
-		Stall_Warn_1 = 1;
-		Stall_Warn_2 = 1;
-
-		disconnect_2 = 0;
 	}
 
 	std::unique_ptr<RearOverheadIOCard> RearOverheadIOCard::create_iocard(AircraftModel& ac_model, const std::string& bus_address) 

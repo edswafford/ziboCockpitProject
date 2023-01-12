@@ -9,7 +9,8 @@
 
 #include "libusb.h"
 #include "queue.hpp"
-
+#include "../zcockpit_switch.hpp"
+#include "../../aircraft_model.hpp"
 
 //#include "../DeleteMeHotkey.h"
 
@@ -33,6 +34,16 @@ namespace zcockpit::cockpit::hardware
 		int bus;
 		int address;
 	};
+
+	
+	struct OnOffCommand
+	{
+		unsigned iocard_pin;
+		ZcockpitSwitch on;
+		ZcockpitSwitch off;
+	};
+
+
 
 	class IOCards
 	{
@@ -104,7 +115,7 @@ namespace zcockpit::cockpit::hardware
 		void send_mastercard(void);
 
 		int mastercard_input(int input, int* value, int card = 0);
-		//void process_master_card_inputs(const OnOffKeyCommand keycmd[], int numberOfCmds, int card = 0);
+		void process_master_card_inputs(AircraftModel& aircraft_model, const std::vector<OnOffCommand>& commands, int card = 0);
 
 		void process_master_card_inputs(masterCard_input_state* switch_states[], int numberOfCmds, int card = 0);
 

@@ -44,14 +44,14 @@ namespace zcockpit::cockpit::hardware
 		//int IRU_DsplSelWnd;
 		//int IRU_DsplSelHdg;
 		//int Pass_Oxygen;
-		int L_EEC_ON;
-		int R_EEC_ON;
-		int Airspd_Warn_1;
-		int Airspd_Warn_2;
-		int Stall_Warn_1;
-		int Stall_Warn_2;
+		int L_EEC_ON{1};
+		int R_EEC_ON{1};
+		int Airspd_Warn_1{1};
+		int Airspd_Warn_2{0};
+		int Stall_Warn_1{1};
+		int Stall_Warn_2{1};
 
-		int disconnect_2;
+		int disconnect_2{0};
 	};
 
 

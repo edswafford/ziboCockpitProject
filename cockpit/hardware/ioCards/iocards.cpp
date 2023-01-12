@@ -1,4 +1,4 @@
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <string>
 #include <sstream> 
@@ -1251,37 +1251,40 @@ namespace zcockpit::cockpit::hardware
 		return (retval);
 	}
 
-//	void IOCards::process_master_card_inputs(const OnOffKeyCommand keycmd[], int numberOfCmds, int card)
-//	{
-//		int* value;
-//		int retval;
-//		if (isOpen && isInitialized)
-//		{
-//			if ((card >= 0) && (card < MASTERCARDS))
-//			{
-//				//for (auto input = 0; input < numberOfCmds; input++)
-//				//{
-//				//	if (keycmd[input].on != INVALID)
-//				//	{
-//				//		if (inputs_old[input][card] != inputs[input][card])
-//				//		{
-//				//			if (inputs[input][card] != 0)
-//				//			{
-//				//				sendMessageInt(keycmd[input].on, 0);
-//				//				LOG() << "send to buffer " << input << " new " << inputs[input][card] << " old " << inputs_old[input][card];
-//				//			}
-//				//			else if (keycmd[input].off != INVALID)
-//				//			{
-//				//				sendMessageInt(keycmd[input].off, 0);
-//				//			}
-//				//			inputs_old[input][card] = inputs[input][card];
-//				//		}
-//				//	}
-//				//}
-//			}
-//		}
-//	}
-//
+	void IOCards::process_master_card_inputs(AircraftModel& aircraft_model, const std::vector<OnOffCommand>& commands, int card)
+	{
+		int* value;
+		int retval;
+		if (is_okay)
+		{
+			if ((card >= 0) && (card < MASTERCARDS))
+			{
+				for (auto& command : commands)
+				{
+					int input = command.iocard_pin;
+					if (command.on.valid)
+					{
+						if (inputs_old[input][card] != inputs[input][card])
+						{
+							if (inputs[input][card] != 0)
+							{
+								aircraft_model.push_switch_change(command.on);
+
+								LOG() << "send to buffer " << input << " new " << inputs[input][card] << " old " << inputs_old[input][card];
+							}
+							else if (command.off.valid)
+							{
+								aircraft_model.push_switch_change(command.off);
+							}
+							inputs_old[input][card] = inputs[input][card];
+						}
+					}
+				}
+			}
+		}
+	}
+
+
 	#pragma optimize( "", off )  
 	void IOCards::process_master_card_inputs(masterCard_input_state* switch_states[], int numberOfCmds, int card)
 	{

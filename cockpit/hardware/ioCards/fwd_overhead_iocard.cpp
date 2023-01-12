@@ -518,6 +518,11 @@ namespace zcockpit::cockpit::hardware
 
 	void ForwardOverheadIOCard::initialize_switches()
 	{
+		iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(17,
+			ZcockpitSwitch(DataRefName::drive_disconnect1_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_ARM),
+			ZcockpitSwitch(DataRefName::drive_disconnect1_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_OFF) ));
+
+
 		iocard_fwd_overhead_zcockpit_switches[0]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, GND);
 		iocard_fwd_overhead_zcockpit_switches[1]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, OFF);
 		iocard_fwd_overhead_zcockpit_switches[2]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, CONT);
@@ -535,8 +540,8 @@ namespace zcockpit::cockpit::hardware
 		iocard_fwd_overhead_zcockpit_switches[11]  = ZcockpitSwitch(DataRefName::air_valve_manual, common::SwitchType::spring_loaded, OUTFLOW_VALVE_MIDDLE);
 		iocard_fwd_overhead_zcockpit_switches[12]  = ZcockpitSwitch(DataRefName::air_valve_manual, common::SwitchType::spring_loaded, OUTFLOW_VALVE_CLOSE);
 
-		iocard_fwd_overhead_zcockpit_switches[13]  = ZcockpitSwitch(DataRefName::alt_flaps_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_ARM );
-		iocard_fwd_overhead_zcockpit_switches[14]  = ZcockpitSwitch(DataRefName::alt_flaps_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_OFF);
+//		iocard_fwd_overhead_zcockpit_switches[13]  = ZcockpitSwitch(DataRefName::alt_flaps_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_ARM );
+//		iocard_fwd_overhead_zcockpit_switches[14]  = ZcockpitSwitch(DataRefName::alt_flaps_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_OFF);
 
 		iocard_fwd_overhead_zcockpit_switches[15]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::toggle, FLIGHT_CONTROL_B_ON);
 		iocard_fwd_overhead_zcockpit_switches[16]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::toggle, FLIGHT_CONTROL_B_OFF );
@@ -578,7 +583,7 @@ namespace zcockpit::cockpit::hardware
 		// Process Switches
 		//
 		//LOG() << "Calling Forward";
-//		process_master_card_inputs(constants::fwd_ovrHead_to_keycmd, constants::fwd_ovrhead_keycmd_size);
+		process_master_card_inputs(aircraft_model, iocard_fwd_overhead_switch_commands);
 
 		//LOG() << "Calling Engine Start";
 		process_master_card_inputs(engine_start_switches, NUMBER_OF_ENGINE_SWITCH_STATES);
@@ -849,20 +854,18 @@ namespace zcockpit::cockpit::hardware
 		}
 
 
-		// Flaps Master ARM switch position
-		if(mastercard_input(53, &flap_Arm))
-		{
-			if(flap_Arm == 1)
-			{
-				LOG() << "Flaps ARM  == 1 " << flap_Arm;
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[13]);  // ALTERNATE_FLAPS_ARM
-			}
-			else
-			{
-				LOG() << "Flaps ARM else " << flap_Arm;
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[14]);  // ALTERNATE_FLAPS_OFF
-			}
-		}
+		//// Flaps Master ARM switch position
+		//if(mastercard_input(53, &flap_Arm))
+		//{
+		//	if(flap_Arm == 1)
+		//	{
+		//		aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[13]);  // ALTERNATE_FLAPS_ARM
+		//	}
+		//	else
+		//	{
+		//		aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[14]);  // ALTERNATE_FLAPS_OFF
+		//	}
+		//}
 
 		// flight control B ON switch position
 		const auto fltctrl_b_on_changed = mastercard_input(54, &fltctrl_b_on);

@@ -113,6 +113,6 @@ namespace zcockpit::cockpit::hardware
 		int engine2_state{-1};
 		int old_engine2_state{ -1 };
 		ZcockpitSwitch iocard_fwd_overhead_zcockpit_switches[MASTERCARD_INPUT_SIZE]{};
-
+		std::vector<OnOffCommand> iocard_fwd_overhead_switch_commands;
 	};
 }
