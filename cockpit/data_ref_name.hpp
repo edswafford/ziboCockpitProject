@@ -292,6 +292,8 @@ namespace zcockpit::cockpit {
 		chrono_fo_et_mode_pb,
 		fire_bell_light2_pb,
 
+		bleed_trip_reset_pb,
+
 		gpws_test,
 
 		gpws_flap,
@@ -339,8 +341,9 @@ namespace zcockpit::cockpit {
 		drive_disconnect1_pos,
 		drive_disconnect2_pos,
 		alt_flaps_pos,
-
-
+		bleed_air_apu_pos,
+		acdc_maint_pos,
+		duct_ovht_test_pos,
 
 		//
 		// end of HARDWARE SWITCHES
@@ -474,7 +477,10 @@ namespace zcockpit::cockpit {
 		DataRefName::pax_oxy_pos,
 		DataRefName::drive_disconnect1_pos,
 		DataRefName::drive_disconnect2_pos,
-		DataRefName::alt_flaps_pos
+		DataRefName::alt_flaps_pos,
+		DataRefName::bleed_air_apu_pos,
+		DataRefName::acdc_maint_pos,
+		DataRefName::duct_ovht_test_pos,
 	};
 
 

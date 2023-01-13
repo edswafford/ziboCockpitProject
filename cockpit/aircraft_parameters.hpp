@@ -213,7 +213,8 @@ namespace zcockpit::cockpit {
 		irs_source_right,
 		vhf_nav_source_lft,
 		vhf_nav_source_rgt,
-
+		acdc_maint,
+		duct_ovht_test,
 		CommandRefName_unused,
 
 		kMaxValue = CommandRefName_unused
@@ -419,7 +420,8 @@ namespace zcockpit::cockpit {
 		CommandRefName::irs_source_right,
 		CommandRefName::vhf_nav_source_lft,
 		CommandRefName::vhf_nav_source_rgt,
-
+		CommandRefName::acdc_maint,
+		CommandRefName::duct_ovht_test,
 
 	};
 

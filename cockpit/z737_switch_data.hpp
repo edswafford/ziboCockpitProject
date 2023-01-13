@@ -1,3 +1,4 @@
+#pragma once
 
 #include <array>
 #include <vector>
@@ -100,42 +101,42 @@ namespace zcockpit::cockpit {
 		std::vector<float>  instrument_brightness{1.0};
 		float spd_ref_adjust{80.0};
 		float n1_set_adjust{1.0};
-		float air_valve_ctrl{0.0};
-		float dc_power{0.0};
-		float ac_power{0.0};
-		float l_pack_pos{0.0};
-		float r_pack_pos{0.0};
-		float isolation_valve_pos{0.0};
-		float position_light_pos{0.0};
-		float irs_left{0.0};
-		float irs_right{0.0};
-		float irs_dspl_sel{0.0};
+		int air_valve_ctrl{0};
+		int dc_power{0};
+		int ac_power{0};
+		int l_pack_pos{0};
+		int r_pack_pos{0};
+		int isolation_valve_pos{0};
+		int position_light_pos{0};
+		int irs_left{0};
+		int irs_right{0};
+		int irs_dspl_sel{0};
 		int starter1_pos{0};
 		int starter2_pos{0};
-		float air_valve_manual{0.0};
-		float flt_ctr_B_pos{0.0};
-		float flt_ctr_A_pos{0.0};
-		float alt_flaps_ctrl{0.0};
-		float dspl_source{0.0};
-		float irs_source{0.0};
-		float vhf_nav_source{0.0};
+		int air_valve_manual{0};
+		int flt_ctr_B_pos{0};
+		int flt_ctr_A_pos{0};
+		int alt_flaps_ctrl{0};
+		int dspl_source{0};
+		int irs_source{0};
+		int vhf_nav_source{0};
 
-		float spoiler_A_pos{0.0};
-		float spoiler_B_pos{0.0};
-		float wing_heat_pos{0.0};
-		float eng1_heat_pos{0.0};
-		float eng2_heat_pos{0.0};
-		float l_recirc_fan_pos{0.0};
-		float r_recirc_fan_pos{0.0};
-		float bleed_air_1_pos{0.0};
-		float bleed_air_2_pos{0.0};
-		float irs_sys_dspl{0.0};
-		float pax_oxy_pos{0.0};
-		float drive_disconnect1_pos{0.0};
-		float drive_disconnect2_pos{0.0};
-		float alt_flaps_pos{0.0};
-
-
+		int spoiler_A_pos{0};
+		int spoiler_B_pos{0};
+		int wing_heat_pos{0};
+		int eng1_heat_pos{0};
+		int eng2_heat_pos{0};
+		int l_recirc_fan_pos{0};
+		int r_recirc_fan_pos{0};
+		int bleed_air_1_pos{0};
+		int bleed_air_2_pos{0};
+		int irs_sys_dspl{0};
+		int pax_oxy_pos{0};
+		int drive_disconnect1_pos{0};
+		int drive_disconnect2_pos{0};
+		int alt_flaps_pos{0};
+		int acdc_maint_pos{0};
+		int duct_ovht_test_pos{0};
 
 		int always_0{ 0 };
 	};
@@ -152,7 +153,7 @@ namespace zcockpit::cockpit {
 						
 	};
 
-	struct Z737SwitchCmd
+	const struct Z737SwitchCmd
 	{
 		SwitchCommands battery_pos{2, std::vector<CommandRefName>{CommandRefName::battery_dn, CommandRefName::battery_up}};
 ;
@@ -304,6 +305,9 @@ namespace zcockpit::cockpit {
 		SwitchCommands drive_disconnect1_pos{2, std::vector<CommandRefName>{CommandRefName::drive_disconnect1, CommandRefName::drive_disconnect1_off}};
 		SwitchCommands drive_disconnect2_pos{2, std::vector<CommandRefName>{CommandRefName::drive_disconnect2, CommandRefName::drive_disconnect2_off}};
 		SwitchCommands alt_flaps_pos{2, std::vector<CommandRefName>{CommandRefName::alt_flaps, CommandRefName::alt_flaps}};
+		SwitchCommands acdc_maint_pos{2, std::vector<CommandRefName>{CommandRefName::acdc_maint, CommandRefName::acdc_maint}};
+		SwitchCommands duct_ovht_test_pos{2, std::vector<CommandRefName>{CommandRefName::duct_ovht_test, CommandRefName::duct_ovht_test}};
+		SwitchCommands bleed_trip_reset{2, std::vector<CommandRefName>{CommandRefName::bleed_trip_reset, CommandRefName::bleed_trip_reset}};
 
 	};
 
@@ -314,7 +318,7 @@ namespace zcockpit::cockpit {
 		float min_value{-1.0f};
 		int size{1};
 	};
-	struct Z737SwitchValue
+	const struct Z737SwitchValue
 	{
 		SwitchValues guarded_covers{1.0f, 0.0, 1};
 		SwitchValues instrument_brightness{1.0f, 0.0f, 6};

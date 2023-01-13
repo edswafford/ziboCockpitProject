@@ -150,18 +150,18 @@ namespace zcockpit::cockpit {
 		data_ref_strings[DataRefName::max_allowable_altitude] = {"sim/cockpit/pressure/max_allowable_altitude", XplaneType::type_Float, round_up};
 		data_ref_strings[DataRefName::landing_alt] = {"laminar/B738/pressurization/knobs/landing_alt", XplaneType::type_Float, round_up};
 
-		//data_ref_strings[DataRefName::acdc_maint_pos] = {"laminar/B738/push_button/acdc_maint_pos", XplaneType::type_Float, !round_up}; //
-		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
-		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
-		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};  //
-		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};  //
+		data_ref_strings[DataRefName::bleed_air_apu_pos] = {"laminar/B738/toggle_switch/bleed_air_apu_pos", XplaneType::type_Float, !round_up};
+
+		data_ref_strings[DataRefName::acdc_maint_pos] = {"laminar/B738/push_button/acdc_maint_pos", XplaneType::type_Float, !round_up}; //
+		data_ref_strings[DataRefName::duct_ovht_test_pos] = {"laminar/B738/push_button/duct_ovht_test_pos", XplaneType::type_Float, !round_up};
+
+		
+
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
 
-
-		//command_ref_strings[CommandRefName::acdc_maint] = { "laminar/B738/push_button/acdc_maint" }; // command press/release
 		//command_ref_strings[CommandRefName::] = { "" };
 		//command_ref_strings[CommandRefName::] = { "" };
 		//command_ref_strings[CommandRefName::] = { "" };
@@ -170,12 +170,6 @@ namespace zcockpit::cockpit {
 		//command_ref_strings[CommandRefName::] = { "" };
 		//command_ref_strings[CommandRefName::] = { "" };
 		//command_ref_strings[CommandRefName::] = { "" };
-		//command_ref_strings[CommandRefName::] = { "" };
-		//command_ref_strings[CommandRefName::] = { "" };
-		//command_ref_strings[CommandRefName::] = { "" };
-
-
-
 
 
 
@@ -617,6 +611,11 @@ namespace zcockpit::cockpit {
 		command_ref_strings[CommandRefName::vhf_nav_source_lft] = {"laminar/B738/toggle_switch/vhf_nav_source_lft"};
 		command_ref_strings[CommandRefName::vhf_nav_source_rgt] = {"laminar/B738/toggle_switch/vhf_nav_source_rgt"};
 
+
+		
+
+		command_ref_strings[CommandRefName::acdc_maint] = { "laminar/B738/push_button/acdc_maint" }; // command press/release
+		command_ref_strings[CommandRefName::duct_ovht_test] = { "laminar/B738/push_button/duct_ovht_test" };// command press/release
 
 		//command_ref_strings[CommandRefName::] = { "" };
 		//command_ref_strings[CommandRefName::] = { "" };

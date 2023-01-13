@@ -132,6 +132,8 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::drive_disconnect2_pos] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.drive_disconnect2_pos,				&z737SwitchCmd.drive_disconnect2_pos);
 		z_cockpit_data[DataRefName::alt_flaps_pos] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.alt_flaps_pos,				&z737SwitchCmd.alt_flaps_pos);
 
+		z_cockpit_data[DataRefName::acdc_maint_pos] = ZCockpitSwitchData(ZCockpitType::ZInt, &xplane_switch_data.acdc_maint_pos, &z737SwitchCmd.acdc_maint_pos);
+		z_cockpit_data[DataRefName::duct_ovht_test_pos] = ZCockpitSwitchData(ZCockpitType::ZInt, &xplane_switch_data.duct_ovht_test_pos, &z737SwitchCmd.duct_ovht_test_pos);
 
 		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
 		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
@@ -164,8 +166,11 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::at_light_fo] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.at_light_fo,				&z737SwitchCmd.at_light_fo);
 		z_cockpit_data[DataRefName::fms_light_fo] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.fms_light_fo,				&z737SwitchCmd.fms_light_fo);
 
-		z_cockpit_data[DataRefName::max_allowable_altitude] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.max_allowable_altitude,				&z737SwitchValue.max_allowable_altitude, OperationType::Value);
-		z_cockpit_data[DataRefName::landing_alt] = ZCockpitSwitchData(ZCockpitType::ZFloat,				&xplane_switch_data.landing_alt,				&z737SwitchValue.landing_alt, OperationType::Value);
+		z_cockpit_data[DataRefName::bleed_trip_reset_pb] = ZCockpitSwitchData(ZCockpitType::ZInt, &xplane_switch_data.always_0, &z737SwitchCmd.bleed_trip_reset);
+
+
+		z_cockpit_data[DataRefName::max_allowable_altitude] = ZCockpitSwitchData(ZCockpitType::ZFloat,	&xplane_switch_data.max_allowable_altitude,	&z737SwitchValue.max_allowable_altitude, OperationType::Value);
+		z_cockpit_data[DataRefName::landing_alt] = ZCockpitSwitchData(ZCockpitType::ZFloat, &xplane_switch_data.landing_alt,	&z737SwitchValue.landing_alt, OperationType::Value);
 
 
 //NOT USED		z_cockpit_data[DataRefName::cover_position] = ZCockpitSwitchData(ZCockpitType::ZVectorFloat, &xplane_switch_data.cover_position);
