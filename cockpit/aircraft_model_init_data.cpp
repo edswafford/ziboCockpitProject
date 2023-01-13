@@ -126,6 +126,8 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::r_recirc_fan_pos] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.r_recirc_fan_pos,				&z737SwitchCmd.r_recirc_fan_pos);
 		z_cockpit_data[DataRefName::bleed_air_1_pos] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.bleed_air_1_pos,				&z737SwitchCmd.bleed_air_1_pos);
 		z_cockpit_data[DataRefName::bleed_air_2_pos] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.bleed_air_2_pos,				&z737SwitchCmd.bleed_air_2_pos);
+		z_cockpit_data[DataRefName::bleed_air_apu_pos] = ZCockpitSwitchData(ZCockpitType::ZInt, &xplane_switch_data.bleed_air_apu_pos, &z737SwitchCmd.bleed_air_apu_pos);
+
 		z_cockpit_data[DataRefName::irs_sys_dspl] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.irs_sys_dspl,				&z737SwitchCmd.irs_sys_dspl);
 		z_cockpit_data[DataRefName::pax_oxy_pos] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.pax_oxy_pos,				&z737SwitchCmd.pax_oxy_pos);
 		z_cockpit_data[DataRefName::drive_disconnect1_pos] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.drive_disconnect1_pos,				&z737SwitchCmd.drive_disconnect1_pos);

@@ -130,6 +130,7 @@ namespace zcockpit::cockpit {
 		int r_recirc_fan_pos{0};
 		int bleed_air_1_pos{0};
 		int bleed_air_2_pos{0};
+		int bleed_air_apu_pos{ 0 };
 		int irs_sys_dspl{0};
 		int pax_oxy_pos{0};
 		int drive_disconnect1_pos{0};
@@ -308,7 +309,7 @@ namespace zcockpit::cockpit {
 		SwitchCommands acdc_maint_pos{2, std::vector<CommandRefName>{CommandRefName::acdc_maint, CommandRefName::acdc_maint}};
 		SwitchCommands duct_ovht_test_pos{2, std::vector<CommandRefName>{CommandRefName::duct_ovht_test, CommandRefName::duct_ovht_test}};
 		SwitchCommands bleed_trip_reset{2, std::vector<CommandRefName>{CommandRefName::bleed_trip_reset, CommandRefName::bleed_trip_reset}};
-
+		SwitchCommands bleed_air_apu_pos{2, std::vector<CommandRefName>{CommandRefName::bleed_air_apu, CommandRefName::bleed_air_apu}};
 	};
 
 
