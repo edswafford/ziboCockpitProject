@@ -48,6 +48,7 @@ namespace zcockpit::cockpit::hardware
 		long landing_altitude{0};
 		bool fresh_flight_altitude{ false };
 		bool fresh_landing_altitude{ false };
+		int spoiler_b;
 
 		static bool is_running(){return running;}
 		static std::string get_bus_addr(){return iocard_bus_addr;}

@@ -705,32 +705,6 @@ namespace zcockpit::cockpit::hardware
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::starter1_pos_gnd]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, GND);
 		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::starter1_pos_off]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, OFF);
 		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::starter1_pos_cont]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, CONT);
@@ -1077,6 +1051,18 @@ namespace zcockpit::cockpit::hardware
 		// moved to rear overhead board which has spares
 		//
 
+		// Spoiler B OFF switch position pin 7
+		if(mastercard_input(7, &spoiler_b))
+		{
+			if(spoiler_b == 1)
+			{
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::spoiler_b_pos_off]); 
+			}
+			else {
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::spoiler_b_pos_on]);
+			}
+		}
+
 
 		// pressurization manual valve
 		if(mastercard_input(51, &outflowOpen))
@@ -1088,7 +1074,6 @@ namespace zcockpit::cockpit::hardware
 			else {
 				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::air_valve_manual_outflow_valve_middle]);  // OUTFLOW_VALVE_MIDDLE
 			}
-			LOG() << "outflowOpen Change = " << outflowOpen;
 		}
 
 		// pressurization manual valve
@@ -1102,7 +1087,6 @@ namespace zcockpit::cockpit::hardware
 
 				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::air_valve_manual_outflow_valve_middle]);  // OUTFLOW_VALVE_MIDDLE
 			}
-			LOG() << "outflowClosed Change = " << outflowClosed;
 		}
 
 		// Flaps Master ARM switch position
@@ -1110,12 +1094,10 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(flap_Arm == 1)
 			{
-				LOG() << "Flaps ARM  == 1 " << flap_Arm;
 				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::alt_flaps_pos_alternate_flaps_arm]);  // ALTERNATE_FLAPS_ARM
 			}
 			else
 			{
-				LOG() << "Flaps ARM else " << flap_Arm;
 				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::alt_flaps_pos_alternate_flaps_off]);  // ALTERNATE_FLAPS_OFF
 			}
 		}
