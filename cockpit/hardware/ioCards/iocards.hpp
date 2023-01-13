@@ -35,14 +35,6 @@ namespace zcockpit::cockpit::hardware
 		int address;
 	};
 
-	
-	struct OnOffCommand
-	{
-		unsigned iocard_pin;
-		ZcockpitSwitch on;
-		ZcockpitSwitch off;
-	};
-
 
 
 	class IOCards
@@ -115,7 +107,7 @@ namespace zcockpit::cockpit::hardware
 		void send_mastercard(void);
 
 		int mastercard_input(int input, int* value, int card = 0);
-		void process_master_card_inputs(AircraftModel& aircraft_model, const std::vector<OnOffCommand>& commands, int card = 0);
+//		void process_master_card_inputs(AircraftModel& aircraft_model, const std::vector<OnOffCommand>& commands, int card = 0);
 
 		void process_master_card_inputs(masterCard_input_state* switch_states[], int numberOfCmds, int card = 0);
 

@@ -3,6 +3,7 @@
 #include <string>
 #include "../../aircraft_model.hpp"
 #include "iocards.hpp"
+#include "fwd_overhead_init_data.hpp"
 
 namespace zcockpit::cockpit::hardware
 {
@@ -112,7 +113,9 @@ namespace zcockpit::cockpit::hardware
 		int old_engine1_state{ -1 };
 		int engine2_state{-1};
 		int old_engine2_state{ -1 };
-		ZcockpitSwitch iocard_fwd_overhead_zcockpit_switches[MASTERCARD_INPUT_SIZE]{};
-		std::vector<OnOffCommand> iocard_fwd_overhead_switch_commands;
+		//ZcockpitSwitch iocard_fwd_overhead_zcockpit_switches[MASTERCARD_INPUT_SIZE]{};
+
+		common::EnumArray<SwitchPosition, ZcockpitSwitch> iocard_fwd_overhead_zcockpit_switches;
+
 	};
 }

@@ -502,14 +502,14 @@ namespace zcockpit::cockpit::hardware
 	{
 		if (fresh_flight_altitude) {
 			fresh_flight_altitude = false;
-			auto sw = iocard_fwd_overhead_zcockpit_switches[33]; // FLT ALT
+			auto sw = iocard_fwd_overhead_zcockpit_switches[SwitchPosition::max_allowable_altitude]; // FLT ALT
 			sw.float_hw_value = static_cast<float>(flight_altitude);
 			LOG() << "process_encoders: push flt alt " << sw.float_hw_value << " should = " << flight_altitude;
 			aircraft_model.push_switch_change(sw);
 		}
 		if (fresh_landing_altitude) {
 			fresh_landing_altitude = false;
-			auto sw = iocard_fwd_overhead_zcockpit_switches[34]; // LAND ALT
+			auto sw = iocard_fwd_overhead_zcockpit_switches[SwitchPosition::landing_alt]; // LAND ALT
 			sw.float_hw_value = static_cast<float>(landing_altitude);
 			aircraft_model.push_switch_change(sw);
 		}
@@ -518,60 +518,224 @@ namespace zcockpit::cockpit::hardware
 
 	void ForwardOverheadIOCard::initialize_switches()
 	{
-		iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(53,
-			ZcockpitSwitch(DataRefName::alt_flaps_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_ARM),
-			ZcockpitSwitch(DataRefName::alt_flaps_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_OFF)
-		));
+
+		constexpr int PRESSURIZATION_MODE_AUTO = 0;		// pin 4
+		constexpr int PRESSURIZATION_MODE_ALTN = 1;		// pin 5
+		constexpr int PRESSURIZATION_MODE_MAN = 2;		// pin 6
+
+		constexpr int FLIGHT_SPOILER_B_OFF = 0;			// pin 7
+		constexpr int FLIGHT_SPOILER_B_ON = 1;			// pin 7
+
+		constexpr int ELECTRICAL_DC_METER_STBY = 0;		// pin 9
+		constexpr int ELECTRICAL_DC_METER_BAT_BUS = 1;	// pin 10
+		constexpr int ELECTRICAL_DC_METER_BAT = 2;		// pin 11 
+//		constexpr int ELECTRICAL_DC_METER_AUX_BAT		// pin 12 
+		constexpr int ELECTRICAL_DC_METER_TR1 = 3;		// pin 13 
+		constexpr int ELECTRICAL_DC_METER_TR2 = 4;		// pin 14 
+		constexpr int ELECTRICAL_DC_METER_TR3 = 5;		// pin 15 
+		constexpr int ELECTRICAL_DC_METER_TEST = 6;		// pin 16 
+
+		//electrical panel maint push button
+		constexpr int ELECTRICAL_MAINT_TEST = 1;		// pin 18 pushbutton command press/release
+
+		constexpr int ELECTRICAL_AC_METER_STDBY = 0;	// pin 19
+		constexpr int ELECTRICAL_AC_METER_GND_PWR = 1;	// pin 20
+		constexpr int ELECTRICAL_AC_METER_GEN_1 = 2;	// pin 21
+		constexpr int ELECTRICAL_AC_METER_GEN_2 = 4;	// pin 22 
+		constexpr int ELECTRICAL_AC_METER_APU = 3;		// pin 23 
+		constexpr int ELECTRICAL_AC_METER_TEST = 6;		// pin 24 
+		constexpr int ELECTRICAL_AC_METER_INV = 5;		// pin 25 
 
 
-		iocard_fwd_overhead_zcockpit_switches[0]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, GND);
-		iocard_fwd_overhead_zcockpit_switches[1]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, OFF);
-		iocard_fwd_overhead_zcockpit_switches[2]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, CONT);
-		iocard_fwd_overhead_zcockpit_switches[3]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, FLT);
+		constexpr int FLTCTRL_FLIGHT_SPOILER_A_OFF = 1;	// pin 26
+		constexpr int FLTCTRL_FLIGHT_SPOILER_A_ON  = 0;	// pin 26
+		constexpr int ANTIICE_WING_ON = 1;				// pin 33
+		constexpr int ANTIICE_WING_OFF = 0;				// pin 33
+		constexpr int ANTIICE_ENG_1_OFF = 1;			// pin 34
+		constexpr int ANTIICE_ENG_1_ON  = 0;			// pin 34
 
-		iocard_fwd_overhead_zcockpit_switches[4]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary_multi_commands, GND);
-		iocard_fwd_overhead_zcockpit_switches[5]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary_multi_commands, OFF);
-		iocard_fwd_overhead_zcockpit_switches[6]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary_multi_commands, CONT);
-		iocard_fwd_overhead_zcockpit_switches[7]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary_multi_commands, FLT);
+		constexpr int WINGBODY_OVHT_TEST = 1;			// pin 36
 
-		iocard_fwd_overhead_zcockpit_switches[8]  = ZcockpitSwitch(DataRefName::drive_disconnect1_pos, common::SwitchType::toggle, GENERATOR_DISCONNECT_UP );
-		iocard_fwd_overhead_zcockpit_switches[9]  = ZcockpitSwitch(DataRefName::drive_disconnect1_pos, common::SwitchType::toggle, GENERATOR_DISCONNECT_DOWN);
+		constexpr int RIGHT_RECIRC_FAN_AUTO = 1;		// pin 37
+		constexpr int RIGHT_RECIRC_FAN_OFF = 0;			// pin 37
+		constexpr int RIGHT_PACK_HIGH = 2;				// pin 38
+		constexpr int RIGHT_PACK_AUTO = 1;				// pin 38
+		constexpr int RIGHT_PACK_OFF = 0;				// pin 39
+		constexpr int ISOLATION_VALVE_OPEN = 2;			// pin 40
+		constexpr int ISOLATION_VALVE_AUTO =1;			// pin 40
+		constexpr int ISOLATION_VALVE_CLOSE = 0;		// pin 41
+		constexpr int LEFT_PACK_HIGH = 2;				// pin 42
+		constexpr int LEFT_PACK_AUTO = 1;				// pin 42
+		constexpr int LEFT_PACK_OFF = 0;				// pin 43
+		constexpr int LEFT_RECIRC_FAN_AUTO = 1;			// pin 44
+		constexpr int LEFT_RECIRC_FAN_OFF = 0;			// pin 44
+		constexpr int ENG_2_BLEED_OFF = 1;				// pin 45
+		constexpr int ENG_2_BLEED_ON = 0;				// pin 45
 
-		iocard_fwd_overhead_zcockpit_switches[10]  = ZcockpitSwitch(DataRefName::air_valve_manual, common::SwitchType::spring_loaded, OUTFLOW_VALVE_OPEN);
-		iocard_fwd_overhead_zcockpit_switches[11]  = ZcockpitSwitch(DataRefName::air_valve_manual, common::SwitchType::spring_loaded, OUTFLOW_VALVE_MIDDLE);
-		iocard_fwd_overhead_zcockpit_switches[12]  = ZcockpitSwitch(DataRefName::air_valve_manual, common::SwitchType::spring_loaded, OUTFLOW_VALVE_CLOSE);
+		constexpr int TRIP_RESET = 1;					// pin 46
+ 
+		constexpr int APU_BLEED_OFF = 1;				// pin 47
+		constexpr int APU_BLEED_ON = 0;					// pin 47
+		constexpr int ENG_1_BLEED_OFF = 1;				// pin 48
+		constexpr int ENG_1_BLEED_ON = 0;				// pin 48
 
-//		iocard_fwd_overhead_zcockpit_switches[13]  = ZcockpitSwitch(DataRefName::alt_flaps_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_ARM );
-//		iocard_fwd_overhead_zcockpit_switches[14]  = ZcockpitSwitch(DataRefName::alt_flaps_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_OFF);
+		constexpr int POSITION_LIGHT_STROBE = 1;		// pin 49
+		constexpr int POSITION_LIGHT_OFF = 0;			// pin 49
+		constexpr int POSITION_LIGHT_STEADY = -1;		// pin 50
 
-		iocard_fwd_overhead_zcockpit_switches[15]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::toggle, FLIGHT_CONTROL_B_ON);
-		iocard_fwd_overhead_zcockpit_switches[16]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::toggle, FLIGHT_CONTROL_B_OFF );
-		iocard_fwd_overhead_zcockpit_switches[17]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::toggle, FLIGHT_CONTROL_B_STBYRUD );
 
-		iocard_fwd_overhead_zcockpit_switches[18]  = ZcockpitSwitch(DataRefName::flt_ctr_A_pos, common::SwitchType::toggle, FLIGHT_CONTROL_A_ON);
-		iocard_fwd_overhead_zcockpit_switches[19]  = ZcockpitSwitch(DataRefName::flt_ctr_A_pos, common::SwitchType::toggle, FLIGHT_CONTROL_A_OFF );
-		iocard_fwd_overhead_zcockpit_switches[20]  = ZcockpitSwitch(DataRefName::flt_ctr_A_pos, common::SwitchType::toggle, FLIGHT_CONTROL_A_STBYRUD );
 
-		iocard_fwd_overhead_zcockpit_switches[21]  = ZcockpitSwitch(DataRefName::alt_flaps_ctrl, common::SwitchType::spring_loaded, ALTERNATE_FLAPS_CTRL_DN);
-		iocard_fwd_overhead_zcockpit_switches[22]  = ZcockpitSwitch(DataRefName::alt_flaps_ctrl, common::SwitchType::toggle, ALTERNATE_FLAPS_CTRL_OFF );
-		iocard_fwd_overhead_zcockpit_switches[23]  = ZcockpitSwitch(DataRefName::alt_flaps_ctrl, common::SwitchType::toggle, ALTERNATE_FLAPS_CTRL_UP);
+		////Spoiler B OFF switch position
+		//iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(7,
+		//ZcockpitSwitch(DataRefName::spoiler_A_pos, common::SwitchType::toggle, FLIGHT_SPOILER_B_OFF),
+		//ZcockpitSwitch(DataRefName::spoiler_A_pos, common::SwitchType::toggle, FLIGHT_SPOILER_B_ON)
+		//));
+		////Spoiler A OFF switch position
+		//iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(26,
+		//ZcockpitSwitch(DataRefName::spoiler_B_pos, common::SwitchType::toggle, FLTCTRL_FLIGHT_SPOILER_A_OFF),
+		//ZcockpitSwitch(DataRefName::spoiler_B_pos, common::SwitchType::toggle,FLTCTRL_FLIGHT_SPOILER_A_ON )
+		//));
+		////wing anti ice switch
+		//iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(33,
+		//ZcockpitSwitch(DataRefName::wing_heat_pos, common::SwitchType::toggle, ANTIICE_WING_ON),
+		//ZcockpitSwitch(DataRefName::wing_heat_pos, common::SwitchType::toggle, ANTIICE_WING_OFF )
+		//));
+		////engine 1 anti ice switch
+		//iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(34,
+		//ZcockpitSwitch(DataRefName::eng1_heat_pos, common::SwitchType::toggle, ANTIICE_ENG_1_OFF),
+		//ZcockpitSwitch(DataRefName::eng1_heat_pos, common::SwitchType::toggle, ANTIICE_ENG_1_ON)
+		//));
 
-		iocard_fwd_overhead_zcockpit_switches[24]  = ZcockpitSwitch(DataRefName::dspl_source, common::SwitchType::toggle, INSTRUMENT_DISPLAYS_SOURCE_1 );
-		iocard_fwd_overhead_zcockpit_switches[25]  = ZcockpitSwitch(DataRefName::dspl_source, common::SwitchType::toggle, INSTRUMENT_DISPLAYS_SOURCE_2);
-		iocard_fwd_overhead_zcockpit_switches[26]  = ZcockpitSwitch(DataRefName::dspl_source, common::SwitchType::toggle, INSTRUMENT_DISPLAYS_SOURCE_AUTO );
-																				 
-		iocard_fwd_overhead_zcockpit_switches[27]  = ZcockpitSwitch(DataRefName::irs_source, common::SwitchType::toggle, FMS_IRS_TFR_R);
-		iocard_fwd_overhead_zcockpit_switches[28]  = ZcockpitSwitch(DataRefName::irs_source, common::SwitchType::toggle, FMS_IRS_TFR_NORMAL );
-		iocard_fwd_overhead_zcockpit_switches[29]  = ZcockpitSwitch(DataRefName::irs_source, common::SwitchType::toggle, FMS_IRS_TFR_L);
+		//// wing body over heat test
+		//iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(36,
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, WINGBODY_OVHT_TEST),
+		//ZcockpitSwitch()
+		//));
 
-		iocard_fwd_overhead_zcockpit_switches[30]  = ZcockpitSwitch(DataRefName::vhf_nav_source, common::SwitchType::toggle, FMS_VHF_NAV_L );
-		iocard_fwd_overhead_zcockpit_switches[31]  = ZcockpitSwitch(DataRefName::vhf_nav_source, common::SwitchType::toggle, FMS_VHF_NAV_NORMAL);
-		iocard_fwd_overhead_zcockpit_switches[32]  = ZcockpitSwitch(DataRefName::vhf_nav_source, common::SwitchType::toggle, FMS_VHF_NAV_R );
+		////right recerc fan
+		//iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(37,
+		//ZcockpitSwitch(DataRefName::r_recirc_fan_pos, common::SwitchType::toggle, RIGHT_RECIRC_FAN_AUTO),
+		//ZcockpitSwitch(DataRefName::r_recirc_fan_pos, common::SwitchType::toggle, RIGHT_RECIRC_FAN_OFF)
+		//));
 
-		iocard_fwd_overhead_zcockpit_switches[33]  = ZcockpitSwitch(DataRefName::max_allowable_altitude, common::SwitchType::raw_encoder, 0.0f, 0, 0);
-		iocard_fwd_overhead_zcockpit_switches[34]  = ZcockpitSwitch(DataRefName::landing_alt, common::SwitchType::raw_encoder, 0.0f, 0, 0);
+		////right pack high switch
+		//iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(38,
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, RIGHT_PACK_HIGH),
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, RIGHT_PACK_AUTO)
+		//));
 
-		iocard_fwd_overhead_zcockpit_switches[35]  = ZcockpitSwitch(DataRefName::alt_flaps_ctrl, common::SwitchType::spring_loaded, ALTERNATE_FLAPS_CTRL_OFF );
+		////right pack off switch
+		//iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(39,
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, RIGHT_PACK_OFF),
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, RIGHT_PACK_AUTO)
+		//));
+
+		////isolation valve open auto
+		//iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(40,
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, ISOLATION_VALVE_OPEN),
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle,ISOLATION_VALVE_AUTO)
+		//));
+
+		////isolation valve close switch
+		//iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(41,
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, ISOLATION_VALVE_CLOSE),
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, ISOLATION_VALVE_AUTO)
+		//));
+
+		////left pack high
+		//iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(42,
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, LEFT_PACK_HIGH),
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, LEFT_PACK_AUTO)
+		//));
+
+		////left pack switch
+		//iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(43,
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, LEFT_PACK_OFF),
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, LEFT_PACK_AUTO)
+		//));
+
+		////left recirc fan switch
+		//iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(44,
+		//ZcockpitSwitch(DataRefName::l_recirc_fan_pos, common::SwitchType::toggle, LEFT_RECIRC_FAN_AUTO),
+		//ZcockpitSwitch(DataRefName::l_recirc_fan_pos, common::SwitchType::toggle, LEFT_RECIRC_FAN_OFF)
+		//));
+
+		////engine 2 bleed
+		//iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(45,
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, ENG_2_BLEED_OFF),
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, ENG_2_BLEED_ON)
+		//));
+
+		//// TRIP rest
+		//iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(46,
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, TRIP_RESET),
+		//ZcockpitSwitch()
+		//));
+
+		////apu bleed switch
+		//iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(47,
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, APU_BLEED_OFF),
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, APU_BLEED_ON)
+		//));
+
+		////engine 1 bleed switch
+		//iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(48,
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, ENG_1_BLEED_OFF),
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, ENG_1_BLEED_ON)
+		//));
+
+
+
+		////Position light steady
+		//iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommad(49,
+		//ZcockpitSwitch(DataRefName::,  common::SwitchType::toggle, POSITION_LIGHT_POS3),
+		//ZcockpitSwitch(DataRefName::, common::SwitchType::toggle, POSITION_LIGHT_POS2)
+		//));
+
+		////Position light strobe and steady
+		//iocard_fwd_overhead_switch_commands.emplace_back(OnOffCommand(50,
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle, POSITION_LIGHT_POS1),
+		//ZcockpitSwitch(DataRefName:: , common::SwitchType::toggle,POSITION_LIGHT_POS2)
+		//));
+
+
+
+
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::starter1_pos_gnd]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, GND);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::starter1_pos_off]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, OFF);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::starter1_pos_cont]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, CONT);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::starter1_pos_flt]  = ZcockpitSwitch(DataRefName::starter1_pos, common::SwitchType::rotary_multi_commands, FLT);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::starter2_pos_gnd]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary_multi_commands, GND);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::starter2_pos_off]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary_multi_commands, OFF);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::starter2_pos_cont]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary_multi_commands, CONT);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::starter2_pos_flt]  = ZcockpitSwitch(DataRefName::starter2_pos, common::SwitchType::rotary_multi_commands, FLT);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::drive_disconnect1_pos_generator_disconnect_up]   = ZcockpitSwitch(DataRefName::drive_disconnect1_pos, common::SwitchType::toggle, GENERATOR_DISCONNECT_UP );
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::drive_disconnect1_pos_generator_disconnect_down]   = ZcockpitSwitch(DataRefName::drive_disconnect1_pos, common::SwitchType::toggle, GENERATOR_DISCONNECT_DOWN);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::air_valve_manual_outflow_valve_open]  = ZcockpitSwitch(DataRefName::air_valve_manual, common::SwitchType::spring_loaded, OUTFLOW_VALVE_OPEN);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::air_valve_manual_outflow_valve_middle]  = ZcockpitSwitch(DataRefName::air_valve_manual, common::SwitchType::spring_loaded, OUTFLOW_VALVE_MIDDLE);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::air_valve_manual_outflow_valve_close]  = ZcockpitSwitch(DataRefName::air_valve_manual, common::SwitchType::spring_loaded, OUTFLOW_VALVE_CLOSE);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::alt_flaps_pos_alternate_flaps_arm]  = ZcockpitSwitch(DataRefName::alt_flaps_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_ARM );
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::alt_flaps_pos_alternate_flaps_off]  = ZcockpitSwitch(DataRefName::alt_flaps_pos, common::SwitchType::toggle, ALTERNATE_FLAPS_OFF);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::flt_ctr_b_pos_flight_control_b_on]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::toggle, FLIGHT_CONTROL_B_ON);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::flt_ctr_b_pos_flight_control_b_off]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::toggle, FLIGHT_CONTROL_B_OFF );
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::flt_ctr_b_pos_flight_control_b_stbyrud]  = ZcockpitSwitch(DataRefName::flt_ctr_B_pos, common::SwitchType::toggle, FLIGHT_CONTROL_B_STBYRUD );
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::flt_ctr_a_pos_flight_control_a_on]  = ZcockpitSwitch(DataRefName::flt_ctr_A_pos, common::SwitchType::toggle, FLIGHT_CONTROL_A_ON);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::flt_ctr_a_pos_flight_control_a_off]  = ZcockpitSwitch(DataRefName::flt_ctr_A_pos, common::SwitchType::toggle, FLIGHT_CONTROL_A_OFF );
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::flt_ctr_a_pos_flight_control_a_stbyrud]  = ZcockpitSwitch(DataRefName::flt_ctr_A_pos, common::SwitchType::toggle, FLIGHT_CONTROL_A_STBYRUD );
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::alt_flaps_ctrl_alternate_flaps_ctrl_dn]  = ZcockpitSwitch(DataRefName::alt_flaps_ctrl, common::SwitchType::spring_loaded, ALTERNATE_FLAPS_CTRL_DN);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::alt_flaps_ctrl_alternate_flaps_ctrl_off]  = ZcockpitSwitch(DataRefName::alt_flaps_ctrl, common::SwitchType::toggle, ALTERNATE_FLAPS_CTRL_OFF );
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::alt_flaps_ctrl_alternate_flaps_ctrl_up]  = ZcockpitSwitch(DataRefName::alt_flaps_ctrl, common::SwitchType::toggle, ALTERNATE_FLAPS_CTRL_UP);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::dspl_source_instrument_displays_source_1]  = ZcockpitSwitch(DataRefName::dspl_source, common::SwitchType::toggle, INSTRUMENT_DISPLAYS_SOURCE_1 );
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::dspl_source_instrument_displays_source_2]  = ZcockpitSwitch(DataRefName::dspl_source, common::SwitchType::toggle, INSTRUMENT_DISPLAYS_SOURCE_2);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::dspl_source_instrument_displays_source_auto]  = ZcockpitSwitch(DataRefName::dspl_source, common::SwitchType::toggle, INSTRUMENT_DISPLAYS_SOURCE_AUTO );
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::irs_source_fms_irs_tfr_r]  = ZcockpitSwitch(DataRefName::irs_source, common::SwitchType::toggle, FMS_IRS_TFR_R);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::irs_source_fms_irs_tfr_normal]  = ZcockpitSwitch(DataRefName::irs_source, common::SwitchType::toggle, FMS_IRS_TFR_NORMAL );
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::irs_source_fms_irs_tfr_l]  = ZcockpitSwitch(DataRefName::irs_source, common::SwitchType::toggle, FMS_IRS_TFR_L);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::vhf_nav_source_fms_vhf_nav_l]  = ZcockpitSwitch(DataRefName::vhf_nav_source, common::SwitchType::toggle, FMS_VHF_NAV_L );
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::vhf_nav_source_fms_vhf_nav_normal]  = ZcockpitSwitch(DataRefName::vhf_nav_source, common::SwitchType::toggle, FMS_VHF_NAV_NORMAL);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::vhf_nav_source_fms_vhf_nav_r]  = ZcockpitSwitch(DataRefName::vhf_nav_source, common::SwitchType::toggle, FMS_VHF_NAV_R );
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::max_allowable_altitude]  = ZcockpitSwitch(DataRefName::max_allowable_altitude, common::SwitchType::raw_encoder, 0.0f, 0, 0);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::landing_alt]  = ZcockpitSwitch(DataRefName::landing_alt, common::SwitchType::raw_encoder, 0.0f, 0, 0);
 
 	}
 
@@ -581,14 +745,9 @@ namespace zcockpit::cockpit::hardware
 
 
 		//
-		// Process Switches
+		// Process Starter Switches
 		//
-		//LOG() << "Calling Forward";
-		process_master_card_inputs(aircraft_model, iocard_fwd_overhead_switch_commands);
-
-		//LOG() << "Calling Engine Start";
 		process_master_card_inputs(engine_start_switches, NUMBER_OF_ENGINE_SWITCH_STATES);
-		//LOG() << "Done forward";
 
 
 		//
@@ -654,19 +813,19 @@ namespace zcockpit::cockpit::hardware
 					switch(engine1_state)
 					{
 						case GND:
-							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[0]);
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::starter1_pos_gnd]);
 							break;
 
 						case OFF:
-							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[1]);
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::starter1_pos_off]);
 							break;
 
 						case CONT:
-							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[2]);
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::starter1_pos_cont]);
 							break;
 
 						case FLT:
-							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[3]);
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::starter1_pos_flt]);
 							break;
 						default:
 							LOG() << "ERROR: invalid starter 1 state " << engine1_state;
@@ -740,19 +899,19 @@ namespace zcockpit::cockpit::hardware
 					switch(engine2_state)
 					{
 						case GND:
-							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[4]);
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::starter2_pos_gnd]);
 							break;
 
 						case OFF:
-							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[5]);
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::starter2_pos_off]);
 							break;
 
 						case CONT:
-							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[6]);
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::starter2_pos_cont]);
 							break;
 
 						case FLT:
-							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[7]);
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::starter2_pos_flt]);
 							break;
 						default:
 							LOG() << "ERROR: invalid starter 2 state " << engine2_state;
@@ -801,7 +960,7 @@ namespace zcockpit::cockpit::hardware
 						if(lastGenCmd != GENERATOR_DISCONNECT_UP)
 						{
 							lastGenCmd = GENERATOR_DISCONNECT_UP;
-							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[8]);
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::drive_disconnect1_pos_generator_disconnect_up]);
 						}
 					}
 					else
@@ -809,7 +968,7 @@ namespace zcockpit::cockpit::hardware
 						if(lastGenCmd != GENERATOR_DISCONNECT_DOWN)
 						{
 							lastGenCmd = GENERATOR_DISCONNECT_DOWN;
-							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[9]);
+							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::drive_disconnect1_pos_generator_disconnect_down]);
 						}
 					}
 				}
@@ -832,10 +991,10 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(outflowOpen == 1)
 			{
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[10]);  // OUTFLOW_VALVE_OPEN
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::air_valve_manual_outflow_valve_open]);  // OUTFLOW_VALVE_OPEN
 			}
 			else {
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[11]);  // OUTFLOW_VALVE_MIDDLE
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::air_valve_manual_outflow_valve_middle]);  // OUTFLOW_VALVE_MIDDLE
 			}
 			LOG() << "outflowOpen Change = " << outflowOpen;
 		}
@@ -845,28 +1004,31 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(outflowClosed == 1)
 			{
-					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[12]);  // OUTFLOW_VALVE_CLOSE
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::air_valve_manual_outflow_valve_close]);  // OUTFLOW_VALVE_CLOSE
 			}
 			else {
 
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[11]);  // OUTFLOW_VALVE_MIDDLE
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::air_valve_manual_outflow_valve_middle]);  // OUTFLOW_VALVE_MIDDLE
 			}
 			LOG() << "outflowClosed Change = " << outflowClosed;
 		}
 
+		// Flaps Master ARM switch position
+		if(mastercard_input(53, &flap_Arm))
+		{
+			if(flap_Arm == 1)
+			{
+				LOG() << "Flaps ARM  == 1 " << flap_Arm;
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::alt_flaps_pos_alternate_flaps_arm]);  // ALTERNATE_FLAPS_ARM
+			}
+			else
+			{
+				LOG() << "Flaps ARM else " << flap_Arm;
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::alt_flaps_pos_alternate_flaps_off]);  // ALTERNATE_FLAPS_OFF
+			}
+		}
 
-		//// Flaps Master ARM switch position
-		//if(mastercard_input(53, &flap_Arm))
-		//{
-		//	if(flap_Arm == 1)
-		//	{
-		//		aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[13]);  // ALTERNATE_FLAPS_ARM
-		//	}
-		//	else
-		//	{
-		//		aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[14]);  // ALTERNATE_FLAPS_OFF
-		//	}
-		//}
+
 
 		// flight control B ON switch position
 		const auto fltctrl_b_on_changed = mastercard_input(54, &fltctrl_b_on);
@@ -875,13 +1037,13 @@ namespace zcockpit::cockpit::hardware
 		{
 			if (fltctrl_b_on == 1)
 			{
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[15]);  // FLIGHT_CONTROL_B_ON
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::flt_ctr_b_pos_flight_control_b_on]);  // FLIGHT_CONTROL_B_ON
 			}
 			else
 			{
 				if (fltctrl_b_stby != 1)
 				{
-					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[16]);  // FLIGHT_CONTROL_B_OFF
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::flt_ctr_b_pos_flight_control_b_off]);  // FLIGHT_CONTROL_B_OFF
 				}
 			}
 		}
@@ -890,13 +1052,13 @@ namespace zcockpit::cockpit::hardware
 		{
 			if (fltctrl_b_stby == 1)
 			{
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[17]);  // FLIGHT_CONTROL_B_STBYRUD
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::flt_ctr_b_pos_flight_control_b_stbyrud]);  // FLIGHT_CONTROL_B_STBYRUD
 			}
 			else
 			{
 				if (fltctrl_b_on != 1)
 				{
-					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[16]);  // FLIGHT_CONTROL_B_OFF
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::flt_ctr_b_pos_flight_control_b_off]);  // FLIGHT_CONTROL_B_OFF
 				}
 			}
 		}
@@ -910,13 +1072,13 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(fltctrl_a_stby == 1)
 			{
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[20]);  // FLIGHT_CONTROL_A_STBYRUD
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::flt_ctr_a_pos_flight_control_a_stbyrud]);  // FLIGHT_CONTROL_A_STBYRUD
 		}
 			else
 			{
 				if(fltctrl_a_on != 1)
 				{
-					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[19]);  // FLIGHT_CONTROL_A_OFF
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::flt_ctr_a_pos_flight_control_a_off]);  // FLIGHT_CONTROL_A_OFF
 				}
 			}
 		}
@@ -925,13 +1087,13 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(fltctrl_a_on == 1)
 			{
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[18]);  // FLIGHT_CONTROL_A_ON
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::flt_ctr_a_pos_flight_control_a_on]);  // FLIGHT_CONTROL_A_ON
 			}
 			else
 			{
 				if(fltctrl_a_stby != 1)
 				{
-					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[19]);  // FLIGHT_CONTROL_A_OFF
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::flt_ctr_a_pos_flight_control_a_off]);  // FLIGHT_CONTROL_A_OFF
 				}
 			}
 		}
@@ -946,13 +1108,13 @@ namespace zcockpit::cockpit::hardware
 			// Spring loaded
 			if(altFlapDn == 1)
 			{
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[21]);  // ALTERNATE_FLAPS_CTRL_DN
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::alt_flaps_ctrl_alternate_flaps_ctrl_dn]);  // ALTERNATE_FLAPS_CTRL_DN
 			}
 			else
 			{
 				if(altFlapDn_old != altFlapDn)
 				{
-					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[35]);  // ALTERNATE_FLAPS_CTRL_OFF
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::flt_ctr_a_pos_flight_control_a_off]);  // ALTERNATE_FLAPS_CTRL_OFF
 				}
 			}
 		}
@@ -960,13 +1122,13 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(altFlapUp == 1)
 			{
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[23]);  // ALTERNATE_FLAPS_CTRL_UP
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::alt_flaps_ctrl_alternate_flaps_ctrl_up]);  // ALTERNATE_FLAPS_CTRL_UP
 			}
 			else
 			{
 				if(altFlapUp_old != altFlapUp)
 				{
-					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[22]);  // ALTERNATE_FLAPS_CTRL_OFF
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::alt_flaps_ctrl_alternate_flaps_ctrl_off]);  // ALTERNATE_FLAPS_CTRL_OFF
 				}
 			}
 		}
@@ -1019,13 +1181,13 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(displaySrc1 == 1)
 			{
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[24]);  // INSTRUMENT_DISPLAYS_SOURCE_1
+				aircraft_model.push_switch_change(		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::dspl_source_instrument_displays_source_1]);  // INSTRUMENT_DISPLAYS_SOURCE_1
 			}
 			else
 			{
 				if(displaySrcAuto != 1)
 				{
-					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[25]);  // INSTRUMENT_DISPLAYS_SOURCE_2
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::dspl_source_instrument_displays_source_2]);  // INSTRUMENT_DISPLAYS_SOURCE_2
 				}
 			}
 		}
@@ -1035,13 +1197,13 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(displaySrcAuto == 1)
 			{
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[26]);  // INSTRUMENT_DISPLAYS_SOURCE_AUTO
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::dspl_source_instrument_displays_source_auto]);  // INSTRUMENT_DISPLAYS_SOURCE_AUTO
 			}
 			else
 			{
 				if(displaySrc1 != 1)
 				{
-					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[25]);  // INSTRUMENT_DISPLAYS_SOURCE_2
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::dspl_source_instrument_displays_source_2]);  // INSTRUMENT_DISPLAYS_SOURCE_2
 				}
 			}
 		}
@@ -1054,13 +1216,13 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(irsBothRight == 1)
 			{
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[27]);  // FMS_IRS_TFR_R
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::irs_source_fms_irs_tfr_r]);  // FMS_IRS_TFR_R
 			}
 			else
 			{
 				if(irsBothLeft != 1)
 				{
-					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[28]);  // FMS_IRS_TFR_NORMAL
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::irs_source_fms_irs_tfr_normal]);  // FMS_IRS_TFR_NORMAL
 				}
 			}
 		}
@@ -1070,13 +1232,13 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(irsBothLeft == 1)
 			{
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[29]);  // FMS_IRS_TFR_L
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::irs_source_fms_irs_tfr_l]);  // FMS_IRS_TFR_L
 			}
 			else
 			{
 				if(irsBothRight != 1)
 				{
-					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[28]);  // FMS_IRS_TFR_NORMAL
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::irs_source_fms_irs_tfr_normal]);  // FMS_IRS_TFR_NORMAL
 				}
 			}
 		}
@@ -1090,13 +1252,13 @@ namespace zcockpit::cockpit::hardware
 			if(vhfNavBoth1 == 1)
 			{
 
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[30]);  // FMS_VHF_NAV_L
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::vhf_nav_source_fms_vhf_nav_l]);  // FMS_VHF_NAV_L
 			}
 			else
 			{
 				if(vhfNavBoth2 != 1)
 				{
-					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[31]);  // FMS_VHF_NAV_NORMAL
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::vhf_nav_source_fms_vhf_nav_normal]);  // FMS_VHF_NAV_NORMAL
 				}
 			}
 		}
@@ -1105,13 +1267,13 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(vhfNavBoth2 == 1)
 			{
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[32]);  // FMS_VHF_NAV_R
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::vhf_nav_source_fms_vhf_nav_r]);  // FMS_VHF_NAV_R
 			}
 			else
 			{
 				if(vhfNavBoth1 != 1)
 				{
-					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[31]);  // FMS_VHF_NAV_NORMAL
+					aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::vhf_nav_source_fms_vhf_nav_normal]);  // FMS_VHF_NAV_NORMAL
 				}
 			}
 		}

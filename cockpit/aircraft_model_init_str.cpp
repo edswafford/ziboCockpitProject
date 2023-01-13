@@ -114,6 +114,14 @@ namespace zcockpit::cockpit {
 		data_ref_strings[DataRefName::air_valve_ctrl] = {"laminar/B738/toggle_switch/air_valve_ctrl", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::dc_power] = {"laminar/B738/knob/dc_power", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::ac_power] = {"laminar/B738/knob/ac_power", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::spoiler_A_pos] = {"laminar/B738/switches/spoiler_A_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::spoiler_B_pos] = {"laminar/B738/switches/spoiler_B_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::wing_heat_pos] = {"laminar/B738/ice/wing_heat_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::eng1_heat_pos] = {"laminar/B738/ice/eng1_heat_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::eng2_heat_pos] = {"laminar/B738/ice/eng2_heat_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::l_recirc_fan_pos] = {"laminar/B738/air/l_recirc_fan_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::r_recirc_fan_pos] = {"laminar/B738/air/r_recirc_fan_pos", XplaneType::type_Float, !round_up};
+
 		data_ref_strings[DataRefName::l_pack_pos] = {"laminar/B738/air/l_pack_pos", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::r_pack_pos] = {"laminar/B738/air/r_pack_pos", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::isolation_valve_pos] = {"laminar/B738/air/isolation_valve_pos", XplaneType::type_Float, !round_up};
@@ -131,15 +139,6 @@ namespace zcockpit::cockpit {
 		data_ref_strings[DataRefName::irs_source] = {"laminar/B738/toggle_switch/irs_source", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::vhf_nav_source] = {"laminar/B738/toggle_switch/vhf_nav_source", XplaneType::type_Float, !round_up};
 
-
-
-		data_ref_strings[DataRefName::spoiler_A_pos] = {"laminar/B738/switches/spoiler_A_pos", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::spoiler_B_pos] = {"laminar/B738/switches/spoiler_B_pos", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::wing_heat_pos] = {"laminar/B738/ice/wing_heat_pos", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::eng1_heat_pos] = {"laminar/B738/ice/eng1_heat_pos", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::eng2_heat_pos] = {"laminar/B738/ice/eng2_heat_pos", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::l_recirc_fan_pos] = {"laminar/B738/air/l_recirc_fan_pos", XplaneType::type_Float, !round_up};
-		data_ref_strings[DataRefName::r_recirc_fan_pos] = {"laminar/B738/air/r_recirc_fan_pos", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::bleed_air_1_pos] = {"laminar/B738/toggle_switch/bleed_air_1_pos", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::bleed_air_2_pos] = {"laminar/B738/toggle_switch/bleed_air_2_pos", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::irs_sys_dspl] = {"laminar/B738/toggle_switch/irs_sys_dspl", XplaneType::type_Float, !round_up};
@@ -151,11 +150,33 @@ namespace zcockpit::cockpit {
 		data_ref_strings[DataRefName::max_allowable_altitude] = {"sim/cockpit/pressure/max_allowable_altitude", XplaneType::type_Float, round_up};
 		data_ref_strings[DataRefName::landing_alt] = {"laminar/B738/pressurization/knobs/landing_alt", XplaneType::type_Float, round_up};
 
+		//data_ref_strings[DataRefName::acdc_maint_pos] = {"laminar/B738/push_button/acdc_maint_pos", XplaneType::type_Float, !round_up}; //
+		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
+		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
+		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};  //
+		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};  //
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
-		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
+
+
+		//command_ref_strings[CommandRefName::acdc_maint] = { "laminar/B738/push_button/acdc_maint" }; // command press/release
+		//command_ref_strings[CommandRefName::] = { "" };
+		//command_ref_strings[CommandRefName::] = { "" };
+		//command_ref_strings[CommandRefName::] = { "" };
+		//command_ref_strings[CommandRefName::] = { "" };
+		//command_ref_strings[CommandRefName::] = { "" };
+		//command_ref_strings[CommandRefName::] = { "" };
+		//command_ref_strings[CommandRefName::] = { "" };
+		//command_ref_strings[CommandRefName::] = { "" };
+		//command_ref_strings[CommandRefName::] = { "" };
+		//command_ref_strings[CommandRefName::] = { "" };
+		//command_ref_strings[CommandRefName::] = { "" };
+
+
+
+
 
 
 
