@@ -276,7 +276,7 @@ namespace zcockpit::cockpit {
 		SwitchCommands l_pack_pos{2, std::vector<CommandRefName>{CommandRefName::l_pack_dn, CommandRefName::l_pack_up}};
 		SwitchCommands r_pack_pos{2, std::vector<CommandRefName>{CommandRefName::r_pack_dn, CommandRefName::r_pack_up}};
 		SwitchCommands isolation_valve_pos{2, std::vector<CommandRefName>{CommandRefName::iso_valve_dn, CommandRefName::iso_valve_up}};
-		SwitchCommands position_light_pos{3, std::vector<CommandRefName>{CommandRefName::position_light_steady, CommandRefName::position_light_strobe, CommandRefName::position_light_off}};
+		SwitchCommands position_light_pos{3, std::vector<CommandRefName>{CommandRefName::position_light_steady, CommandRefName::position_light_off,  CommandRefName::position_light_strobe}};
 		SwitchCommands irs_left{2, std::vector<CommandRefName>{CommandRefName::irs_L_left, CommandRefName::irs_L_right}};
 		SwitchCommands irs_right{2, std::vector<CommandRefName>{CommandRefName::irs_R_left, CommandRefName::irs_R_right}};
 		SwitchCommands irs_dspl_sel{2, std::vector<CommandRefName>{CommandRefName::irs_dspl_sel_left, CommandRefName::irs_dspl_sel_right}};
