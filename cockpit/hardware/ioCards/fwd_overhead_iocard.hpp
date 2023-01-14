@@ -34,6 +34,17 @@ namespace zcockpit::cockpit::hardware
 		void update_encoders();
 		void process_encoders();
 
+		static bool is_running(){return running;}
+		static std::string get_bus_addr(){return iocard_bus_addr;}
+	private:
+
+		void initialize_switches();
+
+		AircraftModel& aircraft_model;
+
+		static std::string iocard_bus_addr;
+		static bool running; 
+
 		int mag_eng1_start{0};
 		int mag_eng2_start{0};
 
@@ -48,31 +59,6 @@ namespace zcockpit::cockpit::hardware
 		long landing_altitude{0};
 		bool fresh_flight_altitude{ false };
 		bool fresh_landing_altitude{ false };
-		int spoiler_b{0};
-		int acdc_maint{0};
-		int spoiler_a{0};
-		int wing_heat{0};
-		int eng1_heat{0};
-		int duct_ovht_test{0};
-		int r_recirc_fan{0};
-		int r_pack_off{0};
-		int r_pack_high{0};
-		int isolation_valve_open{0};
-		int isolation_valve_closed{0};
-		int l_pack_off{0};
-		int l_pack_high{0};
-
-
-		static bool is_running(){return running;}
-		static std::string get_bus_addr(){return iocard_bus_addr;}
-	private:
-
-		void initialize_switches();
-
-		AircraftModel& aircraft_model;
-
-		static std::string iocard_bus_addr;
-		static bool running; 
 
 
 		int outflowOpen{0};
@@ -93,6 +79,27 @@ namespace zcockpit::cockpit::hardware
 		int irsBothLeft{0};
 		int irsBothRight{0};
 		int disconnect_1{0};
+		int spoiler_b{0};
+		int acdc_maint{0};
+		int spoiler_a{0};
+		int wing_heat{0};
+		int eng1_heat{0};
+		int duct_ovht_test{0};
+		int r_recirc_fan{0};
+		int r_pack_off{0};
+		int r_pack_high{0};
+		int isolation_valve_open{0};
+		int isolation_valve_closed{0};
+		int l_pack_off{0};
+		int l_pack_high{0};
+		int l_recirc_fan{0};
+		int bleed_air_2{0};
+		int bleed_trip_reset{0};
+		int bleed_air_apu{0};
+		int bleed_air_1{0};
+		int position_light_strobe{0};
+		int position_light_steady{0};
+
 
 				//int wiper_l_pk{0};
 				//int wiper_l_int{0};
