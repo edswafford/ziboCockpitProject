@@ -83,7 +83,7 @@ namespace zcockpit::cockpit::hardware
 		constexpr int GENERATOR_DISCONNECT_UP = 1;
 		constexpr int GENERATOR_DISCONNECT_DOWN = 0;
 
-		const int DEBOUNCE_MAX_COUNT = 3;
+		constexpr int DEBOUNCE_MAX_COUNT = 3;
 		static int gen2Disconnect = 1;
 		static int gen2Counter = 0;
 		static int lastGenCmd = -1;
@@ -136,49 +136,63 @@ namespace zcockpit::cockpit::hardware
 				}
 			}
 		}
+		constexpr int IRS_MODE_OFF = 0;
+		constexpr int IRS_MODE_ALIGN = 1;
+		constexpr int IRS_MODE_NAV = 2;
+		constexpr int IRS_MODE_ATT = 3;
 
-		//// LEFT IRU MODE Switch
-		//   if(mastercard_input(10, &l_IRU_Off) && l_IRU_Off)
-		//   {
-		//       sendMessageInt(KEY_COMMAND_FMS_IRS_1_MODE_OFF, 0); //855
-		//   }
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_l_off] =ZcockpitSwitch(DataRefName::irs_left,      common::SwitchType::rotary_multi_commands, IRS_MODE_OFF);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_l_align] =ZcockpitSwitch(DataRefName::irs_left,      common::SwitchType::rotary_multi_commands, IRS_MODE_ALIGN);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_l_nav] =ZcockpitSwitch(DataRefName::irs_left,      common::SwitchType::rotary_multi_commands, IRS_MODE_NAV);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_l_att] =ZcockpitSwitch(DataRefName::irs_left,      common::SwitchType::rotary_multi_commands, IRS_MODE_ATT);
 
-		//   if(mastercard_input(12, &l_IRU_Align) && l_IRU_Align)
-		//   {
-		//       sendMessageInt(KEY_COMMAND_FMS_IRS_1_MODE_ALIGN, 0); //856
-		//   }
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_r_off] =ZcockpitSwitch(DataRefName::irs_right,      common::SwitchType::rotary_multi_commands, IRS_MODE_OFF);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_r_align] =ZcockpitSwitch(DataRefName::irs_right,      common::SwitchType::rotary_multi_commands, IRS_MODE_ALIGN);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_r_nav] =ZcockpitSwitch(DataRefName::irs_right,      common::SwitchType::rotary_multi_commands, IRS_MODE_NAV);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_r_att] =ZcockpitSwitch(DataRefName::irs_right,      common::SwitchType::rotary_multi_commands, IRS_MODE_ATT);
 
-		//   if(mastercard_input(9, &l_IRU_Nav) && l_IRU_Nav)
-		//   {
-		//       sendMessageInt(KEY_COMMAND_FMS_IRS_1_MODE_NAV, 0); //857
-		//   }
+		// LEFT IRU MODE Switch
+		   if(mastercard_input(10, &l_IRU_Off) && l_IRU_Off)
+		   {
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_l_off]);
+		   }
 
-		//   if(mastercard_input(11, &l_IRU_Att) && l_IRU_Att)
-		//   {
-		//       sendMessageInt(KEY_COMMAND_FMS_IRS_1_MODE_ATT, 0); //858
-		//   }
+		   if(mastercard_input(12, &l_IRU_Align) && l_IRU_Align)
+		   {
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_l_align]);
+		   }
+
+		   if(mastercard_input(9, &l_IRU_Nav) && l_IRU_Nav)
+		   {
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_l_nav]);
+		   }
+
+		   if(mastercard_input(11, &l_IRU_Att) && l_IRU_Att)
+		   {
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_l_att]);
+		   }
 
 
-		//   // RIGHT IRU MODE Switch
-		//   if(mastercard_input(16, &r_IRU_Off) && r_IRU_Off)
-		//   {
-		//       sendMessageInt(KEY_COMMAND_FMS_IRS_2_MODE_OFF, 0); //861
-		//   }
+		   // RIGHT IRU MODE Switch
+		   if(mastercard_input(16, &r_IRU_Off) && r_IRU_Off)
+		   {
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_r_off]);
+		   }
 
-		//   if(mastercard_input(15, &r_IRU_Align) && r_IRU_Align)
-		//   {
-		//       sendMessageInt(KEY_COMMAND_FMS_IRS_2_MODE_ALIGN, 0); //862
-		//   }
+		   if(mastercard_input(15, &r_IRU_Align) && r_IRU_Align)
+		   {
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_r_align]);
+		   }
 
-		//   if(mastercard_input(13, &r_IRU_Nav) && r_IRU_Nav)
-		//   {
-		//       sendMessageInt(KEY_COMMAND_FMS_IRS_2_MODE_NAV, 0); //863
-		//   }
+		   if(mastercard_input(13, &r_IRU_Nav) && r_IRU_Nav)
+		   {
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_r_nav]);
+		   }
 
-		//   if(mastercard_input(14, &r_IRU_Att) && r_IRU_Att)
-		//   {
-		//       sendMessageInt(KEY_COMMAND_FMS_IRS_2_MODE_ATT, 0); //864
-		//   }
+		   if(mastercard_input(14, &r_IRU_Att) && r_IRU_Att)
+		   {
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_r_att]);
+		   }
 
 
 		//   // IRU Sys Display

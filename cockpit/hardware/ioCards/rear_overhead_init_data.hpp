@@ -11,5 +11,15 @@ namespace zcockpit::cockpit::hardware
 
 		Switch_position_unused,
 		kMaxValue = Switch_position_unused,
+
+
+		irs_l_off,
+		irs_l_align,
+		irs_l_nav,
+		irs_l_att,
+		irs_r_off,
+		irs_r_align,
+		irs_r_nav,
+		irs_r_att,
 	};
 }
