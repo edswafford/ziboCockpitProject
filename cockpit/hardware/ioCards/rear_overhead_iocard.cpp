@@ -1,7 +1,7 @@
 #include "rear_overhead_iocard.hpp"
 #include "../../aircraft_model.hpp"
 #include "../common/logger.hpp"
-#include "../DeleteMeHotkey.h"
+
 
 extern logger LOG;
 
@@ -14,6 +14,8 @@ namespace zcockpit::cockpit::hardware
 		: IOCards(deviceBusAddr, "rearOverhead"), aircraft_model(ac_model)
 	{
 		RearOverheadIOCard::iocard_bus_addr = deviceBusAddr;
+
+		initialize_switches();
 	}
 
 	std::unique_ptr<RearOverheadIOCard> RearOverheadIOCard::create_iocard(AircraftModel& ac_model, const std::string& bus_address) 
@@ -63,23 +65,28 @@ namespace zcockpit::cockpit::hardware
 		return nullptr;
 	}
 
-	void RearOverheadIOCard::fastProcessRearOvrHead()
+
+	void RearOverheadIOCard::initialize_switches()
 	{
-		LOG() << "Calling Rear";
-		//process_master_card_inputs(constants::rear_overhead_to_keycmd, constants::rear_ovrhead_keycmd_size);
-		LOG() << "Done Rear";
-		processRearOvrHead();
+		constexpr int ANTIICE_ENG_2_OFF = 0;
+		constexpr int ANTIICE_ENG_2_ON = 1;
+		//engine 2 anti ice switch: pin 23
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::eng2_heat_pos_off] =ZcockpitSwitch(DataRefName::eng2_heat_pos,      common::SwitchType::toggle, ANTIICE_ENG_2_OFF);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::eng2_heat_pos_on] =ZcockpitSwitch(DataRefName::eng2_heat_pos,      common::SwitchType::toggle, ANTIICE_ENG_2_ON);
+
 	}
 
 		bool RightEngRunning(){return true;}
 
-	void RearOverheadIOCard::processRearOvrHead()
+	void RearOverheadIOCard::process_rear_over_head()
 	{
+		constexpr int GENERATOR_DISCONNECT_UP = 1;
+		constexpr int GENERATOR_DISCONNECT_DOWN = 0;
+
 		const int DEBOUNCE_MAX_COUNT = 3;
 		static int gen2Disconnect = 1;
 		static int gen2Counter = 0;
-		static KEY_COMMAND lastGen2KeyCmd = KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_2_DISCONNECT_UP;
-
+		static int lastGenCmd = -1;
 
 		// Elec Gen 2 Disconnect
 		////////////////////////////////////////////////////////////////////
@@ -112,19 +119,19 @@ namespace zcockpit::cockpit::hardware
 					gen2Counter = DEBOUNCE_MAX_COUNT;
 					if(disconnect_2 == 1)
 					{
-					//	if (lastGen2KeyCmd != KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_2_DISCONNECT_UP)
-					//	{
-					//		lastGen2KeyCmd = KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_2_DISCONNECT_UP;
-					//		sendMessageInt(KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_2_DISCONNECT_UP, 0);
-					//	}
-					//}
-					//else
-					//{
-					//	if(lastGen2KeyCmd != KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_2_DISCONNECT_DOWN)
-					//	{
-					//		lastGen2KeyCmd = KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_2_DISCONNECT_DOWN;
-					//		sendMessageInt(KEY_COMMAND_ELECTRICAL_GENERATOR_DRIVE_2_DISCONNECT_DOWN, 0);
-					//	}
+						if(lastGenCmd != GENERATOR_DISCONNECT_UP)
+						{
+							lastGenCmd = GENERATOR_DISCONNECT_UP;
+							aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::drive_disconnect2_pos_generator_disconnect_up]);
+						}
+					}
+					else
+					{
+						if(lastGenCmd != GENERATOR_DISCONNECT_DOWN)
+						{
+							lastGenCmd = GENERATOR_DISCONNECT_DOWN;
+							aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::drive_disconnect2_pos_generator_disconnect_down]);
+						}
 					}
 				}
 			}

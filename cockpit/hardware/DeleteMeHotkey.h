@@ -1542,5 +1542,4 @@ const OnOffKeyCommand rear_overhead_to_keycmd[] = {
 		{ INVALID, INVALID },
 
 	};
-	const int rear_ovrhead_keycmd_size = sizeof(constants::rear_overhead_to_keycmd) / sizeof(OnOffKeyCommand);
 }

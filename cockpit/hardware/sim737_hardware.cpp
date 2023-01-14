@@ -184,43 +184,19 @@ namespace zcockpit::cockpit::hardware
 
 		else if(current_cycle % FIVE_HZ == 2)
 		{
-			//if(this->rearOvrHeadIOCards->isOpen)
-			//{
-			//	status = HEALTHY_STATUS;
-			//	if(!this->rearOvrHeadIOCards->IsInitialized())
-			//	{
-			//		status = FAILED_STATUS;
-			//		LOG() << "IOCards 2: closing down rear overhead failed init";
-			//	}
-			//	else
-			//	{
-			//		status = HEALTHY_STATUS;
-			//		if(this->rearOvrHeadIOCards->receive_mastercard() < 0)
-			//		{
-			//			status = FAILED_STATUS;
-			//			LOG() << "IOCards 2: closing down rear overhead receive < 0";
-			//			this->rearOvrHeadIOCards->closeDown();
-			//		}
+			if(rear_overhead_iocard && rear_overhead_iocard->is_okay)
+			{
+				int status;
+				while((status = rear_overhead_iocard->receive_mastercard()) > 0)
+				{
+				}
+				if(status >= 0) {
+					// update inputs
+					rear_overhead_iocard->process_rear_over_head();
 
-			//		// update inputs
-			//		this->rearOvrHeadIOCards->fastProcessRearOvrHead();
-
-			//		// send_mastercard() not called
-			//		// Because there are no mastercard outputs 
-
-			//	}
-			//}
-			//else
-			//{
-			//	status = FAILED_STATUS;
-			//}
-
-			//if(status != iocards_rear_overhead_status)
-			//{
-			//	iocards_rear_overhead_status = status;
-			//	PostMessage(mainHwnd, WM_IOCARDS_REAR_OVERHEAD_HEALTH, iocards_rear_overhead_status, NULL);
-			//	LOG() << "IOCards 2: rear overhead status = " << status << " :: " << iocards_rear_overhead_status;
-			//}
+				}
+				rear_overhead_iocard->send_mastercard();
+			}
 		}
 
 

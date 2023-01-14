@@ -943,44 +943,42 @@ namespace zcockpit::cockpit::hardware
 		static int lastGenCmd = -1;
 
 
-	//	if(Ifly737::LeftEngRunning())
+		if(mastercard_input(17, &disconnect_1))
 		{
-			if(mastercard_input(17, &disconnect_1))
+			gen1Counter = 0;
+		}
+		if(disconnect_1 >= 0)
+		{
+			if(gen1Disconnect != disconnect_1)
 			{
+				gen1Disconnect = disconnect_1;
 				gen1Counter = 0;
 			}
-			if(disconnect_1 >= 0)
+			gen1Counter++;
+
+			if(gen1Counter >= DEBOUNCE_MAX_COUNT)
 			{
-				if(gen1Disconnect != disconnect_1)
-				{
-					gen1Disconnect = disconnect_1;
-					gen1Counter = 0;
-				}
-				gen1Counter++;
+				gen1Counter = DEBOUNCE_MAX_COUNT;
 
-				if(gen1Counter >= DEBOUNCE_MAX_COUNT)
+				if(disconnect_1 == 0)
 				{
-					gen1Counter = DEBOUNCE_MAX_COUNT;
-
-					if(disconnect_1 == 0)
+					if(lastGenCmd != GENERATOR_DISCONNECT_UP)
 					{
-						if(lastGenCmd != GENERATOR_DISCONNECT_UP)
-						{
-							lastGenCmd = GENERATOR_DISCONNECT_UP;
-							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::drive_disconnect1_pos_generator_disconnect_up]);
-						}
+						lastGenCmd = GENERATOR_DISCONNECT_UP;
+						aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::drive_disconnect1_pos_generator_disconnect_up]);
 					}
-					else
+				}
+				else
+				{
+					if(lastGenCmd != GENERATOR_DISCONNECT_DOWN)
 					{
-						if(lastGenCmd != GENERATOR_DISCONNECT_DOWN)
-						{
-							lastGenCmd = GENERATOR_DISCONNECT_DOWN;
-							aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::drive_disconnect1_pos_generator_disconnect_down]);
-						}
+						lastGenCmd = GENERATOR_DISCONNECT_DOWN;
+						aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::drive_disconnect1_pos_generator_disconnect_down]);
 					}
 				}
 			}
 		}
+
 
 		// Elec Gen 2 Disconnect
 		////////////////////////////////////////////////////////////////////
