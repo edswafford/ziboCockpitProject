@@ -159,6 +159,21 @@ namespace zcockpit::cockpit::hardware
 			}
 		}
 
+		// Engine 2 AntiIce
+		//engine 1 anti ice switch: pin 23
+		if(mastercard_input(23, &eng2_heat))
+		{
+			if(eng2_heat == 1)
+			{
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::eng2_heat_pos_on]); 
+			}
+			else {
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::eng2_heat_pos_off]);
+			}
+		}
+
+
+
 		// LEFT IRU MODE Switch
 		   if(mastercard_input(10, &l_IRU_Off) && l_IRU_Off)
 		   {

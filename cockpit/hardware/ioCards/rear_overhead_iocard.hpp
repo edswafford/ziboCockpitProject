@@ -54,6 +54,7 @@ namespace zcockpit::cockpit::hardware
 		int Stall_Warn_2{1};
 
 		int disconnect_2{0};
+		int eng2_heat{-1};
 
 		common::EnumArray<RearSwitchPosition, ZcockpitSwitch> iocard_rear_overhead_zcockpit_switches;
 
