@@ -271,8 +271,8 @@ namespace zcockpit::cockpit {
 		SwitchCommands n1_set_source{2, std::vector<CommandRefName>{CommandRefName::n1_set_source_right, CommandRefName::n1_set_source_left}};
 
 		SwitchCommands air_valve_ctrl{2, std::vector<CommandRefName>{CommandRefName::air_valve_ctrl_left, CommandRefName::air_valve_ctrl_right}};
-		SwitchCommands dc_power{2, std::vector<CommandRefName>{CommandRefName::dc_power_dn, CommandRefName::dc_power_up}};
-		SwitchCommands ac_power{2, std::vector<CommandRefName>{CommandRefName::ac_power_dn, CommandRefName::ac_power_up}};
+		SwitchCommands dc_power{2, std::vector<CommandRefName>{CommandRefName::dc_power_up, CommandRefName::dc_power_dn}};
+		SwitchCommands ac_power{2, std::vector<CommandRefName>{CommandRefName::ac_power_up, CommandRefName::ac_power_dn}};
 		SwitchCommands l_pack_pos{2, std::vector<CommandRefName>{CommandRefName::l_pack_dn, CommandRefName::l_pack_up}};
 		SwitchCommands r_pack_pos{2, std::vector<CommandRefName>{CommandRefName::r_pack_dn, CommandRefName::r_pack_up}};
 		SwitchCommands isolation_valve_pos{2, std::vector<CommandRefName>{CommandRefName::iso_valve_dn, CommandRefName::iso_valve_up}};

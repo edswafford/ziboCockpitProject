@@ -662,13 +662,13 @@ namespace zcockpit::cockpit::hardware
 		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::acdc_maint_pos_off] = ZcockpitSwitch(DataRefName::acdc_maint_pos, common::SwitchType::spring_loaded, AC_DC_MAINT_TEST_OFF);
 
 		// DC Meter Position pins 9-16
-		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_stby_pwr] = ZcockpitSwitch(DataRefName::acdc_maint_pos, common::SwitchType::rotary_2_commands, AC_KNOB_STBY_PWR);
-		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_gnd_pwr] = ZcockpitSwitch(DataRefName::acdc_maint_pos, common::SwitchType::rotary_2_commands, AC_KNOB_GND_PWR);
-		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_gen1] = ZcockpitSwitch(DataRefName::acdc_maint_pos, common::SwitchType::rotary_2_commands, AC_KNOB_GEN1);
-		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_apu] = ZcockpitSwitch(DataRefName::acdc_maint_pos, common::SwitchType::rotary_2_commands, AC_KNOB_APU);
-		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_gen2] = ZcockpitSwitch(DataRefName::acdc_maint_pos, common::SwitchType::rotary_2_commands, AC_KNOB_GEN2);
-		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_inv] = ZcockpitSwitch(DataRefName::acdc_maint_pos, common::SwitchType::rotary_2_commands, AC_KNOB_INV);
-		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_test] = ZcockpitSwitch(DataRefName::acdc_maint_pos, common::SwitchType::rotary_2_commands, AC_KNOB_TEST);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_stby_pwr] = ZcockpitSwitch(DataRefName::ac_power, common::SwitchType::rotary_2_commands, AC_KNOB_STBY_PWR);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_gnd_pwr] = ZcockpitSwitch(DataRefName::ac_power, common::SwitchType::rotary_2_commands, AC_KNOB_GND_PWR);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_gen1] = ZcockpitSwitch(DataRefName::ac_power, common::SwitchType::rotary_2_commands, AC_KNOB_GEN1);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_apu] = ZcockpitSwitch(DataRefName::ac_power, common::SwitchType::rotary_2_commands, AC_KNOB_APU);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_gen2] = ZcockpitSwitch(DataRefName::ac_power, common::SwitchType::rotary_2_commands, AC_KNOB_GEN2);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_inv] = ZcockpitSwitch(DataRefName::ac_power, common::SwitchType::rotary_2_commands, AC_KNOB_INV);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_test] = ZcockpitSwitch(DataRefName::ac_power, common::SwitchType::rotary_2_commands, AC_KNOB_TEST);
 
 
 
@@ -1063,21 +1063,21 @@ namespace zcockpit::cockpit::hardware
 		{
 			aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_gen1]);
 		}
-		else if(mastercard_input(22, &ac_apu) && ac_apu)
-		{
-			aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_apu]);
-		}
-		else if(mastercard_input(23, &ac_gen2) && ac_gen2)
+		else if(mastercard_input(22, &ac_gen2) && ac_gen2)
 		{
 			aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_gen2]);
 		}
-		else if(mastercard_input(24, &ac_inv) && ac_inv)
+		else if(mastercard_input(23, &ac_apu) && ac_apu)
 		{
-			aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_inv]);
+			aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_apu]);
 		}
-		else if(mastercard_input(25, &ac_test) && ac_test)
+		else if(mastercard_input(24, &ac_test) && ac_test)
 		{
 			aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_test]);
+		}
+		else if(mastercard_input(25, &ac_inv) && ac_inv)
+		{
+			aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::ac_knob_inv]);
 		}
 
 
