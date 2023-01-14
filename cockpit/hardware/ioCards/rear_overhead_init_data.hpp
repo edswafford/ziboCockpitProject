@@ -8,11 +8,6 @@ namespace zcockpit::cockpit::hardware
 		drive_disconnect2_pos_generator_disconnect_down,
 		eng2_heat_pos_off,
 		eng2_heat_pos_on,
-
-		Switch_position_unused,
-		kMaxValue = Switch_position_unused,
-
-
 		irs_l_off,
 		irs_l_align,
 		irs_l_nav,
@@ -21,5 +16,13 @@ namespace zcockpit::cockpit::hardware
 		irs_r_align,
 		irs_r_nav,
 		irs_r_att,
+		irs_dspl_l,
+		irs_dspl_r,
+
+
+		Switch_position_unused,
+		kMaxValue = Switch_position_unused,
+
+
 	};
 }
