@@ -48,7 +48,20 @@ namespace zcockpit::cockpit::hardware
 		long landing_altitude{0};
 		bool fresh_flight_altitude{ false };
 		bool fresh_landing_altitude{ false };
-		int spoiler_b;
+		int spoiler_b{0};
+		int acdc_maint{0};
+		int spoiler_a{0};
+		int wing_heat{0};
+		int eng1_heat{0};
+		int duct_ovht_test{0};
+		int r_recirc_fan{0};
+		int r_pack_off{0};
+		int r_pack_high{0};
+		int isolation_valve_open{0};
+		int isolation_valve_closed{0};
+		int l_pack_off{0};
+		int l_pack_high{0};
+
 
 		static bool is_running(){return running;}
 		static std::string get_bus_addr(){return iocard_bus_addr;}
