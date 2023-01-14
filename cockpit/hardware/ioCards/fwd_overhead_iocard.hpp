@@ -41,6 +41,21 @@ namespace zcockpit::cockpit::hardware
 		void initialize_switches();
 
 		AircraftModel& aircraft_model;
+		int dc_stby_pwr{-1};
+		int dc_test{-1};
+		int dc_bat_bus{-1};
+		int dc_bat{-1};
+		int dc_aux_bat{-1};
+		int dc_tr1{-1};
+		int dc_tr2{-1};
+		int dc_tr3{-1};
+		int ac_stby_pwr{-1};
+		int ac_gnd_pwr{-1};
+		int ac_gen1{-1};
+		int ac_apu{-1};
+		int ac_gen2{-1};
+		int ac_inv{-1};
+		int ac_test{-1};
 
 		static std::string iocard_bus_addr;
 		static bool running; 
