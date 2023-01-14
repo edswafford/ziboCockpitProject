@@ -580,9 +580,9 @@ namespace zcockpit::cockpit::hardware
 		constexpr int ENG_1_BLEED_OFF = 1;				// pin 48
 		constexpr int ENG_1_BLEED_ON = 0;				// pin 48
 
-		constexpr int POSITION_LIGHT_STROBE = 1;		// pin 49
-		constexpr int POSITION_LIGHT_OFF = 0;			// pin 49
-		constexpr int POSITION_LIGHT_STEADY = -1;		// pin 50
+		constexpr int POSITION_LIGHT_STROBE = 2;		// pin 49
+		constexpr int POSITION_LIGHT_OFF = 1;			// pin 49
+		constexpr int POSITION_LIGHT_STEADY = 0;		// pin 50
 
 
 
@@ -689,11 +689,11 @@ namespace zcockpit::cockpit::hardware
 		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::bleed_air_1_pos_on] =ZcockpitSwitch(DataRefName::bleed_air_1_pos,    common::SwitchType::toggle, ENG_1_BLEED_ON);
 
 		//Position light steady: pin 49
-		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::position_light_pos_steady] =ZcockpitSwitch(DataRefName::position_light_pos, common::SwitchType::toggle, POSITION_LIGHT_STEADY);
-		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::position_light_pos_off] =ZcockpitSwitch(DataRefName::position_light_pos, common::SwitchType::toggle, POSITION_LIGHT_OFF);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::position_light_pos_steady] =ZcockpitSwitch(DataRefName::position_light_pos, common::SwitchType::rotary_multi_commands, POSITION_LIGHT_STEADY);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::position_light_pos_off] =ZcockpitSwitch(DataRefName::position_light_pos, common::SwitchType::rotary_multi_commands, POSITION_LIGHT_OFF);
 		//Position light strobe and steady: pin 50
-		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::position_light_pos_strobe] =ZcockpitSwitch(DataRefName::position_light_pos, common::SwitchType::toggle, POSITION_LIGHT_STROBE);
-		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::position_light_pos_off] =ZcockpitSwitch(DataRefName::position_light_pos, common::SwitchType::toggle, POSITION_LIGHT_OFF);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::position_light_pos_strobe] =ZcockpitSwitch(DataRefName::position_light_pos, common::SwitchType::rotary_multi_commands, POSITION_LIGHT_STROBE);
+		iocard_fwd_overhead_zcockpit_switches[SwitchPosition::position_light_pos_off] =ZcockpitSwitch(DataRefName::position_light_pos, common::SwitchType::rotary_multi_commands, POSITION_LIGHT_OFF);
 
 
 
@@ -968,10 +968,10 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(spoiler_a == 1)
 			{
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::spoiler_a_pos_on]); 
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::spoiler_a_pos_off]); 
 			}
 			else {
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::spoiler_a_pos_off]);
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::spoiler_a_pos_on]);
 			}
 		}
 		//wing anti ice switch: pin 33
@@ -1009,35 +1009,35 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(r_recirc_fan == 1)
 			{
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::r_recirc_fan_pos_off]); 
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::r_recirc_fan_pos_auto]); 
 			}
 			else {
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::r_recirc_fan_pos_auto]);
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::r_recirc_fan_pos_off]);
 			}
 		}
 
 		//right pack high switch: pin 38
-		const auto r_pack_off_changed = mastercard_input(38, &r_pack_off);
-		const auto r_pack_high_changed = mastercard_input(39, &r_pack_high);
-		if(r_pack_off_changed)
-		{
-			if(r_pack_off == 1)
-			{
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::r_pack_pos_off]); 
-			}
-			else if(r_pack_high != 1) {
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::r_pack_pos_auto]);
-			}
-		}
-		//right pack off switch: pin 39
+		const auto r_pack_high_changed = mastercard_input(38, &r_pack_high);
+		const auto r_pack_off_changed = mastercard_input(39, &r_pack_off);
 		if(r_pack_high_changed)
 		{
 			if(r_pack_high == 1)
 			{
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::r_pack_pos_high]); 
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::r_pack_pos_auto]); 
 			}
 			else if(r_pack_off != 1) {
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::r_pack_pos_auto]);
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::r_pack_pos_high]);
+			}
+		}
+		//right pack off switch: pin 39
+		if(r_pack_off_changed)
+		{
+			if(r_pack_off == 1)
+			{
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::r_pack_pos_auto]); 
+			}
+			else if(r_pack_high != 1) {
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::r_pack_pos_off]);
 			}
 		}
 
@@ -1096,10 +1096,10 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(l_recirc_fan == 1)
 			{
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::l_recirc_fan_pos_off]); 
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::l_recirc_fan_pos_auto]); 
 			}
 			else {
-				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::l_recirc_fan_pos_auto]);
+				aircraft_model.push_switch_change(iocard_fwd_overhead_zcockpit_switches[SwitchPosition::l_recirc_fan_pos_off]);
 			}
 		}
 
