@@ -3,7 +3,7 @@
 
 namespace zcockpit::cockpit::hardware
 {
-	enum class SwitchPosition : unsigned {
+	enum class FwdSwitchPosition : unsigned {
 		starter1_pos_gnd,
 		starter1_pos_off,
 		starter1_pos_cont,

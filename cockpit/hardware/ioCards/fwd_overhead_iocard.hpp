@@ -150,7 +150,7 @@ namespace zcockpit::cockpit::hardware
 		int engine2_state{-1};
 		int old_engine2_state{ -1 };
 
-		common::EnumArray<SwitchPosition, ZcockpitSwitch> iocard_fwd_overhead_zcockpit_switches;
+		common::EnumArray<FwdSwitchPosition, ZcockpitSwitch> iocard_fwd_overhead_zcockpit_switches;
 
 	};
 }
