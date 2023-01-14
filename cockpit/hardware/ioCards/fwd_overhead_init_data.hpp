@@ -75,6 +75,23 @@ namespace zcockpit::cockpit::hardware
 		acdc_maint_pos_on,
 		acdc_maint_pos_off,
 
+		dc_knob_stby_pwr,
+		dc_knob_bat_bus,
+		dc_knob_bat,
+		dc_knob_aux_bat,
+		dc_knob_tr1,
+		dc_knob_tr2,
+		dc_knob_tr3,
+		dc_knob_test,
+
+		ac_knob_stby_pwr,
+		ac_knob_gnd_pwr,
+		ac_knob_gen1,
+		ac_knob_apu,
+		ac_knob_gen2,
+		ac_knob_inv,
+		ac_knob_test,
+
 		Switch_position_unused,
 		kMaxValue = Switch_position_unused,
 	};
