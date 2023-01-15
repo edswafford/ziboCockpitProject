@@ -194,20 +194,42 @@ namespace zcockpit::cockpit::hardware
 			}
 		}
 
-		// Engine 2 AntiIce
-		//engine 1 anti ice switch: pin 23
-		if(mastercard_input(23, &eng2_heat))
-		{
-			if(eng2_heat == 1)
-			{
-				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::eng2_heat_pos_off]);
-			}
-			else {
-				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::eng2_heat_pos_on]); 
-			}
-		}
+		// IRU Sys Display
+	   if(mastercard_input(0, &l_IRU_SysDspl) && l_IRU_SysDspl)
+	   {
+			aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_l]);
+	   }
 
+	   if(mastercard_input(1, &r_IRU_SysDspl) && r_IRU_SysDspl)
+	   {
+			aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_r]);
+	   }
 
+	   // IRU Display Select
+	   if(mastercard_input(3, &IRU_DsplSelTst) && IRU_DsplSelTst)
+	   {
+			aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_test]);
+	   }
+
+	   if(mastercard_input(6, &IRU_DsplSelTK) && IRU_DsplSelTK)
+	   {
+			aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_tk_gs]);
+	   }
+
+	   if(mastercard_input(7, &IRU_DsplSelPos) && IRU_DsplSelPos)
+	   {
+		    aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_pos]);
+	   }
+
+	   if(mastercard_input(5, &IRU_DsplSelWnd) && IRU_DsplSelWnd)
+	   {
+		    aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_wind]);
+	   }
+
+	   if(mastercard_input(2, &IRU_DsplSelHdg) && IRU_DsplSelHdg)
+	   {
+		   	aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_heading]);
+	   }
 
 		// LEFT IRU MODE Switch
 		   if(mastercard_input(10, &l_IRU_Off) && l_IRU_Off)
@@ -253,55 +275,6 @@ namespace zcockpit::cockpit::hardware
 		   }
 
 
-			// IRU Sys Display
-		   if(mastercard_input(0, &l_IRU_SysDspl) && l_IRU_SysDspl)
-		   {
-				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_l]);
-		   }
-
-		   if(mastercard_input(1, &r_IRU_SysDspl) && r_IRU_SysDspl)
-		   {
-				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_r]);
-		   }
-
-		   // IRU Display Select
-		   if(mastercard_input(3, &IRU_DsplSelTst) && IRU_DsplSelTst)
-		   {
-				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_test]);
-		   }
-
-		   if(mastercard_input(6, &IRU_DsplSelTK) && IRU_DsplSelTK)
-		   {
-				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_tk_gs]);
-		   }
-
-		   if(mastercard_input(7, &IRU_DsplSelPos) && IRU_DsplSelPos)
-		   {
-		    	aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_pos]);
-		   }
-
-		   if(mastercard_input(5, &IRU_DsplSelWnd) && IRU_DsplSelWnd)
-		   {
-		    	aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_wind]);
-		   }
-
-		   if(mastercard_input(2, &IRU_DsplSelHdg) && IRU_DsplSelHdg)
-		   {
-		   		aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_heading]);
-		   }
-
-		   
-		   if (mastercard_input(27, &Pass_Oxygen) )
-		   {
-		       if ( Pass_Oxygen)
-		       {
-		   		aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::pass_oxygen_on]);
-		       }
-		       else
-		       {
-		   		aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::pass_oxygen_normal]);
-		       }
-		   }
 		// -------------------------------------------------------------------------------------------
 		//
 		//  NOT SUPPORTED
@@ -338,6 +311,33 @@ namespace zcockpit::cockpit::hardware
 ////	        }
 ////	    }
 
+
+
+
+		// Engine 2 AntiIce
+		//engine 1 anti ice switch: pin 23
+		if(mastercard_input(23, &eng2_heat))
+		{
+			if(eng2_heat == 1)
+			{
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::eng2_heat_pos_off]);
+			}
+			else {
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::eng2_heat_pos_on]); 
+			}
+		}
+
+	   if (mastercard_input(27, &Pass_Oxygen) )
+	   {
+	       if ( Pass_Oxygen)
+	       {
+		   	aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::pass_oxygen_on]);
+	       }
+	       else
+	       {
+		   	aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::pass_oxygen_normal]);
+	       }
+	   }
 
 
 		// Airspeed Warning Test

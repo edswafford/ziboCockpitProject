@@ -1,7 +1,6 @@
 #include <algorithm>
 #include "mip_iocard.hpp"
 #include "../sim737_hardware.hpp"
-#include "../DeleteMeHotkey.h"
 #include "../common/logger.hpp"
 extern logger LOG;
 
