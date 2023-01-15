@@ -48,9 +48,9 @@ namespace zcockpit::cockpit::hardware
 		int Pass_Oxygen{-1};
 		int L_EEC_ON{1};
 		int R_EEC_ON{1};
-		int Airspd_Warn_1{1};
+		int mach_airspd_warn_1{1};
 		int Airspd_Warn_2{0};
-		int Stall_Warn_1{1};
+		int stall_warn_1{1};
 		int Stall_Warn_2{1};
 
 		int disconnect_2{0};

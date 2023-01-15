@@ -137,9 +137,17 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::acdc_maint_pos] = ZCockpitSwitchData(ZCockpitType::ZInt, &xplane_switch_data.acdc_maint_pos, &z737SwitchCmd.acdc_maint_pos);
 		z_cockpit_data[DataRefName::duct_ovht_test_pos] = ZCockpitSwitchData(ZCockpitType::ZInt, &xplane_switch_data.duct_ovht_test_pos, &z737SwitchCmd.duct_ovht_test_pos);
 
+		z_cockpit_data[DataRefName::mach_warn1_pos] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.mach_warn1_pos,			&z737SwitchCmd.mach_warn1_pos);
+		z_cockpit_data[DataRefName::mach_warn2_pos] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.mach_warn2_pos,			&z737SwitchCmd.mach_warn2_pos);
+		z_cockpit_data[DataRefName::stall_test1] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.stall_test1,				&z737SwitchCmd.stall_test1);
+		z_cockpit_data[DataRefName::stall_test2] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.stall_test2,				&z737SwitchCmd.stall_test2);
+
 		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
 		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
-						
+		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
+		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
+
+
 		// PUSHBUTTONS	 -- we don't need a switch value to compare
 		// Capt
 		z_cockpit_data[DataRefName::master_caution1_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, nullptr, &z737SwitchCmd.master_caution1_pb );

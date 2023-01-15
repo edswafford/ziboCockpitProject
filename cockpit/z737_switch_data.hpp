@@ -138,6 +138,10 @@ namespace zcockpit::cockpit {
 		int alt_flaps_pos{0};
 		int acdc_maint_pos{0};
 		int duct_ovht_test_pos{0};
+		int mach_warn1_pos{0};
+		int mach_warn2_pos{0};
+		int stall_test1{0};
+		int stall_test2{0};
 
 		int always_0{ 0 };
 	};
@@ -301,7 +305,7 @@ namespace zcockpit::cockpit {
 		SwitchCommands bleed_air_1_pos{2, std::vector<CommandRefName>{CommandRefName::bleed_air_1, CommandRefName::bleed_air_1}};
 		SwitchCommands bleed_air_2_pos{2, std::vector<CommandRefName>{CommandRefName::bleed_air_2, CommandRefName::bleed_air_2}};
 		SwitchCommands irs_sys_dspl{2, std::vector<CommandRefName>{CommandRefName::irs_sys_dspl, CommandRefName::irs_sys_dspl}};
-		SwitchCommands pax_oxy_pos{2, std::vector<CommandRefName>{CommandRefName::pax_oxy_on, CommandRefName::pax_oxy_on}};
+		SwitchCommands pax_oxy_pos{2, std::vector<CommandRefName>{CommandRefName::pax_oxy_on, CommandRefName::pax_oxy_norm}};
 		SwitchCommands pax_oxy_norm_pos{2, std::vector<CommandRefName>{CommandRefName::pax_oxy_norm, CommandRefName::pax_oxy_norm}};
 		SwitchCommands drive_disconnect1_pos{2, std::vector<CommandRefName>{CommandRefName::drive_disconnect1, CommandRefName::drive_disconnect1_off}};
 		SwitchCommands drive_disconnect2_pos{2, std::vector<CommandRefName>{CommandRefName::drive_disconnect2, CommandRefName::drive_disconnect2_off}};
@@ -310,6 +314,11 @@ namespace zcockpit::cockpit {
 		SwitchCommands duct_ovht_test_pos{2, std::vector<CommandRefName>{CommandRefName::duct_ovht_test, CommandRefName::duct_ovht_test}};
 		SwitchCommands bleed_trip_reset{2, std::vector<CommandRefName>{CommandRefName::bleed_trip_reset, CommandRefName::bleed_trip_reset}};
 		SwitchCommands bleed_air_apu_pos{2, std::vector<CommandRefName>{CommandRefName::bleed_air_apu, CommandRefName::bleed_air_apu}};
+
+		SwitchCommands mach_warn1_pos{2, std::vector<CommandRefName>{CommandRefName::mach_warn1_test, CommandRefName::mach_warn1_test}};
+		SwitchCommands mach_warn2_pos{2, std::vector<CommandRefName>{CommandRefName::mach_warn2_test, CommandRefName::mach_warn2_test}};
+		SwitchCommands stall_test1{2, std::vector<CommandRefName>{CommandRefName::stall_test1_press, CommandRefName::stall_test1_press}};
+		SwitchCommands stall_test2{2, std::vector<CommandRefName>{CommandRefName::stall_test2_press, CommandRefName::stall_test2_press}};
 	};
 
 

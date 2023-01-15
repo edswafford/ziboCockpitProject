@@ -79,6 +79,18 @@ namespace zcockpit::cockpit::hardware
 		constexpr int IRS_SYS_DSPL_L = 0;
 		constexpr int IRS_SYS_DSPL_R = 1;
 
+		constexpr int IRS_DSPL_TEST = 0;
+		constexpr int IRS_DSPL_TRACK_GRD_SPEED = 1;
+		constexpr int IRS_DSPL_POSITION = 2;
+		constexpr int IRS_DSPL_WIND = 3;
+		constexpr int IRS_DSPL_HEADING = 4;
+		constexpr int PASS_OXYGEN_ON = 1;
+		constexpr int PASS_OXYGEN_NORMAL = 0;
+		constexpr int MACH_AIRSPD_WARNING_PRESSED = 1;
+		constexpr int MACH_AIRSPD_WARNING_RELEASED = 0;
+		constexpr int STALL_WARNING_PRESSED = 1;
+		constexpr int STALL_WARNING_RELEASED = 1;
+
 		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::drive_disconnect2_pos_generator_disconnect_up]   = ZcockpitSwitch(DataRefName::drive_disconnect2_pos, common::SwitchType::toggle, GENERATOR_DISCONNECT_UP );
 		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::drive_disconnect2_pos_generator_disconnect_down]   = ZcockpitSwitch(DataRefName::drive_disconnect2_pos, common::SwitchType::toggle, GENERATOR_DISCONNECT_DOWN);
 
@@ -99,6 +111,25 @@ namespace zcockpit::cockpit::hardware
 
 		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_l] =ZcockpitSwitch(DataRefName::irs_sys_dspl,      common::SwitchType::toggle, IRS_SYS_DSPL_L);
 		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_r] =ZcockpitSwitch(DataRefName::irs_sys_dspl,      common::SwitchType::toggle, IRS_SYS_DSPL_R);
+
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_test] =ZcockpitSwitch(DataRefName::irs_dspl_sel,      common::SwitchType::rotary_2_commands, IRS_DSPL_TEST);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_tk_gs] =ZcockpitSwitch(DataRefName::irs_dspl_sel,      common::SwitchType::rotary_2_commands, IRS_DSPL_TRACK_GRD_SPEED);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_pos] =ZcockpitSwitch(DataRefName::irs_dspl_sel,      common::SwitchType::rotary_2_commands, IRS_DSPL_POSITION);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_wind] =ZcockpitSwitch(DataRefName::irs_dspl_sel,      common::SwitchType::rotary_2_commands, IRS_DSPL_WIND);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_heading] =ZcockpitSwitch(DataRefName::irs_dspl_sel,      common::SwitchType::rotary_2_commands, IRS_DSPL_HEADING);
+
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::pass_oxygen_on] =ZcockpitSwitch(DataRefName::pax_oxy_pos, common::SwitchType::rotary_multi_commands, PASS_OXYGEN_ON);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::pass_oxygen_normal] =ZcockpitSwitch(DataRefName::pax_oxy_pos, common::SwitchType::rotary_multi_commands, PASS_OXYGEN_NORMAL);
+
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::mach_airspd_warning_1_pressed] =ZcockpitSwitch(DataRefName::mach_warn1_pos, common::SwitchType::spring_loaded,MACH_AIRSPD_WARNING_PRESSED);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::mach_airspd_warning_1_released] =ZcockpitSwitch(DataRefName::mach_warn1_pos, common::SwitchType::spring_loaded,MACH_AIRSPD_WARNING_RELEASED);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::mach_airspd_warning_2_pressed] =ZcockpitSwitch(DataRefName::mach_warn2_pos, common::SwitchType::spring_loaded,MACH_AIRSPD_WARNING_PRESSED);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::mach_airspd_warning_2_released] =ZcockpitSwitch(DataRefName::mach_warn2_pos, common::SwitchType::spring_loaded,MACH_AIRSPD_WARNING_RELEASED);
+
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::stall_warning_1_pressed] =ZcockpitSwitch(DataRefName::stall_test1, common::SwitchType::spring_loaded,STALL_WARNING_PRESSED);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::stall_warning_1_released] =ZcockpitSwitch(DataRefName::stall_test1, common::SwitchType::spring_loaded,STALL_WARNING_RELEASED);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::stall_warning_2_pressed] =ZcockpitSwitch(DataRefName::stall_test2, common::SwitchType::spring_loaded,STALL_WARNING_PRESSED);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::stall_warning_2_released] =ZcockpitSwitch(DataRefName::stall_test2, common::SwitchType::spring_loaded,STALL_WARNING_RELEASED);
 
 	}
 
@@ -143,7 +174,7 @@ namespace zcockpit::cockpit::hardware
 				if(gen2Counter >= DEBOUNCE_MAX_COUNT)
 				{
 					gen2Counter = DEBOUNCE_MAX_COUNT;
-					if(disconnect_2 == 1)
+					if(disconnect_2 == 0)
 					{
 						if(lastGenCmd != GENERATOR_DISCONNECT_UP)
 						{
@@ -233,90 +264,122 @@ namespace zcockpit::cockpit::hardware
 				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_r]);
 		   }
 
+		   // IRU Display Select
+		   if(mastercard_input(3, &IRU_DsplSelTst) && IRU_DsplSelTst)
+		   {
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_test]);
+		   }
 
-		//   // IRU Display Select
-		//   if(mastercard_input(3, &IRU_DsplSelTst) && IRU_DsplSelTst)
-		//   {
-		//       sendMessageInt(KEY_COMMAND_FMS_IRS_DSPL_SEL_POS1, 0); //833
-		//   }
+		   if(mastercard_input(6, &IRU_DsplSelTK) && IRU_DsplSelTK)
+		   {
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_tk_gs]);
+		   }
 
-		//   if(mastercard_input(6, &IRU_DsplSelTK) && IRU_DsplSelTK)
-		//   {
-		//       sendMessageInt(KEY_COMMAND_FMS_IRS_DSPL_SEL_POS2, 0); //834
-		//   }
+		   if(mastercard_input(7, &IRU_DsplSelPos) && IRU_DsplSelPos)
+		   {
+		    	aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_pos]);
+		   }
 
-		//   if(mastercard_input(7, &IRU_DsplSelPos) && IRU_DsplSelPos)
-		//   {
-		//       sendMessageInt(KEY_COMMAND_FMS_IRS_DSPL_SEL_POS3, 0); //835
-		//   }
+		   if(mastercard_input(5, &IRU_DsplSelWnd) && IRU_DsplSelWnd)
+		   {
+		    	aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_wind]);
+		   }
 
-		//   if(mastercard_input(5, &IRU_DsplSelWnd) && IRU_DsplSelWnd)
-		//   {
-		//       sendMessageInt(KEY_COMMAND_FMS_IRS_DSPL_SEL_POS4, 0); //836
-		//   }
+		   if(mastercard_input(2, &IRU_DsplSelHdg) && IRU_DsplSelHdg)
+		   {
+		   		aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_heading]);
+		   }
 
-		//   if(mastercard_input(2, &IRU_DsplSelHdg) && IRU_DsplSelHdg)
-		//   {
-		//       sendMessageInt(KEY_COMMAND_FMS_IRS_DSPL_SEL_POS5, 0); //837
-		//   }
-
-
-		//   if (mastercard_input(27, &Pass_Oxygen) )
-		//   {
-		//       if ( Pass_Oxygen)
-		//       {
-		//           sendMessageInt(KEY_COMMAND_GENERAL_PASS_OXYGEN_ON, 0); //43
-		//       }
-		//       else
-		//       {
-		//           sendMessageInt(KEY_COMMAND_GENERAL_PASS_OXYGEN_NORMAL, 0); //42  
-		//       }
-		//   }
-
-		   // EEC On/ATN
-	 //   if(mastercard_input(17, &L_EEC_ON))
-	 //   {
-	 //       if(L_EEC_ON == 1)
-	 //       {
-	 //           sendMessageInt(KEY_COMMAND_ENGAPU_EEC_1_ON, 0); //504
-	 //       }
-	 //       else
-	 //       {
-	 //           sendMessageInt(KEY_COMMAND_ENGAPU_EEC_1_OFF, 0); //505  
-	 //       }
-	 //   }
-
-	 //   if(mastercard_input(8, &R_EEC_ON))
-	 //   {
-	 //       if(R_EEC_ON == 1)
-	 //       {
-	 //           sendMessageInt(KEY_COMMAND_ENGAPU_EEC_2_ON, 0); //507
-	 //       }
-	 //       else
-	 //       {
-	 //           sendMessageInt(KEY_COMMAND_ENGAPU_EEC_2_OFF, 0); //508  
-	 //       }
-	 //   }
-
-		//// Airspeed Warning Test
-	 //   if(mastercard_input(33, &Airspd_Warn_1) && Airspd_Warn_1 == 0)
-		//{
-	 //       sendMessageInt(KEY_COMMAND_WARNING_AIRSPEED_TEST, 0); //1195
-		//	}
-	 //   if(mastercard_input(31, &Airspd_Warn_2) && Airspd_Warn_2)
-		//{
-	 //       sendMessageInt(KEY_COMMAND_WARNING_AIRSPEED_TEST, 0); //1195
-		//	}
+		   
+		   if (mastercard_input(27, &Pass_Oxygen) )
+		   {
+		       if ( Pass_Oxygen)
+		       {
+		   		aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::pass_oxygen_on]);
+		       }
+		       else
+		       {
+		   		aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::pass_oxygen_normal]);
+		       }
+		   }
+		// -------------------------------------------------------------------------------------------
+		//
+		//  NOT SUPPORTED
+		//
+		// -------------------------------------------------------------------------------------------
+		
+////		constexpr int EEC_1_ON  = 
+//// 		constexpr int EEC_1_OFF =
+////		constexpr int EEC_2_ON  =
+//// 		constexpr int EEC_2_OFF =
+////
+////		   // EEC On/ATN
+////	    if(mastercard_input(17, &L_EEC_ON))
+////	    {
+////	        if(L_EEC_ON == 1)
+////	        {
+////		   		aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::eec_1_on]);
+////	        }
+////	        else
+////	        {
+////		   		aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::eec_1__off]);
+////	        }
+////	    }
+////
+////	    if(mastercard_input(8, &R_EEC_ON))
+////	    {
+////	        if(R_EEC_ON == 1)
+////	        {
+////		   		aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::eec_2_on]);
+////	        }
+////	        else
+////	        {
+////		   		aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::eec_2_off]);
+////	        }
+////	    }
 
 
-		//// Stall Warning
-	 //   if(mastercard_input(28, &Stall_Warn_1) && Stall_Warn_1 == 0)
-		//{
-	 //       sendMessageInt(KEY_COMMAND_WARNING_STALL_TEST, 0); //1196
-		//}
-	 //   if(mastercard_input(30, &Stall_Warn_2) && Stall_Warn_2 == 0)
-		//{
-	 //       sendMessageInt(KEY_COMMAND_WARNING_STALL_TEST, 0); //1196
-		//}
+
+		// Airspeed Warning Test
+	    if(mastercard_input(33, &mach_airspd_warn_1) )
+		{
+			if( mach_airspd_warn_1 == 0){
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::mach_airspd_warning_1_pressed]);
+			}
+			else {
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::mach_airspd_warning_1_released]);
+			}
+
+		}
+	    if(mastercard_input(31, &Airspd_Warn_2) )
+		{
+			if(Airspd_Warn_2) {
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::mach_airspd_warning_2_pressed]);
+			}
+			else {
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::mach_airspd_warning_2_released]);
+			}
+		}
+
+
+		// Stall Warning
+	    if(mastercard_input(28, &stall_warn_1) )
+		{
+			if(stall_warn_1 == 0){
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::stall_warning_1_pressed]);
+			}
+			else {
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::stall_warning_1_released]);
+			}
+		}
+	    if(mastercard_input(30, &Stall_Warn_2) )
+		{
+			if(Stall_Warn_2 == 0){
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::stall_warning_2_pressed]);
+			}
+			else {
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::stall_warning_2_released]);
+			}
+		}
 	}
 }

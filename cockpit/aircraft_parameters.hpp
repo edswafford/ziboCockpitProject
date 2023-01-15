@@ -215,6 +215,10 @@ namespace zcockpit::cockpit {
 		vhf_nav_source_rgt,
 		acdc_maint,
 		duct_ovht_test,
+		mach_warn1_test,
+		mach_warn2_test,
+		stall_test1_press,
+		stall_test2_press,
 		CommandRefName_unused,
 
 		kMaxValue = CommandRefName_unused
@@ -422,6 +426,10 @@ namespace zcockpit::cockpit {
 		CommandRefName::vhf_nav_source_rgt,
 		CommandRefName::acdc_maint,
 		CommandRefName::duct_ovht_test,
+		CommandRefName::mach_warn1_test,
+		CommandRefName::mach_warn2_test,
+		CommandRefName::stall_test1_press,
+		CommandRefName::stall_test2_press,
 
 	};
 

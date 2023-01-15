@@ -344,6 +344,13 @@ namespace zcockpit::cockpit {
 		bleed_air_apu_pos,
 		acdc_maint_pos,
 		duct_ovht_test_pos,
+		mach_warn1_pos,
+		mach_warn2_pos,
+		stall_test1,
+		stall_test2,
+
+
+
 
 		//
 		// end of HARDWARE SWITCHES
@@ -481,6 +488,11 @@ namespace zcockpit::cockpit {
 		DataRefName::bleed_air_apu_pos,
 		DataRefName::acdc_maint_pos,
 		DataRefName::duct_ovht_test_pos,
+		DataRefName::mach_warn1_pos,
+		DataRefName::mach_warn2_pos,
+		DataRefName::stall_test1,
+		DataRefName::stall_test2,
+
 	};
 
 

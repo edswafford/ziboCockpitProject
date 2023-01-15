@@ -155,17 +155,16 @@ namespace zcockpit::cockpit {
 		data_ref_strings[DataRefName::acdc_maint_pos] = {"laminar/B738/push_button/acdc_maint_pos", XplaneType::type_Float, !round_up}; //
 		data_ref_strings[DataRefName::duct_ovht_test_pos] = {"laminar/B738/push_button/duct_ovht_test_pos", XplaneType::type_Float, !round_up};
 
-		
+		data_ref_strings[DataRefName::mach_warn1_pos] = {"laminar/B738/push_button/mach_warn1_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::mach_warn2_pos] = {"laminar/B738/push_button/mach_warn2_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::stall_test1] = {"laminar/B738/push_button/stall_test1", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::stall_test2] = {"laminar/B738/push_button/stall_test2", XplaneType::type_Float, !round_up};
 
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
-		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
 
-		//command_ref_strings[CommandRefName::] = { "" };
-		//command_ref_strings[CommandRefName::] = { "" };
-		//command_ref_strings[CommandRefName::] = { "" };
-		//command_ref_strings[CommandRefName::] = { "" };
+
 		//command_ref_strings[CommandRefName::] = { "" };
 		//command_ref_strings[CommandRefName::] = { "" };
 		//command_ref_strings[CommandRefName::] = { "" };
@@ -616,6 +615,11 @@ namespace zcockpit::cockpit {
 
 		command_ref_strings[CommandRefName::acdc_maint] = { "laminar/B738/push_button/acdc_maint" }; // command press/release
 		command_ref_strings[CommandRefName::duct_ovht_test] = { "laminar/B738/push_button/duct_ovht_test" };// command press/release
+
+		command_ref_strings[CommandRefName::mach_warn1_test] = { "laminar/B738/push_button/mach_warn1_test" };
+		command_ref_strings[CommandRefName::mach_warn2_test] = { "laminar/B738/push_button/mach_warn2_test" };
+		command_ref_strings[CommandRefName::stall_test1_press] = { "laminar/B738/push_button/stall_test1_press" };
+		command_ref_strings[CommandRefName::stall_test2_press] = { "laminar/B738/push_button/stall_test2_press" };
 
 		//command_ref_strings[CommandRefName::] = { "" };
 		//command_ref_strings[CommandRefName::] = { "" };
