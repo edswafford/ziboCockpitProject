@@ -5,6 +5,7 @@
 #include "ioCards/rear_overhead_iocard.hpp"
 #include "health.hpp"
 #include "logger.hpp"
+#include "usb/usbrelay.hpp"
 
 
 extern logger LOG;
@@ -18,7 +19,7 @@ namespace zcockpit::cockpit::hardware
 
 		~Sim737Hardware();
 
-		void initialize_iocard_devices(AircraftModel& ac_model);
+		void initialize_devices(AircraftModel& ac_model);
 
 		void do_updates(int current_cycle);
 
@@ -38,6 +39,7 @@ namespace zcockpit::cockpit::hardware
 		std::unique_ptr<MipIOCard> mip_iocard;
 		std::unique_ptr<ForwardOverheadIOCard> forward_overhead_iocard;
 		std::unique_ptr<RearOverheadIOCard> rear_overhead_iocard;
+		std::unique_ptr<USBRelay> usb_relay;
 
 		void do_usb_work();
 		void start_event_thread();
@@ -54,5 +56,6 @@ namespace zcockpit::cockpit::hardware
 		Health iocard_mip_status{Health::UNKNOWN_STATUS};
 		Health iocard_forward_overhead_status{Health::UNKNOWN_STATUS};
 		Health iocard_rear_overhead_status{Health::UNKNOWN_STATUS};
+		Health usb_relay_status{Health::UNKNOWN_STATUS};
 	};
 }

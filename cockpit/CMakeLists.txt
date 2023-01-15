@@ -31,6 +31,8 @@ add_executable (client WIN32
 	
 	"hardware/usb/hidapi.c" 
 	"hardware/usb/hidapi.h" 
+	"hardware/usb/usbrelay.cpp"
+
     "hardware/health.hpp" 
 	#"websocket/websocket_client.hpp"
 	#"websocket/websocket_client.cpp"

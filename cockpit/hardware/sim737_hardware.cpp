@@ -12,7 +12,7 @@ namespace zcockpit::cockpit::hardware
 	{
 		interface_it.initialize();
 
-		initialize_iocard_devices(ac_model);
+		initialize_devices(ac_model);
 	}
 
 	Sim737Hardware::~Sim737Hardware()
@@ -49,6 +49,8 @@ namespace zcockpit::cockpit::hardware
 			event_thread.join();
 		}
 
+		usb_relay->close_down();
+
 	}
 		// Runs in libusb thread
 	void Sim737Hardware::do_usb_work()
@@ -84,8 +86,10 @@ namespace zcockpit::cockpit::hardware
 	}
 
 
+	constexpr int USB_RELAY_VID = 0;
+	constexpr int USB_RELAY_PID = 5;
 
-	void Sim737Hardware::initialize_iocard_devices(AircraftModel& ac_model)
+	void Sim737Hardware::initialize_devices(AircraftModel& ac_model)
 	{
 		if(LibUsbInterface::is_initialized()) {
 			auto available_iocards = IOCards::find_iocard_devices();
@@ -101,6 +105,9 @@ namespace zcockpit::cockpit::hardware
 				const auto bus_addr = available_iocards[IOCards::IOCard_Device::REAR_OVERHEAD];
 				rear_overhead_iocard = RearOverheadIOCard::create_iocard(ac_model, bus_addr);
 			}
+
+			usb_relay = std::make_unique<USBRelay>(ac_model, USB_RELAY_VID, USB_RELAY_PID);
+			usb_relay->open();
 
 			// Applications should not start the event thread until after their first call to libusb_open()
 			start_event_thread();
@@ -147,6 +154,12 @@ namespace zcockpit::cockpit::hardware
 		//
 		if(current_cycle % FIVE_HZ == 0)
 		{
+			// USB Relay
+			if(usb_relay && usb_relay->is_running()) {
+				usb_relay->process();
+			}
+
+			// MIP IOCard
 			if(mip_iocard && mip_iocard->is_okay)
 			{	int status;
 				while ((status = mip_iocard->receive_mastercard()) > 0) {
@@ -310,6 +323,22 @@ namespace zcockpit::cockpit::hardware
 			iocard_rear_overhead_status = current_iocard_rear_overhead_status;
 		}
 
+		// USB Relay
+		auto current_usb_relay_status = Health::FAILED_STATUS;
+		if(!usb_relay->is_running()) {
+			if(usb_relay->open()) {
+				current_usb_relay_status = Health::HEALTHY_STATUS;
+			}
+		}
+		else {
+			if(usb_relay->check_errors()) {
+				current_usb_relay_status = Health::HEALTHY_STATUS;
+
+			}
+		}
+		if(current_usb_relay_status != usb_relay_status) {
+			usb_relay_status = current_usb_relay_status;
+		}
 	}
 
 	bool Sim737Hardware::interfaceitMipStatus() const
