@@ -87,15 +87,15 @@ namespace zcockpit::cockpit::hardware
 		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::eng2_heat_pos_off] =ZcockpitSwitch(DataRefName::eng2_heat_pos,      common::SwitchType::toggle, ANTIICE_ENG_2_OFF);
 		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::eng2_heat_pos_on] =ZcockpitSwitch(DataRefName::eng2_heat_pos,      common::SwitchType::toggle, ANTIICE_ENG_2_ON);
 
-		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_l_off] =ZcockpitSwitch(DataRefName::irs_left,      common::SwitchType::rotary_multi_commands, IRS_MODE_OFF);
-		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_l_align] =ZcockpitSwitch(DataRefName::irs_left,      common::SwitchType::rotary_multi_commands, IRS_MODE_ALIGN);
-		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_l_nav] =ZcockpitSwitch(DataRefName::irs_left,      common::SwitchType::rotary_multi_commands, IRS_MODE_NAV);
-		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_l_att] =ZcockpitSwitch(DataRefName::irs_left,      common::SwitchType::rotary_multi_commands, IRS_MODE_ATT);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_l_off] =ZcockpitSwitch(DataRefName::irs_left,      common::SwitchType::rotary_2_commands, IRS_MODE_OFF);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_l_align] =ZcockpitSwitch(DataRefName::irs_left,      common::SwitchType::rotary_2_commands, IRS_MODE_ALIGN);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_l_nav] =ZcockpitSwitch(DataRefName::irs_left,      common::SwitchType::rotary_2_commands, IRS_MODE_NAV);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_l_att] =ZcockpitSwitch(DataRefName::irs_left,      common::SwitchType::rotary_2_commands, IRS_MODE_ATT);
 
-		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_r_off] =ZcockpitSwitch(DataRefName::irs_right,      common::SwitchType::rotary_multi_commands, IRS_MODE_OFF);
-		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_r_align] =ZcockpitSwitch(DataRefName::irs_right,      common::SwitchType::rotary_multi_commands, IRS_MODE_ALIGN);
-		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_r_nav] =ZcockpitSwitch(DataRefName::irs_right,      common::SwitchType::rotary_multi_commands, IRS_MODE_NAV);
-		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_r_att] =ZcockpitSwitch(DataRefName::irs_right,      common::SwitchType::rotary_multi_commands, IRS_MODE_ATT);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_r_off] =ZcockpitSwitch(DataRefName::irs_right,      common::SwitchType::rotary_2_commands, IRS_MODE_OFF);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_r_align] =ZcockpitSwitch(DataRefName::irs_right,      common::SwitchType::rotary_2_commands, IRS_MODE_ALIGN);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_r_nav] =ZcockpitSwitch(DataRefName::irs_right,      common::SwitchType::rotary_2_commands, IRS_MODE_NAV);
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_r_att] =ZcockpitSwitch(DataRefName::irs_right,      common::SwitchType::rotary_2_commands, IRS_MODE_ATT);
 
 		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_l] =ZcockpitSwitch(DataRefName::irs_sys_dspl,      common::SwitchType::toggle, IRS_SYS_DSPL_L);
 		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_r] =ZcockpitSwitch(DataRefName::irs_sys_dspl,      common::SwitchType::toggle, IRS_SYS_DSPL_R);
