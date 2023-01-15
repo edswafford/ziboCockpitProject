@@ -65,6 +65,11 @@ namespace zcockpit::cockpit::hardware
 		return nullptr;
 	}
 
+	constexpr int IRS_DSPL_TEST = 0;
+	constexpr int IRS_DSPL_TRACK_GRD_SPEED = 1;
+	constexpr int IRS_DSPL_POSITION = 2;
+	constexpr int IRS_DSPL_WIND = 3;
+	constexpr int IRS_DSPL_HEADING = 4;
 
 	void RearOverheadIOCard::initialize_switches()
 	{
@@ -79,17 +84,12 @@ namespace zcockpit::cockpit::hardware
 		constexpr int IRS_SYS_DSPL_L = 0;
 		constexpr int IRS_SYS_DSPL_R = 1;
 
-		constexpr int IRS_DSPL_TEST = 0;
-		constexpr int IRS_DSPL_TRACK_GRD_SPEED = 1;
-		constexpr int IRS_DSPL_POSITION = 2;
-		constexpr int IRS_DSPL_WIND = 3;
-		constexpr int IRS_DSPL_HEADING = 4;
 		constexpr int PASS_OXYGEN_ON = 1;
 		constexpr int PASS_OXYGEN_NORMAL = 0;
 		constexpr int MACH_AIRSPD_WARNING_PRESSED = 1;
 		constexpr int MACH_AIRSPD_WARNING_RELEASED = 0;
 		constexpr int STALL_WARNING_PRESSED = 1;
-		constexpr int STALL_WARNING_RELEASED = 1;
+		constexpr int STALL_WARNING_RELEASED = 0;
 
 		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::drive_disconnect2_pos_generator_disconnect_up]   = ZcockpitSwitch(DataRefName::drive_disconnect2_pos, common::SwitchType::toggle, GENERATOR_DISCONNECT_UP );
 		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::drive_disconnect2_pos_generator_disconnect_down]   = ZcockpitSwitch(DataRefName::drive_disconnect2_pos, common::SwitchType::toggle, GENERATOR_DISCONNECT_DOWN);
@@ -206,29 +206,37 @@ namespace zcockpit::cockpit::hardware
 	   }
 
 	   // IRU Display Select
+	   static int previous_iru_dspl_sel = IRS_DSPL_TEST;
 	   if(mastercard_input(3, &IRU_DsplSelTst) && IRU_DsplSelTst)
 	   {
 			aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_test]);
+			previous_iru_dspl_sel = IRS_DSPL_TEST;
 	   }
 
 	   if(mastercard_input(6, &IRU_DsplSelTK) && IRU_DsplSelTK)
 	   {
-			aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_tk_gs]);
+		   if (previous_iru_dspl_sel != IRS_DSPL_TEST) {
+			   aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_tk_gs]);
+		   }
+			previous_iru_dspl_sel = IRS_DSPL_TRACK_GRD_SPEED;
 	   }
 
 	   if(mastercard_input(7, &IRU_DsplSelPos) && IRU_DsplSelPos)
 	   {
 		    aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_pos]);
+			previous_iru_dspl_sel = IRS_DSPL_POSITION;
 	   }
 
 	   if(mastercard_input(5, &IRU_DsplSelWnd) && IRU_DsplSelWnd)
 	   {
 		    aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_wind]);
+			previous_iru_dspl_sel = IRS_DSPL_WIND;
 	   }
 
 	   if(mastercard_input(2, &IRU_DsplSelHdg) && IRU_DsplSelHdg)
 	   {
 		   	aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::irs_dspl_sel_heading]);
+			previous_iru_dspl_sel = IRS_DSPL_HEADING;
 	   }
 
 		// LEFT IRU MODE Switch

@@ -283,7 +283,7 @@ namespace zcockpit::cockpit {
 		SwitchCommands position_light_pos{3, std::vector<CommandRefName>{CommandRefName::position_light_steady, CommandRefName::position_light_off,  CommandRefName::position_light_strobe}};
 		SwitchCommands irs_left{2, std::vector<CommandRefName>{CommandRefName::irs_L_right, CommandRefName::irs_L_left}};
 		SwitchCommands irs_right{2, std::vector<CommandRefName>{CommandRefName::irs_R_right, CommandRefName::irs_R_left}};
-		SwitchCommands irs_dspl_sel{2, std::vector<CommandRefName>{CommandRefName::irs_dspl_sel_left, CommandRefName::irs_dspl_sel_right}};
+		SwitchCommands irs_dspl_sel{2, std::vector<CommandRefName>{CommandRefName::irs_dspl_sel_right, CommandRefName::irs_dspl_sel_left}};
 		SwitchCommands starter1_pos{4, std::vector<CommandRefName>{ CommandRefName::eng1_start_grd, CommandRefName::eng1_start_off, CommandRefName::eng1_start_cont, CommandRefName::eng1_start_flt }};
 		SwitchCommands starter2_pos{4, std::vector<CommandRefName>{ CommandRefName::eng2_start_grd, CommandRefName::eng2_start_off, CommandRefName::eng2_start_cont, CommandRefName::eng2_start_flt}};
 		SwitchCommands air_valve_manual{2, std::vector<CommandRefName>{CommandRefName::air_valve_manual_left, CommandRefName::air_valve_manual_right}};

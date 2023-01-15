@@ -158,7 +158,13 @@ namespace zcockpit::cockpit {
 							switch_value += direction;
 							LOG() << "Rotary Command once " << cmd_ref_string << " id " << cmd_ref_id;
 						}
-						rotary_switch_value[dataref_name] = hw_value;
+						if (dataref_name == DataRefName::irs_dspl_sel && hw_value == 0) {
+							// Test is spring loaded and return to Track/Groundspeed, but xplane does not set the value to 1
+							rotary_switch_value[dataref_name] = 1;
+						}
+						else {
+							rotary_switch_value[dataref_name] = hw_value;
+						}
 					}
 					else {
 						LOG() << "Unsupported Command " << cmd_ref_string << " id " << cmd_ref_id;
