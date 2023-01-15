@@ -68,6 +68,8 @@ namespace zcockpit::cockpit::hardware
 
 	void RearOverheadIOCard::initialize_switches()
 	{
+		constexpr int GENERATOR_DISCONNECT_UP = 1;
+		constexpr int GENERATOR_DISCONNECT_DOWN = 0;
 		constexpr int ANTIICE_ENG_2_OFF = 0;
 		constexpr int ANTIICE_ENG_2_ON = 1;
 		constexpr int IRS_MODE_OFF = 0;
@@ -77,6 +79,8 @@ namespace zcockpit::cockpit::hardware
 		constexpr int IRS_SYS_DSPL_L = 0;
 		constexpr int IRS_SYS_DSPL_R = 1;
 
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::drive_disconnect2_pos_generator_disconnect_up]   = ZcockpitSwitch(DataRefName::drive_disconnect2_pos, common::SwitchType::toggle, GENERATOR_DISCONNECT_UP );
+		iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::drive_disconnect2_pos_generator_disconnect_down]   = ZcockpitSwitch(DataRefName::drive_disconnect2_pos, common::SwitchType::toggle, GENERATOR_DISCONNECT_DOWN);
 
 
 		//engine 2 anti ice switch: pin 23
@@ -165,10 +169,10 @@ namespace zcockpit::cockpit::hardware
 		{
 			if(eng2_heat == 1)
 			{
-				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::eng2_heat_pos_on]); 
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::eng2_heat_pos_off]);
 			}
 			else {
-				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::eng2_heat_pos_off]);
+				aircraft_model.push_switch_change(iocard_rear_overhead_zcockpit_switches[RearSwitchPosition::eng2_heat_pos_on]); 
 			}
 		}
 
