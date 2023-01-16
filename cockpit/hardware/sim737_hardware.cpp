@@ -488,7 +488,7 @@ namespace zcockpit::cockpit::hardware
 	}
 	bool Sim737Hardware::get_transponder_status() const
 	{
-		return transponder_status == Health::UNKNOWN_STATUS;
+		return transponder_status == Health::HEALTHY_STATUS;
 	}
 
 

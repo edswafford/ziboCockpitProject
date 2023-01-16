@@ -1034,12 +1034,12 @@ namespace zcockpit::cockpit::hardware
 					if (overhead_zcockpit_switches[44].int_hw_value == XPLANE_STANDBY_POWER_OFF &&
 						overhead_zcockpit_switches[45].int_hw_value == XPLANE_STANDBY_POWER_OFF) {
 						aircraft_model.push_switch_change(overhead_zcockpit_switches[nswitch]);
-						LOG() << "Switch Change: nswitch " << nswitch << " value " << switch_value;
+						//LOG() << "Switch Change: nswitch " << nswitch << " value " << switch_value;
 					}
 					else {
 						if (overhead_zcockpit_switches[nswitch].int_hw_value != XPLANE_STANDBY_POWER_OFF) {
 							aircraft_model.push_switch_change(overhead_zcockpit_switches[nswitch]);
-							LOG() << "Switch Change: nswitch " << nswitch << " value " << switch_value;
+							//LOG() << "Switch Change: nswitch " << nswitch << " value " << switch_value;
 						}
 					}
 				}
@@ -1061,7 +1061,7 @@ namespace zcockpit::cockpit::hardware
 							aircraft_model.push_switch_change(overhead_zcockpit_switches[nswitch]);
 						}
 					}
-					LOG() << "Switch Change: nswitch " << nswitch << " value " << switch_value;
+					//LOG() << "Switch Change: nswitch " << nswitch << " value " << switch_value;
 				}
 			}
 
@@ -1173,7 +1173,7 @@ namespace zcockpit::cockpit::hardware
 						// we only want to use the pole that has changed to one
 						aircraft_model.push_switch_change(mip_zcockpit_switches[nswitch]);
 					}
-					LOG() << "Switch Change: nswitch " << nswitch << " value " << switch_value;
+					//LOG() << "Switch Change: nswitch " << nswitch << " value " << switch_value;
 
 				}
 			}
