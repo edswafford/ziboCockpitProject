@@ -268,7 +268,7 @@ namespace zcockpit::cockpit
 						packet_dataref.clear();
 					}
 					packet_dataref.emplace_back(SubscribeData(param.first, param.second.xplane_type, param.second.is_rounded));
-					LOG() << "# " << total_request << " " << message_count << " " << param.first;
+					//LOG() << "# " << total_request << " " << message_count << " " << param.first;
 					message_count += 1;
 					total_request += 1;
 				}

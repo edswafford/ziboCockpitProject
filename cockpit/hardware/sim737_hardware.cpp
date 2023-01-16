@@ -156,12 +156,13 @@ namespace zcockpit::cockpit::hardware
 			Sim737Hardware::has_run_for_one_second_ = true;
 		}
 
-		if (power_is_on && aircraft_model.z738_ac_power_is_on())
+		if (power_is_on && !aircraft_model.z738_ac_power_is_on())
 		{
 			// turn off
 			if (mipGauges->Available())
 			{
 				mipGauges->updateLights(FiDevice::DISPLAYS_OFF);
+//				overheadGauges->updateLights(FiDevice::DISPLAYS_OFF);
 				power_is_on = false;
 			}
 		}
@@ -171,6 +172,7 @@ namespace zcockpit::cockpit::hardware
 			if (mipGauges->Available())
 			{
 				mipGauges->updateLights(FiDevice::DISPLAYS_ON);
+//				overheadGauges->updateLights(FiDevice::DISPLAYS_OFF);
 				power_is_on = true;
 			}
 		}
@@ -488,7 +490,7 @@ namespace zcockpit::cockpit::hardware
 	}
 	bool Sim737Hardware::get_transponder_status() const
 	{
-		return transponder_status == Health::UNKNOWN_STATUS;
+		return transponder_status == Health::HEALTHY_STATUS;
 	}
 
 

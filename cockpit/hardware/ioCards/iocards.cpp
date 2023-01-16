@@ -1121,7 +1121,7 @@ namespace zcockpit::cockpit::hardware
 								channel = count + segment * channelspersegment;
 								if (channel < NUM_OUTPUTS)
 								{
-									LOG() << "LIBIOCARDS: send output to MASTERCARD card output [" << card << "][" << firstoutput + channel << "] " << outputs[channel][card];
+									//LOG() << "LIBIOCARDS: send output to MASTERCARD card output [" << card << "][" << firstoutput + channel << "] " << outputs[channel][card];
 								}
 							}
 							memcpy(outputs_old, outputs, sizeof(outputs));
@@ -1161,7 +1161,7 @@ namespace zcockpit::cockpit::hardware
 								write_callback_running = false;
 								LOG() << "write submit transfer failed";
 							}
-							LOG() << "Write transfer succeded";
+							//LOG() << "Write transfer succeded";
 
 						}
 						else {

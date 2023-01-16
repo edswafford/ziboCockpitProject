@@ -532,7 +532,7 @@ void Timer_Data::timer(hid_device * handle)
 										state = true;
 									}
 									switch_stack.push(std::make_tuple(i + 1, state));
-									LOG() << "sw " << i << " = " << state;
+									//LOG() << "sw " << i << " = " << state;
 									mask <<= 1;
 								}
 							}
@@ -552,7 +552,7 @@ void Timer_Data::timer(hid_device * handle)
 									{
 										state = true;
 									}
-									LOG() << "sw " << i << " = " << state;
+									//LOG() << "sw " << i << " = " << state;
 									std::lock_guard<std::mutex> lock(interfaceIT_timer_mutex);
 									{
 										switch_stack.push(std::make_tuple(i + 1, (state)));
@@ -587,7 +587,7 @@ void Timer_Data::timer(hid_device * handle)
 										state = true;
 									}
 									switch_stack.push(std::make_tuple(i + 33, state));
-									LOG() << "sw " << i << " = " << state;
+									//LOG() << "sw " << i << " = " << state;
 									mask <<= 1;
 								}
 							}
@@ -606,7 +606,7 @@ void Timer_Data::timer(hid_device * handle)
 									{
 										state = true;
 									}
-									LOG() << "sw " << i << " = " << state;
+									//LOG() << "sw " << i << " = " << state;
 									std::lock_guard<std::mutex> lock(interfaceIT_timer_mutex);
 									{
 										switch_stack.push(std::make_tuple(i + 33, (state)));
