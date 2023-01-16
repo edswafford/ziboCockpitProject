@@ -105,6 +105,8 @@ include_directories(third_party/SDK/CHeaders/XPLM)
 include_directories(third_party/cereal/include)
 include_directories(third_party/libusb-1.0.26/libusb)
 include_directories(third_party/libusb-1.0.26/libusb/os)
+include_directories(third_party/FTD2XX/)
+
 
 add_subdirectory(third_party/libusb-1.0.26/libusb)
 

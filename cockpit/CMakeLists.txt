@@ -48,16 +48,30 @@ add_executable (client WIN32
 	"hardware/ioCards/mip_iocard.cpp"
 	"hardware/ioCards/fwd_overhead_iocard.cpp"
 	"hardware/ioCards/rear_overhead_iocard.cpp"
+
+	"hardware/ftd2xx/ftd2xxdevices_wrapper.cpp"
+	"hardware/flight_illusion/fidevice.cpp"	
+	"hardware/flight_illusion/ficontroller.cpp"
+
+	 "hardware/transponder/transponder.cpp"
 )
 
 
 
 target_compile_definitions(client PRIVATE _UNICODE=1)
+target_compile_definitions(client PRIVATE FTD2XX_STATIC=1)
+# target_compile_definitions(client PRIVATE WIN32_LEAN_AND_MEAN=1)
+# target_compile_definitions(client PRIVATE LOG4CXX_STATIC=1)
+# target_compile_definitions(client PRIVATE _WIN32_WINNT=0x0601)
+# target_compile_definitions(client PRIVATE _WINDOWS=1)
+# target_compile_definitions(client PRIVATE WIN32=1)
+# 
 
 target_include_directories(client PRIVATE ${wxWidgets_SOURCE_DIR}/include/msvc)
 target_include_directories(client PRIVATE ${wxWidgets_SOURCE_DIR}/include)
 target_link_directories(client PRIVATE ${CMAKE_BINARY_DIR}/lib/vc_x64_lib/)
 
+set(FTD2XX_STATIC_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/FTD2XX/Static/amd64")
 
 
 
@@ -65,6 +79,7 @@ target_link_directories(client PRIVATE ${CMAKE_BINARY_DIR}/lib/vc_x64_lib/)
 target_link_libraries(client PUBLIC
 		zboCockpitCommon
 		libusb
+		${FTD2XX_STATIC_LIBRARY}/ftd2xx.lib
 		asio
         wxbase
         wxcore

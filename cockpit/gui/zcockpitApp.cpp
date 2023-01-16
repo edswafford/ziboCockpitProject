@@ -375,7 +375,28 @@ namespace zcockpit::cockpit::gui
 						iocard_rear_overhead_status = current_iocard_rear_overhead_status;
 						main_window->set_iocard_rear_overhead_status(iocard_rear_overhead_status);
 					}
-
+					//
+					// Flight Illusion MIP
+					auto current_flight_illusion_mip_status = sim737_hardware.get_flight_illusion_mip_status();
+					if(flight_illusion_mip_status != current_flight_illusion_mip_status || current_cycle == ONE_SECOND) {
+						flight_illusion_mip_status = current_flight_illusion_mip_status;
+						main_window->set_flight_illusion_mip_status(flight_illusion_mip_status);
+					}
+					//
+					// Flight Illusion Overhead
+					auto current_flight_illusion_overhead_status = sim737_hardware.get_flight_illusion_overhead_status();
+					if(flight_illusion_overhead_status != current_flight_illusion_overhead_status || current_cycle == ONE_SECOND) {
+						flight_illusion_overhead_status = current_flight_illusion_overhead_status;
+						main_window->set_flight_illusion_overhead_status(flight_illusion_overhead_status);
+					}
+					//
+					// Flight Illusion MIP
+					auto current_transponder_status = sim737_hardware.get_transponder_status();
+					if(transponder_status != current_transponder_status || current_cycle == ONE_SECOND) {
+						transponder_status = current_transponder_status;
+						main_window->set_transponder_status(transponder_status);
+					}
+					
 
 
 

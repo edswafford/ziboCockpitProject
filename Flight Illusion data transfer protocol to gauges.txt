@@ -1,0 +1,223 @@
+
+Conversation opened. 1 unread message.
+
+Skip to content
+Using Gmail with screen readers
+1 of 339
+flight Illusions
+Inbox
+Ed Swafford <edswafford@gmail.com>
+	
+2:37 PM (0 minutes ago)
+	
+to me
+Hi Michael,
+
+Here's the protocol we use:
+ 
+Our instruments can be driven via a standard communication port. The CIM or Multiplexer contains a USB to Serial Port module and will show up in windows as a Virtual Communications Port. A standard driver from Microsoft is available for that. Default we use 38400 bps, 8 data bits, No parity and one Stop bit. But this can be changed via Instrument commands to up to 115.2 Kbits/sec.
+Commands sent to the gauges are always 6 bytes long. This 6 byte command frame contains the Gauge address (maximum 255), the instrument command (maximum 16 commands) and the corresponding value that is typical for the Gauge.
+ 
+As an example in Visual Basic this would mean that you have to assign a Communication  port e.g:
+MSComm1.CommPort = 4
+MSComm1.Settings = "38400,N,8,1"
+ 
+Serial comms is fine, but the problem always is synchronisation, so detection of the start and end of a message. There are many HW and SW handshaking tricks to handle that, but often either time-consuming or not very reliable (and Windows is sometimes unpredictable as to this).
+We resolved that by a "flag" byte, a byte with the value zero (&H00). So all messages start with that flag byte and all gauges will then read the next byte, being the address (we call that the GaugeID, being 1 to 255).
+After the GaugeID follows a byte with a 4 bit command and 4 bits that are part of the value that are next to this byte.
+ 
+Consequently, using the "zero" as a unique flag, the other bytes should never contain zero, and that’s why one of the bits in each following byte of the message is forced to "one". To "repair" the two bytes of the command value the original bits are given in the 4 bits following the command in the command byte. The last byte of the message must be 255 (&HFF). If not the gauges will reject the message. For details see the protocol for the "single needle gauge" below.
+ 
+Only a few commands will result in a reply message. Also here a fixed length message, being 25 bytes long. We use fixed length to prevent com port interrupts to "crawl up" to application level for every received byte. The 25 is based the longest message we can get back from gauges.
+ 
+So, to control a gauge, you need to send 3 parameters: the GaugeID, the Command and the Value/Operator. In Visual basic we use the following sub for that:
+ 
+Private Sub ComposeCmd(GaugeID, icmd, ival)
+XferCmd = "      "
+int1 = GaugeID
+Mid$(XferCmd, 2, 1) = Chr$(int1)
+long1 = ival
+If ival < 0 Then long1 = Abs(ival)
+int2 = Int(long1 / 256)
+Mid$(XferCmd, 4, 1) = Chr$((long1 And &HFF) Or &H1) Mid$(XferCmd, 5, 1) = Chr$((int2 And &HFF) Or &H2)
+int3 = icmd * 16
+int3 = int3 Or (long1 And &H1)
+int3 = int3 Or (int2 And &H2)
+If ival < 0 Then int3 = int3 Or &HC Else int3 = int3 Or &H8 Mid$(XferCmd, 3, 1) = Chr$(int3 And &HFF) Mid$(XferCmd, 6, 1) = Chr$(&HFF) Mid$(XferCmd, 1, 1) = Chr$(&H0) ComBufferXmit = ComBufferXmit & Chr$(&HFF) & XferCmd End Sub
+ 
+Just as an example of course and retyped, so can contain some syntax errors.
+ 
+The "single needle" instruments use the following command set:
+'--------------------------------------------------------------
+' Commands from control PC
+'
+   ' Message layout:
+   '
+   ' Byte 1: Flag byte:&h00
+   ' Byte 2: Address: 1-255; address zero forbidden!
+   ' Byte 3: Command: Bit 3 always "1": CCCC.1SHL (H&L = databits, S=sign)
+   ' Byte 4: Data Low: &h00-&hFF;  bit0 always 1 : XXXX.XXX1 -> XXXX.XXXL
+   ' Byte 5: Data High:&h00-&hFF: bit1 always 1 : XXXX.XX1X -> XXXX.XXHX
+   ' Byte 6: End byte:&hFF
+   '
+   ' Commands:
+   '  0= noop
+   '  1= Initialize
+   '  2= Set Instrument Address; Value 1-&hff (not zero!),second byte:&HAA
+   '  3= Set instrument speed; Value 0-&h7fff
+   '  4= Set Instrument direction:lowbyte =0=CW,<>0=CCW
+   '  5= New needle position; Value 0-&h7fff
+   '  6= New display value: 4 bits per digit 1111222233334444
+   '  7= Enquiry instrument info; Reply &h00, Address, Type, Model, Direction, "B"(16 bytes)
+   '  8= Switch lights: Low byte= DL00.0000; D=display on/off, L=light on/off
+   '  9= Set Instrument Model &Version, Low Byte=Model, High Byte=Version
+   '  10=Write an EEPROM byte
+'
+'----------------------------------------------------------------
+ 
+Command 2: sets a new GaugeID
+Command 3: sets the needle speed; Larger number is longer time between steps
+Command 5: Positions the needle on 0-939. Please note that larger will run        the needle to its end stop.
+Command 7: Returns the gauge properties.
+Command 8: to switch backlight (and in case present the numeric display)
+ 
+Other commands are not that important for the single needle and should even be used with care. E.g. some commands are for debug purposes and can -when used wrongly- change the instrument properties and/or the micro program.
+--------------------------------------------------------------
+' G-Step ADF Direction Finder  Moduletype 108
+' Version 1, Date: 18-aug-2008
+'--------------------------------------------------------------
+'
+' Commands from control PC
+'
+   ' Message layout:
+   '
+   ' Byte 1: Flag byte:&h00
+   ' Byte 2: Address: 1-255; (Adress 0 excluded)
+   ' Byte 3: Command: CCCC.1SHL (CCCC=Command 1-15, S= Signbit, H & L are databits)
+   '                    The integer is unsigned 16 bits.
+   ' Byte 4: Data Low; &h00-&hFF;  bit0 always 1 : XXXX.XXX1 -> XXXX.XXXL
+   ' Byte 5: Data Hight:&h00-&hFF: bit1 always 1 : XXXX.XX1X -> XXXX.XXHX
+   ' Byte 6: LPC Check byte or &hFF
+   '
+   ' Commands:
+   '  0= noop
+   '  1= Initialize
+   '  2= Set Instrument Address; Value &h01-&hff (address 0 forbidden),second byte:&HAA
+   '  3= Set speed pointer disk
+   '  4= Not used
+   '  5= Set Pointer disk. (0-4219)
+   '  6= Move Pointerdisk (for calibration)
+   '  7= Send info about instrument; Reply &h00, Address, Type, Model, Version,
+   '  8= Switch lights: Low byte= DL00.0000; D=display on/off, L=light on/off
+   '  9= Set Calibration pointer disk
+   ' 10= Set pointer disk calibration
+   ' 11= Set compass disk to 0 (north)
+   '
+'--------------------------------------------------------------
+' G-Step VOR-1  Moduletype 106
+' Version 1, Date:17 juni 2008
+'--------------------------------------------------------------
+' Commands from control PC
+'
+   ' Message layout:
+   '
+   ' Byte 1: Flag byte:&h00
+   ' Byte 2: Address: 1-255; (Adress 0 excluded)
+   ' Byte 3: Command: CCCC.1SHL (CCCC=Command 1-15, S= Signbit, H & L are databits)
+   '                    The integer is unsigned 16 bits.
+   ' Byte 4: Data Low; &h00-&hFF;  bit0 always 1 : XXXX.XXX1 -> XXXX.XXXL
+   ' Byte 5: Data Hight:&h00-&hFF: bit1 always 1 : XXXX.XX1X -> XXXX.XXHX
+   ' Byte 6: LPC Check byte or &hFF
+   '
+   ' Commands:
+   '  0= noop
+   '  1= Initialize
+   '  2= Set Instrument Address; Value &h01-&hff (address 0 forbidden),second byte:&HAA
+   '  3= Set Instrument speed for Needle1 
+   '  4= Calibrate Localiser Needle to center (delta from 472)
+   '  5= New needle1 position; Value 0-&h7fff
+   '  6= New needle2 position; Value 0-&h7fff (not applicable)
+   '  7= Send info about instrument; Reply &h00, Address, Type, Model, Version,
+   '  8= Switch lights: Low byte= DL00.0000; D=display on/off, L=light on/off
+   '  9= Calibrate Glide Slope Needle to center (delta from 472)
+   ' 10= set indicator disk to a defined position. Low Byte=position number
+   ' 11= Set compass disk to 0 (north)
+   ' 12= rotate indicator disk indicator (for calibration).
+   ' 13= Set indicator disk position. Integer: IPPP; I is position 0-7, PPP=diskposition (0-4000)
+   ' 14= Set speed indicator disk
+   '
+'----------------------------------------------------------------
+' G-Step VOR-2  Moduletype 107
+' Version 1, Date:17 juni 2008
+'--------------------------------------------------------------
+'
+' Commands from control PC
+'
+   ' Message layout:
+   '
+   ' Byte 1: Flag byte:&h00
+   ' Byte 2: Address: 1-255; (Adress 0 excluded)
+   ' Byte 3: Command: CCCC.1SHL (CCCC=Command 1-15, S= Signbit, H & L are databits)
+   '                    The integer is unsigned 16 bits.
+   ' Byte 4: Data Low; &h00-&hFF;  bit0 always 1 : XXXX.XXX1 -> XXXX.XXXL
+   ' Byte 5: Data Hight:&h00-&hFF: bit1 always 1 : XXXX.XX1X -> XXXX.XXHX
+   ' Byte 6: LPC Check byte or &hFF
+   '
+   ' Commands:
+   '  0= noop
+   '  1= Initialize
+   '  2= Set Instrument Address; Value &h01-&hff (address 0 forbidden),second byte:&HAA
+   '  3= Set Instrument speed for both Needle1 and Needle2
+   '  4= Calibrate Localiser Needle to center (delta from 472)
+   '  5= New needle1 position; Value 0-&h7fff
+   '  6= New needle2 position; Value 0-&h7fff
+   '  7= Send info about instrument; Reply &h00, Address, Type, Model, Version,
+   '  8= Switch lights: Low byte= DL00.0000; D=display on/off, L=light on/off
+   '  9= Calibrate Glide Slope Needle to center (delta from 472)
+   ' 10= set indicator disk to a defined position. Low Byte=position number
+   ' 11= Set compass disk to 0 (north)
+   ' 12= rotate indicator disk indicator for calibration.
+   ' 13= Set indicator disk position. Integer: IPPP; I is position 0-7, PPP=diskposition (0-4000)
+   ' 14= Set speed indicator disk
+   '
+The IO module works via the same principle. It can reads 48 input contacts, 6 analogue inputs with 10 bit resolution and drive 32 Leds (15 mA each). All input contacts have pull up resistors.
+ 
+ 
+Command are:
+ 
+  ' Message layout:
+   '
+   ' Byte 1: Flag byte:&h00
+   ' Byte 2: Address: 1-255; Odd addresses=only (bit 0 always 1)
+   ' Byte 3: Command: Bit 2&3 always "1": CCCC.11HL (H & L are databits)
+   ' Byte 4: Data Low; &h00-&hFF;  bit0 always 1 : XXXX.XXX1 -> XXXX.XXXL
+   ' Byte 5: Data Hight:&h00-&hFF: bit1 always 1 : XXXX.XX1X -> XXXX.XXHX
+   ' Byte 6: LPC Check byte
+   '
+   ' Commands:
+   '  0= noop
+   '  1= Initialize
+   '  2= Set Instrument Address; Value 0-&hff (odd addr. only),second byte:&HAA
+   '  3= Set Scan frequency (Instr Speed)
+   '  4= Set Output drivers 1 (&h0000 - &hFFFF) = 16 bits
+   '  5= Set Output drivers 2 (&h0000 - &hFFFF) = 16 bits
+   '  6= Send Inputs: &h00, Address, Sw1-Sw6, <16 bytes analogue>, &HFF
+   '  7= Send info about instrument; Reply &h00, Address, Type,"B"(25 bytes)
+   '  8= Set LED intensity: byte 4 (&h00-&HFF)
+   '  9= Set Instrument Model &Version, Low Byte=Model, High Byte=Version
+'
+Command 4 and 5 control the LEDS.
+Command 6 returns the state of input contacts (6 bytes) and 16 bytes (8 integers) with the analogue inputs. Currently 6 used, but  will be extended in newer versions.
+Card layout is given below:
+ 
+ 
+
+
+Op 17/06/14 02:52 schreef Michael Swafford <michaelswafford@mchsi.com>:
+
+    I 've been converting my sim from project magenta to Ifly 737.  I've managed to configure the gauges to use spare fsuipc offsets, but I'm seeing a lot of lag due to going from ifly sdk to fsuipc then to the GSA software and finally to the gauges.  Is it possible to send me the communication protocol for the gauges?
+
+    Thank you,
+    Ed Swafford 
+
+	

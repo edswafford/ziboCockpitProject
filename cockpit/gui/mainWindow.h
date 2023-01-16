@@ -138,6 +138,57 @@ class MainWindow : public frameMain
 		}
 	}
 
+	void set_flight_illusion_mip_status(bool active)
+	{
+		const wxString text = m_staticTextFlightIllusionsMipStatus->GetLabelText();
+		if(active){
+			if(text.CmpNoCase(connected) != 0) {
+				m_staticTextFlightIllusionsMipStatus->SetBackgroundColour( wxColor(*wxGREEN));
+				m_staticTextFlightIllusionsMipStatus->SetLabel (connected);
+			}
+		}
+		else {
+			if(text.CmpNoCase(not_connected) != 0) {
+				m_staticTextFlightIllusionsMipStatus->SetBackgroundColour( wxColor(*wxRED));
+				m_staticTextFlightIllusionsMipStatus->SetLabel (not_connected);
+			}
+		}
+	}
+	void set_flight_illusion_overhead_status(bool active)
+	{
+		const wxString text = m_staticTextFlightIllusionsOveheadStatus->GetLabelText();
+		if(active){
+			if(text.CmpNoCase(connected) != 0) {
+				m_staticTextFlightIllusionsOveheadStatus->SetBackgroundColour( wxColor(*wxGREEN));
+				m_staticTextFlightIllusionsOveheadStatus->SetLabel (connected);
+			}
+		}
+		else {
+			if(text.CmpNoCase(not_connected) != 0) {
+				m_staticTextFlightIllusionsOveheadStatus->SetBackgroundColour( wxColor(*wxRED));
+				m_staticTextFlightIllusionsOveheadStatus->SetLabel (not_connected);
+			}
+		}
+	}
+	void set_transponder_status(bool active)
+	{
+		const wxString text = m_staticTextTransponderStatus->GetLabelText();
+		if(active){
+			if(text.CmpNoCase(connected) != 0) {
+				m_staticTextTransponderStatus->SetBackgroundColour( wxColor(*wxGREEN));
+				m_staticTextTransponderStatus->SetLabel (connected);
+			}
+		}
+		else {
+			if(text.CmpNoCase(not_connected) != 0) {
+				m_staticTextTransponderStatus->SetBackgroundColour( wxColor(*wxRED));
+				m_staticTextTransponderStatus->SetLabel (not_connected);
+			}
+		}
+	}
+
+
+	
 	void set_iocard_mip_addr(std::string message)
 	{
 		auto msg = wxArrayString(1, message.c_str());

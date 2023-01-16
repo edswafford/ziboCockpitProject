@@ -8,7 +8,7 @@ namespace zcockpit::cockpit::hardware
 {
 	bool Sim737Hardware::has_run_for_one_second_ = false;
 
-	Sim737Hardware::Sim737Hardware(AircraftModel& ac_model, InterfaceIT& iit): interface_it(iit)
+	Sim737Hardware::Sim737Hardware(AircraftModel& ac_model, InterfaceIT& iit): aircraft_model(ac_model), interface_it(iit)
 	{
 		interface_it.initialize();
 
@@ -40,6 +40,18 @@ namespace zcockpit::cockpit::hardware
 			rear_overhead_iocard = nullptr;
 		}
 
+		usb_relay->close_down();
+
+		ftd2Devices->closeDown();
+		Ftd2xxDevices::drop();
+
+		overheadGauges->closeDown();
+		mipGauges->closeDown();
+
+		xpndr->closeDown();
+		Transponder::drop();
+
+
 		std::unique_lock<std::mutex> lk(event_thread_done_mutex);
 			condition.wait(lk, [this]
 				{
@@ -49,7 +61,6 @@ namespace zcockpit::cockpit::hardware
 			event_thread.join();
 		}
 
-		usb_relay->close_down();
 
 	}
 		// Runs in libusb thread
@@ -109,6 +120,28 @@ namespace zcockpit::cockpit::hardware
 			usb_relay = std::make_unique<USBRelay>(ac_model, USB_RELAY_VID, USB_RELAY_PID);
 			usb_relay->open();
 
+			// FTD 2XX Devices
+			ftd2Devices = Ftd2xxDevices::instance();
+			ftd2Devices->get_devices();
+
+			// Flight Illusion Gauges and Radios
+			mipGauges = std::make_unique<FiController>(ONE_SECOND / FIVE_HZ);
+			mipGauges->initialize(FiController::mipSerialNumber, ftd2Devices->getDevice(FiController::mipSerialNumber));
+			mipGauges->open(FiController::mipSerialNumber);
+			build_mip_gauges();
+			mipGauges->start_timer(mipGauges->FtHandle());
+
+			overheadGauges = std::make_unique<FiController>(ONE_SECOND / FIVE_HZ);
+			overheadGauges->initialize(FiController::overheadSerialNumber, ftd2Devices->getDevice(FiController::overheadSerialNumber));
+			overheadGauges->open(FiController::overheadSerialNumber);
+			build_overhead_gauges();
+			overheadGauges->start_timer(overheadGauges->FtHandle());
+
+			xpndr = Transponder::instance();
+			xpndr->initialize(Transponder::xponderSerialNumber, ftd2Devices->getDevice(Transponder::xponderSerialNumber));
+			xpndr->open(Transponder::xponderSerialNumber);
+
+
 			// Applications should not start the event thread until after their first call to libusb_open()
 			start_event_thread();
 			LOG() << "libusb Event thread is running";
@@ -123,29 +156,29 @@ namespace zcockpit::cockpit::hardware
 			Sim737Hardware::has_run_for_one_second_ = true;
 		}
 
-		//if (powerIsOn && ifly737->electrical_power_state == 0)
-		//{
-		//	// turn off
-		//	if (mipGauges->Available())
-		//	{
-		//		mipGauges->updateLights(FiDevice::DISPLAYS_OFF);
-		//		powerIsOn = false;
-		//	}
-		//}
-		//else if (!powerIsOn && ifly737->electrical_power_state != 0)
-		//{
-		//	// turn on
-		//	if (mipGauges->Available())
-		//	{
-		//		mipGauges->updateLights(FiDevice::DISPLAYS_ON);
-		//		powerIsOn = true;
-		//	}
-		//}
+		if (power_is_on && aircraft_model.z738_ac_power_is_on())
+		{
+			// turn off
+			if (mipGauges->Available())
+			{
+				mipGauges->updateLights(FiDevice::DISPLAYS_OFF);
+				power_is_on = false;
+			}
+		}
+		else if (!power_is_on && aircraft_model.z738_ac_power_is_on())
+		{
+			// turn on
+			if (mipGauges->Available())
+			{
+				mipGauges->updateLights(FiDevice::DISPLAYS_ON);
+				power_is_on = true;
+			}
+		}
 
-		//if(current_cycle % 2 == 0 && mipGauges->Available())
-		//{
-		//	mipGauges->updateRadios();
-		//}
+		if(current_cycle % 2 == 0 && mipGauges->Available())
+		{
+			mipGauges->updateRadios();
+		}
 
 
 
@@ -215,28 +248,39 @@ namespace zcockpit::cockpit::hardware
 
 		else if(current_cycle % FIVE_HZ == 3)
 		{
-			//if(xpndr->Available() && ifly737->shareMemSDK->IFLY737NG_STATE && ifly737->electrical_power_state != 0)
-			//{
-			//	xpndr->check_xpndr_digits();
-			//}
+			//
+			// Flight Illusions
+			//   
+			if(overheadGauges->Available())
+			{
+				overheadGauges->updateGauges();
+			}
+			if (mipGauges->Available())
+			{
+				mipGauges->updateGauges();
+			}
 
-			////
-			//// Transponder
-			////
-			//if(xpndr->Available() && ifly737->shareMemSDK->IFLY737NG_STATE)
-			//{
-			//	xpndr->updatePowerOn();
-			//	xpndr->updateFailed();
-			//	xpndr->updateRply();
-			//	xpndr->requestData();
-			//	xpndr->readXpndr();
+			//
+			// Transponder
+			//
+			if(xpndr->Available() && aircraft_model.z738_is_available())
+			{
+				if( aircraft_model.z738_ac_power_is_on()){
+					xpndr->check_xpndr_digits();
+				}
 
-			//	if(init_xpndr)
-			//	{
-			//		init_xpndr = false;
-			//		xpndr->sync_switches();
-			//	}
-			//}
+				xpndr->updatePowerOn();
+				xpndr->updateFailed();
+				xpndr->updateRply();
+				xpndr->requestData();
+				xpndr->readXpndr();
+
+				if(init_xpndr)
+				{
+					init_xpndr = false;
+					xpndr->sync_switches();
+				}
+			}
 
 
 			//
@@ -264,6 +308,7 @@ namespace zcockpit::cockpit::hardware
 
 	void Sim737Hardware::checkConnections()
 	{
+
 		//
 		// InterfaceIT MIP
 		//
@@ -339,6 +384,82 @@ namespace zcockpit::cockpit::hardware
 		if(current_usb_relay_status != usb_relay_status) {
 			usb_relay_status = current_usb_relay_status;
 		}
+
+
+		//
+		// look for new FTD2XX connections
+		//
+		// Transponder
+		auto current_transponder_status = Health::FAILED_STATUS;
+		if(!xpndr->Available())
+		{
+			xpndr->initialize(Transponder::xponderSerialNumber, ftd2Devices->getDevice(Transponder::xponderSerialNumber));
+			xpndr->open(Transponder::xponderSerialNumber);
+			if(xpndr->Available())
+			{
+				string dev_id = to_string(xpndr->devInfo.ID);
+				current_transponder_status = Health::HEALTHY_STATUS;
+			}
+		}
+		else
+		{
+			string dev_id = to_string(xpndr->devInfo.ID);
+			current_transponder_status = Health::HEALTHY_STATUS;
+		}
+		if(transponder_status != current_transponder_status)
+		{
+			transponder_status = current_transponder_status;
+		}
+
+		//
+		// Flight Illusions
+		//
+		auto current_flight_illusions_overhead_status = Health::FAILED_STATUS;
+		if(!overheadGauges->Available())
+		{
+			// try to reconnect
+			overheadGauges->initialize(FiController::overheadSerialNumber, ftd2Devices->getDevice(FiController::overheadSerialNumber));
+			overheadGauges->open(FiController::overheadSerialNumber);
+			if(overheadGauges->Available())
+			{
+				string hex = to_string(overheadGauges->devInfo.ID);
+				current_flight_illusions_overhead_status = Health::HEALTHY_STATUS;
+			}
+		}
+		// we are connected
+		else
+		{
+			string hex = to_string(overheadGauges->devInfo.ID);
+			current_flight_illusions_overhead_status = Health::HEALTHY_STATUS;
+			overheadGauges->validateGauges();
+		}
+		if(flight_illusions_overhead_status != current_flight_illusions_overhead_status)
+		{
+			flight_illusions_overhead_status = current_flight_illusions_overhead_status;
+		}
+		auto current_flight_illusions_mip_status = Health::FAILED_STATUS;
+		if (!mipGauges->Available())
+		{
+			// try to reconnect
+			mipGauges->initialize(FiController::mipSerialNumber, ftd2Devices->getDevice(FiController::mipSerialNumber));
+			mipGauges->open(FiController::mipSerialNumber);
+			if (mipGauges->Available())
+			{
+				string hex = to_string(mipGauges->devInfo.ID);
+				current_flight_illusions_mip_status = Health::HEALTHY_STATUS;
+			}
+		}
+		// we are connected
+		else
+		{
+			string hex = to_string(mipGauges->devInfo.ID);
+			current_flight_illusions_mip_status = Health::HEALTHY_STATUS;
+			mipGauges->validateGauges();
+		}
+		if (flight_illusions_mip_status != current_flight_illusions_mip_status)
+		{
+			flight_illusions_mip_status = current_flight_illusions_mip_status;
+		}
 	}
 
 	bool Sim737Hardware::interfaceitMipStatus() const
@@ -356,4 +477,148 @@ namespace zcockpit::cockpit::hardware
 
 	bool Sim737Hardware::get_iocard_rear_overhead_status() const
 	{ return iocard_rear_overhead_status == Health::HEALTHY_STATUS;}
+
+	bool Sim737Hardware::get_flight_illusion_mip_status() const
+	{
+		return flight_illusions_mip_status == Health::HEALTHY_STATUS;
+	}
+	bool Sim737Hardware::get_flight_illusion_overhead_status() const
+	{
+		return flight_illusions_overhead_status == Health::HEALTHY_STATUS;
+	}
+	bool Sim737Hardware::get_transponder_status() const
+	{
+		return transponder_status == Health::UNKNOWN_STATUS;
+	}
+
+
+	void Sim737Hardware::build_mip_gauges() const
+    {
+		// Yaw Damper ID = 188
+		// 0 - 935 corresponds to rudder deflection -1.0 to 1.0 -- conver to 1000 - 2000
+		// scale factor = 935/ 2.0
+		// offset for zero = 0
+		// K = 0.8
+		// id, gaugeType, scaleFactor, min max, offset, K, Needle CMD
+		mipGauges->addGauge(188, FiDevice::YAW_DAMPER, 800/ 2000.0, 0, 935, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE);
+
+		// Flaps  ID = 230
+		// 0 - 820 corresponds to ...
+		// scale factor = 1.0 
+		// offset for zero = 0
+		// K = 0.8
+		// id, gaugeType, scaleFactor, min max, offset, K, Needle CMD
+		mipGauges->addGauge(230, FiDevice::FLAP, 1.0, 0, 820, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE);
+
+
+		// Brake Pressure ID = 231
+		// 85 - 835 corresponds to 0 to 4000 psi -- does work on gauge very well ... using 650/3000 which is the correct value for 3000
+		// scale factor = does not wrok ...(835 - 85) / 4000
+		// offset for zero = 0
+		// K = 0.8
+		// id, gaugeType, scaleFactor, min max, offset, K, Needle CMD
+		mipGauges->addGauge(231, FiDevice::BRAKE_TEMP, (650) / 3000.0, 0, 835, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE, 50);
+
+
+		// Capt Clock ID = 160
+		
+		// FO Clock ID = 240
+
+		//
+		// RADIOS
+		//
+
+		// Capt Comm ID = 120
+		mipGauges->addRadio(120, FiDevice::CAPT_COMM, 1.0, 0, 200, FiDevice::STATUS);
+
+
+		// FO Comm ID = 122
+		mipGauges->addRadio(122, FiDevice::FO_COMM, 1.0, 0, 200, FiDevice::STATUS);
+
+		// Capt NAV ID = 121
+		mipGauges->addRadio(121, FiDevice::CAPT_NAV, 1.0, 0, 200, FiDevice::STATUS);
+
+
+		// FO NAV ID = 123
+		mipGauges->addRadio(123, FiDevice::FO_NAV, 1.0, 0, 200, FiDevice::STATUS);
+
+
+		// ADF ID = 124
+		mipGauges->addRadio(124, FiDevice::ADF, 1.0, 0, 200, FiDevice::STATUS);
+
+	}
+
+
+	void Sim737Hardware::build_overhead_gauges() const
+	{
+		// EGT ID = 180 
+		// 0 - 800 corresponds to 0 - 1,100 degrees
+		// scale factor = 800.0/ 1200.0
+		// offset for zero = 0
+		// K = 0.8
+		// id, gaugeType, scaleFactor, min max, offset, K, Needle CMD
+		overheadGauges->addGauge(180, FiDevice::APU_EGT, 800.0 / 1100.0, 0, 800, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE);
+
+		// Diff Press/Cabin Alt = 181
+		// Diff Press (large needle) 0 - 925  corresponds to 0-10
+		// scale factor = 925.0/ 10.0
+		// offset for zero = 0
+		// K = 0.8
+		// id, gaugeType, scaleFactor, min max, offset, K, Needle CMD
+		overheadGauges->addGauge(181, FiDevice::PRESS_DIFF, 925.0 / 10.0, 0, 925, 0, 0.8, FiDevice::NEW_SECOND_VALUE);
+
+		// Same Gauge 181
+		// Cabin Alt (small needle )0 - 885 corresponds to 0 to 50,000
+		// scale factor = 885/50000.0
+		// offset for zero = 0
+		// K = 0.8
+		// id, gaugeType, scaleFactor, min max, offset, K, Needle CMD
+		overheadGauges->addGauge(181, FiDevice::CABIN_ALT, 885.0 / 50000.0, 0, 885, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE);
+
+
+		// Cabin Climb = 182
+		// neg - mid - pos
+		//  0  - 472 - 945   corresponds to -4,000 to 4,000
+		// scale factor = 945/8000.0
+		// offset for zero = 472
+		// K = 0.8
+		// id, gaugeType, scaleFactor, min max, offset, K, Needle CMD
+		overheadGauges->addGauge(182, FiDevice::CABIN_CLIMB, 885.0 / 8000.0, 0, 945, 472, 0.8, FiDevice::NEW_NEEDLE_VALUE);
+
+		// Pack Left/Right = 183
+		// 0 - 755  corresponds to 0 - 80 psi
+		// scale factor = 755.0/65.0
+		// offset for zero = 0
+		// K = 0.8
+		// id, gaugeType, scaleFactor, min max, offset, K, Needle CMD
+		overheadGauges->addGauge(183, FiDevice::LEFT_DUCT, 755.0 / 80.0, 0, 755, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE);
+		overheadGauges->addGauge(183, FiDevice::RIGHT_DUCT, 755.0 / 80.0, 0, 755, 0, 0.8, FiDevice::NEW_SECOND_VALUE);
+
+
+		// Fuel Temp = 184
+		// neg  - mid - pos
+		// 115 - 472 - 815  corresponds -50c -- 0 -- 50c
+		// scale factor = (815-115)/100.0
+		// offset for zero = 472
+		// K = 0.8
+		// id, gaugeType, scaleFactor, min max, offset, K, Needle CMD
+		overheadGauges->addGauge(184, FiDevice::FUEL_TEMP, 700.0 / 100.0, 115, 815, 472, 0.8, FiDevice::NEW_NEEDLE_VALUE);
+
+		// Cabin Temp  = 185  -- Air_Temperature_neddle_status
+		// 0 - 765 corresponds to 0 - 100
+		// scale factor = 765.0/100.0
+		// offset for zero = 0
+		// K = 0.8
+		// id, gaugeType, scaleFactor, min max, offset, K, Needle CMD
+		overheadGauges->addGauge(185, FiDevice::CABIN_TEMP, 765.0 / 200.0, 0, 765, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE);
+
+		// Oxygen Pressure = 186
+		// 0 - 843  corresponds  0 - 2000
+		// scale factor = 843.0/2000
+		// ifly range 0 - 2,000
+		// offset for zero = 0
+		// K = 0.8
+		// id, gaugeType, scaleFactor, min max, offset, K, Needle CMD
+		overheadGauges->addGauge(186, FiDevice::CREW_OXYGEN, 843.0 / 2000, 0, 843, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE);
+	}
 }

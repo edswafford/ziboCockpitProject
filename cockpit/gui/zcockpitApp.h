@@ -12,6 +12,7 @@
 #include "../third_party/SimpleIni/SimpleIni.h"
 
 
+
 namespace zcockpit::cockpit::gui
 {
 	class ZcockpitApp : public wxApp
@@ -50,6 +51,9 @@ namespace zcockpit::cockpit::gui
 		bool iocard_mip_status{false};
 		bool iocard_forward_overhead_status{false};
 		bool iocard_rear_overhead_status{false};
+		bool flight_illusion_mip_status{false};
+		bool flight_illusion_overhead_status{false};
+		bool transponder_status{false};
 
 		void timer();
 
