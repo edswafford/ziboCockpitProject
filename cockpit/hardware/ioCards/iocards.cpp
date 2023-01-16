@@ -686,7 +686,7 @@ namespace zcockpit::cockpit::hardware
 			if(length > 0){
 				std::vector<unsigned char> buffer(transfer->buffer, transfer->buffer + length);
 				inQueue.push(std::move(buffer));
-				LOG() << "libusb: Read callback pushed " << length << ", " << device_name;
+				//LOG() << "libusb: Read callback pushed " << length << ", " << device_name;
 			}
 
 			std::lock_guard<std::mutex> lock(usb_mutex);
@@ -697,7 +697,7 @@ namespace zcockpit::cockpit::hardware
 					LOG() << "libusb: Submit transfer read failed";
 				}
 				else {
-					LOG() << "libusb: Submit transfer read succeded " << device_name;
+					//LOG() << "libusb: Submit transfer read succeded " << device_name;
 				}
 			}
 		}
@@ -726,7 +726,7 @@ namespace zcockpit::cockpit::hardware
 			LOG() << "libusb: write callback failed";
 		}
 		else {
-			LOG() << "libusb: write callback completed " << device_name << " queue size = " << outQueue.size();
+			//LOG() << "libusb: write callback completed " << device_name << " queue size = " << outQueue.size();
 
 			if (outQueue.size() > 0) {
 				if (const auto maybe_vector = outQueue.pop()) {
@@ -744,7 +744,7 @@ namespace zcockpit::cockpit::hardware
 							write_callback_running = false;
 							LOG() << "libusb: write submit transfer failed";
 						}
-						LOG() << "libusb: Write transfer succeded";
+						//LOG() << "libusb: Write transfer succeded";
 
 					}
 					else {
@@ -1217,7 +1217,7 @@ namespace zcockpit::cockpit::hardware
 							*value = inputs[input][card];
 							retval = 1;
 							
-							LOG() << "LIBIOCARDS: Pushbutton     : card=" << card << " input=" << input << " old value=" << inputs_old[input][card] << " new value=" << inputs[input][card];
+							//LOG() << "LIBIOCARDS: Pushbutton     : card=" << card << " input=" << input << " old value=" << inputs_old[input][card] << " new value=" << inputs[input][card];
 							//
 							// save value
 							inputs_old[input][card] = inputs[input][card];
@@ -1703,14 +1703,14 @@ namespace zcockpit::cockpit::hardware
 						else
 						{
 							retval = -1;
-							if (type == 0)
-							{
-								LOG() << "LIBIOCARDS: Invalid MASTERCARD input position detected: " <<  input << "-" << input + 2;
-							}
-							else
-							{
-								LOG() << "LIBIOCARDS: Invalid MASTERCARD input position detected: " <<  input << "-" << input + 1;
-							}
+							//if (type == 0)
+							//{
+							//	LOG() << "LIBIOCARDS: Invalid MASTERCARD input position detected: " <<  input << "-" << input + 2;
+							//}
+							//else
+							//{
+							//	LOG() << "LIBIOCARDS: Invalid MASTERCARD input position detected: " <<  input << "-" << input + 1;
+							//}
 						}
 					} /* input encoder value not missing */
 				}
@@ -1723,7 +1723,7 @@ namespace zcockpit::cockpit::hardware
 				if ((type < 0) || (type > 3))
 				{
 					retval = -1;
-					LOG() << "LIBIOCARDS: Invalid encoder type detected: " << type;
+					//LOG() << "LIBIOCARDS: Invalid encoder type detected: " << type;
 				}
 			}
 			else
