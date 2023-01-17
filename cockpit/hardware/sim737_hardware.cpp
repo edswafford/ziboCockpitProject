@@ -554,12 +554,12 @@ namespace zcockpit::cockpit::hardware
 	void Sim737Hardware::build_overhead_gauges() const
 	{
 		// EGT ID = 180 
-		// 0 - 80 corresponds to 0 - 1,10 degrees
-		// scale factor = 80.0/ 110.0
+		// 0 - 80 corresponds to 0 - 1,100 degrees
+		// scale factor = 6400.0/ 1100.0
 		// offset for zero = 0
 		// K = 0.8
 		// id, gaugeType, scaleFactor, min max, offset, K, Needle CMD
-		overheadGauges->addGauge(180, FiDevice::APU_EGT, 80.0 / 110.0, 0, 80, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE);
+		overheadGauges->addGauge(180, FiDevice::APU_EGT, 6400.0 / 1100.0, 0, 800, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE);
 
 		// Diff Press/Cabin Alt = 181
 		// Diff Press (large needle) 0 - 925  corresponds to 0-10
@@ -571,11 +571,11 @@ namespace zcockpit::cockpit::hardware
 
 		// Same Gauge 181
 		// Cabin Alt (small needle )0 - 885 corresponds to 0 to 50,000
-		// scale factor = 885/50000.0
+		// scale factor = 4800/50000.0
 		// offset for zero = 0
 		// K = 0.8
 		// id, gaugeType, scaleFactor, min max, offset, K, Needle CMD
-		overheadGauges->addGauge(181, FiDevice::CABIN_ALT, 885.0 / 50000.0, 0, 885, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE);
+		overheadGauges->addGauge(181, FiDevice::CABIN_ALT, 4800.0 / 50000.0, 0, 885, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE);
 
 
 		// Cabin Climb = 182
@@ -593,8 +593,8 @@ namespace zcockpit::cockpit::hardware
 		// offset for zero = 0
 		// K = 0.8
 		// id, gaugeType, scaleFactor, min max, offset, K, Needle CMD
-		overheadGauges->addGauge(183, FiDevice::LEFT_DUCT, 755.0 / 80.0, 0, 755, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE);
-		overheadGauges->addGauge(183, FiDevice::RIGHT_DUCT, 755.0 / 80.0, 0, 755, 0, 0.8, FiDevice::NEW_SECOND_VALUE);
+		overheadGauges->addGauge(183, FiDevice::LEFT_DUCT, 855.0 / 80.0, 0, 755, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE);
+		overheadGauges->addGauge(183, FiDevice::RIGHT_DUCT, 855.0 / 80.0, 0, 755, 0, 0.8, FiDevice::NEW_SECOND_VALUE);
 
 
 		// Fuel Temp = 184
@@ -612,7 +612,7 @@ namespace zcockpit::cockpit::hardware
 		// offset for zero = 0
 		// K = 0.8
 		// id, gaugeType, scaleFactor, min max, offset, K, Needle CMD
-		overheadGauges->addGauge(185, FiDevice::CABIN_TEMP, 765.0 / 200.0, 0, 765, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE);
+		overheadGauges->addGauge(185, FiDevice::CABIN_TEMP, 1760.0 / 200.0, 0, 765, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE);
 
 		// Oxygen Pressure = 186
 		// 0 - 843  corresponds  0 - 2000

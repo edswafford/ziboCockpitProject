@@ -24,7 +24,7 @@ namespace zcockpit::cockpit {
 		float ac_freq_value{0.0f};
 		float dc_amp_value{0.0f};
 		float ac_amp_value{0.0f};
-		float flap_indicator{0.0f};
+		std::vector<float>  flap_indicator{0.0f};
 		float brake_press{0.0f};
 		float apu_temp{0.0f};
 		float cabin_pressure_diff{0.0f};

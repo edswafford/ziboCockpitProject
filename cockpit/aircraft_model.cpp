@@ -582,6 +582,11 @@ namespace zcockpit::cockpit {
 									*static_cast<std::vector<float>*>(switch_data.xplane_data) = data;
 									return std::string("Vector Float size ") + std::to_string(data.size());
 								}
+								else if (std::holds_alternative<ZCockpitInData>(z_cockpit_data[ac_param.short_name])) {
+									const ZCockpitInData in_data = std::get<ZCockpitInData>(z_cockpit_data[ac_param.short_name]);
+									*static_cast<std::vector<float>*>(in_data.in_data) = data;
+									return std::string("Vector Float size ") + std::to_string(data.size());
+								}
 
 
 								return std::string("floatArray = nOT IMPLEMENYED");

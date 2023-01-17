@@ -199,7 +199,7 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::dc_amp_value] = ZCockpitInData(&z737InData.dc_amp_value, ZCockpitType::ZFloat);
 		z_cockpit_data[DataRefName::ac_amp_value] = ZCockpitInData(&z737InData.ac_amp_value, ZCockpitType::ZFloat);
 
-		z_cockpit_data[DataRefName::flap_indicator] = ZCockpitInData(&z737InData.flap_indicator, ZCockpitType::ZFloat);
+		z_cockpit_data[DataRefName::flap_indicator] = ZCockpitInData(&z737InData.flap_indicator, ZCockpitType::ZVectorFloat);
 		z_cockpit_data[DataRefName::brake_press] = ZCockpitInData(&z737InData.brake_press, ZCockpitType::ZFloat);
 		z_cockpit_data[DataRefName::apu_temp] = ZCockpitInData(&z737InData.apu_temp, ZCockpitType::ZFloat);
 		z_cockpit_data[DataRefName::cabin_pressure_diff] = ZCockpitInData(&z737InData.cabin_pressure_diff, ZCockpitType::ZFloat);
@@ -207,6 +207,7 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::duct_press_L] = ZCockpitInData(&z737InData.duct_press_L, ZCockpitType::ZFloat);
 		z_cockpit_data[DataRefName::duct_press_R] = ZCockpitInData(&z737InData.duct_press_R, ZCockpitType::ZFloat);
 		z_cockpit_data[DataRefName::fuel_temp] = ZCockpitInData(&z737InData.fuel_temp, ZCockpitType::ZFloat);
+		z_cockpit_data[DataRefName::cabin_temp] = ZCockpitInData(&z737InData.cabin_temp, ZCockpitType::ZFloat);
 		z_cockpit_data[DataRefName::cabin_vvi] = ZCockpitInData(&z737InData.cabin_vvi, ZCockpitType::ZFloat);
 
 

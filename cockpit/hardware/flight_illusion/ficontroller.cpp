@@ -770,7 +770,7 @@ namespace zcockpit::cockpit::hardware
 
 				case FiDevice::FLAP:
 				{
-					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), interpolate_flaps(aircraft_model.z737InData.flap_indicator));
+					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), interpolate_flaps(aircraft_model.z737InData.flap_indicator[0]));
 				}
 					break;
 
@@ -812,7 +812,7 @@ namespace zcockpit::cockpit::hardware
 
 				case FiDevice::CREW_OXYGEN:
 					//	NOT Supported
-					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), 843.0);
+					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), 8430.0);
 					break;
 				default: ;
 				}
