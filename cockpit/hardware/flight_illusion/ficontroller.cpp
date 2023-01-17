@@ -15,7 +15,8 @@ namespace zcockpit::cockpit::hardware
 
 
 
-	FiController::FiController(int updates_per_second) : updates_per_second(updates_per_second), ftDeviceHandle(nullptr), serialNumber(nullptr), deviceValidationIndex(0)
+	FiController::FiController(AircraftModel& ac_model, int updates_per_second) :
+		aircraft_model(ac_model), updates_per_second(updates_per_second), ftDeviceHandle(nullptr), serialNumber(nullptr), deviceValidationIndex(0)
 	{
 		ftd2Devices = Ftd2xxDevices::instance();
 	}
@@ -720,7 +721,7 @@ namespace zcockpit::cockpit::hardware
 	{
 		// pmdg static const vector<double> flap_value =  { 0.0,	22.2,	45.8,	62.5,	77.8,	83.3,	87.5,	91.7,	100 };
 		// trailing edge flaps 0-100               up		1		2		5		10		15		25		30		40  
-		static const vector<double> flap_value = { 0.0,		2.5,	5.0,	12.5,	25.8,	37.5,	62.5,	75.0,	100 };
+		static const vector<double> flap_value = { 0.0,		4.0,	7.0,	11.0,	14.0,	17.0,	27.0,	33.0,	49.0 };
 		static const vector<double> gauge_value = { 0.0,	130.0,	250.0,	380.0,	500.0,	590.0,	670.0,	740.0,	820.0};
 
 		static const int size = flap_value.size();
@@ -769,51 +770,49 @@ namespace zcockpit::cockpit::hardware
 
 				case FiDevice::FLAP:
 				{
-					// Flap Index 0 -?
-//					auto flaps = (FsxSimConnect::left_trail_flap + FsxSimConnect::right_trail_flap) /2.0;
-//					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), interpolate_flaps(flaps));
-
+					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), interpolate_flaps(aircraft_model.z737InData.flap_indicator));
 				}
 					break;
 
-				case FiDevice::BRAKE_TEMP:
-//					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), Ifly737::shareMemSDK->Hydraulic_Brake_Pressure_status); // PMDG MAIN_BrakePressNeedle);
+				case FiDevice::BRAKE_PRESS:
+					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), aircraft_model.z737InData.brake_press);
 					break;
 
 				case FiDevice::APU_EGT:
-//					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), Ifly737::shareMemSDK->APU_EGT);
+					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), aircraft_model.z737InData.apu_temp);
 					break;
 
 				case FiDevice::PRESS_DIFF:
-//					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), Ifly737::shareMemSDK->CabinDeltaPres);
+					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), aircraft_model.z737InData.cabin_pressure_diff);
 					break;
 
 				case FiDevice::CABIN_ALT:
-//					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), Ifly737::shareMemSDK->CabinAltitude);
+					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), aircraft_model.z737InData.cabin_alt[0]);
 					break;
 
 				case FiDevice::CABIN_CLIMB:
-//					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), Ifly737::shareMemSDK->CabinAltitudeRate);
+					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), aircraft_model.z737InData.cabin_vvi);
 					break;
 
 				case FiDevice::LEFT_DUCT:
-//					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), Ifly737::shareMemSDK->Duct_Pressure_L_neddle_Status);
+					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), aircraft_model.z737InData.duct_press_L);
 					break;
 
 				case FiDevice::RIGHT_DUCT:
-//					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), Ifly737::shareMemSDK->Duct_Pressure_R_neddle_Status);
+					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), aircraft_model.z737InData.duct_press_R);
 					break;
 
 				case FiDevice::FUEL_TEMP:
-//					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), Ifly737::shareMemSDK->FUEL_TEMP);
+					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), aircraft_model.z737InData.fuel_temp);
 					break;
 
 				case FiDevice::CABIN_TEMP:
-//					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), Ifly737::shareMemSDK->Air_Temperature_neddle_Status);
+					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), aircraft_model.z737InData.cabin_temp);
 					break;
 
 				case FiDevice::CREW_OXYGEN:
-//					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), Ifly737::shareMemSDK->Oxygen_Pressure);
+					//	NOT Supported
+					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), 843.0);
 					break;
 				default: ;
 				}

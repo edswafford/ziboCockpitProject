@@ -125,13 +125,13 @@ namespace zcockpit::cockpit::hardware
 			ftd2Devices->get_devices();
 
 			// Flight Illusion Gauges and Radios
-			mipGauges = std::make_unique<FiController>(ONE_SECOND / FIVE_HZ);
+			mipGauges = std::make_unique<FiController>(ac_model, ONE_SECOND / FIVE_HZ);
 			mipGauges->initialize(FiController::mipSerialNumber, ftd2Devices->getDevice(FiController::mipSerialNumber));
 			mipGauges->open(FiController::mipSerialNumber);
 			build_mip_gauges();
 			mipGauges->start_timer(mipGauges->FtHandle());
 
-			overheadGauges = std::make_unique<FiController>(ONE_SECOND / FIVE_HZ);
+			overheadGauges = std::make_unique<FiController>(ac_model, ONE_SECOND / FIVE_HZ);
 			overheadGauges->initialize(FiController::overheadSerialNumber, ftd2Devices->getDevice(FiController::overheadSerialNumber));
 			overheadGauges->open(FiController::overheadSerialNumber);
 			build_overhead_gauges();
@@ -519,7 +519,7 @@ namespace zcockpit::cockpit::hardware
 		// offset for zero = 0
 		// K = 0.8
 		// id, gaugeType, scaleFactor, min max, offset, K, Needle CMD
-		mipGauges->addGauge(231, FiDevice::BRAKE_TEMP, (650) / 3000.0, 0, 835, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE, 50);
+		mipGauges->addGauge(231, FiDevice::BRAKE_PRESS, (650) / 3000.0, 0, 835, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE, 50);
 
 
 		// Capt Clock ID = 160
@@ -554,12 +554,12 @@ namespace zcockpit::cockpit::hardware
 	void Sim737Hardware::build_overhead_gauges() const
 	{
 		// EGT ID = 180 
-		// 0 - 800 corresponds to 0 - 1,100 degrees
-		// scale factor = 800.0/ 1200.0
+		// 0 - 80 corresponds to 0 - 1,10 degrees
+		// scale factor = 80.0/ 110.0
 		// offset for zero = 0
 		// K = 0.8
 		// id, gaugeType, scaleFactor, min max, offset, K, Needle CMD
-		overheadGauges->addGauge(180, FiDevice::APU_EGT, 800.0 / 1100.0, 0, 800, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE);
+		overheadGauges->addGauge(180, FiDevice::APU_EGT, 80.0 / 110.0, 0, 80, 0, 0.8, FiDevice::NEW_NEEDLE_VALUE);
 
 		// Diff Press/Cabin Alt = 181
 		// Diff Press (large needle) 0 - 925  corresponds to 0-10

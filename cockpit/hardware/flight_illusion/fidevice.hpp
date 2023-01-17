@@ -33,7 +33,7 @@ namespace zcockpit::cockpit::hardware
 	        CREW_OXYGEN,
 			YAW_DAMPER,
 			FLAP,
-			BRAKE_TEMP,
+			BRAKE_PRESS,
 			CAPT_COMM,
 			CAPT_NAV,
 			FO_COMM,

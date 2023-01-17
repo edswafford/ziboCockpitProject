@@ -5,6 +5,7 @@
 #include "ftd2xx.h"
 #include "../ftd2xx/ftd2xxdevices_wrapper.hpp"
 #include "fidevice.hpp"
+#include "../../aircraft_model.hpp"
 
 //using namespace std;
 namespace zcockpit::cockpit::hardware
@@ -39,7 +40,7 @@ namespace zcockpit::cockpit::hardware
 		bool updateRadios();
 
 		FiController() = delete;
-		FiController(int updates_per_second);
+		FiController(AircraftModel& ac_model, int updates_per_second);
 		~FiController();
 
 		void addGauge(int ID, FiDevice::DEVICE_Type type, double scaleFactor, int minValue, int maxValue, int offset, double K, FiDevice::FI_DEVICE_CMD needleCmd, int max_send_count = 3);
@@ -60,6 +61,8 @@ namespace zcockpit::cockpit::hardware
 		void openEx();
 		void reopen(const char* deviceSerialNumber);
 		void setTimeouts(int readTimeout, int writeTimeout);
+
+		AircraftModel& aircraft_model;
 
 
 		Ftd2xxDevices* ftd2Devices;
