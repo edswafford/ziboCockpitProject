@@ -54,6 +54,23 @@ add_executable (client WIN32
 	"hardware/flight_illusion/ficontroller.cpp"
 
 	 "hardware/transponder/transponder.cpp"
+	
+	 "hardware/throttle/throttle_joystick.cpp"
+	 "hardware/throttle/Pokeys/stepper.cpp"
+	 "hardware/throttle/Pokeys/PokeysLib.cpp"
+	 "hardware/throttle/Vjoy/VjoyFeeder.cpp"
+
+	 "${CMAKE_SOURCE_DIR}/third_party/iir_lib/iir/Butterworth.cpp"
+	 "${CMAKE_SOURCE_DIR}/third_party/iir_lib/iir/ChebyshevI.cpp"
+	 "${CMAKE_SOURCE_DIR}/third_party/iir_lib/iir/ChebyshevII.cpp"
+	 "${CMAKE_SOURCE_DIR}/third_party/iir_lib/iir/Cascade.cpp"
+
+ 	 "${CMAKE_SOURCE_DIR}/third_party/iir_lib/iir/PoleFilter.cpp"
+	 "${CMAKE_SOURCE_DIR}/third_party/iir_lib/iir/RBJ.cpp"
+	 "${CMAKE_SOURCE_DIR}/third_party/iir_lib/iir/Biquad.cpp"
+	 "${CMAKE_SOURCE_DIR}/third_party/iir_lib/iir/Custom.cpp"
+	# "${CMAKE_SOURCE_DIR}/third_party/iir_lib/iir/Cascade.cpp"
+	
 )
 
 
@@ -69,9 +86,14 @@ target_compile_definitions(client PRIVATE FTD2XX_STATIC=1)
 
 target_include_directories(client PRIVATE ${wxWidgets_SOURCE_DIR}/include/msvc)
 target_include_directories(client PRIVATE ${wxWidgets_SOURCE_DIR}/include)
+target_include_directories(client PRIVATE ${CMAKE_SOURCE_DIR}/third_party/Vjoy)
+target_include_directories(client PRIVATE ${wxWidgets_SOURCE_DIR}/include)
+target_include_directories(client PRIVATE ${CMAKE_SOURCE_DIR}/third_party/iir_lib)
+
 target_link_directories(client PRIVATE ${CMAKE_BINARY_DIR}/lib/vc_x64_lib/)
 
 set(FTD2XX_STATIC_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/FTD2XX/Static/amd64")
+set(VJOY_STATIC_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/Vjoy/lib")
 
 
 
@@ -80,6 +102,7 @@ target_link_libraries(client PUBLIC
 		zboCockpitCommon
 		libusb
 		${FTD2XX_STATIC_LIBRARY}/ftd2xx.lib
+		${VJOY_STATIC_LIBRARY}/vJoyInterface.lib
 		asio
         wxbase
         wxcore
@@ -88,4 +111,8 @@ target_link_libraries(client PUBLIC
 )
 
 
+add_custom_command(TARGET client POST_BUILD        # Adds a post-build event to client
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different  # which executes "cmake - E copy_if_different..."
+        "${CMAKE_SOURCE_DIR}/third_party/Vjoy/lib/vJoyInterface.dll"      # <--this is in-file
+        $<TARGET_FILE_DIR:client>)                 # <--this is out-file path
 
