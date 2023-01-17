@@ -24,11 +24,23 @@ namespace zcockpit::cockpit {
 		float ac_freq_value{0.0f};
 		float dc_amp_value{0.0f};
 		float ac_amp_value{0.0f};
+		float flap_indicator{0.0f};
+		float brake_press{0.0f};
+		float apu_temp{0.0f};
+		float cabin_pressure_diff{0.0f};
+		std::vector<float> cabin_alt{0.0f};
+		float duct_press_L{0.0f};
+		float duct_press_R{0.0f};
+		float fuel_temp{0.0f};
+		float cabin_temp{0.0f};
+		float cabin_vvi{0.0f};
+
+
 		char tail_number[40];
 
 		bool FUEL_annunXFEED_VALVE_OPEN{false};
 		bool HYD_annunOVERHEAT_elec[2]{false};
-		bool cabin_alt{false};
+		bool annun_cabin_alt{false};
 		bool takeoff_config{false};
 		bool IRS_annunGPS{false};
 		bool OXY_annunPASS_OXY_ON{false};

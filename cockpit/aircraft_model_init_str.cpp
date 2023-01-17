@@ -204,8 +204,19 @@ namespace zcockpit::cockpit {
 		data_ref_strings[DataRefName::dc_amp_value] = {"laminar/B738/dc_amp_value", XplaneType::type_Float, round_up};
 		data_ref_strings[DataRefName::ac_amp_value] = {"laminar/B738/ac_amp_value", XplaneType::type_Float, round_up};
 
+		// float vector [2]
+		data_ref_strings[DataRefName::flap_indicator] = {"laminar/B738/flap_indicator", XplaneType::type_FloatArray, !round_up};
+		data_ref_strings[DataRefName::brake_press] = {"laminar/B738/brake/brake_press", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::apu_temp] = {"laminar/B738/electrical/apu_temp", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::cabin_pressure_diff] = {"laminar/B738/cabin_pressure_diff", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::cabin_alt] = {"laminar/B738/cabin_alt", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::duct_press_L] = {"laminar/B738/indicators/duct_press_L", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::duct_press_R] = {"laminar/B738/indicators/duct_press_R", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::fuel_temp] = {"laminar/B738/engine/fuel_temp", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::cabin_temp] = {"laminar/B738/cabin_temp", XplaneType::type_Float, !round_up};
+		// cabin rate 
+		data_ref_strings[DataRefName::cabin_vvi] = {"laminar/B738/cabin_vvi", XplaneType::type_Float, !round_up};
 
-		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
 
@@ -216,7 +227,7 @@ namespace zcockpit::cockpit {
 		data_ref_strings[DataRefName::engine1_ovht] = { "laminar/B738/annunciator/engine1_ovht", XplaneType::type_Float, round_up};
 		data_ref_strings[DataRefName::engine2_ovht] = { "laminar/B738/annunciator/engine2_ovht", XplaneType::type_Float, round_up};
 
-		data_ref_strings[DataRefName::cabin_alt] = { "laminar/B738/annunciator/cabin_alt", XplaneType::type_Float, round_up};
+		data_ref_strings[DataRefName::annun_cabin_alt] = { "laminar/B738/annunciator/cabin_alt", XplaneType::type_Float, round_up};
 		data_ref_strings[DataRefName::hyd_A_rud] = { "laminar/B738/annunciator/hyd_A_rud", XplaneType::type_Float, round_up};
 		data_ref_strings[DataRefName::hyd_B_rud] = { "laminar/B738/annunciator/hyd_B_rud", XplaneType::type_Float, round_up};
 		data_ref_strings[DataRefName::takeoff_config] = { "laminar/B738/annunciator/takeoff_config", XplaneType::type_Float, round_up};

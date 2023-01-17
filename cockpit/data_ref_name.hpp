@@ -15,7 +15,7 @@ namespace zcockpit::cockpit {
 
 		engine1_ovht,
 		engine2_ovht,
-		cabin_alt,
+		annun_cabin_alt,
 		gps,
 		engine1_fire,
 		engine2_fire,
@@ -175,6 +175,16 @@ namespace zcockpit::cockpit {
 		dc_amp_value,
 		ac_amp_value,
 
+		flap_indicator,
+		brake_press,
+		apu_temp,
+		cabin_pressure_diff,
+		cabin_alt,
+		duct_press_L,
+		duct_press_R,
+		fuel_temp,
+		cabin_temp,
+		cabin_vvi,
 
 		//
 		// end of DataRef names

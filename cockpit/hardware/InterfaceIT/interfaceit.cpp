@@ -722,7 +722,7 @@ namespace zcockpit::cockpit::hardware
 		hid->pLED_Set(mipSession, 11, ( aircraft_model.z737InData.MAIN_annun_AT_RED[0])); // Red
 		hid->pLED_Set(mipSession, 12, ( aircraft_model.z737InData.MAIN_annun_AT_AMBER[0])); // Amber
 		hid->pLED_Set(mipSession, 13, aircraft_model.z737InData.MAIN_annun_FMC_AMBER[0]);
-		hid->pLED_Set(mipSession, 14, aircraft_model.z737InData.cabin_alt);
+		hid->pLED_Set(mipSession, 14, aircraft_model.z737InData.annun_cabin_alt);
 		hid->pLED_Set(mipSession, 15, aircraft_model.z737InData.takeoff_config);
 		hid->pLED_Set(mipSession, 16, aircraft_model.z737InData.MAIN_annunBELOW_GS);
 		hid->pLED_Set(mipSession, 17, aircraft_model.z737InData.MAIN_annunSPEEDBRAKE_ARMED);
@@ -740,7 +740,7 @@ namespace zcockpit::cockpit::hardware
 		hid->pLED_Set(mipSession, 28, aircraft_model.z737InData.Right_Gear_Safe);		// Gear Locked 2 Right
 		hid->pLED_Set(mipSession, 29, aircraft_model.z737InData.Nose_Gear_Safe);		// Gear Locked 1 Nose
 		hid->pLED_Set(mipSession, 30, aircraft_model.z737InData.MAIN_annunGEAR_transit[2]);
-		hid->pLED_Set(mipSession, 31, aircraft_model.z737InData.cabin_alt);
+		hid->pLED_Set(mipSession, 31, aircraft_model.z737InData.annun_cabin_alt);
 		// 32
 		hid->pLED_Set(mipSession, 33, aircraft_model.z737InData.MAIN_annunSPEEDBRAKE_EXTENDED);
 		hid->pLED_Set(mipSession, 34, ( aircraft_model.z737InData.MAIN_annun_AT_AMBER[1])); // Amber
