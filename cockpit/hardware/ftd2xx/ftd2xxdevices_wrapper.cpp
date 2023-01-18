@@ -1,20 +1,26 @@
 #include "ftd2xxdevices_wrapper.hpp"
+#include "../common/logger.hpp"
+
+extern logger LOG;
 
 Ftd2xxDevices * Ftd2xxDevices::xpndrInstance = nullptr;
 
 
 void Ftd2xxDevices::closeDown()
 {
-    for ( const auto& next_device : devices)
-    {
-        FT_DEVICE_LIST_INFO_NODE * device = (FT_DEVICE_LIST_INFO_NODE *)next_device.second;
-        free(device);
+    if (!devices.empty()) {
+        for (const auto& next_device : devices)
+        {
+            FT_DEVICE_LIST_INFO_NODE* device = (FT_DEVICE_LIST_INFO_NODE*)next_device.second;
+            free(device);
+        }
     }
-
     drop();
 }
 
-
+Ftd2xxDevices::~Ftd2xxDevices() {
+    LOG() << "	closing Ftd2xxDevices";
+}
 void Ftd2xxDevices::get_devices()
 {
     FT_STATUS ftStatus;

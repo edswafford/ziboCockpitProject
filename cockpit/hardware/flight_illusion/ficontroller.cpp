@@ -567,7 +567,7 @@ namespace zcockpit::cockpit::hardware
 		int current_radio = 0;
 		for (const auto& radio_device : devices)
 		{
-			if (radio->CATEGORY() == FiDevice::RADIO)
+			if (radio_device->CATEGORY() == FiDevice::RADIO)
 			{
 				if(radio_index == current_radio) {
 					radio = radio_device.get();

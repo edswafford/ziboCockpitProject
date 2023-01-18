@@ -1227,7 +1227,8 @@ namespace zcockpit::cockpit::hardware
 			}
 		}
 		// Allocate Buffer
-		const auto temp_bufffer = std::make_unique<char[]>(dwSize + 1);
+		// something is wrong with pGetDeviceList it seems to write way pass what it needs
+		const auto temp_bufffer = std::make_unique<char[]>(dwSize * 1000);
 		pBuffer = temp_bufffer.get();  //new char[dwSize + 1];
 
 		//Retrieve a list of all connected boards

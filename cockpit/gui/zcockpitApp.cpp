@@ -52,6 +52,9 @@ namespace zcockpit::cockpit::gui
 
 
 	}
+	ZcockpitApp::~ZcockpitApp() {
+		LOG() << "Deleting ZcockpitApp";
+	}
 
 
 	bool ZcockpitApp::OnInit()
@@ -198,7 +201,7 @@ namespace zcockpit::cockpit::gui
 
 	void ZcockpitApp::timer()
 	{
-			try {
+		try {
 			// random number generator
 			std::random_device rd; // Will be used to obtain a seed for the random number engine
 			std::seed_seq seed{ rd(), rd(), rd(), rd() };
@@ -253,8 +256,8 @@ namespace zcockpit::cockpit::gui
 			}
 
 			const std::string ip_address = udp.get_ip();
-			if(ip_address.empty()) {
-				auto message = "Cannot continue execution when my IP address cannot be found"; 
+			if (ip_address.empty()) {
+				auto message = "Cannot continue execution when my IP address cannot be found";
 				LOG(Severe) << message;
 				wxSafeShowMessage("Fatal Error", message);
 				main_window->Close(true);
@@ -272,7 +275,7 @@ namespace zcockpit::cockpit::gui
 			zcockpit::cockpit::Client<Udp> client(ip_address, udp, multicast_server_controller, multicast_app_controller, udp_controller, connection, gen, aircraft_model, UPDATE_RATE);
 
 			zcockpit::cockpit::hardware::Sim737Hardware sim737_hardware(aircraft_model, interface_it);
-			
+
 			// IOCards should be initialized by now
 			//
 			main_window->set_iocard_status(IOCards::devices);
@@ -293,7 +296,7 @@ namespace zcockpit::cockpit::gui
 			//
 	////		WebsocketClientEndpoint client_endpoint;
 	////		int websocket_id = client_endpoint.connect("ws://192.168.0.143:8080");
-		
+
 		/*	std::string input;
 			int id = 0;
 			char key = ' ';
@@ -325,11 +328,11 @@ namespace zcockpit::cockpit::gui
 
 				client.update(current_cycle);
 				auto current_zibo_status = client.ziboStatus();
-				if((zibo_status != current_zibo_status) || current_cycle == ONE_SECOND) {
+				if ((zibo_status != current_zibo_status) || current_cycle == ONE_SECOND) {
 					zibo_status = current_zibo_status;
 					main_window->set_zibo_status(zibo_status);
 				}
-//				if(zibo_status)
+				//				if(zibo_status)
 				{
 
 					sim737_hardware.do_updates(current_cycle);
@@ -339,18 +342,18 @@ namespace zcockpit::cockpit::gui
 				if (current_cycle >= ONE_SECOND)
 				{
 					sim737_hardware.checkConnections();
-				
+
 					//
 					// InterfaceIT MIP
 					auto current_interfaceit_mip_status = sim737_hardware.interfaceitMipStatus();
-					if(interfaceit_mip_status != current_interfaceit_mip_status || current_cycle == ONE_SECOND) {
+					if (interfaceit_mip_status != current_interfaceit_mip_status || current_cycle == ONE_SECOND) {
 						interfaceit_mip_status = current_interfaceit_mip_status;
 						main_window->set_interfaceit_mip_status(interfaceit_mip_status);
 					}
 					//
 					// Interfaceit Overhead
 					auto current_interfaceit_overhead_status = sim737_hardware.interfaceitOverheadStatus();
-					if(interfaceit_overhead_status != current_interfaceit_overhead_status || current_cycle == ONE_SECOND) {
+					if (interfaceit_overhead_status != current_interfaceit_overhead_status || current_cycle == ONE_SECOND) {
 						interfaceit_overhead_status = current_interfaceit_overhead_status;
 						main_window->set_interfaceit_overhead_status(interfaceit_overhead_status);
 					}
@@ -358,46 +361,46 @@ namespace zcockpit::cockpit::gui
 					//
 					// IOCards MIP
 					auto current_iocard_mip_status = sim737_hardware.get_iocard_mip_status();
-					if(iocard_mip_status != current_iocard_mip_status || current_cycle == ONE_SECOND) {
+					if (iocard_mip_status != current_iocard_mip_status || current_cycle == ONE_SECOND) {
 						iocard_mip_status = current_iocard_mip_status;
 						main_window->set_iocard_mip_status(iocard_mip_status);
 					}
 					//
 					// IOCards Forward Overhead
 					auto current_iocard_forward_overhead_status = sim737_hardware.get_iocard_forward_overhead_status();
-					if(iocard_forward_overhead_status != current_iocard_forward_overhead_status || current_cycle == ONE_SECOND) {
+					if (iocard_forward_overhead_status != current_iocard_forward_overhead_status || current_cycle == ONE_SECOND) {
 						iocard_forward_overhead_status = current_iocard_forward_overhead_status;
 						main_window->set_iocard_fwd_overhead_status(iocard_forward_overhead_status);
 					}
 					//
 					// IOCards Rear Overhead
 					auto current_iocard_rear_overhead_status = sim737_hardware.get_iocard_rear_overhead_status();
-					if(iocard_rear_overhead_status != current_iocard_rear_overhead_status || current_cycle == ONE_SECOND) {
+					if (iocard_rear_overhead_status != current_iocard_rear_overhead_status || current_cycle == ONE_SECOND) {
 						iocard_rear_overhead_status = current_iocard_rear_overhead_status;
 						main_window->set_iocard_rear_overhead_status(iocard_rear_overhead_status);
 					}
 					//
 					// Flight Illusion MIP
 					auto current_flight_illusion_mip_status = sim737_hardware.get_flight_illusion_mip_status();
-					if(flight_illusion_mip_status != current_flight_illusion_mip_status || current_cycle == ONE_SECOND) {
+					if (flight_illusion_mip_status != current_flight_illusion_mip_status || current_cycle == ONE_SECOND) {
 						flight_illusion_mip_status = current_flight_illusion_mip_status;
 						main_window->set_flight_illusion_mip_status(flight_illusion_mip_status);
 					}
 					//
 					// Flight Illusion Overhead
 					auto current_flight_illusion_overhead_status = sim737_hardware.get_flight_illusion_overhead_status();
-					if(flight_illusion_overhead_status != current_flight_illusion_overhead_status || current_cycle == ONE_SECOND) {
+					if (flight_illusion_overhead_status != current_flight_illusion_overhead_status || current_cycle == ONE_SECOND) {
 						flight_illusion_overhead_status = current_flight_illusion_overhead_status;
 						main_window->set_flight_illusion_overhead_status(flight_illusion_overhead_status);
 					}
 					//
 					// Flight Illusion MIP
 					auto current_transponder_status = sim737_hardware.get_transponder_status();
-					if(transponder_status != current_transponder_status || current_cycle == ONE_SECOND) {
+					if (transponder_status != current_transponder_status || current_cycle == ONE_SECOND) {
 						transponder_status = current_transponder_status;
 						main_window->set_transponder_status(transponder_status);
 					}
-					
+
 
 
 
@@ -431,14 +434,25 @@ namespace zcockpit::cockpit::gui
 
 
 
-	////		json terminate = {{"id", id},
-	////						{"messageType", "terminate"},};
-	////		client_endpoint.send(terminate.dump());
-	////		client_endpoint.close(websocketpp::close::status::normal, "Client Terminated");
-	////		std::cout << "\nKeyboard Input Terminating ...\n";
+			////		json terminate = {{"id", id},
+			////						{"messageType", "terminate"},};
+			////		client_endpoint.send(terminate.dump());
+			////		client_endpoint.close(websocketpp::close::status::normal, "Client Terminated");
+			////		std::cout << "\nKeyboard Input Terminating ...\n";
 
 
-			}
+			//if (ovrheadIOCards != nullptr) {
+			//	ovrheadIOCards->drop();
+			//}
+
+			LOG() << "Timer Stoped";
+
+			std::unique_lock<std::mutex> lk(timer_done_mutex);
+			timer_has_stopped = true;
+			lk.unlock();
+			condition.notify_one();
+
+		}
 		////catch (websocketpp::exception const& e) {
 		////	std::cout << e.what() << std::endl;
 		////}
@@ -446,19 +460,6 @@ namespace zcockpit::cockpit::gui
 			wxSafeShowMessage("Fatal Error", "other exception ");
 			main_window->Close(true);
 		}
-
-
-		//if (ovrheadIOCards != nullptr) {
-		//	ovrheadIOCards->drop();
-		//}
-
-		LOG() << "Timer Stoped";
-
-		std::unique_lock<std::mutex> lk(timer_done_mutex);
-		timer_has_stopped = true;
-		lk.unlock();
-		condition.notify_one();
-
 	}
 
 //

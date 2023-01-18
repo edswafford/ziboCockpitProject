@@ -14,7 +14,7 @@ using namespace std;
 class Ftd2xxDevices
 {
 public:
-	~Ftd2xxDevices() = default;
+	~Ftd2xxDevices();
 	Ftd2xxDevices(const Ftd2xxDevices&) = delete;
 	Ftd2xxDevices& operator=(const Ftd2xxDevices&) = delete;
 
@@ -32,7 +32,7 @@ public:
 		return xpndrInstance;
 	}
 
-	static void drop()
+	void drop()
 	{
 		static mutex mutex;
 		std::lock_guard<std::mutex> lock(mutex);

@@ -28,6 +28,11 @@ namespace zcockpit::cockpit::hardware
 
 	}
 
+	Transponder::~Transponder() {
+		LOG() << "closing Transponder";
+	}
+
+
 	void Transponder::check_xpndr_digits()
 	{
 		ifly_xpndr_stable_cnt++;

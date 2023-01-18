@@ -18,6 +18,7 @@ namespace zcockpit::cockpit::hardware
 	public:
 		static const char* xponderSerialNumber;
 		Transponder();
+		~Transponder();
 		Transponder(const Transponder&) = delete;
 		Transponder& operator=(const Transponder&) = delete;
 
