@@ -19,7 +19,7 @@ namespace zcockpit::cockpit::gui
 	{
 	public:
 		ZcockpitApp();
-	   
+
 		// override base class virtuals
 		// ----------------------------
 

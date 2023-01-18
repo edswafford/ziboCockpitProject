@@ -1227,7 +1227,8 @@ namespace zcockpit::cockpit::hardware
 			}
 		}
 		// Allocate Buffer
-		pBuffer = new char[dwSize + 1];
+		const auto temp_bufffer = std::make_unique<char[]>(dwSize + 1);
+		pBuffer = temp_bufffer.get();  //new char[dwSize + 1];
 
 		//Retrieve a list of all connected boards
 		nRet = hid->pGetDeviceList(pBuffer, &dwSize, pszBoard);

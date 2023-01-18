@@ -60,7 +60,7 @@ namespace zcockpit::cockpit::hardware
 		Ftd2xxDevices* ftd2Devices;
 		std::unique_ptr<FiController> overheadGauges;
 		std::unique_ptr<FiController> mipGauges;
-		Transponder* xpndr;
+		std::unique_ptr<Transponder> xpndr;
 
 		void do_usb_work();
 		void start_event_thread();

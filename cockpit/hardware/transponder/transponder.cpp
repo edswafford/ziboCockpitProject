@@ -8,7 +8,6 @@ extern logger LOG;
 namespace zcockpit::cockpit::hardware
 {
 
-	Transponder* Transponder::xpndrInstance = nullptr;
 	const char* Transponder::xponderSerialNumber = "DPAP30AG";
 
 	std::random_device rd;

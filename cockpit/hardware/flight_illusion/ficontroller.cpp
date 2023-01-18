@@ -24,21 +24,22 @@ namespace zcockpit::cockpit::hardware
 
 	void FiController::addGauge(int gaugeID, FiDevice::DEVICE_Type type, double scaleFactor, int minGaugeValue, int maxGaugeValue, int offset, double K, FiDevice::FI_DEVICE_CMD needleCmd, int max_send_count)
 	{
-		FiDevice* gauge = new FiDevice(gaugeID, FiDevice::GAUGE, type, scaleFactor, minGaugeValue, maxGaugeValue, offset, K, needleCmd,
+		auto gauge = std::make_unique<FiDevice>(gaugeID, FiDevice::GAUGE, type, scaleFactor, minGaugeValue, maxGaugeValue, offset, K, needleCmd,
 		                               FiDevice::NOOP, FiDevice::NOOP, max_send_count);
-		devices.push_back(gauge);
 		gauge->checkStatus(ftDeviceHandle);
-		devices_map_by_id.try_emplace(gauge->DeviceID(), gauge);
+		devices_map_by_id.try_emplace(gauge->DeviceID(), gauge.get());
+		devices.push_back(std::move(gauge));
 	}
 
 	void FiController::addRadio(int radioID, FiDevice::DEVICE_Type type, double scaleFactor, int minValue, int maxValue, FiDevice::FI_DEVICE_CMD radioCmd)
 	{
-		FiDevice* radio = new FiDevice(radioID, FiDevice::RADIO, type, scaleFactor, minValue, maxValue, 0, 0, radioCmd);
-		devices.push_back(radio);
-		radio_devices.push_back(radio);
-
+		auto radio =  std::make_unique<FiDevice>(radioID, FiDevice::RADIO, type, scaleFactor, minValue, maxValue, 0, 0, radioCmd);
 		radio->checkStatus(ftDeviceHandle);
-		devices_map_by_id.try_emplace(radio->DeviceID(), radio);
+		devices_map_by_id.try_emplace(radio->DeviceID(), radio.get());
+		devices.push_back(std::move(radio));
+
+		number_of_radios += 1;
+
 	}
 
 	void FiController::initialize(const char* deviceSerialNumber, FT_DEVICE_LIST_INFO_NODE* devInfo)
@@ -62,14 +63,6 @@ namespace zcockpit::cockpit::hardware
 	{
 		// stop the timer thread
 		drop();
-
-		for (auto device : devices)
-		{
-			if (device != nullptr)
-			{
-				delete device;
-			}
-		}
 	}
 
 	/*
@@ -212,10 +205,6 @@ namespace zcockpit::cockpit::hardware
 	{
 		if (available)
 		{
-			for (auto gauge : devices)
-			{
-				delete gauge;
-			}
 			devices.clear();
 
 			FT_Close(ftDeviceHandle);
@@ -535,9 +524,10 @@ namespace zcockpit::cockpit::hardware
 		deviceValidationIndex++;
 	}
 
+
 	void FiController::updateLights(int light_state)
 	{
-		for (auto device : devices)
+		for (const auto& device : devices)
 		{
 			if (device->CATEGORY() == FiDevice::RADIO || device->CATEGORY() == FiDevice::CLOCK)
 			{
@@ -563,149 +553,166 @@ namespace zcockpit::cockpit::hardware
 	static DWORD adf_freq = 1000;
 	bool FiController::updateRadios()
 	{
+
 		static int read_cycle = 0;
-		static const int number_of_radios = radio_devices.size();
 		static int radio_index = 0;
+
+		FiDevice* radio = nullptr;
 
 		if (radio_index >= number_of_radios)
 		{
 			radio_index = 0;
 		}
 
-		auto radio = radio_devices[radio_index];
-
-		bool status = VALID;
-		DWORD bcd_value = 0;
-
-		radio->timeout_counter += 1;
-		if (radio->timeout_counter > updates_per_second)
+		int current_radio = 0;
+		for (const auto& radio_device : devices)
 		{
-			radio->timeout_counter = updates_per_second;
-			radio->valid = false;
+			if (radio->CATEGORY() == FiDevice::RADIO)
+			{
+				if(radio_index == current_radio) {
+					radio = radio_device.get();
+					break;
+				}
+				current_radio += 1;
+			}
 		}
 
-		int bytes_read = 0;
+		bool status = false;
+		if(radio != nullptr){
+			 status = VALID;
+			DWORD bcd_value = 0;
 
-		try
-		{
-			if (read_cycle == 0)
+			radio->timeout_counter += 1;
+			if (radio->timeout_counter > updates_per_second)
 			{
-				radio->sendCommand(ftDeviceHandle, FiDevice::FI_DEVICE_CMD::STATUS, 0);
-				read_cycle = 1;
+				radio->timeout_counter = updates_per_second;
+				radio->valid = false;
 			}
-			else
+
+			int bytes_read = 0;
+
+			try
 			{
-				bytes_read = radio->bytes_read_by_timer_thread;
-				read_cycle = 0;
-				radio_index += 1;
-			}
-		}
-		catch (std::runtime_error& err)
-		{
-			LOG() << "Flight Illusions exception reading radios : " << err.what();
-			return false;
-		}
-
-		if (bytes_read > 16 && radio->fresh_data)
-		{
-			radio->fresh_data = false;
-
-			uint32_t active_display = radio->get_display_value(FiDevice::ACTIVE);
-			uint32_t inactive_display = radio->get_display_value(FiDevice::INACTIVE);
-
-			// round up and get int form of 1xxyy
-			// value 22000 corresponds to 122.00
-			active_display = (active_display) / 10;
-			inactive_display = (inactive_display) / 10;
-
-			const FiDevice::DEVICE_Type radio_type = radio->Type();
-			switch (radio_type)
-			{
-			case FiDevice::CAPT_COMM:
-			case FiDevice::FO_COMM:
-			{
-				// convert to BCD
-				bcd_value = dec2bcd(active_display);
-//				DWORD current_radio_value = radio_type == FiDevice::CAPT_COMM ? FsxSimConnect::comm1_active : FsxSimConnect::comm2_active;
-//				if (bcd_value != current_radio_value)
+				if (read_cycle == 0)
 				{
-					bcd_value += 0X10000;
-					//const EVENT_ID event_id = radio_type == FiDevice::CAPT_COMM ? EVENT_COM_RADIO_SET : EVENT_COM2_RADIO_SET;
-					//if (SimConnect_TransmitClientEvent(FsxSimConnect::hSimConnect, 0, event_id, bcd_value,
-					//	SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY) != S_OK)
-					//{
-					//	LOG() << "SimConnect failed to transmit Event";
-					//}
+					radio->sendCommand(ftDeviceHandle, FiDevice::FI_DEVICE_CMD::STATUS, 0);
+					read_cycle = 1;
 				}
-
-				// convert to BCD
-				bcd_value = dec2bcd(inactive_display);
-//				current_radio_value = radio_type == FiDevice::CAPT_COMM ? FsxSimConnect::comm1_standby : FsxSimConnect::comm2_standby;
-//				if (bcd_value != current_radio_value)
+				else
 				{
-					bcd_value += 0X10000;
-					//const EVENT_ID event_id = radio_type == FiDevice::CAPT_COMM ? EVENT_COM_STBY_RADIO_SET : EVENT_COM2_STBY_RADIO_SET;
-					//if (SimConnect_TransmitClientEvent(FsxSimConnect::hSimConnect, 0, event_id, bcd_value,
-					//	SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY) != S_OK)
-					//{
-					//	LOG() << "SimConnect failed to transmit Event";
-					//}
+					bytes_read = radio->bytes_read_by_timer_thread;
+					read_cycle = 0;
+					radio_index += 1;
 				}
 			}
-			break;
-
-			case FiDevice::CAPT_NAV:
-			case FiDevice::FO_NAV:
+			catch (std::runtime_error& err)
 			{
-				// convert to BCD
-				bcd_value = dec2bcd(active_display);
-//				auto radio_value = (radio_type == FiDevice::CAPT_NAV ? FsxSimConnect::nav1_active : FsxSimConnect::nav2_active);
-//				DWORD current_radio_value = dec2bcd(static_cast<uint32_t>(radio_value * 100.0));
-//				if ((bcd_value + 0X10000) != current_radio_value)
-				{
-					//const EVENT_ID event_id = radio_type == FiDevice::CAPT_NAV ? EVENT_NAV1_RADIO_SET : EVENT_NAV2_RADIO_SET;
-					//if (SimConnect_TransmitClientEvent(FsxSimConnect::hSimConnect, 0, event_id, bcd_value,
-					//	SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY) != S_OK)
-					//{
-					//	LOG() << "SimConnect failed to transmit Event";
-					//}
-				}
-
-				// convert to BCD
-				bcd_value = dec2bcd(inactive_display);
-//				radio_value = (radio_type == FiDevice::CAPT_NAV ? FsxSimConnect::nav1_standby : FsxSimConnect::nav2_standby);
-//				current_radio_value = dec2bcd(static_cast<uint32_t>(radio_value * 100.0));
-//				if ((bcd_value + 0X10000) != current_radio_value)
-				{
-					//const EVENT_ID event_id = radio_type == FiDevice::CAPT_NAV ? EVENT_NAV1_STBY_SET : EVENT_NAV2_STBY_SET;
-					//if (SimConnect_TransmitClientEvent(FsxSimConnect::hSimConnect, 0, event_id, bcd_value,
-					//	SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY) != S_OK)
-					//{
-					//	LOG() << "SimConnect failed to transmit Event";
-					//}
-				}
+				LOG() << "Flight Illusions exception reading radios : " << err.what();
+				return false;
 			}
-			break;
 
-			case FiDevice::ADF:
+			if (bytes_read > 16 && radio->fresh_data)
 			{
-				// convert to BCD
-				bcd_value = dec2bcd(active_display);
-//				const auto radio_value = FsxSimConnect::adf1_active;
-//				DWORD current_radio_value = radio_value / 0x1000;
-//				if ((bcd_value * 0x10) != current_radio_value)
-				{
-					//if (SimConnect_TransmitClientEvent(FsxSimConnect::hSimConnect, 0, EVENT_ADF_SET, bcd_value,
-					//	SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY) != S_OK)
-					//{
-					//	LOG() << "SimConnect failed to transmit Event";
-					//}
-				}
+				radio->fresh_data = false;
 
-			}
-			break;
-			default:
+				uint32_t active_display = radio->get_display_value(FiDevice::ACTIVE);
+				uint32_t inactive_display = radio->get_display_value(FiDevice::INACTIVE);
+
+				// round up and get int form of 1xxyy
+				// value 22000 corresponds to 122.00
+				active_display = (active_display) / 10;
+				inactive_display = (inactive_display) / 10;
+
+				const FiDevice::DEVICE_Type radio_type = radio->Type();
+				switch (radio_type)
+				{
+				case FiDevice::CAPT_COMM:
+				case FiDevice::FO_COMM:
+				{
+					// convert to BCD
+					bcd_value = dec2bcd(active_display);
+	//				DWORD current_radio_value = radio_type == FiDevice::CAPT_COMM ? FsxSimConnect::comm1_active : FsxSimConnect::comm2_active;
+	//				if (bcd_value != current_radio_value)
+					{
+						bcd_value += 0X10000;
+						//const EVENT_ID event_id = radio_type == FiDevice::CAPT_COMM ? EVENT_COM_RADIO_SET : EVENT_COM2_RADIO_SET;
+						//if (SimConnect_TransmitClientEvent(FsxSimConnect::hSimConnect, 0, event_id, bcd_value,
+						//	SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY) != S_OK)
+						//{
+						//	LOG() << "SimConnect failed to transmit Event";
+						//}
+					}
+
+					// convert to BCD
+					bcd_value = dec2bcd(inactive_display);
+	//				current_radio_value = radio_type == FiDevice::CAPT_COMM ? FsxSimConnect::comm1_standby : FsxSimConnect::comm2_standby;
+	//				if (bcd_value != current_radio_value)
+					{
+						bcd_value += 0X10000;
+						//const EVENT_ID event_id = radio_type == FiDevice::CAPT_COMM ? EVENT_COM_STBY_RADIO_SET : EVENT_COM2_STBY_RADIO_SET;
+						//if (SimConnect_TransmitClientEvent(FsxSimConnect::hSimConnect, 0, event_id, bcd_value,
+						//	SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY) != S_OK)
+						//{
+						//	LOG() << "SimConnect failed to transmit Event";
+						//}
+					}
+				}
 				break;
+
+				case FiDevice::CAPT_NAV:
+				case FiDevice::FO_NAV:
+				{
+					// convert to BCD
+					bcd_value = dec2bcd(active_display);
+	//				auto radio_value = (radio_type == FiDevice::CAPT_NAV ? FsxSimConnect::nav1_active : FsxSimConnect::nav2_active);
+	//				DWORD current_radio_value = dec2bcd(static_cast<uint32_t>(radio_value * 100.0));
+	//				if ((bcd_value + 0X10000) != current_radio_value)
+					{
+						//const EVENT_ID event_id = radio_type == FiDevice::CAPT_NAV ? EVENT_NAV1_RADIO_SET : EVENT_NAV2_RADIO_SET;
+						//if (SimConnect_TransmitClientEvent(FsxSimConnect::hSimConnect, 0, event_id, bcd_value,
+						//	SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY) != S_OK)
+						//{
+						//	LOG() << "SimConnect failed to transmit Event";
+						//}
+					}
+
+					// convert to BCD
+					bcd_value = dec2bcd(inactive_display);
+	//				radio_value = (radio_type == FiDevice::CAPT_NAV ? FsxSimConnect::nav1_standby : FsxSimConnect::nav2_standby);
+	//				current_radio_value = dec2bcd(static_cast<uint32_t>(radio_value * 100.0));
+	//				if ((bcd_value + 0X10000) != current_radio_value)
+					{
+						//const EVENT_ID event_id = radio_type == FiDevice::CAPT_NAV ? EVENT_NAV1_STBY_SET : EVENT_NAV2_STBY_SET;
+						//if (SimConnect_TransmitClientEvent(FsxSimConnect::hSimConnect, 0, event_id, bcd_value,
+						//	SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY) != S_OK)
+						//{
+						//	LOG() << "SimConnect failed to transmit Event";
+						//}
+					}
+				}
+				break;
+
+				case FiDevice::ADF:
+				{
+					// convert to BCD
+					bcd_value = dec2bcd(active_display);
+	//				const auto radio_value = FsxSimConnect::adf1_active;
+	//				DWORD current_radio_value = radio_value / 0x1000;
+	//				if ((bcd_value * 0x10) != current_radio_value)
+					{
+						//if (SimConnect_TransmitClientEvent(FsxSimConnect::hSimConnect, 0, EVENT_ADF_SET, bcd_value,
+						//	SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY) != S_OK)
+						//{
+						//	LOG() << "SimConnect failed to transmit Event";
+						//}
+					}
+
+				}
+				break;
+				default:
+					break;
+				}
+				
 			}
 		}
 		return status;
@@ -747,17 +754,17 @@ namespace zcockpit::cockpit::hardware
 	bool FiController::updateGauges()
 	{
 		bool status = VALID;
-		for (auto gauge : devices)
+		for (const auto& gauge : devices)
 		{
-			gauge->timeout_counter += 1;
-			if (gauge->timeout_counter > updates_per_second)
-			{
-				gauge->timeout_counter = updates_per_second;
-				gauge->valid = false;
-			}
-
 			if (gauge->CATEGORY() == FiDevice::GAUGE)
 			{
+				gauge->timeout_counter += 1;
+				if (gauge->timeout_counter > updates_per_second)
+				{
+					gauge->timeout_counter = updates_per_second;
+					gauge->valid = false;
+				}
+
 				switch (gauge->Type())
 				{
 				case FiDevice::YAW_DAMPER:

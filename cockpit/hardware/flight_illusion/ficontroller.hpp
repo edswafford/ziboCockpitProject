@@ -69,13 +69,15 @@ namespace zcockpit::cockpit::hardware
 
 		FT_HANDLE ftDeviceHandle;
 
-		vector<FiDevice *> devices;
-		vector<FiDevice *> radio_devices;
+		std::vector<std::unique_ptr<FiDevice>> devices;
+
+		std::vector<std::unique_ptr<FiDevice>> radio_devices;
 		const char* serialNumber;
 		bool available{false};
 		bool valid{false};
 
 		int deviceValidationIndex{0};
+		int number_of_radios{0};
 
 		// TIMER
 		int updates_per_second{ 5 };

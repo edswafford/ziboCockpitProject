@@ -53,6 +53,7 @@ namespace zcockpit::cockpit::gui
 
 	}
 
+
 	bool ZcockpitApp::OnInit()
 	{
 		LOG() << "Starting Main Window";

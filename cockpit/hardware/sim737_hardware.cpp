@@ -137,7 +137,7 @@ namespace zcockpit::cockpit::hardware
 			build_overhead_gauges();
 			overheadGauges->start_timer(overheadGauges->FtHandle());
 
-			xpndr = Transponder::instance();
+			xpndr = std::make_unique<Transponder>();
 			xpndr->initialize(Transponder::xponderSerialNumber, ftd2Devices->getDevice(Transponder::xponderSerialNumber));
 			xpndr->open(Transponder::xponderSerialNumber);
 

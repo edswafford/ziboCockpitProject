@@ -17,6 +17,10 @@ namespace zcockpit::cockpit::hardware
 	{
 	public:
 		static const char* xponderSerialNumber;
+		Transponder();
+		Transponder(const Transponder&) = delete;
+		Transponder& operator=(const Transponder&) = delete;
+
 		static const bool VALID = true;
 		FT_DEVICE_LIST_INFO_NODE devInfo;
 		int xpndr_mode;
@@ -52,47 +56,36 @@ namespace zcockpit::cockpit::hardware
 		void closeDown();
 
 
-		static Transponder* instance()
-		{
-			static mutex mutex;
-			if(!xpndrInstance)
-			{
-				std::lock_guard<std::mutex> lock(mutex);
-				if(!xpndrInstance)
-				{
-					xpndrInstance = new Transponder;
-				}
-			}
+		//static Transponder* instance()
+		//{
+		//	static mutex mutex;
+		//	if(!xpndrInstance)
+		//	{
+		//		std::lock_guard<std::mutex> lock(mutex);
+		//		if(!xpndrInstance)
+		//		{
+		//			xpndrInstance = new Transponder;
+		//		}
+		//	}
 
-			return xpndrInstance;
-		}
+		//	return xpndrInstance;
+		//}
 
 		static void drop()
 		{
 			static mutex mutex;
 			std::lock_guard<std::mutex> lock(mutex);
-			delete xpndrInstance;
-			xpndrInstance = 0;
+//			delete xpndrInstance;
+//			xpndrInstance = 0;
 		}
 
 
 	private:
-
-		Transponder();
-
-
-		~Transponder()
-		{
-		};
-
-		Transponder(const Transponder&); // hide copy constructor
-		Transponder& operator=(const Transponder&); // hide assign op
-
 		void openEx();
 		void reopen(const char* deviceSerialNumber);
 		void setTimeouts(int readTimeout, int writeTimeout);
 
-		static Transponder* xpndrInstance;
+//		static Transponder* xpndrInstance;
 
 		Ftd2xxDevices* ftd2Devices;
 		FT_HANDLE ftDeviceHandle;
