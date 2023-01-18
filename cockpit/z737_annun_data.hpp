@@ -28,7 +28,7 @@ namespace zcockpit::cockpit {
 		float brake_press{0.0f};
 		float apu_temp{0.0f};
 		float cabin_pressure_diff{0.0f};
-		std::vector<float> cabin_alt{0.0f};
+		float cabin_alt{0.0f};
 		float duct_press_L{0.0f};
 		float duct_press_R{0.0f};
 		float fuel_temp{0.0f};

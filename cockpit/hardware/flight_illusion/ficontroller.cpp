@@ -794,7 +794,7 @@ namespace zcockpit::cockpit::hardware
 					break;
 
 				case FiDevice::CABIN_ALT:
-					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), aircraft_model.z737InData.cabin_alt[0]);
+					status = gauge->sendValue(ftDeviceHandle, gauge->Cmd(), aircraft_model.z737InData.cabin_alt);
 					break;
 
 				case FiDevice::CABIN_CLIMB:

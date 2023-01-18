@@ -127,25 +127,25 @@ namespace zcockpit::cockpit::hardware
 			usb_relay->open();
 
 			// FTD 2XX Devices
-//			ftd2Devices = Ftd2xxDevices::instance();
-//			ftd2Devices->get_devices();
+			ftd2Devices = Ftd2xxDevices::instance();
+			ftd2Devices->get_devices();
 
 			// Flight Illusion Gauges and Radios
-			//mipGauges = std::make_unique<FiController>(ac_model, ONE_SECOND / FIVE_HZ);
-			//mipGauges->initialize(FiController::mipSerialNumber, ftd2Devices->getDevice(FiController::mipSerialNumber));
-			//mipGauges->open(FiController::mipSerialNumber);
-			//build_mip_gauges();
-			//mipGauges->start_timer(mipGauges->FtHandle());
+			mipGauges = std::make_unique<FiController>(ac_model, ONE_SECOND / FIVE_HZ);
+			mipGauges->initialize(FiController::mipSerialNumber, ftd2Devices->getDevice(FiController::mipSerialNumber));
+			mipGauges->open(FiController::mipSerialNumber);
+			build_mip_gauges();
+			mipGauges->start_timer(mipGauges->FtHandle());
 
-			//overheadGauges = std::make_unique<FiController>(ac_model, ONE_SECOND / FIVE_HZ);
-			//overheadGauges->initialize(FiController::overheadSerialNumber, ftd2Devices->getDevice(FiController::overheadSerialNumber));
-			//overheadGauges->open(FiController::overheadSerialNumber);
-			//build_overhead_gauges();
-			//overheadGauges->start_timer(overheadGauges->FtHandle());
+			overheadGauges = std::make_unique<FiController>(ac_model, ONE_SECOND / FIVE_HZ);
+			overheadGauges->initialize(FiController::overheadSerialNumber, ftd2Devices->getDevice(FiController::overheadSerialNumber));
+			overheadGauges->open(FiController::overheadSerialNumber);
+			build_overhead_gauges();
+			overheadGauges->start_timer(overheadGauges->FtHandle());
 
-			//xpndr = std::make_unique<Transponder>();
-			//xpndr->initialize(Transponder::xponderSerialNumber, ftd2Devices->getDevice(Transponder::xponderSerialNumber));
-			//xpndr->open(Transponder::xponderSerialNumber);
+			xpndr = std::make_unique<Transponder>();
+			xpndr->initialize(Transponder::xponderSerialNumber, ftd2Devices->getDevice(Transponder::xponderSerialNumber));
+			xpndr->open(Transponder::xponderSerialNumber);
 
 
 			// Applications should not start the event thread until after their first call to libusb_open()
@@ -161,35 +161,38 @@ namespace zcockpit::cockpit::hardware
 		if(current_cycle >= ONE_SECOND) {
 			Sim737Hardware::has_run_for_one_second_ = true;
 		}
-//
-//		if (power_is_on && !aircraft_model.z738_ac_power_is_on())
-//		{
-//			// turn off
-//			if (mipGauges->Available())
-//			{
-//				mipGauges->updateLights(FiDevice::DISPLAYS_OFF);
-////				overheadGauges->updateLights(FiDevice::DISPLAYS_OFF);
-//				power_is_on = false;
-//			}
-//		}
-//		else if (!power_is_on && aircraft_model.z738_ac_power_is_on())
-//		{
-//			// turn on
-//			if (mipGauges->Available())
-//			{
-//				mipGauges->updateLights(FiDevice::DISPLAYS_ON);
-////				overheadGauges->updateLights(FiDevice::DISPLAYS_OFF);
-//				power_is_on = true;
-//			}
-//		}
-//
-//		if(current_cycle % 2 == 0 && mipGauges->Available())
-//		{
-//			mipGauges->updateRadios();
-//		}
-//
-//
-//
+
+		if (power_is_on && !aircraft_model.z738_ac_power_is_on())
+		{
+			// turn off
+			if (mipGauges->Available())
+			{
+				mipGauges->updateLights(FiDevice::DISPLAYS_OFF);
+				power_is_on = false;
+			}
+			if (overheadGauges->Available())
+			{
+				overheadGauges->updateLights(FiDevice::DISPLAYS_OFF);
+			}
+		}
+		else if (!power_is_on && aircraft_model.z738_ac_power_is_on())
+		{
+			// turn on
+			if (mipGauges->Available())
+			{
+				mipGauges->updateLights(FiDevice::DISPLAYS_ON);
+				power_is_on = true;
+			}
+			if (overheadGauges->Available())
+			{
+				overheadGauges->updateLights(FiDevice::DISPLAYS_ON);
+			}
+		}
+		if(current_cycle % 2 == 0 && mipGauges->Available())
+		{
+			mipGauges->updateRadios();
+		}
+
 
 		// MIP IOCards
 		//
@@ -256,39 +259,39 @@ namespace zcockpit::cockpit::hardware
 
 		else if(current_cycle % FIVE_HZ == 3)
 		{
-			////
-			//// Flight Illusions
-			////   
-			//if(overheadGauges->Available())
-			//{
-			//	overheadGauges->updateGauges();
-			//}
-			//if (mipGauges->Available())
-			//{
-			//	mipGauges->updateGauges();
-			//}
+			//
+			// Flight Illusions
+			//   
+			if(overheadGauges->Available())
+			{
+				overheadGauges->updateGauges();
+			}
+			if (mipGauges->Available())
+			{
+				mipGauges->updateGauges();
+			}
 
-			////
-			//// Transponder
-			////
-			//if(xpndr->Available() && aircraft_model.z738_is_available())
-			//{
-			//	if( aircraft_model.z738_ac_power_is_on()){
-			//		xpndr->check_xpndr_digits();
-			//	}
+			//
+			// Transponder
+			//
+			if(xpndr->Available() && aircraft_model.z738_is_available())
+			{
+				if( aircraft_model.z738_ac_power_is_on()){
+					xpndr->check_xpndr_digits();
+				}
 
-			//	xpndr->updatePowerOn();
-			//	xpndr->updateFailed();
-			//	xpndr->updateRply();
-			//	xpndr->requestData();
-			//	xpndr->readXpndr();
+				xpndr->updatePowerOn();
+				xpndr->updateFailed();
+				xpndr->updateRply();
+				xpndr->requestData();
+				xpndr->readXpndr();
 
-			//	if(init_xpndr)
-			//	{
-			//		init_xpndr = false;
-			//		xpndr->sync_switches();
-			//	}
-			//}
+				if(init_xpndr)
+				{
+					init_xpndr = false;
+					xpndr->sync_switches();
+				}
+			}
 
 
 			//
@@ -394,80 +397,80 @@ namespace zcockpit::cockpit::hardware
 		}
 
 
-		////
-		//// look for new FTD2XX connections
-		////
-		//// Transponder
-		//auto current_transponder_status = Health::FAILED_STATUS;
-		//if(!xpndr->Available())
-		//{
-		//	xpndr->initialize(Transponder::xponderSerialNumber, ftd2Devices->getDevice(Transponder::xponderSerialNumber));
-		//	xpndr->open(Transponder::xponderSerialNumber);
-		//	if(xpndr->Available())
-		//	{
-		//		string dev_id = to_string(xpndr->devInfo.ID);
-		//		current_transponder_status = Health::HEALTHY_STATUS;
-		//	}
-		//}
-		//else
-		//{
-		//	string dev_id = to_string(xpndr->devInfo.ID);
-		//	current_transponder_status = Health::HEALTHY_STATUS;
-		//}
-		//if(transponder_status != current_transponder_status)
-		//{
-		//	transponder_status = current_transponder_status;
-		//}
+		//
+		// look for new FTD2XX connections
+		//
+		// Transponder
+		auto current_transponder_status = Health::FAILED_STATUS;
+		if(!xpndr->Available())
+		{
+			xpndr->initialize(Transponder::xponderSerialNumber, ftd2Devices->getDevice(Transponder::xponderSerialNumber));
+			xpndr->open(Transponder::xponderSerialNumber);
+			if(xpndr->Available())
+			{
+				string dev_id = to_string(xpndr->devInfo.ID);
+				current_transponder_status = Health::HEALTHY_STATUS;
+			}
+		}
+		else
+		{
+			string dev_id = to_string(xpndr->devInfo.ID);
+			current_transponder_status = Health::HEALTHY_STATUS;
+		}
+		if(transponder_status != current_transponder_status)
+		{
+			transponder_status = current_transponder_status;
+		}
 
-		////
-		//// Flight Illusions
-		////
-		//auto current_flight_illusions_overhead_status = Health::FAILED_STATUS;
-		//if(!overheadGauges->Available())
-		//{
-		//	// try to reconnect
-		//	overheadGauges->initialize(FiController::overheadSerialNumber, ftd2Devices->getDevice(FiController::overheadSerialNumber));
-		//	overheadGauges->open(FiController::overheadSerialNumber);
-		//	if(overheadGauges->Available())
-		//	{
-		//		string hex = to_string(overheadGauges->devInfo.ID);
-		//		current_flight_illusions_overhead_status = Health::HEALTHY_STATUS;
-		//	}
-		//}
-		//// we are connected
-		//else
-		//{
-		//	string hex = to_string(overheadGauges->devInfo.ID);
-		//	current_flight_illusions_overhead_status = Health::HEALTHY_STATUS;
-		//	overheadGauges->validateGauges();
-		//}
-		//if(flight_illusions_overhead_status != current_flight_illusions_overhead_status)
-		//{
-		//	flight_illusions_overhead_status = current_flight_illusions_overhead_status;
-		//}
-		//auto current_flight_illusions_mip_status = Health::FAILED_STATUS;
-		//if (!mipGauges->Available())
-		//{
-		//	// try to reconnect
-		//	mipGauges->initialize(FiController::mipSerialNumber, ftd2Devices->getDevice(FiController::mipSerialNumber));
-		//	mipGauges->open(FiController::mipSerialNumber);
-		//	if (mipGauges->Available())
-		//	{
-		//		string hex = to_string(mipGauges->devInfo.ID);
-		//		current_flight_illusions_mip_status = Health::HEALTHY_STATUS;
-		//	}
-		//}
-		//// we are connected
-		//else
-		//{
-		//	string hex = to_string(mipGauges->devInfo.ID);
-		//	current_flight_illusions_mip_status = Health::HEALTHY_STATUS;
-		//	mipGauges->validateGauges();
-		//}
-		//if (flight_illusions_mip_status != current_flight_illusions_mip_status)
-		//{
-		//	flight_illusions_mip_status = current_flight_illusions_mip_status;
-		//}
+		//
+		// Flight Illusions
+		//
+		auto current_flight_illusions_overhead_status = Health::FAILED_STATUS;
+		if(!overheadGauges->Available())
+		{
+			// try to reconnect
+			overheadGauges->initialize(FiController::overheadSerialNumber, ftd2Devices->getDevice(FiController::overheadSerialNumber));
+			overheadGauges->open(FiController::overheadSerialNumber);
+			if(overheadGauges->Available())
+			{
+				string hex = to_string(overheadGauges->devInfo.ID);
+				current_flight_illusions_overhead_status = Health::HEALTHY_STATUS;
+			}
+		}
+		// we are connected
+		else
+		{
+			string hex = to_string(overheadGauges->devInfo.ID);
+			current_flight_illusions_overhead_status = Health::HEALTHY_STATUS;
+			overheadGauges->validateGauges();
+		}
+		if(flight_illusions_overhead_status != current_flight_illusions_overhead_status)
+		{
+			flight_illusions_overhead_status = current_flight_illusions_overhead_status;
+		}
+		auto current_flight_illusions_mip_status = Health::FAILED_STATUS;
+		if (!mipGauges->Available())
+		{
+			// try to reconnect
+			mipGauges->initialize(FiController::mipSerialNumber, ftd2Devices->getDevice(FiController::mipSerialNumber));
+			mipGauges->open(FiController::mipSerialNumber);
+			if (mipGauges->Available())
+			{
+				string hex = to_string(mipGauges->devInfo.ID);
+				current_flight_illusions_mip_status = Health::HEALTHY_STATUS;
+			}
+		}
+		// we are connected
+		else
+		{
+			string hex = to_string(mipGauges->devInfo.ID);
+			current_flight_illusions_mip_status = Health::HEALTHY_STATUS;
+			mipGauges->validateGauges();
+		}
+		if (flight_illusions_mip_status != current_flight_illusions_mip_status)
+		{
+			flight_illusions_mip_status = current_flight_illusions_mip_status;
+		}
 	}
 
 	bool Sim737Hardware::interfaceitMipStatus() const
