@@ -3,7 +3,7 @@
 
 extern logger LOG;
 
-Ftd2xxDevices * Ftd2xxDevices::xpndrInstance = nullptr;
+std::unique_ptr<Ftd2xxDevices> Ftd2xxDevices::xpndrInstance = nullptr;
 
 
 void Ftd2xxDevices::closeDown()
@@ -14,6 +14,20 @@ void Ftd2xxDevices::closeDown()
 
 Ftd2xxDevices::~Ftd2xxDevices() {
     LOG() << "	closing Ftd2xxDevices";
+}
+
+Ftd2xxDevices* Ftd2xxDevices::instance()
+{
+	static std::mutex mutex;
+	if(!xpndrInstance)
+	{
+		std::lock_guard<std::mutex> lock(mutex);
+		if(!xpndrInstance)
+		{
+			xpndrInstance = std::make_unique<Ftd2xxDevices>();
+		}
+	}
+	return xpndrInstance.get();
 }
 
 FT_DEVICE_LIST_INFO_NODE* Ftd2xxDevices::getDevice(const std::string serial_number)
