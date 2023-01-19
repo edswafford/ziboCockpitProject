@@ -8,7 +8,6 @@
 #include <windows.h>
 #include "ftd2xx.h"
 
-using namespace std;
 
 
 class Ftd2xxDevices
@@ -20,7 +19,7 @@ public:
 
 	static Ftd2xxDevices* instance()
 	{
-		static mutex mutex;
+		static std::mutex mutex;
 		if(!xpndrInstance)
 		{
 			std::lock_guard<std::mutex> lock(mutex);
@@ -32,20 +31,20 @@ public:
 		return xpndrInstance;
 	}
 
-	void drop()
+	static void drop()
 	{
-		static mutex mutex;
+		static std::mutex mutex;
 		std::lock_guard<std::mutex> lock(mutex);
 		delete xpndrInstance;
-		xpndrInstance = 0;
+		xpndrInstance = nullptr;
 	}
 
 
 
-	FT_DEVICE_LIST_INFO_NODE* getDevice(string serialNumber)
+	FT_DEVICE_LIST_INFO_NODE* getDevice(const std::string serialNumber)
 	{
 		get_devices();
-		if(devices.find(serialNumber) != devices.end())
+		if(devices.contains(serialNumber))
 		{
 			return (FT_DEVICE_LIST_INFO_NODE *)devices[serialNumber];
 		}
@@ -54,17 +53,15 @@ public:
 
 
 	void get_devices();
-	void closeDown();
+	void closeDown() const;
 
 private:
-	Ftd2xxDevices()
-	{
-	}
-
+	Ftd2xxDevices() = default;
 
 
 	static Ftd2xxDevices* xpndrInstance;
+	void free_devices() const;
 
-	unordered_map<std::string, FT_DEVICE_LIST_INFO_NODE *> devices;
+	std::unordered_map<std::string, FT_DEVICE_LIST_INFO_NODE *> devices;
 };
 

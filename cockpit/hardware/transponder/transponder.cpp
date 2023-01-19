@@ -1,6 +1,4 @@
 #include "transponder.hpp"
-
-
 #include "../common/logger.hpp"
 
 extern logger LOG;
@@ -14,13 +12,13 @@ namespace zcockpit::cockpit::hardware
 	std::mt19937_64 gen(rd());
 	std::uniform_int_distribution<> dis(1, 12);
 
-	static const int COMMAND_SIZE = 4;
-	using namespace std;
+	static constexpr int COMMAND_SIZE = 4;
+	//using namespace std;
 
-	Transponder::Transponder(): valid(false), randomInt(0), rplyCnt(3), stbySelected(false), releaseIdent(false),
-	                            xpndr_mode(-1), xpndr_alt(-1), xpndr_atc(-1), xpnd_previous_digits{{ 0xFF,0xFF,0xFF,0xFF }}, ifly_xpnd_previous_digits{{0,0,0,0}},
-	                            xpndr_needs_sync{{false,false,false,false}}, ifly_xpndr_stable_cnt(0),
-	                            ifly_xpnd_expected_digits{{0xFF,0xFF,0xFF,0xFF }}, ifly_xpnd_expected_cnt{{0,0,0,0}}
+	Transponder::Transponder(): xpndr_mode(-1), xpndr_atc(-1), xpndr_alt(-1), valid(false), randomInt(0),
+	                            rplyCnt(3), stbySelected(false), releaseIdent(false), xpnd_previous_digits{{ 0xFF,0xFF,0xFF,0xFF }}, ifly_xpnd_previous_digits{{0,0,0,0}},
+	                            ifly_xpnd_expected_digits{{0xFF,0xFF,0xFF,0xFF }}, ifly_xpnd_expected_cnt{{0,0,0,0}},
+	                            ifly_xpndr_stable_cnt(0), xpndr_needs_sync{{false,false,false,false}}
 	{
 		Available(false);
 
@@ -163,7 +161,7 @@ namespace zcockpit::cockpit::hardware
 		}
 	}
 
-	void Transponder::closeDown()
+	void Transponder::closeDown() const
 	{
 		if(Available())
 		{
@@ -174,12 +172,11 @@ namespace zcockpit::cockpit::hardware
 
 	void Transponder::setTimeouts(int readTimeout, int writeTimeout)
 	{
-		FT_STATUS ftStatus;
 		// Set read/write timeout i.e. 5000 = 5sec, 1000 = 1sec 
-		ftStatus = FT_SetTimeouts(ftDeviceHandle, readTimeout, writeTimeout);
-		if(ftStatus != FT_OK)
+		const FT_STATUS ft_status = FT_SetTimeouts(ftDeviceHandle, readTimeout, writeTimeout);
+		if(ft_status != FT_OK)
 		{
-			LOG() << "Setting Timeout Failed for Device: (" << serialNumber << ")  -- Error: " << ftStatus;
+			LOG() << "Setting Timeout Failed for Device: (" << serialNumber << ")  -- Error: " << ft_status;
 			Available(false);
 		}
 	}
@@ -187,24 +184,23 @@ namespace zcockpit::cockpit::hardware
 	void Transponder::reopen(const char* deviceSerialNumber)
 	{
 		// look for device
-		FT_DEVICE_LIST_INFO_NODE* devInfo = ftd2Devices->getDevice(deviceSerialNumber);
-		if(devInfo != nullptr)
+		FT_DEVICE_LIST_INFO_NODE* dev_info = ftd2Devices->getDevice(deviceSerialNumber);
+		if(dev_info != nullptr)
 		{
-			initialize(deviceSerialNumber, devInfo);
+			initialize(deviceSerialNumber, dev_info);
 			openEx();
 		}
 	}
 
 	void Transponder::openEx()
 	{
-		FT_STATUS ftStatus;
 		if((devInfo.Flags & 0X1) == 0)
 		{
-			ftStatus = FT_OpenEx((PVOID)serialNumber, FT_OPEN_BY_SERIAL_NUMBER, &ftDeviceHandle);
-			if(ftStatus == FT_OK)
+			FT_STATUS ft_status = FT_OpenEx((PVOID)serialNumber, FT_OPEN_BY_SERIAL_NUMBER, &ftDeviceHandle);
+			if(ft_status == FT_OK)
 			{
-				ftStatus = FT_ResetDevice(ftDeviceHandle);
-				if(ftStatus == FT_OK)
+				ft_status = FT_ResetDevice(ftDeviceHandle);
+				if(ft_status == FT_OK)
 				{
 					Available(true);
 				}
@@ -216,11 +212,10 @@ namespace zcockpit::cockpit::hardware
 			}
 			else
 			{
-				void* pSerialNumber;
-				pSerialNumber = (void*)string(serialNumber).c_str();
-				ftStatus = FT_OpenEx(pSerialNumber, FT_OPEN_BY_SERIAL_NUMBER, &ftDeviceHandle);
-				ftStatus = FT_ResetDevice(ftDeviceHandle);
-				if(ftStatus == FT_OK)
+				void* pSerialNumber = (void*)std::string(serialNumber).c_str();
+				ft_status = FT_OpenEx(pSerialNumber, FT_OPEN_BY_SERIAL_NUMBER, &ftDeviceHandle);
+				ft_status = FT_ResetDevice(ftDeviceHandle);
+				if(ft_status == FT_OK)
 				{
 					Available(true);
 				}
@@ -244,13 +239,12 @@ namespace zcockpit::cockpit::hardware
 
 	void Transponder::updatePowerOn()
 	{
-		FT_STATUS ftStatus;
 		DWORD BytesWritten;
 		char TxBuffer[4]; // Contains data to write to device
 
 		if(Available())
 		{
-			int code = Transponder::XPNDR_POWER_ON;
+			const int code = Transponder::XPNDR_POWER_ON;
 			//if(client->electrical_power_state == 0)
 			//{
 			//	code = Transponder::XPNDR_POWER_OFF;
@@ -260,8 +254,8 @@ namespace zcockpit::cockpit::hardware
 			TxBuffer[1] = 0;
 			TxBuffer[2] = 0;
 			TxBuffer[3] = 0;
-			ftStatus = FT_Write(ftDeviceHandle, TxBuffer, COMMAND_SIZE, &BytesWritten);
-			if(ftStatus != FT_OK)
+			const FT_STATUS ft_status = FT_Write(ftDeviceHandle, TxBuffer, COMMAND_SIZE, &BytesWritten);
+			if(ft_status != FT_OK)
 			{
 				Available(false);
 			}
@@ -270,15 +264,14 @@ namespace zcockpit::cockpit::hardware
 
 	void Transponder::updateRply()
 	{
-		FT_STATUS ftStatus;
 		DWORD BytesWritten;
-		char TxBuffer[4]; // Contains data to write to device
 
 
 		if(Available())
 		{
 			if(randomInt <= 0)
 			{
+				char tx_buffer[4];
 				BYTE code = Transponder::XPNDR_REPLY_OFF;
 				if(stbySelected)
 				{
@@ -298,12 +291,12 @@ namespace zcockpit::cockpit::hardware
 				}
 
 
-				TxBuffer[0] = code;
-				TxBuffer[1] = 0;
-				TxBuffer[2] = 0;
-				TxBuffer[3] = 0;
-				ftStatus = FT_Write(ftDeviceHandle, TxBuffer, COMMAND_SIZE, &BytesWritten);
-				if(ftStatus != FT_OK)
+				tx_buffer[0] = code;
+				tx_buffer[1] = 0;
+				tx_buffer[2] = 0;
+				tx_buffer[3] = 0;
+				const FT_STATUS ft_status = FT_Write(ftDeviceHandle, tx_buffer, COMMAND_SIZE, &BytesWritten);
+				if(ft_status != FT_OK)
 				{
 					Available(false);
 				}
@@ -342,18 +335,17 @@ namespace zcockpit::cockpit::hardware
 
 	void Transponder::requestData()
 	{
-		FT_STATUS ftStatus;
 		DWORD BytesWritten;
-		char TxBuffer[4]; // Contains data to write to device
+		char tx_buffer[4]; // Contains data to write to device
 
 		if(Available())
 		{
 			// get ATC code from transponder
-			TxBuffer[0] = Transponder::XPNDR_ATC_CODE;
-			TxBuffer[1] = 0;
-			TxBuffer[2] = 0;
-			TxBuffer[3] = 0;
-			ftStatus = FT_Write(ftDeviceHandle, TxBuffer, COMMAND_SIZE, &BytesWritten);
+			tx_buffer[0] = Transponder::XPNDR_ATC_CODE;
+			tx_buffer[1] = 0;
+			tx_buffer[2] = 0;
+			tx_buffer[3] = 0;
+			FT_STATUS ftStatus = FT_Write(ftDeviceHandle, tx_buffer, COMMAND_SIZE, &BytesWritten);
 			if(ftStatus != FT_OK)
 			{
 				Available(false);
@@ -361,8 +353,8 @@ namespace zcockpit::cockpit::hardware
 			}
 
 			// get switch positions
-			TxBuffer[0] = Transponder::XPNDR_BUTTONS;
-			ftStatus = FT_Write(ftDeviceHandle, TxBuffer, COMMAND_SIZE, &BytesWritten);
+			tx_buffer[0] = Transponder::XPNDR_BUTTONS;
+			ftStatus = FT_Write(ftDeviceHandle, tx_buffer, COMMAND_SIZE, &BytesWritten);
 			if(ftStatus != FT_OK)
 			{
 				Available(false);
@@ -467,7 +459,6 @@ namespace zcockpit::cockpit::hardware
 
 	void Transponder::readXpndr()
 	{
-		FT_STATUS ftStatus;
 		DWORD EventDWord;
 		DWORD RxBytes;
 		DWORD TxBytes;
@@ -477,7 +468,7 @@ namespace zcockpit::cockpit::hardware
 		DWORD BytesWritten;
 		bool stbySelected;
 
-		ftStatus = FT_GetStatus(ftDeviceHandle, &RxBytes, &TxBytes, &EventDWord);
+		FT_STATUS ftStatus = FT_GetStatus(ftDeviceHandle, &RxBytes, &TxBytes, &EventDWord);
 		if(ftStatus == FT_OK)
 		{
 			if(RxBytes > 0)
