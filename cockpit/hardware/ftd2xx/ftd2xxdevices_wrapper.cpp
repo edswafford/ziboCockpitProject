@@ -21,8 +21,8 @@ FT_DEVICE_LIST_INFO_NODE* Ftd2xxDevices::getDevice(const std::string serial_numb
 	get_devices();
 	if(devices.contains(serial_number))
 	{
-//		const auto& device = devices[serial_number];
-//		return static_cast<FT_DEVICE_LIST_INFO_NODE *>(device.get());
+		const auto& device = devices[serial_number];
+		return static_cast<FT_DEVICE_LIST_INFO_NODE *>(device.get());
 	}
 	return nullptr;
 }
