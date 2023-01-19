@@ -3,8 +3,21 @@
 
 extern logger LOG;
 
-Ftd2xxDevices * Ftd2xxDevices::xpndrInstance = nullptr;
+std::unique_ptr<Ftd2xxDevices> Ftd2xxDevices::xpndrInstance = nullptr;
 
+Ftd2xxDevices* Ftd2xxDevices::instance()
+{
+    static std::mutex mutex;
+    if (!xpndrInstance)
+    {
+        std::lock_guard<std::mutex> lock(mutex);
+        if (!xpndrInstance)
+        {
+            xpndrInstance = std::make_unique<Ftd2xxDevices>();
+        }
+    }
+    return xpndrInstance.get();
+}
 
 void Ftd2xxDevices::closeDown()
 {
