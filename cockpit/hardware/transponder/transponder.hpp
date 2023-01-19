@@ -54,7 +54,7 @@ namespace zcockpit::cockpit::hardware
 		void initialize(const char* deviceSerialNumber, FT_DEVICE_LIST_INFO_NODE* devInfo);
 		void check_xpndr_digits();
 		void open(const char* deviceSerialNumber);
-		void closeDown();
+		void closeDown() const;
 
 
 		//static Transponder* instance()
@@ -74,7 +74,7 @@ namespace zcockpit::cockpit::hardware
 
 		static void drop()
 		{
-			static mutex mutex;
+			static std::mutex mutex;
 			std::lock_guard<std::mutex> lock(mutex);
 //			delete xpndrInstance;
 //			xpndrInstance = 0;

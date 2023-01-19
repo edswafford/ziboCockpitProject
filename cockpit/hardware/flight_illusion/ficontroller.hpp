@@ -34,10 +34,10 @@ namespace zcockpit::cockpit::hardware
 			return ftDeviceHandle;
 		}
 
-		bool updateGauges();
+		bool updateGauges() const;
 		void validateGauges();
-		void updateLights(int light_state);
-		bool updateRadios();
+		void updateLights(int light_state) const;
+		bool updateRadios() const;
 
 		FiController() = delete;
 		FiController(AircraftModel& ac_model, int updates_per_second);
@@ -46,7 +46,7 @@ namespace zcockpit::cockpit::hardware
 		void addGauge(int ID, FiDevice::DEVICE_Type type, double scaleFactor, int minValue, int maxValue, int offset, double K, FiDevice::FI_DEVICE_CMD needleCmd, int max_send_count = 3);
 		void addRadio(int radioID, FiDevice::DEVICE_Type type, double scaleFactor, int minValue, int maxValue,
 		              FiDevice::FI_DEVICE_CMD radioCmd);
-		void initialize(const char* deviceSerialNumber, FT_DEVICE_LIST_INFO_NODE* devInfo);
+		void initialize(const char* deviceSerialNumber, const FT_DEVICE_LIST_INFO_NODE* devInfo);
 		void open(const char* deviceSerialNumber);
 		void closeDown();
 

@@ -16,11 +16,10 @@ namespace zcockpit::cockpit::hardware
 
 
 	FiController::FiController(AircraftModel& ac_model, int updates_per_second) :
-		aircraft_model(ac_model), updates_per_second(updates_per_second), ftDeviceHandle(nullptr), serialNumber(nullptr), deviceValidationIndex(0)
+		aircraft_model(ac_model), ftDeviceHandle(nullptr), serialNumber(nullptr), deviceValidationIndex(0), updates_per_second(updates_per_second)
 	{
 		ftd2Devices = Ftd2xxDevices::instance();
 	}
-	;
 
 	void FiController::addGauge(int gaugeID, FiDevice::DEVICE_Type type, double scaleFactor, int minGaugeValue, int maxGaugeValue, int offset, double K, FiDevice::FI_DEVICE_CMD needleCmd, int max_send_count)
 	{
@@ -42,7 +41,7 @@ namespace zcockpit::cockpit::hardware
 
 	}
 
-	void FiController::initialize(const char* deviceSerialNumber, FT_DEVICE_LIST_INFO_NODE* devInfo)
+	void FiController::initialize(const char* deviceSerialNumber, const FT_DEVICE_LIST_INFO_NODE* devInfo)
 	{
 		if (devInfo != nullptr)
 		{
@@ -122,9 +121,8 @@ namespace zcockpit::cockpit::hardware
 
 	void FiController::setTimeouts(int readTimeout, int writeTimeout)
 	{
-		FT_STATUS ftStatus;
 		// Set read/write timeout i.e. 5000 = 5sec, 1000 = 1sec 
-		ftStatus = FT_SetTimeouts(ftDeviceHandle, readTimeout, writeTimeout);
+		const FT_STATUS ftStatus = FT_SetTimeouts(ftDeviceHandle, readTimeout, writeTimeout);
 		if (ftStatus != FT_OK)
 		{
 			LOG() << "Setting Timeout Failed for Device: (" << serialNumber << ")  -- Error: " << ftStatus;
@@ -142,10 +140,10 @@ namespace zcockpit::cockpit::hardware
 			drop();
 		}
 		// look for device
-		FT_DEVICE_LIST_INFO_NODE* devInfo = ftd2Devices->getDevice(deviceSerialNumber);
-		if (devInfo != nullptr)
+		FT_DEVICE_LIST_INFO_NODE* dev_info = ftd2Devices->getDevice(deviceSerialNumber);
+		if (dev_info != nullptr)
 		{
-			initialize(deviceSerialNumber, devInfo);
+			initialize(deviceSerialNumber, dev_info);
 			openEx();
 
 			// start a new timer thread
@@ -158,10 +156,9 @@ namespace zcockpit::cockpit::hardware
 
 	void FiController::openEx()
 	{
-		FT_STATUS ftStatus;
 		if ((devInfo.Flags & 0X1) == 0)
 		{
-			ftStatus = FT_OpenEx((PVOID)serialNumber, FT_OPEN_BY_SERIAL_NUMBER, &ftDeviceHandle);
+			FT_STATUS ftStatus = FT_OpenEx((PVOID)serialNumber, FT_OPEN_BY_SERIAL_NUMBER, &ftDeviceHandle);
 			if (ftStatus == FT_OK)
 			{
 				ftStatus = FT_ResetDevice(ftDeviceHandle);
@@ -251,8 +248,8 @@ namespace zcockpit::cockpit::hardware
 
 	void FiController::timer(FT_HANDLE handle)
 	{
-		const int MAX_BUFFER_SIZE = 500;
-		const int EXPECTED_MESSAGE_SIZE = 25;
+		constexpr int MAX_BUFFER_SIZE = 500;
+		constexpr int EXPECTED_MESSAGE_SIZE = 25;
 		uint8_t buffer[MAX_BUFFER_SIZE];
 		uint8_t saved_msg[EXPECTED_MESSAGE_SIZE];
 		uint8_t * current_msg = nullptr;
@@ -390,7 +387,7 @@ namespace zcockpit::cockpit::hardware
 												const auto remaining_bytes = actual_bytes_read - i;
 												if (remaining_bytes >= EXPECTED_MESSAGE_SIZE)
 												{
-													auto device = device_iter->second;
+													const auto device = device_iter->second;
 													memcpy(device->get_buffer(), &buffer[i], 25);
 													device->bytes_read_by_timer_thread = 25;
 													device->timeout_counter = 0;
@@ -437,7 +434,7 @@ namespace zcockpit::cockpit::hardware
 											const auto remaining_bytes = actual_bytes_read - i;
 											if (remaining_bytes >= EXPECTED_MESSAGE_SIZE)
 											{
-												auto device = device_iter->second;
+												const auto device = device_iter->second;
 												memcpy(device->get_buffer(), &buffer[i], 25);
 												device->bytes_read_by_timer_thread = 25;
 												device->timeout_counter = 0;
@@ -525,7 +522,7 @@ namespace zcockpit::cockpit::hardware
 	}
 
 
-	void FiController::updateLights(int light_state)
+	void FiController::updateLights(int light_state) const
 	{
 		for (const auto& device : devices)
 		{
@@ -551,7 +548,7 @@ namespace zcockpit::cockpit::hardware
 		return result;
 	}
 	static DWORD adf_freq = 1000;
-	bool FiController::updateRadios()
+	bool FiController::updateRadios() const
 	{
 
 		static int read_cycle = 0;
@@ -728,8 +725,8 @@ namespace zcockpit::cockpit::hardware
 	{
 		// pmdg static const vector<double> flap_value =  { 0.0,	22.2,	45.8,	62.5,	77.8,	83.3,	87.5,	91.7,	100 };
 		// trailing edge flaps 0-100               up		1		2		5		10		15		25		30		40  
-		static const vector<double> flap_value = { 0.0,		4.0,	7.0,	11.0,	14.0,	17.0,	27.0,	33.0,	49.0 };
-		static const vector<double> gauge_value = { 0.0,	130.0,	250.0,	380.0,	500.0,	590.0,	670.0,	740.0,	820.0};
+		static const std::vector<double> flap_value = { 0.0,		4.0,	7.0,	11.0,	14.0,	17.0,	27.0,	33.0,	49.0 };
+		static const std::vector<double> gauge_value = { 0.0,	130.0,	250.0,	380.0,	500.0,	590.0,	670.0,	740.0,	820.0};
 
 		static const int size = flap_value.size();
 
@@ -751,7 +748,7 @@ namespace zcockpit::cockpit::hardware
 		return yL + dydx * (x - xL);                                              // linear interpolation
 	}
 
-	bool FiController::updateGauges()
+	bool FiController::updateGauges() const
 	{
 		bool status = VALID;
 		for (const auto& gauge : devices)
