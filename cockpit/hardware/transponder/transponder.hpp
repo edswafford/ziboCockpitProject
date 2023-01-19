@@ -57,27 +57,10 @@ namespace zcockpit::cockpit::hardware
 		void closeDown() const;
 
 
-		//static Transponder* instance()
-		//{
-		//	static mutex mutex;
-		//	if(!xpndrInstance)
-		//	{
-		//		std::lock_guard<std::mutex> lock(mutex);
-		//		if(!xpndrInstance)
-		//		{
-		//			xpndrInstance = new Transponder;
-		//		}
-		//	}
-
-		//	return xpndrInstance;
-		//}
-
 		static void drop()
 		{
 			static std::mutex mutex;
 			std::lock_guard<std::mutex> lock(mutex);
-//			delete xpndrInstance;
-//			xpndrInstance = 0;
 		}
 
 
@@ -85,8 +68,7 @@ namespace zcockpit::cockpit::hardware
 		void openEx();
 		void reopen(const char* deviceSerialNumber);
 		void setTimeouts(int readTimeout, int writeTimeout);
-
-//		static Transponder* xpndrInstance;
+		static Transponder* xpndrInstance;
 
 		Ftd2xxDevices* ftd2Devices;
 		FT_HANDLE ftDeviceHandle;

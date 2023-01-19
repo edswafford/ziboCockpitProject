@@ -41,27 +41,18 @@ public:
 
 
 
-	FT_DEVICE_LIST_INFO_NODE* getDevice(const std::string serialNumber)
-	{
-		get_devices();
-		if(devices.contains(serialNumber))
-		{
-			return (FT_DEVICE_LIST_INFO_NODE *)devices[serialNumber];
-		}
-		return nullptr;
-	}
+	FT_DEVICE_LIST_INFO_NODE* getDevice(const std::string serial_number);
 
 
 	void get_devices();
-	void closeDown() const;
+	void closeDown();
 
 private:
 	Ftd2xxDevices() = default;
 
 
 	static Ftd2xxDevices* xpndrInstance;
-	void free_devices() const;
 
-	std::unordered_map<std::string, FT_DEVICE_LIST_INFO_NODE *> devices;
+	std::unordered_map<std::string, std::unique_ptr<FT_DEVICE_LIST_INFO_NODE>> devices;
 };
 
