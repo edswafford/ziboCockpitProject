@@ -58,6 +58,10 @@ namespace zcockpit::cockpit::hardware
 			ftd2Devices->drop();
 		}
 
+		if(throttle) {
+			throttle->drop();
+		}
+
 		std::unique_lock<std::mutex> lk(event_thread_done_mutex);
 			condition.wait(lk, [this]
 				{
@@ -147,6 +151,7 @@ namespace zcockpit::cockpit::hardware
 			xpndr->initialize(Transponder::xponderSerialNumber, ftd2Devices->getDevice(Transponder::xponderSerialNumber));
 			xpndr->open(Transponder::xponderSerialNumber);
 
+			throttle = std::make_unique<ThrottleAndJoystick>(ac_model);
 
 			// Applications should not start the event thread until after their first call to libusb_open()
 			start_event_thread();

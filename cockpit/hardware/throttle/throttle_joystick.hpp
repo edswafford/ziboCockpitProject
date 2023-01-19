@@ -8,6 +8,7 @@
 #include "Vjoy/VjoyFeeder.h"
 #include "Iir.h"
 #include <xtree>
+#include "../../aircraft_model.hpp"
 
 namespace zcockpit::cockpit::hardware
 {
@@ -38,25 +39,25 @@ namespace zcockpit::cockpit::hardware
 	//
 	// Butterworth filter constants
 	//
-	const int order = 4; // 4th order (=2 biquads)
-	const float samplingrate = 40; // 1000; // Hz
-	const float cutoff_frequency = 1;// 5; // Hz
+	constexpr int order = 4; // 4th order (=2 biquads)
+	constexpr float samplingrate = 40; // 1000; // Hz
+	constexpr float cutoff_frequency = 1;// 5; // Hz
 
-	const double MAX_AXIS = 32768.0;
-	const double MAX_SPD_BRAKE = 32768.0;
-	const double MAX_THROTTLE = 32768.0;
-	const double MAX_REVERSER = 32768.0;
+	constexpr double MAX_AXIS = 32768.0;
+	constexpr double MAX_SPD_BRAKE = 32768.0;
+	constexpr double MAX_THROTTLE = 32768.0;
+	constexpr double MAX_REVERSER = 32768.0;
 
-	const double REVRSER_FULLSCALE = -0.316;
+	constexpr double REVRSER_FULLSCALE = -0.316;
 
-	const auto SPDBRK_DELTA = 50;
+	constexpr auto SPDBRK_DELTA = 50;
 	extern std::mutex pokeys_mutex;
 
 	class ThrottleAndJoystick
 	{
 	public:
 
-		ThrottleAndJoystick();
+		ThrottleAndJoystick(AircraftModel& ac_model);
 		void drop();
 		void static updateBeagleBonejoystick(JoystickDataStore& data);
 
@@ -113,7 +114,7 @@ namespace zcockpit::cockpit::hardware
 		void send_reverser_value(int side, double value) const;
 		void process_analogs();
 		void process_switches();
-		void flaps_simconnect_update(const unsigned flaps);
+		void flaps_xplane_update(const unsigned flaps);
 
 	//	static void update_throttle_HEALTH_text(const char* text, const COLOR color);
 		void update_eng1_min_text(const int val) const;
@@ -139,8 +140,8 @@ namespace zcockpit::cockpit::hardware
 		std::thread stepper_thread_for_testing;
 
 
-		bool stop_timer;
-		bool timer_has_stopped;
+		bool stop_timer{true};
+		bool timer_has_stopped{true};
 
 		std::mutex throttle_timer_mutex;
 		std::mutex timer_done_mutex;
@@ -183,6 +184,8 @@ namespace zcockpit::cockpit::hardware
 		static bool rev_deployed[2];
 
 	private:
+		AircraftModel& aircraft_model;
+
 		bool auto_throttle_toggle{ false };
 
 		int previous_speed_brake{ -100 };
@@ -245,18 +248,18 @@ namespace zcockpit::cockpit::hardware
 		int filter_evolution[2]{ 0,0 };
 		bool filter_has_settled{ false };
 
-		static const int MAX_EVOLUTIONS = 100;
+		static constexpr int MAX_EVOLUTIONS = 100;
 
 	public:
 
-		static const int REV_1 = 0;
-		static const int REV_2 = 1;
-		static const int ENG_1 = 2;
-		static const int ENG_2 = 3;
-		static const int SPBRK = 4;
-		//static const int FLAPS = 5;
+		static constexpr int REV_1 = 0;
+		static constexpr int REV_2 = 1;
+		static constexpr int ENG_1 = 2;
+		static constexpr int ENG_2 = 3;
+		static constexpr int SPBRK = 4;
+		//static constexpr int FLAPS = 5;
 
-		static const int MAX_AXES = 6;
+		static constexpr int MAX_AXES = 6;
 
 		double adc_threshold[MAX_AXES] = { 6, 6, 6, 6, 6};
 		double adc_previous_filtered[MAX_AXES] = { 100, 100, 100, 100, 100 };

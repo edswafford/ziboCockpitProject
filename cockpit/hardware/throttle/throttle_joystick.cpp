@@ -5,16 +5,29 @@
 #include <thread>
 #include <ctime>
 
-	extern logger LOG;
+#include "shared_types.hpp"
+
+extern logger LOG;
 
 namespace zcockpit::cockpit::hardware
 {
+	enum class Autothrottle_Modes : unsigned
+	{
+		BLANK = 0,		// Autothrottle Flight mode Annunicator is blank.  Servos are Inhibited
+		ARM = 1,		// No Autothrottle mode is engaged.  Servos are Inhibited
+		N1 = 2,			// Autothrottle maintains thrust at N1 limit
+		MCD_SPD = 3,	// Autothrottle maintains speed by MCP
+		FMC_SPD = 4,	// Autothrottle maintains speed by FMC
+		GA = 5,			// Autothrottle maintains thrust at reduced go-around setting
+		THR_HLD = 6,	// Autothrottle servos are Inhibited
+		RETARD = 7,		// Autothrottle move levers to aft stop.  Retard mode is followed by ARM
+		UNKNOWN = 8,
+	};
+
 	// STATIC
 	JoystickDataStore ThrottleAndJoystick::beagleBoneData;
 	bool ThrottleAndJoystick::beagleBoneFresh = false;
 
-
-	extern HWND mainHwnd;
 
 	sPoKeysDeviceStatus ThrottleAndJoystick::deviceStat_;
 	sPoKeysDeviceStatus ThrottleAndJoystick::deviceStat_flaps;
@@ -38,7 +51,7 @@ namespace zcockpit::cockpit::hardware
 	bool ThrottleAndJoystick::rev_deployed[2] = { false, false };
 	const std::set<int> inputs{
 		eng_1_idle_cutoff_sw,
-		eng_2_idle_cutoff_sw,
+		ENG_2_IDLE_CUTOFF_SW,
 		toga_sw,
 		auto_throttle_sw,
 		parking_brake_sw,
@@ -81,87 +94,85 @@ namespace zcockpit::cockpit::hardware
 		flaps_analog_input,
 	};
 
-	static const auto IDLE_OFFSET = 5;
-	static const auto LEFT_REVERSER_FUDGE_FACTOR = 200;  // compensate to the large amount of play in the pots
-	static const auto RIGHT_REVERSER_FUDGE_FACTOR = 210;  // compensate to the large amount of play in the pots
-	ThrottleAndJoystick::ThrottleAndJoystick()
+	static constexpr auto IDLE_OFFSET = 5;
+	static constexpr auto LEFT_REVERSER_FUDGE_FACTOR = 200;  // compensate to the large amount of play in the pots
+	static constexpr auto RIGHT_REVERSER_FUDGE_FACTOR = 210;  // compensate to the large amount of play in the pots
+	ThrottleAndJoystick::ThrottleAndJoystick(AircraftModel& ac_model) : aircraft_model(ac_model)
 	{
 
-		//update_throttle_HEALTH_text("No Connection", RED);
+		pokey_alive = init_pokeys();
+		const auto joy_status = vjoy_feeder.init_vjoy(1);
+		if (joy_status != Vjoy_State::Valid)
+		{
+			throw std::exception("Virtual Joystick Failure.  See log for details.");
+		}
+		vjoy_available = vjoy_feeder.aquire();
+		if (!vjoy_available)
+		{
+			auto msg = "Virtual Joystick Failure.  Device " + std::to_string(vjoy_feeder.get_id()) + " may not be enabled.";
+			throw std::exception(msg.c_str());
+		}
 
-		//pokey_alive = init_pokeys();
-		//const auto joy_status = vjoy_feeder.init_vjoy(1);
-		//if (joy_status != Vjoy_State::Valid)
-		//{
-		//	throw std::exception("Virtual Joystick Failure.  See log for details.");
-		//}
-		//vjoy_available = vjoy_feeder.aquire();
-		//if (!vjoy_available)
-		//{
-		//	auto msg = "Virtual Joystick Failure.  Device " + std::to_string(vjoy_feeder.get_id()) + " may not be enabled.";
-		//	throw std::exception(msg.c_str());
-		//}
+		initialize_calibration();
 
-		//initialize_calibration();
+		update_calibration_display();
 
-		//update_calibration_display();
+		//throttle_filtered[0] = eng_min[0];
+		//throttle_filtered[1] = eng_min[1];
+		for (auto i = 0; i < 5; i++) {
+			butterworth[i].setup(samplingrate, cutoff_frequency);
+		}
 
-		////throttle_filtered[0] = eng_min[0];
-		////throttle_filtered[1] = eng_min[1];
-		//for (auto i = 0; i < 5; i++) {
-		//	butterworth[i].setup(samplingrate, cutoff_frequency);
-		//}
-
-		//LOG() << "Starting Throttle Timer";
-		//// start timer thread
-		//timer_thread = std::thread([this]
-		//{
-		//	this->timer();
-		//});
+		LOG() << "Starting Throttle Timer";
+		// start timer thread
+		timer_thread = std::thread([this]
+		{
+			this->timer();
+		});
 
 	}
 
 	void ThrottleAndJoystick::drop()
 	{
-		//if (stepper_ctrl.is_initialized())
-		//{
-		//	stepper_ctrl.drop();
-		//}
+		if (stepper_ctrl.is_initialized())
+		{
+			stepper_ctrl.drop();
+		}
 
-		//// now we can stop the timer
-		//std::unique_lock<std::mutex> lk(timer_done_mutex);
-		//{
-		//	std::lock_guard<std::mutex> lock(throttle_timer_mutex);
-		//	stop_timer = true;
-		//	LOG() << "Request Throttle Timer to terminate";
-		//}
-		//condition.wait(lk, [this]
-		//{
-		//	return (this->timer_has_stopped);
-		//});
+		// now we can stop the timer
+		std::unique_lock<std::mutex> lk(timer_done_mutex);
+		{
+			std::lock_guard<std::mutex> lock(throttle_timer_mutex);
+			stop_timer = true;
+			LOG() << "Request Throttle Timer to terminate";
+		}
+		condition.wait(lk, [this]
+		{
+			return (this->timer_has_stopped);
+		});
 
-		//while (stepper_test_running)
-		//{
-		//	LOG() << "Waiting on Stepper TEST task";
-		//}
+		while (stepper_test_running)
+		{
+			LOG() << "Waiting on Stepper TEST task";
+		}
 
-		//while (stepper_running)
-		//{
-		//	LOG() << "Waiting on Stepper task";
-		//}
-		//if (stepper_thread.joinable())
-		//{
-		//	stepper_thread.join();
-		//}
-		//if (timer_thread.joinable())
-		//{
-		//	timer_thread.join();
-		//}
-		//if (pokey_alive)
-		//{
-		//	DisconnectPoKeysDevice();
-		//	TerminateWinsock(); //Clean up Winsock
-		//}
+		while (stepper_running)
+		{
+			LOG() << "Waiting on Stepper task";
+		}
+		if (stepper_thread.joinable())
+		{
+			stepper_thread.join();
+		}
+		if (timer_thread.joinable())
+		{
+			timer_thread.join();
+		}
+		if (pokey_alive)
+		{
+			DisconnectPoKeysDevice();
+			TerminateWinsock(); //Clean up Winsock
+		}
 		LOG() << "Throttle terminated: Goodby Throttle.";
 	}
 
@@ -175,163 +186,161 @@ namespace zcockpit::cockpit::hardware
 	{
 		stop_timer = false;
 		timer_has_stopped = false;
-		//while (true)
-		//{
-		//	// do we need to shut down
-		//	{
-		//		std::lock_guard<std::mutex> lock(throttle_timer_mutex);
-		//		if (stop_timer)
-		//		{
-		//			LOG() << "Throttle timer is stopping";
-		//			if (pokey_alive)
-		//			{
-		//				set_parking_brake_output(false);
-		//			}
-		//			break;
-		//		}
-		//	}
-		//	if (pokey_alive)
-		//	{
-		//		try
-		//		{
-		//			{
-		//				std::lock_guard<std::mutex> lock(pokeys_mutex);
-		//				process_throttle();
-		//			}
+		while (true)
+		{
+			// do we need to shut down
+			{
+				std::lock_guard<std::mutex> lock(throttle_timer_mutex);
+				if (stop_timer)
+				{
+					LOG() << "Throttle timer is stopping";
+					if (pokey_alive)
+					{
+						set_parking_brake_output(false);
+					}
+					break;
+				}
+			}
+			if (pokey_alive)
+			{
+				try
+				{
+					{
+						std::lock_guard<std::mutex> lock(pokeys_mutex);
+						process_throttle();
+					}
 
 
 
-		//			if (realtime_display_enabled)
-		//			{
-		//				if (current_cycle % FIVE_HZ == 0)
-		//				{
-		//					update_realtime_display();
-		//				}
-		//			}
-		//			if (calibration_enabled)
-		//			{
-		//				calibrate();
-		//			}
-		//			else
-		//			{
-		//				calibration_init = false;
-		//			}
-		//			if (save_calibration_)
-		//			{
-		//				save_calibration();
-		//			}
-		//			else if (cancel_calibration_)
-		//			{
-		//				// restore display with old calibration values
-		//				update_calibration_display();
-		//				cancel_calibration_ = false;
-		//				save_calibration_ = false;
-		//			}
+					if (realtime_display_enabled)
+					{
+						if (current_cycle % common::FIVE_HZ == 0)
+						{
+							update_realtime_display();
+						}
+					}
+					if (calibration_enabled)
+					{
+						calibrate();
+					}
+					else
+					{
+						calibration_init = false;
+					}
+					if (save_calibration_)
+					{
+						save_calibration();
+					}
+					else if (cancel_calibration_)
+					{
+						// restore display with old calibration values
+						update_calibration_display();
+						cancel_calibration_ = false;
+						save_calibration_ = false;
+					}
 
 
-		//			//
-		//			// Testing
-		//			//
-		//			if (increment_stepper)
-		//			{
-		//				if (!stepper_test_running)
-		//				{
-		//					stepper_thread_for_testing = std::thread([this]
-		//					{
-		//						//this->stepper_ctrl->step_forward(SPDBRK, 200);
-		//						if (stepper_ctrl.is_initialized())
-		//						{
-		//							stepper_ctrl.step_forward(LEFT_THROTTLE, 200);
-		//						}
-		//						//this->stepper_ctrl->step_reverse(RIGHT_THROTTLE, 200);
+					//
+					// Testing
+					//
+					if (increment_stepper)
+					{
+						if (!stepper_test_running)
+						{
+							stepper_thread_for_testing = std::thread([this]
+							{
+								//this->stepper_ctrl->step_forward(SPDBRK, 200);
+								if (stepper_ctrl.is_initialized())
+								{
+									stepper_ctrl.step_forward(LEFT_THROTTLE, 200);
+								}
+								//this->stepper_ctrl->step_reverse(RIGHT_THROTTLE, 200);
 
-		//					});
-		//					stepper_thread_for_testing.detach();
-		//					increment_stepper = false;
-		//				}
-		//				else
-		//				{
-		//					LOG() << "Stepper running";
-		//				}
-		//			}
-		//			else if (decrement_stepper)
-		//			{
-		//				if (!stepper_test_running)
-		//				{
-		//					stepper_thread_for_testing = std::thread([this]
-		//					{
-		//						//this->stepper_ctrl->step_reverse(SPDBRK, 200);
-		//						if (stepper_ctrl.is_initialized())
-		//						{
-		//							stepper_ctrl.step_reverse(LEFT_THROTTLE, 200);
-		//						}
-		//						//this->stepper_ctrl->step_forward(RIGHT_THROTTLE, 200);
+							});
+							stepper_thread_for_testing.detach();
+							increment_stepper = false;
+						}
+						else
+						{
+							LOG() << "Stepper running";
+						}
+					}
+					else if (decrement_stepper)
+					{
+						if (!stepper_test_running)
+						{
+							stepper_thread_for_testing = std::thread([this]
+							{
+								//this->stepper_ctrl->step_reverse(SPDBRK, 200);
+								if (stepper_ctrl.is_initialized())
+								{
+									stepper_ctrl.step_reverse(LEFT_THROTTLE, 200);
+								}
+								//this->stepper_ctrl->step_forward(RIGHT_THROTTLE, 200);
 
-		//					});
-		//					stepper_thread_for_testing.detach();
-		//					decrement_stepper = false;
-		//				}
-		//				else
-		//				{
-		//					LOG() << "Stepper running";
-		//				}
-		//			}
-		//		}
-		//		catch (std::exception& e)
-		//		{
-		//			pokey_alive = false;
-		//			LOG() << "Throttle Exception: " << e.what();
-		//		}
-		//	}
-		//	else
-		//	{
-		//		//
-		//		// Pokeys is NOT Running
-		//		//
-		//		// update Status
-		//		if (throttle_status_is_healthy)
-		//		{
-		//			throttle_status_is_healthy = false;
-		//			update_throttle_HEALTH_text("Connected", RED);
-		//		}
-		//		if (current_cycle % ONE_SECOND)
-		//		{
-		//			pokey_alive = init_pokeys();
-		//			if (pokey_alive)
-		//			{
-		//				throttle_status_is_healthy = true;
-		//				update_throttle_HEALTH_text("Connected", GREEN);
-		//			}
-		//		}
-		//	}
+							});
+							stepper_thread_for_testing.detach();
+							decrement_stepper = false;
+						}
+						else
+						{
+							LOG() << "Stepper running";
+						}
+					}
+				}
+				catch (std::exception& e)
+				{
+					pokey_alive = false;
+					LOG() << "Throttle Exception: " << e.what();
+				}
+			}
+			else
+			{
+				//
+				// Pokeys is NOT Running
+				//
+				// update Status
+				if (throttle_status_is_healthy)
+				{
+					throttle_status_is_healthy = false;
+				}
+				if (current_cycle % common::ONE_SECOND)
+				{
+					pokey_alive = init_pokeys();
+					if (pokey_alive)
+					{
+						throttle_status_is_healthy = true;
+					}
+				}
+			}
 
-		//	if (!stepper_thread.joinable() && stepper_ctrl.is_initialized())
-		//	{
-		//		LOG() << "Starting Stepper Timer";
-		//		stepper_thread = std::thread(&Step_Controller::timer);
-		//		//std::thread([this]
-		//		//{
-		//		//	this->stepper_ctrl.timer();
-		//		//});
-		//	}
-		//	//
-		//	// 1Hz task
-		//	if (current_cycle >= ONE_SECOND)
-		//	{
-		//		update_throttle_health();
-		//		sync_switches = true;
-		//		sync_flaps = true;
-		//	}
+			if (!stepper_thread.joinable() && stepper_ctrl.is_initialized())
+			{
+				LOG() << "Starting Stepper Timer";
+				stepper_thread = std::thread(&Step_Controller::timer);
+				//std::thread([this]
+				//{
+				//	this->stepper_ctrl.timer();
+				//});
+			}
+			//
+			// 1Hz task
+			if (current_cycle >= common::ONE_SECOND)
+			{
+				update_throttle_health();
+				sync_switches = true;
+				sync_flaps = true;
+			}
 
-		//	//
-		//	// sleep
-		//	//
-		//	// update rate is 20Hz
-		//	std::this_thread::sleep_for(std::chrono::milliseconds(HZ_40));
+			//
+			// sleep
+			//
+			// update rate is 40Hz
+			std::this_thread::sleep_for(std::chrono::milliseconds(common::HZ_40));
 
-		//	// update counters
-		//	current_cycle = (current_cycle >= ONE_SECOND) ? 0 : current_cycle + 1;
-		//}
+			// update counters
+			current_cycle = (current_cycle >= common::ONE_SECOND) ? 0 : current_cycle + 1;
+		}
 
 		// timer  has stopped
 		LOG() << "Throttle timer has stopped";
@@ -367,184 +376,184 @@ namespace zcockpit::cockpit::hardware
 		static int muxIndex = 0;
 		static bool cycle_20hz = true;
 
-		//if (pokey_alive)
-		//{
-		//	//
-		//	// FLAPS
-		//	//
-		//	process_analogs();
-		//	if (cycle_20hz)
-		//	{
-		//		if (GetDigitalAnalogInputs(&deviceStat_flaps, flaps_analog_input) == -1)
-		//	{
-		//		throw std::exception("PoKeys failed to read flaps.");
-		//	}
-		//		flapSensors[muxIndex] = deviceStat_flaps.Pins[flaps_analog_input].AnalogValue > 3700 ? 1 : 0;
-		//	muxIndex++;
-		//	if (muxIndex > 3)
-		//	{
-		//		muxIndex = 0;
-		//		const unsigned flaps = flapSensors[0] + (flapSensors[1] << 1) + (flapSensors[2] << 2) + (flapSensors[3] << 3);
-		//		if (flaps == previous_flaps)
-		//		{
-		//			if (flap_steady_state_count >= 3)
-		//			{
-		//				flap_steady_state_count = 3;
-		//				flaps_simconnect_update(flaps);
-		//			}
-		//			else
-		//			{
-		//				flap_steady_state_count += 1;
-		//			}
-		//		}
-		//		else
-		//		{
-		//			flap_steady_state_count = 0;
-		//		}
-		//		previous_flaps = flaps;
-		//	}
+		if (pokey_alive)
+		{
+			//
+			// FLAPS
+			//
+			process_analogs();
+			if (cycle_20hz)
+			{
+				if (GetDigitalAnalogInputs(&deviceStat_flaps, flaps_analog_input) == -1)
+			{
+				throw std::exception("PoKeys failed to read flaps.");
+			}
+				flapSensors[muxIndex] = deviceStat_flaps.Pins[flaps_analog_input].AnalogValue > 3700 ? 1 : 0;
+			muxIndex++;
+			if (muxIndex > 3)
+			{
+				muxIndex = 0;
+				const unsigned flaps = flapSensors[0] + (flapSensors[1] << 1) + (flapSensors[2] << 2) + (flapSensors[3] << 3);
+				if (flaps == previous_flaps)
+				{
+					if (flap_steady_state_count >= 3)
+					{
+						flap_steady_state_count = 3;
+						flaps_xplane_update(flaps);
+					}
+					else
+					{
+						flap_steady_state_count += 1;
+					}
+				}
+				else
+				{
+					flap_steady_state_count = 0;
+				}
+				previous_flaps = flaps;
+			}
 
-		//	// Select which MUX input to read
-		//	deviceStat_.Pins[mux_s0].DigitalOutputValue = (muxIndex & 1);
-		//	deviceStat_.Pins[mux_s1].DigitalOutputValue = (muxIndex >> 1) & 1;
-		//	deviceStat_.Pins[mux_s2].DigitalOutputValue = LOW;
+			// Select which MUX input to read
+			deviceStat_.Pins[mux_s0].DigitalOutputValue = (muxIndex & 1);
+			deviceStat_.Pins[mux_s1].DigitalOutputValue = (muxIndex >> 1) & 1;
+			deviceStat_.Pins[mux_s2].DigitalOutputValue = LOW;
 
-		//	//
-		//	// PARKING BRAKE
-		//	//
-		//	set_parking_brake_output(parking_brake == 0);
+			//
+			// PARKING BRAKE
+			//
+			set_parking_brake_output(parking_brake == 0);
 
-		//	//
-		//	// Process Switches
-		//	//
-		//	if (GetDigitalInputsStatus(&deviceStat_) == -1) // reads the current inputs
-		//	{
-		//		throw std::exception("PoKeys failed to read digital Inputs.");
-		//	}
-		//	process_switches();
+			//
+			// Process Switches
+			//
+			if (GetDigitalInputsStatus(&deviceStat_) == -1) // reads the current inputs
+			{
+				throw std::exception("PoKeys failed to read digital Inputs.");
+			}
+			process_switches();
 
-		//		//
-		//		// update Virtual Joystick
-		//		//
-		//		if(beagleBoneFresh)
-		//		{
-		//			// Aileron
-		//			vjoy.axisR = ThrottleAndJoystick::beagleBoneData.adc[1];
-		//			// Elevator
-		//			vjoy.axisS = ThrottleAndJoystick::beagleBoneData.adc[0];
-		//			//Rudder
-		//			vjoy.axisT = ThrottleAndJoystick::beagleBoneData.adc[3];
-		//			// left brake capt vs fo
-		//			if (ThrottleAndJoystick::beagleBoneData.adc[2] > 0) {
-		//				vjoy.axisU = ThrottleAndJoystick::beagleBoneData.adc[2];
-		//			}
-		//			else if (ThrottleAndJoystick::beagleBoneData.adc[6] > 100) {
-		//				vjoy.axisU = ThrottleAndJoystick::beagleBoneData.adc[5];
-		//			}
-		//			else {
-		//				vjoy.axisU = 0;
-		//			}
-		//			// right brake capt vs fo
-		//			if (ThrottleAndJoystick::beagleBoneData.adc[5] > 0) {
-		//				vjoy.axisV = ThrottleAndJoystick::beagleBoneData.adc[5];
-		//			}
-		//			else if (ThrottleAndJoystick::beagleBoneData.adc[4] > 100) {
-		//				vjoy.axisV = ThrottleAndJoystick::beagleBoneData.adc[4];
-		//			}
-		//			else {
-		//				vjoy.axisV = 0;
-		//			}
+				//
+				// update Virtual Joystick
+				//
+				if(beagleBoneFresh)
+				{
+					// Aileron
+					vjoy.axisR = ThrottleAndJoystick::beagleBoneData.adc[1];
+					// Elevator
+					vjoy.axisS = ThrottleAndJoystick::beagleBoneData.adc[0];
+					//Rudder
+					vjoy.axisT = ThrottleAndJoystick::beagleBoneData.adc[3];
+					// left brake capt vs fo
+					if (ThrottleAndJoystick::beagleBoneData.adc[2] > 0) {
+						vjoy.axisU = ThrottleAndJoystick::beagleBoneData.adc[2];
+					}
+					else if (ThrottleAndJoystick::beagleBoneData.adc[6] > 100) {
+						vjoy.axisU = ThrottleAndJoystick::beagleBoneData.adc[5];
+					}
+					else {
+						vjoy.axisU = 0;
+					}
+					// right brake capt vs fo
+					if (ThrottleAndJoystick::beagleBoneData.adc[5] > 0) {
+						vjoy.axisV = ThrottleAndJoystick::beagleBoneData.adc[5];
+					}
+					else if (ThrottleAndJoystick::beagleBoneData.adc[4] > 100) {
+						vjoy.axisV = ThrottleAndJoystick::beagleBoneData.adc[4];
+					}
+					else {
+						vjoy.axisV = 0;
+					}
 
-		//			if (ThrottleAndJoystick::beagleBoneData.ap_disconnect)
-		//			{
-		//				sendMessageInt(KEY_COMMAND_AUTOMATICFLIGHT_AUTOPILOT_DISCONNECT, 0);
-		//				simconnect_send_event_data(EVT_YOKE_L_AP_DISC_SWITCH, MOUSE_FLAG_LEFTSINGLE);
-		//			}	
-		//			if (ThrottleAndJoystick::beagleBoneData.trim_up) {
-		//				sendMessageInt(KEY_COMMAND_FLTCTRL_STAB_TRIM_UP, 0);
-		//			}
-		//			else if (ThrottleAndJoystick::beagleBoneData.trim_dn) {
-		//				sendMessageInt(KEY_COMMAND_FLTCTRL_STAB_TRIM_DOWN, 0);
-		//			}
-		//			vjoy_available = vjoy_feeder.update(vjoy, ThrottleAndJoystick::beagleBoneData.lButtons);
-		//			ThrottleAndJoystick::beagleBoneFresh = false;
-		//		}
-		//		else {
-		//			vjoy_available = vjoy_feeder.update(vjoy);
-		//		}
+					if (ThrottleAndJoystick::beagleBoneData.ap_disconnect)
+					{
+						//sendMessageInt(KEY_COMMAND_AUTOMATICFLIGHT_AUTOPILOT_DISCONNECT, 0);
+						//simconnect_send_event_data(EVT_YOKE_L_AP_DISC_SWITCH, MOUSE_FLAG_LEFTSINGLE);
+					}	
+					if (ThrottleAndJoystick::beagleBoneData.trim_up) {
+						//sendMessageInt(KEY_COMMAND_FLTCTRL_STAB_TRIM_UP, 0);
+					}
+					else if (ThrottleAndJoystick::beagleBoneData.trim_dn) {
+						//sendMessageInt(KEY_COMMAND_FLTCTRL_STAB_TRIM_DOWN, 0);
+					}
+					vjoy_available = vjoy_feeder.update(vjoy, ThrottleAndJoystick::beagleBoneData.lButtons);
+					ThrottleAndJoystick::beagleBoneFresh = false;
+				}
+				else {
+					vjoy_available = vjoy_feeder.update(vjoy);
+				}
 
-		//		{
-		//		//
-		//		// 0:blank;  1:N1;  2:GA;  3:RETARD;  4:FMC SPD;  5:MCP SPD;  6:THR HLD;  7:ARM
-		//		//
-		//		auto at_mode = Autothrottle_Modes::UNKNOWN;
-		//		enable_at_steppers = false;
-		//		static auto previous_enable_at_steppers = false;
+				{
+				//
+				// 0:blank;  1:ARM;  2:N1;  3:MCP SPD;  4:FMC SPD;  5:GA;  6:THR HLD;  7:RETARD
+				//
+				auto at_mode = Autothrottle_Modes::UNKNOWN;
+				enable_at_steppers = false;
+				static auto previous_enable_at_steppers = false;
 
-		//		if (Ifly737::shareMemSDK != nullptr && Ifly737::shareMemSDK->IFLY737NG_STATE)
-		//		{
-		//			if (at_mode != static_cast<Autothrottle_Modes>(Ifly737::shareMemSDK->Autothrottle_Mode))
-		//			{
-		//				at_mode = static_cast<Autothrottle_Modes>(Ifly737::shareMemSDK->Autothrottle_Mode);
+				if (aircraft_model.z738_is_available())
+				{
+				//	if (at_mode != static_cast<Autothrottle_Modes>(Ifly737::shareMemSDK->Autothrottle_Mode))
+					{
+				//		at_mode = static_cast<Autothrottle_Modes>(Ifly737::shareMemSDK->Autothrottle_Mode);
 
-		//				enable_at_steppers = !(at_mode == Autothrottle_Modes::ARM || at_mode == Autothrottle_Modes::THR_HLD || at_mode ==
-		//					Autothrottle_Modes::BLANK || at_mode == Autothrottle_Modes::UNKNOWN);
-		//			}
+						enable_at_steppers = !(at_mode == Autothrottle_Modes::ARM || at_mode == Autothrottle_Modes::THR_HLD || at_mode ==
+							Autothrottle_Modes::BLANK || at_mode == Autothrottle_Modes::UNKNOWN);
+					}
 
-		//			if (ThrottleAndJoystick::disengage_auto_throttle == 0)
-		//			{
-		//				enable_at_steppers = false;
-		//				previous_enable_at_steppers = false;
-		//				LOG() << "Stepper Disengage auto throttle";
-		//			}
-
-
-		//			if (Ifly737::shareMemSDK->AT_Switches_Status && enable_at_steppers)
-		//			{
-		//				previous_enable_at_steppers = enable_at_steppers;
-		//				auto scaler = (100 - FsxSimConnect::left_throttle_position) / 100 * 0.27;
-		//				left_n1_commanded = 20.6 + (FsxSimConnect::left_throttle_position * (0.93 + scaler));
-		//				if (left_n1_commanded < 0.0)
-		//				{
-		//					left_n1_commanded = 0.0;
-		//				}
-
-		//				scaler = (100 - FsxSimConnect::right_throttle_position) / 100 * 0.27;
-		//				right_n1_commanded = 20.6 + (FsxSimConnect::right_throttle_position * (0.93 + scaler));
-		//				if (right_n1_commanded < 0.0)
-		//				{
-		//					right_n1_commanded = 0.0;
-		//				}
-		//			}
-		//			else if (previous_enable_at_steppers && !auto_throttle_is_disengaged)
-		//			{
-		//				// don't turn off steppers until they have caught up with the last commanded value
-		//				// Determine % throttle
-		//					const auto left_throttle_precent = 100.0 * (static_cast<double>(adc_normalized[ENG_1] + IDLE_OFFSET)/32768.0 );
-		//				const auto left_delta_value = left_n1_commanded - left_throttle_precent;
-
-		//					const auto right_throttle_precent = 100.0 *  (static_cast<double>(adc_normalized[ENG_2] + IDLE_OFFSET) / 32768.0);
-		//				const auto right_delta_value = right_n1_commanded - right_throttle_precent;
-		//				if (abs(left_delta_value) > 2.0 || abs(right_delta_value) > 2.0)
-		//				{
-		//					enable_at_steppers = true;
-		//				}
-		//				else
-		//				{
-		//					previous_enable_at_steppers = enable_at_steppers;
-		//				}
-		//			}
-		//		}
-		//	}
+					if (ThrottleAndJoystick::disengage_auto_throttle == 0)
+					{
+						enable_at_steppers = false;
+						previous_enable_at_steppers = false;
+						LOG() << "Stepper Disengage auto throttle";
+					}
 
 
-		//	}
-		//	cycle_20hz != cycle_20hz;
-		//}
+					//if (Ifly737::shareMemSDK->AT_Switches_Status && enable_at_steppers)
+					{
+						previous_enable_at_steppers = enable_at_steppers;
+						//auto scaler = (100 - FsxSimConnect::left_throttle_position) / 100 * 0.27;
+						//left_n1_commanded = 20.6 + (FsxSimConnect::left_throttle_position * (0.93 + scaler));
+						if (left_n1_commanded < 0.0)
+						{
+							left_n1_commanded = 0.0;
+						}
+
+						//scaler = (100 - FsxSimConnect::right_throttle_position) / 100 * 0.27;
+						//right_n1_commanded = 20.6 + (FsxSimConnect::right_throttle_position * (0.93 + scaler));
+						if (right_n1_commanded < 0.0)
+						{
+							right_n1_commanded = 0.0;
+						}
+					}
+					//else if (previous_enable_at_steppers && !auto_throttle_is_disengaged)
+					{
+						// don't turn off steppers until they have caught up with the last commanded value
+						// Determine % throttle
+							const auto left_throttle_precent = 100.0 * (static_cast<double>(adc_normalized[ENG_1] + IDLE_OFFSET)/32768.0 );
+						const auto left_delta_value = left_n1_commanded - left_throttle_precent;
+
+							const auto right_throttle_precent = 100.0 *  (static_cast<double>(adc_normalized[ENG_2] + IDLE_OFFSET) / 32768.0);
+						const auto right_delta_value = right_n1_commanded - right_throttle_precent;
+						if (abs(left_delta_value) > 2.0 || abs(right_delta_value) > 2.0)
+						{
+							enable_at_steppers = true;
+						}
+						else
+						{
+							previous_enable_at_steppers = enable_at_steppers;
+						}
+					}
+				}
+			}
+
+
+			}
+			cycle_20hz != cycle_20hz;
+		}
 	}
 
 
-	void ThrottleAndJoystick::flaps_simconnect_update(const unsigned flaps)
+	void ThrottleAndJoystick::flaps_xplane_update(const unsigned flaps)
 	{
 		//switch (flaps)
 		//{
@@ -648,110 +657,110 @@ namespace zcockpit::cockpit::hardware
 	void ThrottleAndJoystick::process_analogs()
 	{
 
-	//	if (GetAllAnalogInputs(adc_raw, eng_1_reverser_analog_input) == -1)
-	//	{
-	//		LOG() << "PoKeys failed to read Analogs" ;
-	//		throw std::exception("PoKeys failed to read Analogs.");
-	//	}
-	//	//
-	//	// Spike Filter
-	//	//
-	//	for (int i = 0; i < MAX_AXES; i++) {
-	//		if (abs(adc_raw[i] - adc_previous_raw[i]) > SPIKE_THRESHOLD[i]) {
-	//			//LOG() << "REV Spike  i == " << i << " adc raw " << adc_raw[i] << " count " << spike_index[i];
-	//			if (spike_index[i] < MAX_SPIKES[i]) {
-	//				spikes[spike_index[i]][i] = adc_raw[i];
-	//				spike_index[i] += 1;
-	//				adc_raw[i] = adc_previous_raw[i];
-	//			}
-	//			else {
-	//				if (i == 0 || i == 1) {
-	//					LOG() << "MAX REV Spike  i == " << i << " adc raw " << adc_raw[i];
-	//				}
-	//				spike_index[i] = 0;
-	//				int sum = 0;
-	//				for (int j = 0; j < MAX_SPIKES[i]; j++) {
-	//					sum += spikes[j][i];
-	//				}
-	//				spike_index[i] = 0;
-	//				adc_raw[i] = sum / MAX_SPIKES[i];
-	//				adc_previous_raw[i] = adc_raw[i];
-	//			}
-	//		}
-	//		else {
-	//			spike_index[i] = 0;
-	//			adc_previous_raw[i] = adc_raw[i];
-	//		}
-	//	}
-	///*
-	//	char buffer[1024];
-	//#pragma warning(disable:4996)
-	//	sprintf(buffer, "Analog [0] %6d [1] %6d [2] %6d [3] %6d [4] %6d [5] %6d",
-	//		adc_raw[REV_1], adc_raw[REV_2], adc_raw[ENG_1],
-	//		adc_raw[ENG_2], adc_raw[SPBRK], adc_raw[FLAPS]);
-	//	LOG() << buffer;
-	//
-	//#pragma warning(enable:4996)
-	//*/
-	//
-	//		process_reverser(eng_1_reverser_analog_input, REV_1, EVT_CONTROL_STAND_REV_THRUST1_LEVER);
-	//		process_reverser(eng_2_reverser_analog_input, REV_2, EVT_CONTROL_STAND_REV_THRUST2_LEVER);
-	//
-	//		filter_analogs(eng_1_thrust_analog_input, ENG_1);
-	//		if (rev_deployed[0])
-	//		{
-	//			vjoy.axisX = 0.0;
-	//		}
-	//		else if (!enable_at_steppers)
-	//		{
-	//			vjoy.axisX = adc_normalized[ENG_1];
-	//		}
-	//
-	//		filter_analogs(eng_2_thrust_analog_input, ENG_2);
-	//		if (rev_deployed[1])
-	//		{
-	//			vjoy.axisX = 0.0;
-	//		}
-	//		else if (!enable_at_steppers)
-	//		{
-	//			vjoy.axisY = adc_normalized[ENG_2];
-	//		}
-	//
-	//		filter_analogs(spoiler_analog_input, SPBRK);
-	//		if (filter_has_settled) {
-	//			double spdbrk = (-adc_normalized[SPBRK] + 32768.0);
-	//
-	//			speed_brake = static_cast<int>(spdbrk / 32768.0 * 208);
-	//				//previous_speed_brake = speed_brake;
-	//				if (speed_brake < 20) {
-	//					//vjoy.axisZ = 4000.0;
-	//					sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_SPOILER_POS, 0);
-	//					//
-	//					// Spoiler handle position [0: Retracted, 1.0: Fully Extended] 
-	//					simconnect_send_spoiler_position(0.0);
-	//				}
-	//				else if(speed_brake < 30) {
-	//					//speed_brake = 25;
-	//					sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_SPOILER_ARMED, 1);
-	//				}
-	//				else {
-	//					//vjoy.axisZ = spdbrk;
-	//					sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_SPOILER_POS, speed_brake);
-	//					//
-	//					// Spoiler handle position [0: Retracted, 1.0: Fully Extended] 
-	//					simconnect_send_spoiler_position(spdbrk / 32768.0);
-	//				}
-	//
-	//
-	//
-	//			//if (send_speed_brake) {
-	//			////	LOG() << "SpeedBrake  " << speed_brake;
-	//			//	sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_SPOILER_POS, speed_brake);
-	//			//}
-	//			//send_speed_brake = !send_speed_brake;
-	//
-	//			//LOG() << "SpeedBrake Ifly Actual " << Ifly737::shareMemSDK->SpoilerPos << "     FSX Actual " << FsxSimConnect::spoiler_handle_position << "      Input Simconnect " << spdbrk/32768.0;
-	//		}
+		if (GetAllAnalogInputs(adc_raw, eng_1_reverser_analog_input) == -1)
+		{
+			LOG() << "PoKeys failed to read Analogs" ;
+			throw std::exception("PoKeys failed to read Analogs.");
+		}
+		//
+		// Spike Filter
+		//
+		for (int i = 0; i < MAX_AXES; i++) {
+			if (abs(adc_raw[i] - adc_previous_raw[i]) > SPIKE_THRESHOLD[i]) {
+				//LOG() << "REV Spike  i == " << i << " adc raw " << adc_raw[i] << " count " << spike_index[i];
+				if (spike_index[i] < MAX_SPIKES[i]) {
+					spikes[spike_index[i]][i] = adc_raw[i];
+					spike_index[i] += 1;
+					adc_raw[i] = adc_previous_raw[i];
+				}
+				else {
+					if (i == 0 || i == 1) {
+						LOG() << "MAX REV Spike  i == " << i << " adc raw " << adc_raw[i];
+					}
+					spike_index[i] = 0;
+					int sum = 0;
+					for (int j = 0; j < MAX_SPIKES[i]; j++) {
+						sum += spikes[j][i];
+					}
+					spike_index[i] = 0;
+					adc_raw[i] = sum / MAX_SPIKES[i];
+					adc_previous_raw[i] = adc_raw[i];
+				}
+			}
+			else {
+				spike_index[i] = 0;
+				adc_previous_raw[i] = adc_raw[i];
+			}
+		}
+	/*
+		char buffer[1024];
+	#pragma warning(disable:4996)
+		sprintf(buffer, "Analog [0] %6d [1] %6d [2] %6d [3] %6d [4] %6d [5] %6d",
+			adc_raw[REV_1], adc_raw[REV_2], adc_raw[ENG_1],
+			adc_raw[ENG_2], adc_raw[SPBRK], adc_raw[FLAPS]);
+		LOG() << buffer;
+	
+	#pragma warning(enable:4996)
+	*/
+	
+//			process_reverser(eng_1_reverser_analog_input, REV_1, EVT_CONTROL_STAND_REV_THRUST1_LEVER);
+//			process_reverser(eng_2_reverser_analog_input, REV_2, EVT_CONTROL_STAND_REV_THRUST2_LEVER);
+	
+			filter_analogs(eng_1_thrust_analog_input, ENG_1);
+			if (rev_deployed[0])
+			{
+				vjoy.axisX = 0.0;
+			}
+			else if (!enable_at_steppers)
+			{
+				vjoy.axisX = adc_normalized[ENG_1];
+			}
+	
+			filter_analogs(eng_2_thrust_analog_input, ENG_2);
+			if (rev_deployed[1])
+			{
+				vjoy.axisX = 0.0;
+			}
+			else if (!enable_at_steppers)
+			{
+				vjoy.axisY = adc_normalized[ENG_2];
+			}
+	
+			filter_analogs(spoiler_analog_input, SPBRK);
+			if (filter_has_settled) {
+				double spdbrk = (-adc_normalized[SPBRK] + 32768.0);
+	
+				speed_brake = static_cast<int>(spdbrk / 32768.0 * 208);
+					//previous_speed_brake = speed_brake;
+					if (speed_brake < 20) {
+						//vjoy.axisZ = 4000.0;
+//						sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_SPOILER_POS, 0);
+						//
+						// Spoiler handle position [0: Retracted, 1.0: Fully Extended] 
+//						simconnect_send_spoiler_position(0.0);
+					}
+					else if(speed_brake < 30) {
+						//speed_brake = 25;
+//						sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_SPOILER_ARMED, 1);
+					}
+					else {
+						//vjoy.axisZ = spdbrk;
+//						sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_SPOILER_POS, speed_brake);
+						//
+						// Spoiler handle position [0: Retracted, 1.0: Fully Extended] 
+//						simconnect_send_spoiler_position(spdbrk / 32768.0);
+					}
+	
+	
+	
+				//if (send_speed_brake) {
+				////	LOG() << "SpeedBrake  " << speed_brake;
+				//	sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_SPOILER_POS, speed_brake);
+				//}
+				//send_speed_brake = !send_speed_brake;
+	
+				//LOG() << "SpeedBrake Ifly Actual " << Ifly737::shareMemSDK->SpoilerPos << "     FSX Actual " << FsxSimConnect::spoiler_handle_position << "      Input Simconnect " << spdbrk/32768.0;
+			}
 
 	}
 
@@ -1145,87 +1154,87 @@ namespace zcockpit::cockpit::hardware
 	{
 		LOG() << "Pokeys: Starting Initialization";
 
-		//// Initialize Winsock
-		//if (InitWinsock() != 0)
-		//{
-		//	LOG() << "Throttle: Failed to initialize Winsock for Pokeys.";
-		//	return false;
-		//};
+		// Initialize Winsock
+		if (InitWinsock() != 0)
+		{
+			LOG() << "Throttle: Failed to initialize Winsock for Pokeys.";
+			return false;
+		};
 
-		//// Enumerate PoKeys devices
-		//const int numDevices = EnumeratePoKeysDevices(PoKeysDevices);
+		// Enumerate PoKeys devices
+		const int numDevices = EnumeratePoKeysDevices(PoKeysDevices);
 
-		//if (numDevices == 0)
-		//{
-		//	LOG() << "Throttle: No PoKeys devices found!";
-		//	TerminateWinsock();
-		//	return false;
-		//}
+		if (numDevices == 0)
+		{
+			LOG() << "Throttle: No PoKeys devices found!";
+			TerminateWinsock();
+			return false;
+		}
 
-		//// Connect to first PoKeys device
-		//if (ConnectToPoKeysDevice(&PoKeysDevices[0]) != 0)
-		//{
-		//	LOG() << "Throttle: Could not connect to PoKeys board!\n";
-		//	TerminateWinsock();
-		//	return false;
-		//}
+		// Connect to first PoKeys device
+		if (ConnectToPoKeysDevice(&PoKeysDevices[0]) != 0)
+		{
+			LOG() << "Throttle: Could not connect to PoKeys board!\n";
+			TerminateWinsock();
+			return false;
+		}
 
-		//// Fill the device info structure
-		//GetDeviceData(&deviceStat_);
+		// Fill the device info structure
+		GetDeviceData(&deviceStat_);
 
-		//// Initialize Pins
-		//for (auto i = 0; i < 55; i++)
-		//{
-		//	// Clear all digital outputs
-		//	deviceStat_.Pins[i].DigitalOutputValue = 0;
+		// Initialize Pins
+		for (auto i = 0; i < 55; i++)
+		{
+			// Clear all digital outputs
+			deviceStat_.Pins[i].DigitalOutputValue = 0;
 
-		//	if (inputs.find(i) != inputs.end())
-		//	{
-		//		deviceStat_.Pins[i].PinFunction = pinFunctionDigitalInput;
-		//	}
-		//	else if (outputs.find(i) != outputs.end())
-		//	{
-		//		deviceStat_.Pins[i].PinFunction = pinFunctionDigitalOutput;
-		//	}
-		//	else if (analog_inputs.find(i) != analog_inputs.end())
-		//	{
-		//		deviceStat_.Pins[i].PinFunction = pinFunctionAnalogInput;
-		//	}
-		//	else
-		//	{
-		//		deviceStat_.Pins[i].PinFunction = pinFunctionInactive;
-		//	}
-		//}
+			if (inputs.find(i) != inputs.end())
+			{
+				deviceStat_.Pins[i].PinFunction = pinFunctionDigitalInput;
+			}
+			else if (outputs.find(i) != outputs.end())
+			{
+				deviceStat_.Pins[i].PinFunction = pinFunctionDigitalOutput;
+			}
+			else if (analog_inputs.find(i) != analog_inputs.end())
+			{
+				deviceStat_.Pins[i].PinFunction = pinFunctionAnalogInput;
+			}
+			else
+			{
+				deviceStat_.Pins[i].PinFunction = pinFunctionInactive;
+			}
+		}
 
-		//// Set pin directions (this must be called on every device startup since outputs are not activated before!)
-		//SetPinFunctions(&deviceStat_);
+		// Set pin directions (this must be called on every device startup since outputs are not activated before!)
+		SetPinFunctions(&deviceStat_);
 
-		//// Set the outputs
-		//deviceStat_.Pins[mux_s0].DigitalOutputValue = HIGH;
-		//deviceStat_.Pins[mux_s1].DigitalOutputValue = HIGH;
-		//deviceStat_.Pins[mux_s2].DigitalOutputValue = LOW;
+		// Set the outputs
+		deviceStat_.Pins[mux_s0].DigitalOutputValue = HIGH;
+		deviceStat_.Pins[mux_s1].DigitalOutputValue = HIGH;
+		deviceStat_.Pins[mux_s2].DigitalOutputValue = LOW;
 
-		////
-		//// Set up Stepper Motors
-		////
-		//left_throttle = std::make_unique<Stepper>(eng_1_stp, eng_1_dir, eng_1_EN,
-		//	eng_1_thrust_analog_input, IDLE_OFFSET, eng_min[LEFT], eng_max[LEFT], eng_min[LEFT] + 100, eng_max[LEFT] - 100);
+		//
+		// Set up Stepper Motors
+		//
+		left_throttle = std::make_unique<Stepper>(eng_1_stp, eng_1_dir, eng_1_EN,
+			eng_1_thrust_analog_input, IDLE_OFFSET, eng_min[LEFT], eng_max[LEFT], eng_min[LEFT] + 100, eng_max[LEFT] - 100);
 
-		//right_throttle = std::make_unique<Stepper>(eng_2_stp, eng_2_dir, eng_2_EN,
-		//	eng_2_thrust_analog_input, IDLE_OFFSET, eng_min[RIGHT], eng_max[RIGHT], eng_min[RIGHT] + 100, eng_max[RIGHT] - 100);
+		right_throttle = std::make_unique<Stepper>(eng_2_stp, eng_2_dir, eng_2_EN,
+			eng_2_thrust_analog_input, IDLE_OFFSET, eng_min[RIGHT], eng_max[RIGHT], eng_min[RIGHT] + 100, eng_max[RIGHT] - 100);
 
-		//spoiler = std::make_unique<Stepper>(spoiler_stp, spoiler_dir, spoiler_EN,
-		//	spoiler_analog_input, 0, spdbrk_min, spdbrk_max, spdbrk_min + 500, spdbrk_max - 400);
-		//stepper_ctrl.initialize(left_throttle.get(), right_throttle.get(), spoiler.get());
+		spoiler = std::make_unique<Stepper>(spoiler_stp, spoiler_dir, spoiler_EN,
+			spoiler_analog_input, 0, spdbrk_min, spdbrk_max, spdbrk_min + 500, spdbrk_max - 400);
+		stepper_ctrl.initialize(left_throttle.get(), right_throttle.get(), spoiler.get());
 
-		//deviceStat_.Pins[left_throttle->en_].DigitalOutputValue = LOW;
-		//deviceStat_.Pins[right_throttle->en_].DigitalOutputValue = LOW;
-		//deviceStat_.Pins[spoiler->en_].DigitalOutputValue = LOW;
+		deviceStat_.Pins[left_throttle->en_].DigitalOutputValue = LOW;
+		deviceStat_.Pins[right_throttle->en_].DigitalOutputValue = LOW;
+		deviceStat_.Pins[spoiler->en_].DigitalOutputValue = LOW;
 
-		//SetDigitalOutputs(&deviceStat_); // Sets the outputs and reads the inputs
+		SetDigitalOutputs(&deviceStat_); // Sets the outputs and reads the inputs
 
-		//sync_switches = true;
-		//sync_flaps = true;
+		sync_switches = true;
+		sync_flaps = true;
 
 		LOG() << "Pokeys: Initialization Successful";
 

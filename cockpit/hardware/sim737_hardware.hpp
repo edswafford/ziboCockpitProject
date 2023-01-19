@@ -7,6 +7,7 @@
 #include "logger.hpp"
 #include "flight_illusion/ficontroller.hpp"
 #include "ftd2xx/ftd2xxdevices_wrapper.hpp"
+#include "throttle/throttle_joystick.hpp"
 #include "transponder/transponder.hpp"
 #include "usb/usbrelay.hpp"
 
@@ -61,6 +62,8 @@ namespace zcockpit::cockpit::hardware
 		std::unique_ptr<FiController> overheadGauges;
 		std::unique_ptr<FiController> mipGauges;
 		std::unique_ptr<Transponder> xpndr;
+		std::unique_ptr<ThrottleAndJoystick> throttle;
+
 
 		void do_usb_work();
 		void start_event_thread();
