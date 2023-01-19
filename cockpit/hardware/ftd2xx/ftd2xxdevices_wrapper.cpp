@@ -3,22 +3,18 @@
 
 extern logger LOG;
 
-Ftd2xxDevices * Ftd2xxDevices::xpndrInstance = nullptr;
 
-
-void Ftd2xxDevices::closeDown()
-{
-    devices.clear();
-    drop();
-}
 
 Ftd2xxDevices::~Ftd2xxDevices() {
+	devices.clear();
     LOG() << "	closing Ftd2xxDevices";
 }
 
 FT_DEVICE_LIST_INFO_NODE* Ftd2xxDevices::getDevice(const std::string serial_number)
 {
-	get_devices();
+    if(devices.empty() || !devices.contains(serial_number)){
+		get_devices();
+    }
 	if(devices.contains(serial_number))
 	{
 		const auto& device = devices[serial_number];

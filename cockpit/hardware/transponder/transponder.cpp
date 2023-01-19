@@ -15,14 +15,14 @@ namespace zcockpit::cockpit::hardware
 	static constexpr int COMMAND_SIZE = 4;
 	//using namespace std;
 
-	Transponder::Transponder(): xpndr_mode(-1), xpndr_atc(-1), xpndr_alt(-1), valid(false), randomInt(0),
+	Transponder::Transponder(Ftd2xxDevices& ftd_2xx_devices):
+		ftd2Devices(ftd_2xx_devices),
+		xpndr_mode(-1), xpndr_atc(-1), xpndr_alt(-1), valid(false), randomInt(0),
 	                            rplyCnt(3), stbySelected(false), releaseIdent(false), xpnd_previous_digits{{ 0xFF,0xFF,0xFF,0xFF }}, ifly_xpnd_previous_digits{{0,0,0,0}},
 	                            ifly_xpnd_expected_digits{{0xFF,0xFF,0xFF,0xFF }}, ifly_xpnd_expected_cnt{{0,0,0,0}},
 	                            ifly_xpndr_stable_cnt(0), xpndr_needs_sync{{false,false,false,false}}
 	{
 		Available(false);
-
-		ftd2Devices = Ftd2xxDevices::instance();
 
 	}
 
@@ -184,7 +184,7 @@ namespace zcockpit::cockpit::hardware
 	void Transponder::reopen(const char* deviceSerialNumber)
 	{
 		// look for device
-		FT_DEVICE_LIST_INFO_NODE* dev_info = ftd2Devices->getDevice(deviceSerialNumber);
+		FT_DEVICE_LIST_INFO_NODE* dev_info = ftd2Devices.getDevice(deviceSerialNumber);
 		if(dev_info != nullptr)
 		{
 			initialize(deviceSerialNumber, dev_info);

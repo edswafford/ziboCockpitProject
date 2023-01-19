@@ -40,7 +40,7 @@ namespace zcockpit::cockpit::hardware
 		bool updateRadios() const;
 
 		FiController() = delete;
-		FiController(AircraftModel& ac_model, int updates_per_second);
+		FiController(Ftd2xxDevices& ftd2_xx_devices, AircraftModel& ac_model, int updates_per_second);
 		~FiController();
 
 		void addGauge(int ID, FiDevice::DEVICE_Type type, double scaleFactor, int minValue, int maxValue, int offset, double K, FiDevice::FI_DEVICE_CMD needleCmd, int max_send_count = 3);
@@ -65,7 +65,7 @@ namespace zcockpit::cockpit::hardware
 		AircraftModel& aircraft_model;
 
 
-		Ftd2xxDevices* ftd2Devices;
+		Ftd2xxDevices& ftd2Devices;
 
 		FT_HANDLE ftDeviceHandle;
 
