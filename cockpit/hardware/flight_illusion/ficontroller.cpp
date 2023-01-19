@@ -15,10 +15,10 @@ namespace zcockpit::cockpit::hardware
 
 
 
-	FiController::FiController(Ftd2xxDevices& ftd2_xx_devices, AircraftModel& ac_model, int updates_per_second) :
-		ftd2Devices(ftd2_xx_devices),
+	FiController::FiController(AircraftModel& ac_model, int updates_per_second) :
 		aircraft_model(ac_model), ftDeviceHandle(nullptr), serialNumber(nullptr), deviceValidationIndex(0), updates_per_second(updates_per_second)
 	{
+		ftd2Devices = Ftd2xxDevices::instance();
 	}
 
 	void FiController::addGauge(int gaugeID, FiDevice::DEVICE_Type type, double scaleFactor, int minGaugeValue, int maxGaugeValue, int offset, double K, FiDevice::FI_DEVICE_CMD needleCmd, int max_send_count)
@@ -140,7 +140,7 @@ namespace zcockpit::cockpit::hardware
 			drop();
 		}
 		// look for device
-		FT_DEVICE_LIST_INFO_NODE* dev_info = ftd2Devices.getDevice(deviceSerialNumber);
+		FT_DEVICE_LIST_INFO_NODE* dev_info = ftd2Devices->getDevice(deviceSerialNumber);
 		if (dev_info != nullptr)
 		{
 			initialize(deviceSerialNumber, dev_info);

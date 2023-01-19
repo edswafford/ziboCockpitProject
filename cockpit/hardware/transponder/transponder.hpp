@@ -17,8 +17,7 @@ namespace zcockpit::cockpit::hardware
 	{
 	public:
 		static const char* xponderSerialNumber;
-		Transponder() = delete;
-		Transponder(Ftd2xxDevices& ftd_2xx_devices);
+		Transponder();
 		~Transponder();
 		Transponder(const Transponder&) = delete;
 		Transponder& operator=(const Transponder&) = delete;
@@ -71,7 +70,7 @@ namespace zcockpit::cockpit::hardware
 		void setTimeouts(int readTimeout, int writeTimeout);
 		static Transponder* xpndrInstance;
 
-		Ftd2xxDevices& ftd2Devices;
+		Ftd2xxDevices* ftd2Devices;
 		FT_HANDLE ftDeviceHandle;
 
 		const char* serialNumber;

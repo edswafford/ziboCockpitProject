@@ -57,7 +57,7 @@ namespace zcockpit::cockpit::hardware
 		std::unique_ptr<RearOverheadIOCard> rear_overhead_iocard;
 		std::unique_ptr<USBRelay> usb_relay;
 
-		Ftd2xxDevices ftd2Devices;
+		Ftd2xxDevices* ftd2Devices{nullptr};
 		std::unique_ptr<FiController> overheadGauges;
 		std::unique_ptr<FiController> mipGauges;
 		std::unique_ptr<Transponder> xpndr;

@@ -53,8 +53,10 @@ namespace zcockpit::cockpit::hardware
 			xpndr->closeDown();
 			Transponder::drop();
 		}
-
-
+		if (ftd2Devices) {
+			ftd2Devices->closeDown();
+			ftd2Devices->drop();
+		}
 
 		std::unique_lock<std::mutex> lk(event_thread_done_mutex);
 			condition.wait(lk, [this]
@@ -125,23 +127,24 @@ namespace zcockpit::cockpit::hardware
 			usb_relay->open();
 
 			// FTD 2XX Devices
-			ftd2Devices.get_devices();
+			ftd2Devices = Ftd2xxDevices::instance();
+			ftd2Devices->get_devices();
 
 			// Flight Illusion Gauges and Radios
-			mipGauges = std::make_unique<FiController>(ftd2Devices, ac_model, ONE_SECOND / FIVE_HZ);
-			mipGauges->initialize(FiController::mipSerialNumber, ftd2Devices.getDevice(FiController::mipSerialNumber));
+			mipGauges = std::make_unique<FiController>(ac_model, ONE_SECOND / FIVE_HZ);
+			mipGauges->initialize(FiController::mipSerialNumber, ftd2Devices->getDevice(FiController::mipSerialNumber));
 			mipGauges->open(FiController::mipSerialNumber);
 			build_mip_gauges();
 			mipGauges->start_timer(mipGauges->FtHandle());
 
-			overheadGauges = std::make_unique<FiController>(ftd2Devices, ac_model, ONE_SECOND / FIVE_HZ);
-			overheadGauges->initialize(FiController::overheadSerialNumber, ftd2Devices.getDevice(FiController::overheadSerialNumber));
+			overheadGauges = std::make_unique<FiController>(ac_model, ONE_SECOND / FIVE_HZ);
+			overheadGauges->initialize(FiController::overheadSerialNumber, ftd2Devices->getDevice(FiController::overheadSerialNumber));
 			overheadGauges->open(FiController::overheadSerialNumber);
 			build_overhead_gauges();
 			overheadGauges->start_timer(overheadGauges->FtHandle());
 
-			xpndr = std::make_unique<Transponder>(ftd2Devices);
-			xpndr->initialize(Transponder::xponderSerialNumber, ftd2Devices.getDevice(Transponder::xponderSerialNumber));
+			xpndr = std::make_unique<Transponder>();
+			xpndr->initialize(Transponder::xponderSerialNumber, ftd2Devices->getDevice(Transponder::xponderSerialNumber));
 			xpndr->open(Transponder::xponderSerialNumber);
 
 
@@ -401,7 +404,7 @@ namespace zcockpit::cockpit::hardware
 		auto current_transponder_status = Health::FAILED_STATUS;
 		if(!xpndr->Available())
 		{
-			xpndr->initialize(Transponder::xponderSerialNumber, ftd2Devices.getDevice(Transponder::xponderSerialNumber));
+			xpndr->initialize(Transponder::xponderSerialNumber, ftd2Devices->getDevice(Transponder::xponderSerialNumber));
 			xpndr->open(Transponder::xponderSerialNumber);
 			if(xpndr->Available())
 			{
@@ -426,7 +429,7 @@ namespace zcockpit::cockpit::hardware
 		if(!overheadGauges->Available())
 		{
 			// try to reconnect
-			overheadGauges->initialize(FiController::overheadSerialNumber, ftd2Devices.getDevice(FiController::overheadSerialNumber));
+			overheadGauges->initialize(FiController::overheadSerialNumber, ftd2Devices->getDevice(FiController::overheadSerialNumber));
 			overheadGauges->open(FiController::overheadSerialNumber);
 			if(overheadGauges->Available())
 			{
@@ -449,7 +452,7 @@ namespace zcockpit::cockpit::hardware
 		if (!mipGauges->Available())
 		{
 			// try to reconnect
-			mipGauges->initialize(FiController::mipSerialNumber, ftd2Devices.getDevice(FiController::mipSerialNumber));
+			mipGauges->initialize(FiController::mipSerialNumber, ftd2Devices->getDevice(FiController::mipSerialNumber));
 			mipGauges->open(FiController::mipSerialNumber);
 			if (mipGauges->Available())
 			{
