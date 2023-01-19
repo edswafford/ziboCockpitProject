@@ -408,13 +408,13 @@ namespace zcockpit::cockpit::hardware
 			xpndr->open(Transponder::xponderSerialNumber);
 			if(xpndr->Available())
 			{
-				string dev_id = to_string(xpndr->devInfo.ID);
+				std::string dev_id = std::to_string(xpndr->devInfo.ID);
 				current_transponder_status = Health::HEALTHY_STATUS;
 			}
 		}
 		else
 		{
-			string dev_id = to_string(xpndr->devInfo.ID);
+			std::string dev_id = std::to_string(xpndr->devInfo.ID);
 			current_transponder_status = Health::HEALTHY_STATUS;
 		}
 		if(transponder_status != current_transponder_status)
@@ -433,14 +433,14 @@ namespace zcockpit::cockpit::hardware
 			overheadGauges->open(FiController::overheadSerialNumber);
 			if(overheadGauges->Available())
 			{
-				string hex = to_string(overheadGauges->devInfo.ID);
+				std::string hex = std::to_string(overheadGauges->devInfo.ID);
 				current_flight_illusions_overhead_status = Health::HEALTHY_STATUS;
 			}
 		}
 		// we are connected
 		else
 		{
-			string hex = to_string(overheadGauges->devInfo.ID);
+			std::string hex = std::to_string(overheadGauges->devInfo.ID);
 			current_flight_illusions_overhead_status = Health::HEALTHY_STATUS;
 			overheadGauges->validateGauges();
 		}
@@ -456,14 +456,14 @@ namespace zcockpit::cockpit::hardware
 			mipGauges->open(FiController::mipSerialNumber);
 			if (mipGauges->Available())
 			{
-				string hex = to_string(mipGauges->devInfo.ID);
+				std::string hex = std::to_string(mipGauges->devInfo.ID);
 				current_flight_illusions_mip_status = Health::HEALTHY_STATUS;
 			}
 		}
 		// we are connected
 		else
 		{
-			string hex = to_string(mipGauges->devInfo.ID);
+			std::string hex = std::to_string(mipGauges->devInfo.ID);
 			current_flight_illusions_mip_status = Health::HEALTHY_STATUS;
 			mipGauges->validateGauges();
 		}
