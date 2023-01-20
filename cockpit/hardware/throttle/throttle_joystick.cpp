@@ -1412,54 +1412,54 @@ namespace zcockpit::cockpit::hardware
 
 	void ThrottleAndJoystick::save_calibration()
 	{
-	//	eng_min[LEFT] = cal_eng_min[LEFT];
-	//	eng_min[RIGHT] = cal_eng_min[RIGHT];
-	////	eng_range[LEFT] = eng_max[LEFT] - eng_min[LEFT];
-	////	eng_range[RIGHT] = eng_max[RIGHT] - eng_min[RIGHT];
-	//
-	//	spdbrk_min = cal_spdbrk_min;
-	//	rev_min[LEFT] = cal_rev_min[LEFT];
-	//	rev_min[RIGHT] = cal_rev_min[RIGHT];
-	//
-	//	eng_max[LEFT] = cal_eng_max[LEFT];
-	//	eng_max[RIGHT] = cal_eng_max[RIGHT];
-	//	spdbrk_max = cal_spdbrk_max;
-	//	rev_max[LEFT] = cal_rev_max[LEFT];
-	//	rev_max[RIGHT] = cal_rev_max[RIGHT];
-	//
-	////	eng_scaler[LEFT] = MAX_AXIS / (eng_max[LEFT] - eng_min[LEFT]);
-	////	eng_scaler[RIGHT] = MAX_AXIS / (eng_max[RIGHT] - eng_min[RIGHT]);
-	////	spdbrk_scaler = MAX_AXIS / (spdbrk_max - spdbrk_min);
-	////	rev_scaler[LEFT] = (MAX_REVERSER) / (rev_max[LEFT] - rev_min[LEFT]);
-	////	rev_scaler[RIGHT] = (MAX_REVERSER) / (rev_max[RIGHT] - rev_min[RIGHT]);
-	//
-	//	CockpitCfg::ptr->eng1_min = eng_min[LEFT];
-	//	CockpitCfg::ptr->eng2_min = eng_min[RIGHT];
-	//	CockpitCfg::ptr->spdbrk_min = spdbrk_min;
-	//	CockpitCfg::ptr->rev1_min = rev_min[LEFT];
-	//	CockpitCfg::ptr->rev2_min = rev_min[RIGHT];
-	//
-	//	CockpitCfg::ptr->eng1_max = eng_max[LEFT];
-	//	CockpitCfg::ptr->eng2_max = eng_max[RIGHT];
-	//	CockpitCfg::ptr->spdbrk_max = spdbrk_max;
-	//	CockpitCfg::ptr->rev1_max = rev_max[LEFT];
-	//	CockpitCfg::ptr->rev2_max = rev_max[RIGHT];
-	//
-	//	save_calibration_ = false;
-	//	cancel_calibration_ = false;
-	//	adc_min[0] = rev_min[LEFT];
-	//	adc_min[1] = rev_min[RIGHT];
-	//	adc_min[2] = eng_min[LEFT];
-	//	adc_min[3] = eng_min[RIGHT];
-	//	adc_min[4] = spdbrk_min;
-	//	adc_max[0] = rev_max[LEFT];
-	//	adc_max[1] = rev_max[RIGHT];
-	//	adc_max[2] = eng_max[LEFT];
-	//	adc_max[3] = eng_max[RIGHT];
-	//	adc_max[4] = spdbrk_max;
-	//	for (auto i = 0; i < 5; i++) {
-	//		adc_range[i] = adc_max[i] - adc_min[i];
-	//	}
+		eng_min[LEFT] = cal_eng_min[LEFT];
+		eng_min[RIGHT] = cal_eng_min[RIGHT];
+	//	eng_range[LEFT] = eng_max[LEFT] - eng_min[LEFT];
+	//	eng_range[RIGHT] = eng_max[RIGHT] - eng_min[RIGHT];
+	
+		spdbrk_min = cal_spdbrk_min;
+		rev_min[LEFT] = cal_rev_min[LEFT];
+		rev_min[RIGHT] = cal_rev_min[RIGHT];
+	
+		eng_max[LEFT] = cal_eng_max[LEFT];
+		eng_max[RIGHT] = cal_eng_max[RIGHT];
+		spdbrk_max = cal_spdbrk_max;
+		rev_max[LEFT] = cal_rev_max[LEFT];
+		rev_max[RIGHT] = cal_rev_max[RIGHT];
+	
+	//	eng_scaler[LEFT] = MAX_AXIS / (eng_max[LEFT] - eng_min[LEFT]);
+	//	eng_scaler[RIGHT] = MAX_AXIS / (eng_max[RIGHT] - eng_min[RIGHT]);
+	//	spdbrk_scaler = MAX_AXIS / (spdbrk_max - spdbrk_min);
+	//	rev_scaler[LEFT] = (MAX_REVERSER) / (rev_max[LEFT] - rev_min[LEFT]);
+	//	rev_scaler[RIGHT] = (MAX_REVERSER) / (rev_max[RIGHT] - rev_min[RIGHT]);
+	
+		CockpitCfg::ptr->eng1_min = eng_min[LEFT];
+		CockpitCfg::ptr->eng2_min = eng_min[RIGHT];
+		CockpitCfg::ptr->spdbrk_min = spdbrk_min;
+		CockpitCfg::ptr->rev1_min = rev_min[LEFT];
+		CockpitCfg::ptr->rev2_min = rev_min[RIGHT];
+	
+		CockpitCfg::ptr->eng1_max = eng_max[LEFT];
+		CockpitCfg::ptr->eng2_max = eng_max[RIGHT];
+		CockpitCfg::ptr->spdbrk_max = spdbrk_max;
+		CockpitCfg::ptr->rev1_max = rev_max[LEFT];
+		CockpitCfg::ptr->rev2_max = rev_max[RIGHT];
+	
+		save_calibration_ = false;
+		cancel_calibration_ = false;
+		adc_min[0] = rev_min[LEFT];
+		adc_min[1] = rev_min[RIGHT];
+		adc_min[2] = eng_min[LEFT];
+		adc_min[3] = eng_min[RIGHT];
+		adc_min[4] = spdbrk_min;
+		adc_max[0] = rev_max[LEFT];
+		adc_max[1] = rev_max[RIGHT];
+		adc_max[2] = eng_max[LEFT];
+		adc_max[3] = eng_max[RIGHT];
+		adc_max[4] = spdbrk_max;
+		for (auto i = 0; i < 5; i++) {
+			adc_range[i] = adc_max[i] - adc_min[i];
+		}
 	}
 
 	//
