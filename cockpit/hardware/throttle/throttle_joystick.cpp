@@ -1,10 +1,10 @@
+#include <ctime>
+#include <thread>
 #include "throttle_joystick.hpp"
 #include "../common/logger.hpp"
 #include "Pokeys/stepper.hpp"
 #include "throttle_hardware.hpp"
-#include <thread>
-#include <ctime>
-
+#include "../../sim_configuration.hpp"
 #include "shared_types.hpp"
 
 extern logger LOG;
@@ -51,7 +51,7 @@ namespace zcockpit::cockpit::hardware
 	bool ThrottleAndJoystick::rev_deployed[2] = { false, false };
 	const std::set<int> inputs{
 		eng_1_idle_cutoff_sw,
-		ENG_2_IDLE_CUTOFF_SW,
+		eng_2_idle_cutoff_sw,
 		toga_sw,
 		auto_throttle_sw,
 		parking_brake_sw,
@@ -555,93 +555,93 @@ namespace zcockpit::cockpit::hardware
 
 	void ThrottleAndJoystick::flaps_xplane_update(const unsigned flaps)
 	{
-		//switch (flaps)
-		//{
-		//case Flap_0:
-		//	if (previous_flaps != Flap_0 || sync_flaps)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_0, 0);
-		//		previous_flaps = Flap_0;
-		//	}
-		//	break;
-		//case Flap_1:
-		//	if (previous_flaps != Flap_1 || sync_flaps)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_1, 0);
-		//		previous_flaps = Flap_1;
-		//	}
-		//	break;
-		//case Flap_2:
-		//	if (previous_flaps != Flap_2 || sync_flaps)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_2, 0);
-		//		previous_flaps = Flap_2;
-		//	}
-		//	break;
-		//case Flap_5:
-		//	if (previous_flaps != Flap_5 || sync_flaps)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_5, 0);
-		//		previous_flaps = Flap_5;
-		//	}
-		//	break;
-		//case Flap_10:
-		//	if (previous_flaps != Flap_10 || sync_flaps)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_10, 0);
-		//		previous_flaps = Flap_10;
-		//	}
-		//	break;
-		//case Flap_15:
-		//	if (previous_flaps != Flap_15 || sync_flaps)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_15, 0);
-		//		previous_flaps = Flap_15;
-		//	}
-		//	break;
-		//case Flap_25:
-		//	if (previous_flaps != Flap_25 || sync_flaps)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_25, 0);
-		//		previous_flaps = Flap_25;
-		//	}
-		//	break;
-		//case Flap_30:
-		//	if (previous_flaps != Flap_30 || sync_flaps)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_30, 0);
-		//		previous_flaps = Flap_30;
-		//	}
-		//	break;
-		//case Flap_40:
-		//	if (previous_flaps != Flap_40 || sync_flaps)
-		//	{
-		//		sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_40, 0);
-		//		previous_flaps = Flap_40;
-		//	}
-		//	break;
-		//default:;
-		//}
-		//sync_flaps = false;
+		switch (flaps)
+		{
+		case Flap_0:
+			if (previous_flaps != Flap_0 || sync_flaps)
+			{
+//				sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_0, 0);
+				previous_flaps = Flap_0;
+			}
+			break;
+		case Flap_1:
+			if (previous_flaps != Flap_1 || sync_flaps)
+			{
+//				sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_1, 0);
+				previous_flaps = Flap_1;
+			}
+			break;
+		case Flap_2:
+			if (previous_flaps != Flap_2 || sync_flaps)
+			{
+//				sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_2, 0);
+				previous_flaps = Flap_2;
+			}
+			break;
+		case Flap_5:
+			if (previous_flaps != Flap_5 || sync_flaps)
+			{
+//				sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_5, 0);
+				previous_flaps = Flap_5;
+			}
+			break;
+		case Flap_10:
+			if (previous_flaps != Flap_10 || sync_flaps)
+			{
+//				sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_10, 0);
+				previous_flaps = Flap_10;
+			}
+			break;
+		case Flap_15:
+			if (previous_flaps != Flap_15 || sync_flaps)
+			{
+//				sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_15, 0);
+				previous_flaps = Flap_15;
+			}
+			break;
+		case Flap_25:
+			if (previous_flaps != Flap_25 || sync_flaps)
+			{
+//				sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_25, 0);
+				previous_flaps = Flap_25;
+			}
+			break;
+		case Flap_30:
+			if (previous_flaps != Flap_30 || sync_flaps)
+			{
+//				sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_30, 0);
+				previous_flaps = Flap_30;
+			}
+			break;
+		case Flap_40:
+			if (previous_flaps != Flap_40 || sync_flaps)
+			{
+//				sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_40, 0);
+				previous_flaps = Flap_40;
+			}
+			break;
+		default:;
+		}
+		sync_flaps = false;
 	}
 
 	void ThrottleAndJoystick::set_parking_brake_output(const bool on)
 	{
-		//if (on)
-		//{
-		//	// ON
-		//	deviceStat_.Pins[parking_brake_light].DigitalOutputValue = HIGH;
-		//}
-		//else
-		//{
-		//	// OFF
-		//	deviceStat_.Pins[parking_brake_light].DigitalOutputValue = LOW;
-		//}
+		if (on)
+		{
+			// ON
+			deviceStat_.Pins[parking_brake_light].DigitalOutputValue = HIGH;
+		}
+		else
+		{
+			// OFF
+			deviceStat_.Pins[parking_brake_light].DigitalOutputValue = LOW;
+		}
 
-		//if (SetDigitalOutputs(&deviceStat_) == -1) // Sets the outputs and reads the inputs
-		//{
-		//	throw std::exception("PoKeys failed to SetDigitalOutputs.");
-		//}
+		if (SetDigitalOutputs(&deviceStat_) == -1) // Sets the outputs and reads the inputs
+		{
+			throw std::exception("PoKeys failed to SetDigitalOutputs.");
+		}
 	}
 
 	//map(value, fromLow, fromHigh, toLow, toHigh)
@@ -753,13 +753,13 @@ namespace zcockpit::cockpit::hardware
 	
 	
 	
-				//if (send_speed_brake) {
-				////	LOG() << "SpeedBrake  " << speed_brake;
-				//	sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_SPOILER_POS, speed_brake);
-				//}
-				//send_speed_brake = !send_speed_brake;
+				if (send_speed_brake) {
+				//	LOG() << "SpeedBrake  " << speed_brake;
+//					sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_SPOILER_POS, speed_brake);
+				}
+				send_speed_brake = !send_speed_brake;
 	
-				//LOG() << "SpeedBrake Ifly Actual " << Ifly737::shareMemSDK->SpoilerPos << "     FSX Actual " << FsxSimConnect::spoiler_handle_position << "      Input Simconnect " << spdbrk/32768.0;
+//				LOG() << "SpeedBrake Ifly Actual " << Ifly737::shareMemSDK->SpoilerPos << "     FSX Actual " << FsxSimConnect::spoiler_handle_position << "      Input Simconnect " << spdbrk/32768.0;
 			}
 
 	}
@@ -811,20 +811,20 @@ namespace zcockpit::cockpit::hardware
 
 	void ThrottleAndJoystick::send_reverser_value(const int side, const double value) const
 	{
-		////
-		////Pro only. Val:-16383~16383,from Full_Rev to Full_Power
-		////
-		//if (value <= 0.0) {
-		//	const int reverser = static_cast<int>(value * -16383.0/ REVRSER_FULLSCALE);
-		//	
-		//	if (side == LEFT) {
-		//		sendMessageInt(KEY_COMMAND_ENGAPU_THROTTLE1_POS, reverser);
-		//	}
-		//	else
-		//	{
-		//		sendMessageInt(KEY_COMMAND_ENGAPU_THROTTLE2_POS, reverser);
-		//	}
-		//}
+		//
+		//Pro only. Val:-16383~16383,from Full_Rev to Full_Power
+		//
+		if (value <= 0.0) {
+			const int reverser = static_cast<int>(value * -16383.0/ REVRSER_FULLSCALE);
+			
+			if (side == LEFT) {
+//				sendMessageInt(KEY_COMMAND_ENGAPU_THROTTLE1_POS, reverser);
+			}
+			else
+			{
+//				sendMessageInt(KEY_COMMAND_ENGAPU_THROTTLE2_POS, reverser);
+			}
+		}
 	}
 
 	//
@@ -856,143 +856,143 @@ namespace zcockpit::cockpit::hardware
 			rev_waiting_for_click_response[side] = false;
 		}
 
-		//if (Ifly737::shareMemSDK != nullptr) {
+		if (aircraft_model.z738_is_available()) {
 
-		//	// The code will step once per cycle at 20 Hz.  It is possible we could out run PMDG
-		//	// So we should step then wait for the response before steping again -- unless we time out then will try again
-		//	//
-		//	//
+			// The code will step once per cycle at 20 Hz.  It is possible we could out run xplane
+			// So we should step then wait for the response before steping again -- unless we time out then will try again
+			//
+			//
+			double thrust_and_reverser_lever = 0.0;
+//			thrust_and_reverser_lever = side == LEFT ? Ifly737::shareMemSDK->Throttle1Pos :
+ //				Ifly737::shareMemSDK->Throttle2Pos;
 
-		//	double thrust_and_reverser_lever = side == LEFT ? Ifly737::shareMemSDK->Throttle1Pos :
-		//		Ifly737::shareMemSDK->Throttle2Pos;
+			// Check if PMDG Thrust Lever slightly above idle
+			if (thrust_and_reverser_lever > 0)
+			{
+				pmdg_thrust_lever_above_idle[side] = true;
+				thrust_and_reverser_lever = 0.0;
+			}
+			else
+			{  // Thurst lever is at idle --> conver to positive value (easier to reason about)
+				pmdg_thrust_lever_above_idle[side] = false;
+				thrust_and_reverser_lever = thrust_and_reverser_lever;
+			}
 
-		//	// Check if PMDG Thrust Lever slightly above idle
-		//	if (thrust_and_reverser_lever > 0)
-		//	{
-		//		pmdg_thrust_lever_above_idle[side] = true;
-		//		thrust_and_reverser_lever = 0.0;
-		//	}
-		//	else
-		//	{  // Thurst lever is at idle --> conver to positive value (easier to reason about)
-		//		pmdg_thrust_lever_above_idle[side] = false;
-		//		thrust_and_reverser_lever = thrust_and_reverser_lever;
-		//	}
+			//
+			// Normalize joystick value
+			double rev = adc_filtered[side] - adc_min[side];
+			if (rev < 100.0) {
+				rev = 0.0;
+			}
+			//	LOG() << "Reverser side " << side << " adc value " << rev;
 
-		//	//
-		//	// Normalize joystick value
-		//	double rev = adc_filtered[side] - adc_min[side];
-		//	if (rev < 100.0) {
-		//		rev = 0.0;
-		//	}
-		//	//	LOG() << "Reverser side " << side << " adc value " << rev;
+			rev = rev / adc_range[side] * REVRSER_FULLSCALE;
 
-		//	rev = rev / adc_range[side] * REVRSER_FULLSCALE;
+			if (rev > 0.0)
+			{
+				rev = 0.0;
+			}
+			else if (rev < REVRSER_FULLSCALE)
+			{
+				rev = REVRSER_FULLSCALE;
+			}
 
-		//	if (rev > 0.0)
-		//	{
-		//		rev = 0.0;
-		//	}
-		//	else if (rev < REVRSER_FULLSCALE)
-		//	{
-		//		rev = REVRSER_FULLSCALE;
-		//	}
+			if (rev < 0.0)
+			{
+				rev_deployed[side] = true;
+			}
+			else
+			{
+				rev_deployed[side] = false;
+			}
 
-		//	if (rev < 0.0)
-		//	{
-		//		rev_deployed[side] = true;
-		//	}
-		//	else
-		//	{
-		//		rev_deployed[side] = false;
-		//	}
+			// Deployed
+			//
+			if (previous_rev_deployed[side] == false && rev_deployed[side])
+			{
+				// Starting Reverser
+				//
 
-		//	// Deployed
-		//	//
-		//	if (previous_rev_deployed[side] == false && rev_deployed[side])
-		//	{
-		//		// Starting Reverser
-		//		//
+				// Make sure throttle is at idle -- otherwise reverser will not deploy
+				//LOG() << "CUT-THROTTLE PMDG  Send First Click -- then wait  Side " << side << " REV = " << rev << " filtered " << adc_filtered[side];
+				send_reverser_value(side, -0.001 * 100);
 
-		//		// Make sure throttle is at idle -- otherwise reverser will not deploy
-		//		//LOG() << "CUT-THROTTLE PMDG  Send First Click -- then wait  Side " << side << " REV = " << rev << " filtered " << adc_filtered[side];
-		//		send_reverser_value(side, -0.001 * 100);
+				// first click lifts reverser, but doesn't change N1
+				//simconnect_send_event_data(thrust_lever_event, MOUSE_FLAG_LEFTSINGLE);
 
-		//		// first click lifts reverser, but doesn't change N1
-		//		//simconnect_send_event_data(thrust_lever_event, MOUSE_FLAG_LEFTSINGLE);
+				expected_rev_nozzle_position[side] = -0.001;
+				rev_waiting_for_click_response[side] = true;
+				previous_rev_deployed[side] = rev_deployed[side];
+			}
+			//
+			// Closed
+			else if (previous_rev_deployed[side] == true && rev_deployed[side] == false)
+			{
+				//  Reverser Closed
+				//
+				//LOG() << "Reverser Closed: Send throttle 0.0";
+				send_reverser_value(side, 0.0);
+				expected_rev_nozzle_position[side] = 0.0;
+				previous_rev_deployed[side] = rev_deployed[side];
+			}
+			else {
+				if (!rev_waiting_for_click_response[side]) {
 
-		//		expected_rev_nozzle_position[side] = -0.001;
-		//		rev_waiting_for_click_response[side] = true;
-		//		previous_rev_deployed[side] = rev_deployed[side];
-		//	}
-		//	//
-		//	// Closed
-		//	else if (previous_rev_deployed[side] == true && rev_deployed[side] == false)
-		//	{
-		//		//  Reverser Closed
-		//		//
-		//		//LOG() << "Reverser Closed: Send throttle 0.0";
-		//		send_reverser_value(side, 0.0);
-		//		expected_rev_nozzle_position[side] = 0.0;
-		//		previous_rev_deployed[side] = rev_deployed[side];
-		//	}
-		//	else {
-		//		if (!rev_waiting_for_click_response[side]) {
+					if (rev < thrust_and_reverser_lever)
+					{
+						// we need to increse Reverser
+						expected_rev_nozzle_position[side] = rev;
+						if (expected_rev_nozzle_position[side] < REVRSER_FULLSCALE) {
+							expected_rev_nozzle_position[side] = REVRSER_FULLSCALE;
+						}
+						start[side] = std::chrono::high_resolution_clock::now();
+						rev_waiting_for_click_response[side] = true;
+						//simconnect_send_event_data(thrust_lever_event, MOUSE_FLAG_LEFTSINGLE);
+						send_reverser_value(side, expected_rev_nozzle_position[side] * 100);
+						//LOG() << "Increase REV_THRUST_LEVER  " << thrust_and_reverser_lever << " expected " << expected_rev_nozzle_position[side];
+					}
+					else if (rev > thrust_and_reverser_lever)
+					{
+						// we need to decrease Reverser
+						expected_rev_nozzle_position[side] = rev;
+						if (expected_rev_nozzle_position[side] > 0.0) {
+							expected_rev_nozzle_position[side] = 0.0;
+						}
+						start[side] = std::chrono::high_resolution_clock::now();
+						rev_waiting_for_click_response[side] = true;
+						//simconnect_send_event_data(thrust_lever_event, MOUSE_FLAG_RIGHTSINGLE);
+						send_reverser_value(side, expected_rev_nozzle_position[side] * 100);
+						//LOG() << "Decrease REV_THRUST_LEVER  " << thrust_and_reverser_lever << " expected " << expected_rev_nozzle_position[side];
 
-		//			if (rev < thrust_and_reverser_lever)
-		//			{
-		//				// we need to increse Reverser
-		//				expected_rev_nozzle_position[side] = rev;
-		//				if (expected_rev_nozzle_position[side] < REVRSER_FULLSCALE) {
-		//					expected_rev_nozzle_position[side] = REVRSER_FULLSCALE;
-		//				}
-		//				start[side] = std::chrono::high_resolution_clock::now();
-		//				rev_waiting_for_click_response[side] = true;
-		//				//simconnect_send_event_data(thrust_lever_event, MOUSE_FLAG_LEFTSINGLE);
-		//				send_reverser_value(side, expected_rev_nozzle_position[side] * 100);
-		//				//LOG() << "Increase REV_THRUST_LEVER  " << thrust_and_reverser_lever << " expected " << expected_rev_nozzle_position[side];
-		//			}
-		//			else if (rev > thrust_and_reverser_lever)
-		//			{
-		//				// we need to decrease Reverser
-		//				expected_rev_nozzle_position[side] = rev;
-		//				if (expected_rev_nozzle_position[side] > 0.0) {
-		//					expected_rev_nozzle_position[side] = 0.0;
-		//				}
-		//				start[side] = std::chrono::high_resolution_clock::now();
-		//				rev_waiting_for_click_response[side] = true;
-		//				//simconnect_send_event_data(thrust_lever_event, MOUSE_FLAG_RIGHTSINGLE);
-		//				send_reverser_value(side, expected_rev_nozzle_position[side] * 100);
-		//				//LOG() << "Decrease REV_THRUST_LEVER  " << thrust_and_reverser_lever << " expected " << expected_rev_nozzle_position[side];
+					}
+					else
+					{
+						// Or no changes needed
+						//expected_rev_nozzle_position[side] = thrust_and_reverser_lever;
+						rev_waiting_for_click_response[side] = false;
+						//LOG() << "lever " << thrust_and_reverser_lever << " == expected " << expected_rev_nozzle_position[side];
+					}
 
-		//			}
-		//			else
-		//			{
-		//				// Or no changes needed
-		//				//expected_rev_nozzle_position[side] = thrust_and_reverser_lever;
-		//				rev_waiting_for_click_response[side] = false;
-		//				//LOG() << "lever " << thrust_and_reverser_lever << " == expected " << expected_rev_nozzle_position[side];
-		//			}
-
-		//		}
-		//		else {
-		//			// has PMDG responded -- lever == expecte lever posioion
-		//			if (abs(thrust_and_reverser_lever - expected_rev_nozzle_position[side]) < 0.01) {
-		//				rev_waiting_for_click_response[side] = false;
-		//				//LOG() << "Responded lever == " << thrust_and_reverser_lever;
-		//			}
-		//			// Ohterwise check for timeout -- 
-		//			else
-		//			{
-		//				auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start[side]);
-		//				if (elapsed.count() > DELAY_CLICK)
-		//				{
-		//					rev_waiting_for_click_response[side] = false;
-		//					LOG() << "REV timeout";
-		//				}
-		//			}
-		//		}
-		//	}
-		//}
+				}
+				else {
+					// has PMDG responded -- lever == expecte lever posioion
+					if (abs(thrust_and_reverser_lever - expected_rev_nozzle_position[side]) < 0.01) {
+						rev_waiting_for_click_response[side] = false;
+						//LOG() << "Responded lever == " << thrust_and_reverser_lever;
+					}
+					// Ohterwise check for timeout -- 
+					else
+					{
+						auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start[side]);
+						if (elapsed.count() > DELAY_CLICK)
+						{
+							rev_waiting_for_click_response[side] = false;
+							LOG() << "REV timeout";
+						}
+					}
+				}
+			}
+		}
 	}
 
 
@@ -1001,147 +1001,147 @@ namespace zcockpit::cockpit::hardware
 	{
 		//LOG() << "disemgaged == " << Throttle::auto_throttle_is_disengaged;
 
-		//if (auto_throttle_toggle)
-		//{
-		//	// Disengauge was press -- waiting for light to toggle off
-		//	if (Ifly737::shareMemSDK != nullptr && !Ifly737::shareMemSDK->AT_Switches_Status)
-		//	{
-		//		// light is now off
-		//		auto_throttle_toggle = false;
-		//		LOG() << "AT Light toggled off";
-		//	}
-		//}
-		//else
-		//{
-		//	if (Ifly737::shareMemSDK != nullptr && Ifly737::shareMemSDK->AT_Switches_Status)
-		//	{
-		//		// light is on --> AT is not disengaged
-		//		ThrottleAndJoystick::auto_throttle_is_disengaged = false;
-		//	}
-		//	else
-		//	{
-		//		ThrottleAndJoystick::auto_throttle_is_disengaged = true;
-		//	}
-		//}
-		//for (auto i : inputs)
-		//{
-		//	const auto value = deviceStat_.Pins[i].DigitalInputValue;
-		//	switch (i)
-		//	{
-		//	case eng_1_idle_cutoff_sw:
-		//		if (eng_1_idle_cutoff != value || sync_switches)
-		//		{
-		//			eng_1_idle_cutoff = value;
-		//			if (value == 1)
-		//			{
-		//				sendMessageInt(KEY_COMMAND_ENGAPU_ENG_1_START_LEVER_IDLE, 0);
-		//			}
-		//			else
-		//			{
-		//				sendMessageInt(KEY_COMMAND_ENGAPU_ENG_1_START_LEVER_CUTOFF, 0);
-		//			}
-		//		}
-		//		break;
-		//	case eng_2_idle_cutoff_sw:
-		//		if (eng_2_idle_cutoff != value || sync_switches)
-		//		{
-		//			eng_2_idle_cutoff = value;
-		//			if (value == 1)
-		//			{
-		//				sendMessageInt(KEY_COMMAND_ENGAPU_ENG_2_START_LEVER_IDLE, 0);
-		//			}
-		//			else
-		//			{
-		//				sendMessageInt(KEY_COMMAND_ENGAPU_ENG_2_START_LEVER_CUTOFF, 0);
-		//			}
-		//		}
-		//		break;
-		//	case toga_sw:
-		//		if (toga != value)
-		//		{
-		//			toga = value;
-		//			if (value == 0)
-		//			{
-		//				sendMessageInt(KEY_COMMAND_AUTOMATICFLIGHT_TOGA, 0);
-		//			}
-		//		}
-		//		break;
-		//	case auto_throttle_sw:
-		//		if (disengage_auto_throttle != value)
-		//		{
-		//			disengage_auto_throttle = value;
-		//			if (value == 0)
-		//			{
-		//				ThrottleAndJoystick::auto_throttle_is_disengaged = true;
-		//				left_n1_commanded = right_n1_commanded = 0.0;
-		//				if (Ifly737::shareMemSDK != nullptr && Ifly737::shareMemSDK->AT_Switches_Status)
-		//				{
-		//					// light is on need to wait for toggle
-		//					auto_throttle_toggle = true;
-		//					LOG() << "AUTO_THROTTLE Toggle == true";
-		//				}
-		//				LOG() << "AUTO THROTTLE  process switches Disengage auto throttle";
-		//				sendMessageInt(KEY_COMMAND_AUTOMATICFLIGHT_AUTOTHROTTLE_DISCONNECT, 0);
-		//			}
-		//		}
-		//		break;
-		//	case parking_brake_sw:
-		//		if (parking_brake != value || sync_switches)
-		//		{
-		//			parking_brake = value;
-		//			if (value == 0)
-		//			{
-		//				sendMessageInt(KEY_COMMAND_GEAR_PARKING_BRAKE_LEVER_ON, 0);
-		//			}
-		//			else
-		//			{
-		//				sendMessageInt(KEY_COMMAND_GEAR_PARKING_BRAKE_LEVER_OFF, 0);
-		//			}
-		//		}
-		//		break;
-		//	case horn_cutout_sw:
-		//		if (horn_cutout != value)
-		//		{
-		//			horn_cutout = value;
-		//			if (value == 0)
-		//			{
-		//				sendMessageInt(KEY_COMMAND_WARNING_LDG_GEAR_WARNING_CUTOUT, 0);
-		//			}
-		//		}
-		//		break;
-		//	case stab_trim_man_cutout_sw:
-		//		if (stab_trim_man_cutout != value || sync_switches)
-		//		{
-		//			stab_trim_man_cutout = value;
-		//			if (value == 0)
-		//			{
-		//				sendMessageInt(KEY_COMMAND_FLTCTRL_STAB_TRIM_MAIN_ELECT_CUTOUT_NORMAL, 0);
-		//			}
-		//			else
-		//			{
-		//				// open guard
-		//				sendMessageInt(KEY_COMMAND_FLTCTRL_STAB_TRIM_MAIN_ELECT_CUTOUT_CUTOUT, 0);
-		//			}
-		//		}
-		//		break;
-		//	case stab_trim_auto_cutout_sw:
-		//		if (stab_trim_auto_cutout != value || sync_switches)
-		//		{
-		//			stab_trim_auto_cutout = value;
-		//			if (value == 0)
-		//			{
-		//				sendMessageInt(KEY_COMMAND_FLTCTRL_STAB_TRIM_AUTOPILOT_CUTOUT_NORMAL, 0);
-		//			}
-		//			else
-		//			{
-		//				// open guard
-		//				sendMessageInt(KEY_COMMAND_FLTCTRL_STAB_TRIM_AUTOPILOT_CUTOUT_CUTOUT, 0);
-		//			}
-		//		}
-		//		break;
-		//	default:;
-		//	}
-		//}
+		if (auto_throttle_toggle)
+		{
+			// Disengauge was press -- waiting for light to toggle off
+			if (aircraft_model.z738_is_available() && aircraft_model.z737InData.autothrottle_active)
+			{
+				// light is now off
+				auto_throttle_toggle = false;
+				LOG() << "AT Light toggled off";
+			}
+		}
+		else
+		{
+			if (aircraft_model.z738_is_available() && aircraft_model.z737InData.autothrottle_active)
+			{
+				// light is on --> AT is not disengaged
+				ThrottleAndJoystick::auto_throttle_is_disengaged = false;
+			}
+			else
+			{
+				ThrottleAndJoystick::auto_throttle_is_disengaged = true;
+			}
+		}
+		for (auto i : inputs)
+		{
+			const auto value = deviceStat_.Pins[i].DigitalInputValue;
+			switch (i)
+			{
+			case eng_1_idle_cutoff_sw:
+				if (eng_1_idle_cutoff != value || sync_switches)
+				{
+					eng_1_idle_cutoff = value;
+					if (value == 1)
+					{
+//						sendMessageInt(KEY_COMMAND_ENGAPU_ENG_1_START_LEVER_IDLE, 0);
+					}
+					else
+					{
+//						sendMessageInt(KEY_COMMAND_ENGAPU_ENG_1_START_LEVER_CUTOFF, 0);
+					}
+				}
+				break;
+			case eng_2_idle_cutoff_sw:
+				if (eng_2_idle_cutoff != value || sync_switches)
+				{
+					eng_2_idle_cutoff = value;
+					if (value == 1)
+					{
+//						sendMessageInt(KEY_COMMAND_ENGAPU_ENG_2_START_LEVER_IDLE, 0);
+					}
+					else
+					{
+//						sendMessageInt(KEY_COMMAND_ENGAPU_ENG_2_START_LEVER_CUTOFF, 0);
+					}
+				}
+				break;
+			case toga_sw:
+				if (toga != value)
+				{
+					toga = value;
+					if (value == 0)
+					{
+//						sendMessageInt(KEY_COMMAND_AUTOMATICFLIGHT_TOGA, 0);
+					}
+				}
+				break;
+			case auto_throttle_sw:
+				if (disengage_auto_throttle != value)
+				{
+					disengage_auto_throttle = value;
+					if (value == 0)
+					{
+						ThrottleAndJoystick::auto_throttle_is_disengaged = true;
+						left_n1_commanded = right_n1_commanded = 0.0;
+						if (aircraft_model.z738_is_available() && aircraft_model.z737InData.autothrottle_active)
+						{
+							// light is on need to wait for toggle
+							auto_throttle_toggle = true;
+							LOG() << "AUTO_THROTTLE Toggle == true";
+						}
+						LOG() << "AUTO THROTTLE  process switches Disengage auto throttle";
+//						sendMessageInt(KEY_COMMAND_AUTOMATICFLIGHT_AUTOTHROTTLE_DISCONNECT, 0);
+					}
+				}
+				break;
+			case parking_brake_sw:
+				if (parking_brake != value || sync_switches)
+				{
+					parking_brake = value;
+					if (value == 0)
+					{
+//						sendMessageInt(KEY_COMMAND_GEAR_PARKING_BRAKE_LEVER_ON, 0);
+					}
+					else
+					{
+//						sendMessageInt(KEY_COMMAND_GEAR_PARKING_BRAKE_LEVER_OFF, 0);
+					}
+				}
+				break;
+			case horn_cutout_sw:
+				if (horn_cutout != value)
+				{
+					horn_cutout = value;
+					if (value == 0)
+					{
+//						sendMessageInt(KEY_COMMAND_WARNING_LDG_GEAR_WARNING_CUTOUT, 0);
+					}
+				}
+				break;
+			case stab_trim_man_cutout_sw:
+				if (stab_trim_man_cutout != value || sync_switches)
+				{
+					stab_trim_man_cutout = value;
+					if (value == 0)
+					{
+//						sendMessageInt(KEY_COMMAND_FLTCTRL_STAB_TRIM_MAIN_ELECT_CUTOUT_NORMAL, 0);
+					}
+					else
+					{
+						// open guard
+//						sendMessageInt(KEY_COMMAND_FLTCTRL_STAB_TRIM_MAIN_ELECT_CUTOUT_CUTOUT, 0);
+					}
+				}
+				break;
+			case stab_trim_auto_cutout_sw:
+				if (stab_trim_auto_cutout != value || sync_switches)
+				{
+					stab_trim_auto_cutout = value;
+					if (value == 0)
+					{
+//						sendMessageInt(KEY_COMMAND_FLTCTRL_STAB_TRIM_AUTOPILOT_CUTOUT_NORMAL, 0);
+					}
+					else
+					{
+						// open guard
+//						sendMessageInt(KEY_COMMAND_FLTCTRL_STAB_TRIM_AUTOPILOT_CUTOUT_CUTOUT, 0);
+					}
+				}
+				break;
+			default:;
+			}
+		}
 		sync_switches = false;
 	}
 
@@ -1244,16 +1244,16 @@ namespace zcockpit::cockpit::hardware
 
 	void ThrottleAndJoystick::update_throttle_health()
 	{
-		//if (pokey_alive)
-		//{
-		//	throttle_status_is_healthy = true;
-		//	update_throttle_HEALTH_text("Connected", GREEN);
-		//}
-		//else
-		//{
-		//	throttle_status_is_healthy = false;
-		//	update_throttle_HEALTH_text("No Connection", RED);
-		//}
+		if (pokey_alive)
+		{
+			throttle_status_is_healthy = true;
+//			update_throttle_HEALTH_text("Connected", GREEN);
+		}
+		else
+		{
+			throttle_status_is_healthy = false;
+//			update_throttle_HEALTH_text("No Connection", RED);
+		}
 	}
 
 	void ThrottleAndJoystick::update_realtime_display() const
@@ -1282,132 +1282,132 @@ namespace zcockpit::cockpit::hardware
 	}
 	void ThrottleAndJoystick::update_calibration_display() const
 	{
-		//update_eng1_min_text(eng_min[LEFT]);
-		//update_eng2_min_text(eng_min[RIGHT]);
-		//update_spdbrk_min_text(spdbrk_min);
-		//update_rev1_min_text(rev_min[LEFT]);
-		//update_rev2_min_text(rev_min[RIGHT]);
+		update_eng1_min_text(eng_min[LEFT]);
+		update_eng2_min_text(eng_min[RIGHT]);
+		update_spdbrk_min_text(spdbrk_min);
+		update_rev1_min_text(rev_min[LEFT]);
+		update_rev2_min_text(rev_min[RIGHT]);
 
-		//update_eng1_max_text(eng_max[LEFT]);
-		//update_eng2_max_text(eng_max[RIGHT]);
-		//update_spdbrk_max_text(spdbrk_max);
-		//update_rev1_max_text(rev_max[LEFT]);
-		//update_rev2_max_text(rev_max[RIGHT]);
+		update_eng1_max_text(eng_max[LEFT]);
+		update_eng2_max_text(eng_max[RIGHT]);
+		update_spdbrk_max_text(spdbrk_max);
+		update_rev1_max_text(rev_max[LEFT]);
+		update_rev2_max_text(rev_max[RIGHT]);
 	}
 
 	void ThrottleAndJoystick::initialize_calibration()
 	{
-	//	eng_min[LEFT] = CockpitCfg::ptr->eng1_min;
-	//	eng_min[RIGHT] = CockpitCfg::ptr->eng2_min;
-	//	spdbrk_min = CockpitCfg::ptr->spdbrk_min;
-	//	rev_min[LEFT] = CockpitCfg::ptr->rev1_min;
-	//	rev_min[RIGHT] = CockpitCfg::ptr->rev2_min;
-	//
-	//	eng_idle[LEFT] = eng_min[LEFT] + 100;
-	//	eng_idle[RIGHT] = eng_min[RIGHT] + 100;
-	//
-	//
-	//	eng_max[LEFT] = CockpitCfg::ptr->eng1_max;
-	//	eng_max[RIGHT] = CockpitCfg::ptr->eng2_max;
-	//	spdbrk_max = CockpitCfg::ptr->spdbrk_max;
-	//	rev_max[LEFT] = CockpitCfg::ptr->rev1_max;
-	//	rev_max[RIGHT] = CockpitCfg::ptr->rev2_max;
-	//
-	//	rev_range[LEFT] = rev_max[LEFT] - rev_min[LEFT];
-	//	rev_range[RIGHT] = rev_max[RIGHT] - rev_min[RIGHT];
-	////	eng_scaler[LEFT] = MAX_THROTTLE / (eng_max[LEFT] - eng_min[LEFT]);
-	////	eng_scaler[RIGHT] = MAX_THROTTLE / (eng_max[RIGHT] - eng_min[RIGHT]);
-	////	spdbrk_scaler = MAX_SPD_BRAKE / (spdbrk_max - spdbrk_min);
-	////	rev_scaler[LEFT] = (MAX_REVERSER) / (rev_max[LEFT] - rev_min[LEFT]);
-	////	rev_scaler[RIGHT] = (MAX_REVERSER) / (rev_max[RIGHT] - rev_min[RIGHT]);
-	////	eng_range[LEFT] = eng_max[LEFT] - eng_min[LEFT];
-	////	eng_range[RIGHT] = eng_max[RIGHT] - eng_min[RIGHT];
-	//	adc_min[0] = rev_min[LEFT];
-	//	adc_min[1] = rev_min[RIGHT];
-	//	adc_min[2] = eng_min[LEFT];
-	//	adc_min[3] = eng_min[RIGHT];
-	//	adc_min[4] = spdbrk_min;
-	//	adc_max[0] = rev_max[LEFT];
-	//	adc_max[1] = rev_max[RIGHT];
-	//	adc_max[2] = eng_max[LEFT];
-	//	adc_max[3] = eng_max[RIGHT];
-	//	adc_max[4] = spdbrk_max;
-	//	for (auto i = 0; i < 5; i++) {
-	//		adc_range[i] = adc_max[i] - adc_min[i];
-	//	}
+		eng_min[LEFT] = CockpitCfg::ptr->eng1_min;
+		eng_min[RIGHT] = CockpitCfg::ptr->eng2_min;
+		spdbrk_min = CockpitCfg::ptr->spdbrk_min;
+		rev_min[LEFT] = CockpitCfg::ptr->rev1_min;
+		rev_min[RIGHT] = CockpitCfg::ptr->rev2_min;
+	
+		eng_idle[LEFT] = eng_min[LEFT] + 100;
+		eng_idle[RIGHT] = eng_min[RIGHT] + 100;
+	
+	
+		eng_max[LEFT] = CockpitCfg::ptr->eng1_max;
+		eng_max[RIGHT] = CockpitCfg::ptr->eng2_max;
+		spdbrk_max = CockpitCfg::ptr->spdbrk_max;
+		rev_max[LEFT] = CockpitCfg::ptr->rev1_max;
+		rev_max[RIGHT] = CockpitCfg::ptr->rev2_max;
+	
+		rev_range[LEFT] = rev_max[LEFT] - rev_min[LEFT];
+		rev_range[RIGHT] = rev_max[RIGHT] - rev_min[RIGHT];
+	//	eng_scaler[LEFT] = MAX_THROTTLE / (eng_max[LEFT] - eng_min[LEFT]);
+	//	eng_scaler[RIGHT] = MAX_THROTTLE / (eng_max[RIGHT] - eng_min[RIGHT]);
+	//	spdbrk_scaler = MAX_SPD_BRAKE / (spdbrk_max - spdbrk_min);
+	//	rev_scaler[LEFT] = (MAX_REVERSER) / (rev_max[LEFT] - rev_min[LEFT]);
+	//	rev_scaler[RIGHT] = (MAX_REVERSER) / (rev_max[RIGHT] - rev_min[RIGHT]);
+	//	eng_range[LEFT] = eng_max[LEFT] - eng_min[LEFT];
+	//	eng_range[RIGHT] = eng_max[RIGHT] - eng_min[RIGHT];
+		adc_min[0] = rev_min[LEFT];
+		adc_min[1] = rev_min[RIGHT];
+		adc_min[2] = eng_min[LEFT];
+		adc_min[3] = eng_min[RIGHT];
+		adc_min[4] = spdbrk_min;
+		adc_max[0] = rev_max[LEFT];
+		adc_max[1] = rev_max[RIGHT];
+		adc_max[2] = eng_max[LEFT];
+		adc_max[3] = eng_max[RIGHT];
+		adc_max[4] = spdbrk_max;
+		for (auto i = 0; i < 5; i++) {
+			adc_range[i] = adc_max[i] - adc_min[i];
+		}
 	}
 
 	void ThrottleAndJoystick::calibrate()
 	{
-		//if (!calibration_init)
-		//{
-		//	cal_eng_min[LEFT] = LONG_MAX;
-		//	cal_eng_min[RIGHT] = LONG_MAX;
-		//	cal_spdbrk_min = LONG_MAX;
-		//	cal_rev_min[LEFT] = LONG_MAX;
-		//	cal_rev_min[RIGHT] = LONG_MAX;
+		if (!calibration_init)
+		{
+			cal_eng_min[LEFT] = LONG_MAX;
+			cal_eng_min[RIGHT] = LONG_MAX;
+			cal_spdbrk_min = LONG_MAX;
+			cal_rev_min[LEFT] = LONG_MAX;
+			cal_rev_min[RIGHT] = LONG_MAX;
 
-		//	cal_eng_max[LEFT] = 0;
-		//	cal_eng_max[RIGHT] = 0;
-		//	cal_spdbrk_max = 0;
-		//	cal_rev_max[LEFT] = 0;
-		//	cal_rev_max[RIGHT] = 0;
-		//	calibration_init = true;
-		//}
-		//if (adc_filtered[ENG_1] < cal_eng_min[LEFT])
-		//{
-		//	cal_eng_min[LEFT] = adc_filtered[ENG_1];
-		//	update_eng1_min_text(cal_eng_min[LEFT]);
-		//}
-		//if (adc_filtered[ENG_1] > cal_eng_max[LEFT])
-		//{
-		//	cal_eng_max[LEFT] = adc_filtered[ENG_1];
-		//	update_eng1_max_text(cal_eng_max[LEFT]);
-		//}
+			cal_eng_max[LEFT] = 0;
+			cal_eng_max[RIGHT] = 0;
+			cal_spdbrk_max = 0;
+			cal_rev_max[LEFT] = 0;
+			cal_rev_max[RIGHT] = 0;
+			calibration_init = true;
+		}
+		if (adc_filtered[ENG_1] < cal_eng_min[LEFT])
+		{
+			cal_eng_min[LEFT] = adc_filtered[ENG_1];
+			update_eng1_min_text(cal_eng_min[LEFT]);
+		}
+		if (adc_filtered[ENG_1] > cal_eng_max[LEFT])
+		{
+			cal_eng_max[LEFT] = adc_filtered[ENG_1];
+			update_eng1_max_text(cal_eng_max[LEFT]);
+		}
 
-		//if (adc_filtered[ENG_2] < cal_eng_min[RIGHT])
-		//{
-		//	cal_eng_min[RIGHT] = adc_filtered[ENG_2];
-		//	update_eng2_min_text(cal_eng_min[RIGHT]);
-		//}
-		//if (adc_filtered[ENG_2] > cal_eng_max[RIGHT])
-		//{
-		//	cal_eng_max[RIGHT] = adc_filtered[ENG_2];
-		//	update_eng2_max_text(cal_eng_max[RIGHT]);
-		//}
+		if (adc_filtered[ENG_2] < cal_eng_min[RIGHT])
+		{
+			cal_eng_min[RIGHT] = adc_filtered[ENG_2];
+			update_eng2_min_text(cal_eng_min[RIGHT]);
+		}
+		if (adc_filtered[ENG_2] > cal_eng_max[RIGHT])
+		{
+			cal_eng_max[RIGHT] = adc_filtered[ENG_2];
+			update_eng2_max_text(cal_eng_max[RIGHT]);
+		}
 
-		//if (adc_filtered[SPBRK] < cal_spdbrk_min)
-		//{
-		//	cal_spdbrk_min = adc_filtered[SPBRK];
-		//	update_spdbrk_min_text(cal_spdbrk_min);
-		//}
-		//if (adc_filtered[SPBRK] > cal_spdbrk_max)
-		//{
-		//	cal_spdbrk_max = adc_filtered[SPBRK];
-		//	update_spdbrk_max_text(cal_spdbrk_max);
-		//}
+		if (adc_filtered[SPBRK] < cal_spdbrk_min)
+		{
+			cal_spdbrk_min = adc_filtered[SPBRK];
+			update_spdbrk_min_text(cal_spdbrk_min);
+		}
+		if (adc_filtered[SPBRK] > cal_spdbrk_max)
+		{
+			cal_spdbrk_max = adc_filtered[SPBRK];
+			update_spdbrk_max_text(cal_spdbrk_max);
+		}
 
-		//if (adc_filtered[REV_1] < cal_rev_min[LEFT])
-		//{
-		//	cal_rev_min[LEFT] = adc_filtered[REV_1];
-		//	update_rev1_min_text(cal_rev_min[LEFT]);
-		//}
-		//if (adc_filtered[REV_1] > cal_rev_max[LEFT])
-		//{
-		//	cal_rev_max[LEFT] = adc_filtered[REV_1];
-		//	update_rev1_max_text(cal_rev_max[LEFT]);
-		//}
+		if (adc_filtered[REV_1] < cal_rev_min[LEFT])
+		{
+			cal_rev_min[LEFT] = adc_filtered[REV_1];
+			update_rev1_min_text(cal_rev_min[LEFT]);
+		}
+		if (adc_filtered[REV_1] > cal_rev_max[LEFT])
+		{
+			cal_rev_max[LEFT] = adc_filtered[REV_1];
+			update_rev1_max_text(cal_rev_max[LEFT]);
+		}
 
-		//if (adc_filtered[REV_2] < cal_rev_min[RIGHT])
-		//{
-		//	cal_rev_min[RIGHT] = adc_filtered[REV_2];
-		//	update_rev2_min_text(cal_rev_min[RIGHT]);
-		//}
-		//if (adc_filtered[REV_2] > cal_rev_max[RIGHT])
-		//{
-		//	cal_rev_max[RIGHT] = adc_filtered[REV_2];
-		//	update_rev2_max_text(cal_rev_max[RIGHT]);
-		//}
+		if (adc_filtered[REV_2] < cal_rev_min[RIGHT])
+		{
+			cal_rev_min[RIGHT] = adc_filtered[REV_2];
+			update_rev2_min_text(cal_rev_min[RIGHT]);
+		}
+		if (adc_filtered[REV_2] > cal_rev_max[RIGHT])
+		{
+			cal_rev_max[RIGHT] = adc_filtered[REV_2];
+			update_rev2_max_text(cal_rev_max[RIGHT]);
+		}
 	}
 
 	void ThrottleAndJoystick::save_calibration()

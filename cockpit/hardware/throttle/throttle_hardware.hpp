@@ -8,7 +8,7 @@ namespace zcockpit::cockpit::hardware
 	// INPUTS
 	//
 	constexpr auto eng_1_idle_cutoff_sw = 0;	// pin 1 # 1 Idle/Cutoff
-	constexpr auto ENG_2_IDLE_CUTOFF_SW = 1;	// pin 2 # 1 Idle/Cutoff
+	constexpr auto eng_2_idle_cutoff_sw = 1;	// pin 2 # 1 Idle/Cutoff
 	constexpr auto toga_sw = 2;					// pin 3 TOGA
 	constexpr auto auto_throttle_sw = 3;		// pin 4 AT
 	constexpr auto parking_brake_sw = 4;		// pin 5 Parking Brake

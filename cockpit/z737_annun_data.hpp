@@ -1,5 +1,6 @@
 #pragma once
 
+
 namespace zcockpit::cockpit {
 
 
@@ -34,6 +35,10 @@ namespace zcockpit::cockpit {
 		float fuel_temp{0.0f};
 		float cabin_temp{0.0f};
 		float cabin_vvi{0.0f};
+
+		float autothrottle_active;
+
+
 
 
 		char tail_number[40];
@@ -187,5 +192,6 @@ namespace zcockpit::cockpit {
 
 		bool ac_tnsbus1_status{false};
 		bool ac_tnsbus2_status{false};
+
 	};
 }

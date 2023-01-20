@@ -40,7 +40,7 @@ add_executable (client WIN32
 	"aircraft_model_init_data.cpp"
 	"aircraft_model_init_str.cpp"   
   
-	"hardware/util.cpp"
+	"../common/util.cpp"
 
 	"hardware/usb/libusb_interface.cpp" 
 	"hardware/ioCards/iocards.cpp" 
@@ -69,7 +69,8 @@ add_executable (client WIN32
 	 "${CMAKE_SOURCE_DIR}/third_party/iir_lib/iir/RBJ.cpp"
 	 "${CMAKE_SOURCE_DIR}/third_party/iir_lib/iir/Biquad.cpp"
 	 "${CMAKE_SOURCE_DIR}/third_party/iir_lib/iir/Custom.cpp"
-	# "${CMAKE_SOURCE_DIR}/third_party/iir_lib/iir/Cascade.cpp"
+
+	 "sim_configuration.cpp"
 	
 )
 
@@ -95,12 +96,17 @@ target_link_directories(client PRIVATE ${CMAKE_BINARY_DIR}/lib/vc_x64_lib/)
 set(FTD2XX_STATIC_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/FTD2XX/Static/amd64")
 set(VJOY_STATIC_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/Vjoy/lib")
 
+target_include_directories(client PRIVATE ${CMAKE_SOURCE_DIR}/third_party/yaml-cpp/include/)
+
+
+
 
 
  # Link required libraries to the executable
 target_link_libraries(client PUBLIC
 		zboCockpitCommon
 		libusb
+		yaml-cpp
 		${FTD2XX_STATIC_LIBRARY}/ftd2xx.lib
 		${VJOY_STATIC_LIBRARY}/vJoyInterface.lib
 		asio

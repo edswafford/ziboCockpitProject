@@ -10,6 +10,7 @@
 #include <xtree>
 #include "../../aircraft_model.hpp"
 
+
 namespace zcockpit::cockpit::hardware
 {
 	struct JoystickDataStore

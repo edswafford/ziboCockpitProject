@@ -23,6 +23,7 @@ endif()
 # (Note that under MinGW, Boost.Thread is still required, due to a bug in MinGW that prevents the C++11 version from being used)
 add_definitions(-D_WEBSOCKETPP_CPP11_STRICT_)
 
+# ------------------ ASIO ------------------
 FetchContent_Declare(asio
   GIT_REPOSITORY https://github.com/chriskohlhoff/asio.git
   GIT_TAG asio-1-22-1
@@ -30,6 +31,7 @@ FetchContent_Declare(asio
   BUILD_COMMAND ""
   )
 message(STATUS "ASIO populated ${asio_POPULATED}")
+
 
 if(NOT asio_POPULATED)
 FetchContent_MakeAvailable(asio)
@@ -105,11 +107,13 @@ include_directories(third_party/libusb-1.0.26/libusb)
 include_directories(third_party/libusb-1.0.26/libusb/os)
 include_directories(third_party/FTD2XX/)
 
+add_subdirectory(third_party/yaml-cpp)
+
 
 add_subdirectory(third_party/libusb-1.0.26/libusb)
 
-add_executable(test_usb third_party/libusb-1.0.26/examples/testlibusb.c)
-target_link_libraries (test_usb PUBLIC libusb)
+#add_executable(test_usb third_party/libusb-1.0.26/examples/testlibusb.c)
+#target_link_libraries (test_usb PUBLIC libusb)
 
 
 include_directories(common)

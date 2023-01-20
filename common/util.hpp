@@ -5,6 +5,19 @@
 #include <sstream> 
 #include <vector>
 
+
+class FileNotFoundException : public std::exception {
+private:
+	std::string message;
+
+    public:
+	FileNotFoundException(std::string msg) : message(msg){}
+	char* what()
+	{
+		return const_cast<char*>(message.c_str());
+    }
+};
+
 class Util
 {
 public:

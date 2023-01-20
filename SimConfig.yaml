@@ -1,0 +1,12 @@
+# Sim737 Configuration
+#
+eng1_min: 230
+eng2_min: 230
+spdbrk_min: 60
+rev1_min: 970
+rev2_min: 2060
+eng1_max: 2770
+eng2_max: 2910
+spdbrk_max: 3260
+rev1_max: 2960
+rev2_max: 4080

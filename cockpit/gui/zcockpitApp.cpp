@@ -20,6 +20,8 @@
 #include "../hardware/InterfaceIT/HidInterfaceIT.hpp"
 
 #include <cassert>
+
+#include "util.hpp"
 #include "xplane_status.cpp"
 logger LOG("ZiboCockpit Client.log");
 
@@ -31,6 +33,7 @@ logger LOG("ZiboCockpit Client.log");
 //#include "../hardware/ioCards/mip_iocard.hpp"
 #include "../hardware/ioCards/fwd_overhead_iocard.hpp"
 //#include "../hardware/ioCards/rear_overhead_iocard.hpp"
+#include "../sim_configuration.hpp"
 
 using namespace std::chrono_literals;
 using namespace zcockpit::common::network;
@@ -94,6 +97,20 @@ namespace zcockpit::cockpit::gui
 		else {
 			main_window->set_iocard_status(std::string("Failed to Initialize LibUsb"));
 		}
+
+		try {
+			// Cockpit Configuration -- called first to get options and configuration
+			std::unique_ptr<CockpitCfgAbstractBase> cockpitCfgPtr(std::make_unique<SimConfiguration>());
+			CockpitCfg config(std::move(cockpitCfgPtr));
+		}
+		catch (FileNotFoundException e)
+		{
+			std::string cs(e.what());
+			wxSafeShowMessage("Fatal Error :: Exception ", cs);
+			main_window->Close(true);
+			return false;
+		}
+
 
 		timer_thread = std::thread([this]
 		{
