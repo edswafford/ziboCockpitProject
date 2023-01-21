@@ -7,10 +7,10 @@
 #include "logger.hpp"
 #include "flight_illusion/ficontroller.hpp"
 #include "ftd2xx/ftd2xxdevices_wrapper.hpp"
-#include "throttle/throttle_joystick.hpp"
 #include "transponder/transponder.hpp"
 #include "usb/usbrelay.hpp"
 
+#include "throttle/throttle_joystick.hpp"
 
 extern logger LOG;
 namespace zcockpit::cockpit::hardware
@@ -19,7 +19,7 @@ namespace zcockpit::cockpit::hardware
 	{
 	public:
 
-		Sim737Hardware(AircraftModel& ac_model, InterfaceIT& iit);
+		Sim737Hardware(AircraftModel& ac_model, InterfaceIT& iit, ThrottleAndJoystick& throttle_);
 
 		~Sim737Hardware();
 
@@ -53,6 +53,7 @@ namespace zcockpit::cockpit::hardware
 		static bool has_run_for_one_second_;
 
 		InterfaceIT& interface_it;
+		ThrottleAndJoystick& throttle;
 		
 		std::unique_ptr<MipIOCard> mip_iocard;
 		std::unique_ptr<ForwardOverheadIOCard> forward_overhead_iocard;
@@ -63,7 +64,6 @@ namespace zcockpit::cockpit::hardware
 		std::unique_ptr<FiController> overheadGauges;
 		std::unique_ptr<FiController> mipGauges;
 		std::unique_ptr<Transponder> xpndr;
-		std::unique_ptr<ThrottleAndJoystick> throttle;
 
 
 		void do_usb_work();

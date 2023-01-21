@@ -10,19 +10,35 @@
     #include "wx/wx.h"
 #endif
 
+#include <map>
 #include <xlocmon>
 
 #include "wxfb/mainApp.h"
-#include "../hardware/throttle/throttle_joystick.hpp"
+//#include "../hardware/throttle/throttle_joystick.hpp"
 
 class wxWindow;
+
+enum class CallbackTypes
+{
+	Calibrate,
+	SaveCalibration,
+	CancelCalibration,
+	ThrottleTest,
+	StopThrottleTest,
+};
 
 /** Implementing frameMain */
 class MainWindow : public frameMain
 {
 	public:
-	
+
+	// Callback typedefs
+	using TCallback = std::function<void()>;
+	using TCallbackMap = std::map<CallbackTypes, TCallback>;
+
 	MainWindow( wxWindow* parent );
+
+	void add_callback(const CallbackTypes cb_type, const TCallback cb);
 
 	void onCalibrate( wxCommandEvent& event ) override;
 
@@ -96,6 +112,8 @@ class MainWindow : public frameMain
 
 
 private:
+	TCallbackMap callbacks;
+
 	static constexpr wchar_t connected[] = wxT("Connected");
 	static constexpr wchar_t not_connected[] = wxT("Not Connected");
 

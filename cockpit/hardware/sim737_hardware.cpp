@@ -8,7 +8,8 @@ namespace zcockpit::cockpit::hardware
 {
 	bool Sim737Hardware::has_run_for_one_second_ = false;
 
-	Sim737Hardware::Sim737Hardware(AircraftModel& ac_model, InterfaceIT& iit): aircraft_model(ac_model), interface_it(iit)
+	Sim737Hardware::Sim737Hardware(AircraftModel& ac_model, InterfaceIT& iit, ThrottleAndJoystick& throttle_) :
+		aircraft_model(ac_model), interface_it(iit), throttle(throttle_)
 	{
 		interface_it.initialize();
 
@@ -19,6 +20,8 @@ namespace zcockpit::cockpit::hardware
 	{
 		interface_it.closeInterfaceITController();
 		interface_it.drop();
+
+		throttle.drop();
 
 		{
 			std::lock_guard<std::mutex> guard(event_thread_mutex);
@@ -58,9 +61,6 @@ namespace zcockpit::cockpit::hardware
 			ftd2Devices->drop();
 		}
 
-		if(throttle) {
-			throttle->drop();
-		}
 
 		std::unique_lock<std::mutex> lk(event_thread_done_mutex);
 			condition.wait(lk, [this]
@@ -151,7 +151,6 @@ namespace zcockpit::cockpit::hardware
 			xpndr->initialize(Transponder::xponderSerialNumber, ftd2Devices->getDevice(Transponder::xponderSerialNumber));
 			xpndr->open(Transponder::xponderSerialNumber);
 
-			throttle = std::make_unique<ThrottleAndJoystick>(ac_model);
 
 			// Applications should not start the event thread until after their first call to libusb_open()
 			start_event_thread();
@@ -328,7 +327,7 @@ namespace zcockpit::cockpit::hardware
 		// Throttle
 		//
 		auto current_throttle_status = Health::FAILED_STATUS;
-		if(throttle->available()) {
+		if(throttle.available()) {
 			current_throttle_status = Health::HEALTHY_STATUS;
 		}
 		if(current_throttle_status != throttle_status) {

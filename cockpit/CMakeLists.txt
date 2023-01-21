@@ -77,7 +77,8 @@ add_executable (client WIN32
 
 target_compile_definitions(client PRIVATE _UNICODE=1)
 target_compile_definitions(client PRIVATE FTD2XX_STATIC=1)
-# target_compile_definitions(client PRIVATE WIN32_LEAN_AND_MEAN=1)
+target_compile_definitions(client PRIVATE WIN32_LEAN_AND_MEAN=1)
+
 # target_compile_definitions(client PRIVATE LOG4CXX_STATIC=1)
 # target_compile_definitions(client PRIVATE _WIN32_WINNT=0x0601)
 # target_compile_definitions(client PRIVATE _WINDOWS=1)

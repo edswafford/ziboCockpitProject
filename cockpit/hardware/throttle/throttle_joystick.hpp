@@ -1,15 +1,17 @@
 #pragma once
+#include <thread>
+#include <memory>
+#include <condition_variable>
+#include <xtree>
+#define _WINSOCK2API_
+#define _WINSOCKAPI_   /* Prevent inclusion of winsock.h in windows.h */
+#include "../../gui/mainWindow.hpp"
 #include "windows.h"
 #include "Pokeys/PoKeysLib.h"
 #include "Pokeys/Stepper.hpp"
-#include <memory>
-#include <thread>
-#include <condition_variable>
 #include "Vjoy/VjoyFeeder.h"
 #include "Iir.h"
-#include <xtree>
 #include "../../aircraft_model.hpp"
-
 
 namespace zcockpit::cockpit::hardware
 {
@@ -58,43 +60,43 @@ namespace zcockpit::cockpit::hardware
 	{
 	public:
 
-		ThrottleAndJoystick(AircraftModel& ac_model);
+		ThrottleAndJoystick(AircraftModel& ac_model, MainWindow* mw);
 		void drop();
 		void static updateBeagleBonejoystick(JoystickDataStore& data);
 
 		bool available() {return throttle_healthy;}
 
-		static void set_enable_realtime_display(const bool enable_realtime_dispay)
+		 void set_enable_realtime_display(const bool enable_realtime_dispay)
 		{
-			ThrottleAndJoystick::realtime_display_enabled = enable_realtime_dispay;
+			realtime_display_enabled = enable_realtime_dispay;
 		}
 
-		static void set_enable_calibration(const bool enable_calibration)
+		 void set_enable_calibration(const bool enable_calibration)
 		{
-			ThrottleAndJoystick::calibration_enabled = enable_calibration;
+			calibration_enabled = enable_calibration;
 		}
 
-		static void set_save_calibration(const bool save_calibration)
+		 void set_save_calibration(const bool save_calibration)
 		{
-			ThrottleAndJoystick::save_calibration_ = save_calibration;
+			calibration_save = save_calibration;
 		}
 
-		static void set_cancel_calibration(const bool cancel_calibration)
+		 void set_cancel_calibration(const bool cancel_calibration)
 		{
-			ThrottleAndJoystick::cancel_calibration_ = cancel_calibration;
+			calibration_cancel = cancel_calibration;
 		}
 
 		// only used to test stepper motors
 
 
-		static void set_increment_stepper(const bool increment_stepper)
+		 void set_increment_stepper(const bool increment_stepper_)
 		{
-			ThrottleAndJoystick::increment_stepper = increment_stepper;
+			increment_stepper = increment_stepper_;
 		}
 
-		static void set_decrement_stepper(const bool decrement_stepper)
+		 void set_decrement_stepper(const bool decrement_stepper_)
 		{
-			ThrottleAndJoystick::decrement_stepper = decrement_stepper;
+			decrement_stepper = decrement_stepper_;
 		}
 		
 		static sPoKeysDeviceStatus deviceStat_;
@@ -187,6 +189,7 @@ namespace zcockpit::cockpit::hardware
 
 	private:
 		AircraftModel& aircraft_model;
+		MainWindow* main_window{nullptr};
 		bool throttle_healthy{ false };
 
 		bool auto_throttle_toggle{ false };
@@ -234,13 +237,14 @@ namespace zcockpit::cockpit::hardware
 		//double spdbrk_scaler{ MAX_SPD_BRAKE / 3600.0 };
 		//double rev_scaler[2]{ MAX_AXIS / 2900.0, MAX_AXIS / 2800.0 };
 
-		static bool realtime_display_enabled;
-		static bool calibration_enabled;
-		static bool calibration_init;
-		static bool save_calibration_;
-		static bool cancel_calibration_;
-		static bool increment_stepper;
-		static bool decrement_stepper;
+		bool realtime_display_enabled{false};
+		bool calibration_enabled{false};
+		bool calibration_init{false};
+		bool calibration_save{false};
+		bool calibration_cancel{false};
+		bool increment_stepper{false};
+		bool decrement_stepper{false};
+		void init_callbacks();
 
 		VjoyFeeder vjoy_feeder;
 		bool vjoy_available{ false };

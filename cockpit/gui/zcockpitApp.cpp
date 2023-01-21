@@ -291,7 +291,9 @@ namespace zcockpit::cockpit::gui
 
 			zcockpit::cockpit::Client<Udp> client(ip_address, udp, multicast_server_controller, multicast_app_controller, udp_controller, connection, gen, aircraft_model, UPDATE_RATE);
 
-			zcockpit::cockpit::hardware::Sim737Hardware sim737_hardware(aircraft_model, interface_it);
+			zcockpit::cockpit::hardware::ThrottleAndJoystick throttle(aircraft_model, main_window);
+
+			zcockpit::cockpit::hardware::Sim737Hardware sim737_hardware(aircraft_model, interface_it, throttle);
 
 			// IOCards should be initialized by now
 			//
@@ -300,16 +302,6 @@ namespace zcockpit::cockpit::gui
 			main_window->set_iocard_fwd_overhead_addr(ForwardOverheadIOCard::get_bus_addr());
 			main_window->set_iocard_rear_overhead_addr(RearOverheadIOCard::get_bus_addr());
 
-			main_window->set_eng1_min(CockpitCfg::ptr->eng1_min);
-			main_window->set_eng1_max(CockpitCfg::ptr->eng1_max);
-			main_window->set_eng2_min(CockpitCfg::ptr->eng2_min);
-			main_window->set_eng2_max(CockpitCfg::ptr->eng2_max);
-			main_window->set_spd_brk_min(CockpitCfg::ptr->spdbrk_min);
-			main_window->set_spd_brk_max(CockpitCfg::ptr->spdbrk_max);
-			main_window->set_rev1_min(CockpitCfg::ptr->rev1_min);
-			main_window->set_rev1_max(CockpitCfg::ptr->rev1_max);
-			main_window->set_rev2_min(CockpitCfg::ptr->rev2_min);
-			main_window->set_rev2_max(CockpitCfg::ptr->rev2_max);
 
 			LOG() << "Client running";
 

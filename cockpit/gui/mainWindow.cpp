@@ -6,6 +6,11 @@ MainWindow::MainWindow(wxWindow* parent): frameMain( parent )
 	sbsizerStatusBox->GetStaticBox()->Refresh();
 }
 
+void MainWindow::add_callback(const CallbackTypes cb_type, const TCallback cb)
+{
+	callbacks[cb_type] = cb;	
+}
+
 void MainWindow::onCalibrate(wxCommandEvent& event)
 {
 	const wxString text = m_buttonStartCalibrate->GetLabelText();
@@ -17,9 +22,9 @@ void MainWindow::onCalibrate(wxCommandEvent& event)
 		m_buttonSaveCalibration->Enable(true);
 		m_buttonStartCalibrate->Enable(false);
 		m_buttonStartTest->Enable(false);
-		zcockpit::cockpit::hardware::ThrottleAndJoystick::set_enable_realtime_display(true);
-		zcockpit::cockpit::hardware::ThrottleAndJoystick::set_enable_calibration(true);
-		zcockpit::cockpit::hardware::ThrottleAndJoystick::set_cancel_calibration(false);
+		if(callbacks.contains(CallbackTypes::Calibrate)) {
+			callbacks[CallbackTypes::Calibrate]();
+		}
 	}
 }
 
@@ -34,9 +39,9 @@ void MainWindow::onSaveCalibration(wxCommandEvent& event)
 		m_buttonSaveCalibration->Enable(false);
 		m_buttonStartCalibrate->Enable(true);
 		m_buttonStartTest->Enable(true);
-		zcockpit::cockpit::hardware::ThrottleAndJoystick::set_save_calibration(true);		
-		zcockpit::cockpit::hardware::ThrottleAndJoystick::set_enable_realtime_display(false);
-		zcockpit::cockpit::hardware::ThrottleAndJoystick::set_enable_calibration(false);
+		if(callbacks.contains(CallbackTypes::SaveCalibration)) {
+			callbacks[CallbackTypes::Calibrate]();
+		}
 	}
 }
 
@@ -51,9 +56,9 @@ void MainWindow::onCancelCalibration(wxCommandEvent& event)
 		m_buttonSaveCalibration->Enable(false);
 		m_buttonStartCalibrate->Enable(true);
 		m_buttonStartTest->Enable(true);
-		zcockpit::cockpit::hardware::ThrottleAndJoystick::set_enable_realtime_display(false);
-		zcockpit::cockpit::hardware::ThrottleAndJoystick::set_enable_calibration(false);
-		zcockpit::cockpit::hardware::ThrottleAndJoystick::set_cancel_calibration(true);
+		if(callbacks.contains(CallbackTypes::CancelCalibration)) {
+			callbacks[CallbackTypes::Calibrate]();
+		}
 	}
 }
 
@@ -67,7 +72,9 @@ void MainWindow::onTest(wxCommandEvent& event)
 		m_buttonStopTest->Enable(true);
 		m_buttonStartTest->Enable(false);
 		m_buttonStartCalibrate->Enable(false);
-		zcockpit::cockpit::hardware::ThrottleAndJoystick::set_enable_realtime_display(true);
+		if(callbacks.contains(CallbackTypes::ThrottleTest)) {
+			callbacks[CallbackTypes::Calibrate]();
+		}
 	}
 }
 
@@ -81,7 +88,9 @@ void MainWindow::onStopTest(wxCommandEvent& event)
 		m_buttonStopTest->Enable(false);
 		m_buttonStartTest->Enable(true);
 		m_buttonStartCalibrate->Enable(true);
-		zcockpit::cockpit::hardware::ThrottleAndJoystick::set_enable_realtime_display(false);
+		if(callbacks.contains(CallbackTypes::StopThrottleTest)) {
+			callbacks[CallbackTypes::Calibrate]();
+		}
 	}		
 }
 
@@ -290,6 +299,7 @@ void MainWindow::set_iocard_rear_overhead_addr(std::string message)
 void MainWindow::set_eng1_min(unsigned long min)
 {
 	auto message = std::to_string(min);
+	m_textCtrlEng1Min->Clear();
 	std::ostream stream(m_textCtrlEng1Min);
 	stream << message;
 	stream.flush();
@@ -298,6 +308,7 @@ void MainWindow::set_eng1_min(unsigned long min)
 void MainWindow::set_eng1_max(unsigned long max)
 {
 	auto message = std::to_string(max);
+	m_textCtrlEng1Max->Clear();
 	std::ostream stream(m_textCtrlEng1Max);
 	stream << message;
 	stream.flush();
@@ -306,6 +317,7 @@ void MainWindow::set_eng1_max(unsigned long max)
 void MainWindow::set_eng1_value(unsigned long value)
 {
 	auto message = std::to_string(value);
+	m_textCtrlEng1Value->Clear();
 	std::ostream stream(m_textCtrlEng1Value);
 	stream << message;
 	stream.flush();
@@ -314,6 +326,7 @@ void MainWindow::set_eng1_value(unsigned long value)
 void MainWindow::set_eng2_min(unsigned long min)
 {
 	auto message = std::to_string(min);
+	m_textCtrlEng2Min->Clear();
 	std::ostream stream(m_textCtrlEng2Min);
 	stream << message;
 	stream.flush();
@@ -322,6 +335,7 @@ void MainWindow::set_eng2_min(unsigned long min)
 void MainWindow::set_eng2_max(unsigned long max)
 {
 	auto message = std::to_string(max);
+	m_textCtrlEng2Max->Clear();
 	std::ostream stream(m_textCtrlEng2Max);
 	stream << message;
 	stream.flush();
@@ -330,6 +344,7 @@ void MainWindow::set_eng2_max(unsigned long max)
 void MainWindow::set_eng2_value(unsigned long value)
 {
 	auto message = std::to_string(value);
+	m_textCtrlEng2Value->Clear();
 	std::ostream stream(m_textCtrlEng2Value);
 	stream << message;
 	stream.flush();
@@ -338,6 +353,7 @@ void MainWindow::set_eng2_value(unsigned long value)
 void MainWindow::set_spd_brk_min(unsigned long min)
 {
 	auto message = std::to_string(min);
+	m_textCtrlSpdfBrkMin->Clear();
 	std::ostream stream(m_textCtrlSpdfBrkMin);
 	stream << message;
 	stream.flush();
@@ -346,6 +362,7 @@ void MainWindow::set_spd_brk_min(unsigned long min)
 void MainWindow::set_spd_brk_max(unsigned long max)
 {
 	auto message = std::to_string(max);
+	m_textCtrlSpdBrkMax->Clear();
 	std::ostream stream(m_textCtrlSpdBrkMax);
 	stream << message;
 	stream.flush();
@@ -354,6 +371,7 @@ void MainWindow::set_spd_brk_max(unsigned long max)
 void MainWindow::set_spd_brk_value(unsigned long value)
 {
 	auto message = std::to_string(value);
+	m_textCtrlSpdBrkValue->Clear();
 	std::ostream stream(m_textCtrlSpdBrkValue);
 	stream << message;
 	stream.flush();
@@ -362,6 +380,7 @@ void MainWindow::set_spd_brk_value(unsigned long value)
 void MainWindow::set_rev1_min(unsigned long min)
 {
 	auto message = std::to_string(min);
+	m_textCtrlRev1Min->Clear();
 	std::ostream stream(m_textCtrlRev1Min);
 	stream << message;
 	stream.flush();
@@ -370,6 +389,7 @@ void MainWindow::set_rev1_min(unsigned long min)
 void MainWindow::set_rev1_max(unsigned long max)
 {
 	auto message = std::to_string(max);
+	m_textCtrlRev1Max->Clear();
 	std::ostream stream(m_textCtrlRev1Max);
 	stream << message;
 	stream.flush();
@@ -378,6 +398,7 @@ void MainWindow::set_rev1_max(unsigned long max)
 void MainWindow::set_rev1_value(unsigned long value)
 {
 	auto message = std::to_string(value);
+	m_textCtrlRev1Value->Clear();
 	std::ostream stream(m_textCtrlRev1Value);
 	stream << message;
 	stream.flush();
@@ -386,6 +407,7 @@ void MainWindow::set_rev1_value(unsigned long value)
 void MainWindow::set_rev2_min(unsigned long min)
 {
 	auto message = std::to_string(min);
+	m_textCtrlRev2Min->Clear();
 	std::ostream stream(m_textCtrlRev2Min);
 	stream << message;
 	stream.flush();
@@ -394,6 +416,7 @@ void MainWindow::set_rev2_min(unsigned long min)
 void MainWindow::set_rev2_max(unsigned long max)
 {
 	auto message = std::to_string(max);
+	m_textCtrlRev2Max->Clear();
 	std::ostream stream(m_textCtrlRev2Max);
 	stream << message;
 	stream.flush();
@@ -401,7 +424,8 @@ void MainWindow::set_rev2_max(unsigned long max)
 
 void MainWindow::set_rev2_value(unsigned long value)
 {
-	auto message = std::to_string(std::money_base::value);
+	auto message = std::to_string(value);
+	m_textCtrlRev2Value->Clear();
 	std::ostream stream(m_textCtrlRev2Value);
 	stream << message;
 	stream.flush();

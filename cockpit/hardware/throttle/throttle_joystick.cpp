@@ -98,18 +98,12 @@ namespace zcockpit::cockpit::hardware
 	static constexpr auto LEFT_REVERSER_FUDGE_FACTOR = 200;  // compensate to the large amount of play in the pots
 	static constexpr auto RIGHT_REVERSER_FUDGE_FACTOR = 210;  // compensate to the large amount of play in the pots
 
-	
-	bool ThrottleAndJoystick::realtime_display_enabled = false;
-	bool ThrottleAndJoystick::calibration_enabled = false;
-	bool ThrottleAndJoystick::calibration_init = false;
-	bool ThrottleAndJoystick::save_calibration_ = false;
-	bool ThrottleAndJoystick::cancel_calibration_ =  false;
-	bool ThrottleAndJoystick::increment_stepper = false;
-	bool ThrottleAndJoystick::decrement_stepper = false;
 
 
-	ThrottleAndJoystick::ThrottleAndJoystick(AircraftModel& ac_model) : aircraft_model(ac_model)
+	ThrottleAndJoystick::ThrottleAndJoystick(AircraftModel& ac_model, MainWindow* mw) : aircraft_model(ac_model), main_window(mw)
 	{
+
+		init_callbacks();
 
 		pokey_alive = init_pokeys();
 		const auto joy_status = vjoy_feeder.init_vjoy(1);
@@ -223,14 +217,14 @@ namespace zcockpit::cockpit::hardware
 
 
 
-					if (ThrottleAndJoystick::realtime_display_enabled)
+					if (realtime_display_enabled)
 					{
 						if (current_cycle % common::FIVE_HZ == 0)
 						{
 							update_realtime_display();
 						}
 					}
-					if (ThrottleAndJoystick::calibration_enabled)
+					if (calibration_enabled)
 					{
 						calibrate();
 					}
@@ -238,23 +232,23 @@ namespace zcockpit::cockpit::hardware
 					{
 						ThrottleAndJoystick::calibration_init = false;
 					}
-					if (ThrottleAndJoystick::save_calibration_)
+					if (calibration_save)
 					{
 						save_calibration();
 					}
-					else if (ThrottleAndJoystick::cancel_calibration_)
+					else if (calibration_cancel)
 					{
 						// restore display with old calibration values
 						update_calibration_display();
-						ThrottleAndJoystick::cancel_calibration_ = false;
-						ThrottleAndJoystick::save_calibration_ = false;
+						ThrottleAndJoystick::calibration_cancel = false;
+						calibration_save = false;
 					}
 
 
 					//
 					// Testing
 					//
-					if (ThrottleAndJoystick::increment_stepper)
+					if (increment_stepper)
 					{
 						if (!stepper_test_running)
 						{
@@ -276,7 +270,7 @@ namespace zcockpit::cockpit::hardware
 							LOG() << "Stepper running";
 						}
 					}
-					else if (ThrottleAndJoystick::decrement_stepper)
+					else if (decrement_stepper)
 					{
 						if (!stepper_test_running)
 						{
@@ -1452,8 +1446,8 @@ namespace zcockpit::cockpit::hardware
 		CockpitCfg::ptr->rev1_max = rev_max[LEFT];
 		CockpitCfg::ptr->rev2_max = rev_max[RIGHT];
 	
-		ThrottleAndJoystick::save_calibration_ = false;
-		ThrottleAndJoystick::cancel_calibration_ = false;
+		calibration_save = false;
+		calibration_cancel = false;
 		adc_min[0] = rev_min[LEFT];
 		adc_min[1] = rev_min[RIGHT];
 		adc_min[2] = eng_min[LEFT];
@@ -1469,6 +1463,46 @@ namespace zcockpit::cockpit::hardware
 		}
 	}
 
+	
+	void ThrottleAndJoystick::init_callbacks()
+	{
+		auto cb_calibrate = [this]()
+		{
+			set_enable_realtime_display(true);
+			set_enable_calibration(true);
+			set_cancel_calibration(false);			
+		};
+		main_window->add_callback(CallbackTypes::Calibrate, cb_calibrate);
+
+		auto cb_save_calibration = [this]()
+		{
+			set_save_calibration(true);		
+			set_enable_realtime_display(false);
+			set_enable_calibration(false);			
+		};
+		main_window->add_callback(CallbackTypes::SaveCalibration, cb_save_calibration);
+
+		auto cb_cancel_calibration = [this]()
+		{
+			set_enable_realtime_display(false);
+			set_enable_calibration(false);
+			set_cancel_calibration(true);			
+		};
+
+		auto cb_test_throttle = [this]()
+		{
+			set_enable_realtime_display(true);
+		};
+		main_window->add_callback(CallbackTypes::ThrottleTest, cb_test_throttle);
+
+		auto cb_stop_throttle_test = [this]()
+		{
+			set_enable_realtime_display(false);			
+		};
+		main_window->add_callback(CallbackTypes::StopThrottleTest, cb_stop_throttle_test);
+	}
+
+
 	//
 	// Messages to GUI
 	//
@@ -1479,91 +1513,76 @@ namespace zcockpit::cockpit::hardware
 
 	void ThrottleAndJoystick::update_eng1_min_text(const int val) const
 	{
-	//	SendMessage(mainHwnd, WM_THROTTLE_ENG_1_MIN, NONE,
-//			reinterpret_cast<LPARAM>(std::to_string(val).c_str()));
+		main_window->set_eng1_min(val);
 	}
 
 	void ThrottleAndJoystick::update_eng1_text(const int val) const
 	{
-	//	SendMessage(mainHwnd, WM_THROTTLE_ENG_1, NONE,
-//			reinterpret_cast<LPARAM>(std::to_string(val).c_str()));
+		main_window->set_eng1_value(val);
 	}
 
 	void ThrottleAndJoystick::update_eng1_max_text(const int val) const
 	{
-	//	SendMessage(mainHwnd, WM_THROTTLE_ENG_1_MAX, NONE,
-//			reinterpret_cast<LPARAM>(std::to_string(val).c_str()));
+		main_window->set_eng1_max(val);
 	}
 
 	void ThrottleAndJoystick::update_eng2_min_text(const int val) const
 	{
-	//	SendMessage(mainHwnd, WM_THROTTLE_ENG_2_MIN, NONE,
-//			reinterpret_cast<LPARAM>(std::to_string(val).c_str()));
+		main_window->set_eng2_min(val);
 	}
 
 	void ThrottleAndJoystick::update_eng2_text(const int val) const
 	{
-	//	SendMessage(mainHwnd, WM_THROTTLE_ENG_2, NONE,
-//			reinterpret_cast<LPARAM>(std::to_string(val).c_str()));
+		main_window->set_eng2_value(val);
 	}
 
 	void ThrottleAndJoystick::update_eng2_max_text(const int val) const
 	{
-	//	SendMessage(mainHwnd, WM_THROTTLE_ENG_2_MAX, NONE,
-//			reinterpret_cast<LPARAM>(std::to_string(val).c_str()));
+		main_window->set_eng2_max(val);
 	}
 
 	void ThrottleAndJoystick::update_spdbrk_min_text(const int val) const
 	{
-	//	SendMessage(mainHwnd, WM_THROTTLE_SPDBRK_MIN, NONE,
-//			reinterpret_cast<LPARAM>(std::to_string(val).c_str()));
+		main_window->set_spd_brk_min(val);
 	}
 
 	void ThrottleAndJoystick::update_spdbrk_text(const int val) const
 	{
-	//	SendMessage(mainHwnd, WM_THROTTLE_SPDBRK, NONE,
-//			reinterpret_cast<LPARAM>(std::to_string(val).c_str()));
+		main_window->set_spd_brk_value(val);
 	}
 
 	void ThrottleAndJoystick::update_spdbrk_max_text(const int val) const
 	{
-	//	SendMessage(mainHwnd, WM_THROTTLE_SPDBRK_MAX, NONE,
-//			reinterpret_cast<LPARAM>(std::to_string(val).c_str()));
+		main_window->set_spd_brk_max(val);
 	}
 
 	void ThrottleAndJoystick::update_rev1_min_text(const int val) const
 	{
-	//	SendMessage(mainHwnd, WM_THROTTLE_REV_1_MIN, NONE,
-//			reinterpret_cast<LPARAM>(std::to_string(val).c_str()));
+		main_window->set_rev1_min(val);
 	}
 
 	void ThrottleAndJoystick::update_rev1_text(const int val) const
 	{
-	//	SendMessage(mainHwnd, WM_THROTTLE_REV_1, NONE,
-//			reinterpret_cast<LPARAM>(std::to_string(val).c_str()));
+		main_window->set_rev1_value(val);
 	}
 
 	void ThrottleAndJoystick::update_rev1_max_text(const int val) const
 	{
-	//	SendMessage(mainHwnd, WM_THROTTLE_REV_1_MAX, NONE,
-//			reinterpret_cast<LPARAM>(std::to_string(val).c_str()));
+		main_window->set_rev1_max(val);
 	}
 
 	void ThrottleAndJoystick::update_rev2_min_text(const int val) const
 	{
-	//	SendMessage(mainHwnd, WM_THROTTLE_REV_2_MIN, NONE,
-//			reinterpret_cast<LPARAM>(std::to_string(val).c_str()));
+		main_window->set_rev2_min(val);
 	}
 
 	void ThrottleAndJoystick::update_rev2_text(const int val) const
 	{
-	//	SendMessage(mainHwnd, WM_THROTTLE_REV_2, NONE,
-//			reinterpret_cast<LPARAM>(std::to_string(val).c_str()));
+		main_window->set_rev2_value(val);
 	}
 
 	void ThrottleAndJoystick::update_rev2_max_text(const int val) const
 	{
-	//	SendMessage(mainHwnd, WM_THROTTLE_REV_2_MAX, NONE,
-//			reinterpret_cast<LPARAM>(std::to_string(val).c_str()));
+		main_window->set_rev2_max(val);
 	}
 }
