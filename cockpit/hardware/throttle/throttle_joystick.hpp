@@ -62,37 +62,39 @@ namespace zcockpit::cockpit::hardware
 		void drop();
 		void static updateBeagleBonejoystick(JoystickDataStore& data);
 
-		void set_enable_realtime_display(const bool enable_realtime_dispay)
+		bool available() {return throttle_healthy;}
+
+		static void set_enable_realtime_display(const bool enable_realtime_dispay)
 		{
-			this->realtime_display_enabled = enable_realtime_dispay;
+			ThrottleAndJoystick::realtime_display_enabled = enable_realtime_dispay;
 		}
 
-		void set_enable_calibration(const bool enable_calibration)
+		static void set_enable_calibration(const bool enable_calibration)
 		{
-			this->calibration_enabled = enable_calibration;
+			ThrottleAndJoystick::calibration_enabled = enable_calibration;
 		}
 
-		void set_save_calibration(const bool save_calibration)
+		static void set_save_calibration(const bool save_calibration)
 		{
-			save_calibration_ = save_calibration;
+			ThrottleAndJoystick::save_calibration_ = save_calibration;
 		}
 
-		void set_cancel_calibration(const bool cancel_calibration)
+		static void set_cancel_calibration(const bool cancel_calibration)
 		{
-			cancel_calibration_ = cancel_calibration;
+			ThrottleAndJoystick::cancel_calibration_ = cancel_calibration;
 		}
 
 		// only used to test stepper motors
 
 
-		void set_increment_stepper(const bool increment_stepper)
+		static void set_increment_stepper(const bool increment_stepper)
 		{
-			this->increment_stepper = increment_stepper;
+			ThrottleAndJoystick::increment_stepper = increment_stepper;
 		}
 
-		void set_decrement_stepper(const bool decrement_stepper)
+		static void set_decrement_stepper(const bool decrement_stepper)
 		{
-			this->decrement_stepper = decrement_stepper;
+			ThrottleAndJoystick::decrement_stepper = decrement_stepper;
 		}
 		
 		static sPoKeysDeviceStatus deviceStat_;
@@ -152,7 +154,6 @@ namespace zcockpit::cockpit::hardware
 		bool sync_switches{ true };
 		bool sync_flaps{ true };
 		bool pokey_alive{ false };
-		bool throttle_status_is_healthy{ false };
 
 		// List of detected PoKeys devices
 		sPoKeysDevice PoKeysDevices[16];
@@ -186,6 +187,7 @@ namespace zcockpit::cockpit::hardware
 
 	private:
 		AircraftModel& aircraft_model;
+		bool throttle_healthy{ false };
 
 		bool auto_throttle_toggle{ false };
 
@@ -232,14 +234,13 @@ namespace zcockpit::cockpit::hardware
 		//double spdbrk_scaler{ MAX_SPD_BRAKE / 3600.0 };
 		//double rev_scaler[2]{ MAX_AXIS / 2900.0, MAX_AXIS / 2800.0 };
 
-		bool realtime_display_enabled{ false };
-		bool calibration_enabled{ false };
-		bool calibration_init{ false };
-		bool save_calibration_{ false };
-		bool cancel_calibration_{ false };
-
-		bool increment_stepper{ false };
-		bool decrement_stepper{ false };
+		static bool realtime_display_enabled;
+		static bool calibration_enabled;
+		static bool calibration_init;
+		static bool save_calibration_;
+		static bool cancel_calibration_;
+		static bool increment_stepper;
+		static bool decrement_stepper;
 
 		VjoyFeeder vjoy_feeder;
 		bool vjoy_available{ false };

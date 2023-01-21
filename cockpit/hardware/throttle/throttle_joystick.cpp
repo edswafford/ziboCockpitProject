@@ -97,6 +97,17 @@ namespace zcockpit::cockpit::hardware
 	static constexpr auto IDLE_OFFSET = 5;
 	static constexpr auto LEFT_REVERSER_FUDGE_FACTOR = 200;  // compensate to the large amount of play in the pots
 	static constexpr auto RIGHT_REVERSER_FUDGE_FACTOR = 210;  // compensate to the large amount of play in the pots
+
+	
+	bool ThrottleAndJoystick::realtime_display_enabled = false;
+	bool ThrottleAndJoystick::calibration_enabled = false;
+	bool ThrottleAndJoystick::calibration_init = false;
+	bool ThrottleAndJoystick::save_calibration_ = false;
+	bool ThrottleAndJoystick::cancel_calibration_ =  false;
+	bool ThrottleAndJoystick::increment_stepper = false;
+	bool ThrottleAndJoystick::decrement_stepper = false;
+
+
 	ThrottleAndJoystick::ThrottleAndJoystick(AircraftModel& ac_model) : aircraft_model(ac_model)
 	{
 
@@ -212,38 +223,38 @@ namespace zcockpit::cockpit::hardware
 
 
 
-					if (realtime_display_enabled)
+					if (ThrottleAndJoystick::realtime_display_enabled)
 					{
 						if (current_cycle % common::FIVE_HZ == 0)
 						{
 							update_realtime_display();
 						}
 					}
-					if (calibration_enabled)
+					if (ThrottleAndJoystick::calibration_enabled)
 					{
 						calibrate();
 					}
 					else
 					{
-						calibration_init = false;
+						ThrottleAndJoystick::calibration_init = false;
 					}
-					if (save_calibration_)
+					if (ThrottleAndJoystick::save_calibration_)
 					{
 						save_calibration();
 					}
-					else if (cancel_calibration_)
+					else if (ThrottleAndJoystick::cancel_calibration_)
 					{
 						// restore display with old calibration values
 						update_calibration_display();
-						cancel_calibration_ = false;
-						save_calibration_ = false;
+						ThrottleAndJoystick::cancel_calibration_ = false;
+						ThrottleAndJoystick::save_calibration_ = false;
 					}
 
 
 					//
 					// Testing
 					//
-					if (increment_stepper)
+					if (ThrottleAndJoystick::increment_stepper)
 					{
 						if (!stepper_test_running)
 						{
@@ -258,14 +269,14 @@ namespace zcockpit::cockpit::hardware
 
 							});
 							stepper_thread_for_testing.detach();
-							increment_stepper = false;
+							ThrottleAndJoystick::increment_stepper = false;
 						}
 						else
 						{
 							LOG() << "Stepper running";
 						}
 					}
-					else if (decrement_stepper)
+					else if (ThrottleAndJoystick::decrement_stepper)
 					{
 						if (!stepper_test_running)
 						{
@@ -280,7 +291,7 @@ namespace zcockpit::cockpit::hardware
 
 							});
 							stepper_thread_for_testing.detach();
-							decrement_stepper = false;
+							ThrottleAndJoystick::decrement_stepper = false;
 						}
 						else
 						{
@@ -299,17 +310,15 @@ namespace zcockpit::cockpit::hardware
 				//
 				// Pokeys is NOT Running
 				//
-				// update Status
-				if (throttle_status_is_healthy)
-				{
-					throttle_status_is_healthy = false;
-				}
+
+				throttle_healthy = false;
+
 				if (current_cycle % common::ONE_SECOND)
 				{
 					pokey_alive = init_pokeys();
 					if (pokey_alive)
 					{
-						throttle_status_is_healthy = true;
+						throttle_healthy = true;
 					}
 				}
 			}
@@ -1246,19 +1255,17 @@ namespace zcockpit::cockpit::hardware
 	{
 		if (pokey_alive)
 		{
-			throttle_status_is_healthy = true;
-//			update_throttle_HEALTH_text("Connected", GREEN);
+			throttle_healthy = true;
 		}
 		else
 		{
-			throttle_status_is_healthy = false;
-//			update_throttle_HEALTH_text("No Connection", RED);
+			throttle_healthy = false;
 		}
 	}
 
 	void ThrottleAndJoystick::update_realtime_display() const
 	{
-		if (!calibration_enabled) {
+		if (!ThrottleAndJoystick::calibration_enabled) {
 			update_eng1_text(adc_normalized[ENG_1]);
 			update_eng2_text(adc_normalized[ENG_2]);
 			update_spdbrk_text(adc_normalized[SPBRK]);
@@ -1339,7 +1346,7 @@ namespace zcockpit::cockpit::hardware
 
 	void ThrottleAndJoystick::calibrate()
 	{
-		if (!calibration_init)
+		if (!ThrottleAndJoystick::calibration_init)
 		{
 			cal_eng_min[LEFT] = LONG_MAX;
 			cal_eng_min[RIGHT] = LONG_MAX;
@@ -1352,7 +1359,7 @@ namespace zcockpit::cockpit::hardware
 			cal_spdbrk_max = 0;
 			cal_rev_max[LEFT] = 0;
 			cal_rev_max[RIGHT] = 0;
-			calibration_init = true;
+			ThrottleAndJoystick::calibration_init = true;
 		}
 		if (adc_filtered[ENG_1] < cal_eng_min[LEFT])
 		{
@@ -1445,8 +1452,8 @@ namespace zcockpit::cockpit::hardware
 		CockpitCfg::ptr->rev1_max = rev_max[LEFT];
 		CockpitCfg::ptr->rev2_max = rev_max[RIGHT];
 	
-		save_calibration_ = false;
-		cancel_calibration_ = false;
+		ThrottleAndJoystick::save_calibration_ = false;
+		ThrottleAndJoystick::cancel_calibration_ = false;
 		adc_min[0] = rev_min[LEFT];
 		adc_min[1] = rev_min[RIGHT];
 		adc_min[2] = eng_min[LEFT];

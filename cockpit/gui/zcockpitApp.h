@@ -47,6 +47,7 @@ namespace zcockpit::cockpit::gui
 		bool stop_timer{true};
 		bool timer_has_stopped{true};
 		bool zibo_status{false};
+		bool throttle_status{false};
 		bool interfaceit_mip_status{false};
 		bool interfaceit_overhead_status{false};
 		bool iocard_mip_status{false};

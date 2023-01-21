@@ -16,6 +16,9 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	wxBoxSizer* bSizerFrameMain;
 	bSizerFrameMain = new wxBoxSizer( wxVERTICAL );
 
+	wxBoxSizer* bSizer9;
+	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
+
 	wxBoxSizer* bSizerMainFrame;
 	bSizerMainFrame = new wxBoxSizer( wxVERTICAL );
 
@@ -237,7 +240,220 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizerMainFrame->Add( m_panelMain, 1, wxALL|wxEXPAND, 0 );
 
 
-	bSizerFrameMain->Add( bSizerMainFrame, 1, wxALL, 0 );
+	bSizer9->Add( bSizerMainFrame, 1, wxALL, 0 );
+
+	wxBoxSizer* bSizer101;
+	bSizer101 = new wxBoxSizer( wxVERTICAL );
+
+	m_panelThrottle = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer11;
+	bSizer11 = new wxBoxSizer( wxVERTICAL );
+
+	wxStaticBoxSizer* sbSizer3;
+	sbSizer3 = new wxStaticBoxSizer( new wxStaticBox( m_panelThrottle, wxID_ANY, wxT("THROTTLE") ), wxVERTICAL );
+
+	wxFlexGridSizer* fgSizer31;
+	fgSizer31 = new wxFlexGridSizer( 0, 4, 0, 0 );
+	fgSizer31->SetFlexibleDirection( wxBOTH );
+	fgSizer31->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+
+
+	fgSizer31->Add( 0, 0, 1, wxEXPAND, 5 );
+
+	m_staticText24 = new wxStaticText( sbSizer3->GetStaticBox(), wxID_ANY, wxT("VALUE"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText24->Wrap( -1 );
+	m_staticText24->SetFont( wxFont( 12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Arial") ) );
+
+	fgSizer31->Add( m_staticText24, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+	m_staticText241 = new wxStaticText( sbSizer3->GetStaticBox(), wxID_ANY, wxT("MIN"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText241->Wrap( -1 );
+	m_staticText241->SetFont( wxFont( 12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Arial") ) );
+
+	fgSizer31->Add( m_staticText241, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+	m_staticText242 = new wxStaticText( sbSizer3->GetStaticBox(), wxID_ANY, wxT("MAX"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText242->Wrap( -1 );
+	m_staticText242->SetFont( wxFont( 12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Arial") ) );
+
+	fgSizer31->Add( m_staticText242, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+	m_staticText243 = new wxStaticText( sbSizer3->GetStaticBox(), wxID_ANY, wxT("ENG 1"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText243->Wrap( -1 );
+	m_staticText243->SetFont( wxFont( 12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Arial") ) );
+
+	fgSizer31->Add( m_staticText243, 0, wxALL, 5 );
+
+	m_textCtrlEng1Value = new wxTextCtrl( sbSizer3->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_textCtrlEng1Value, 0, wxALL, 5 );
+
+	m_textCtrlEng1Min = new wxTextCtrl( sbSizer3->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_textCtrlEng1Min, 0, wxALL, 5 );
+
+	m_textCtrlEng1Max = new wxTextCtrl( sbSizer3->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_textCtrlEng1Max, 0, wxALL, 5 );
+
+	m_staticText2431 = new wxStaticText( sbSizer3->GetStaticBox(), wxID_ANY, wxT("ENG 2"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText2431->Wrap( -1 );
+	m_staticText2431->SetFont( wxFont( 12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Arial") ) );
+
+	fgSizer31->Add( m_staticText2431, 0, wxALL, 5 );
+
+	m_textCtrlEng2Value = new wxTextCtrl( sbSizer3->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_textCtrlEng2Value, 0, wxALL, 5 );
+
+	m_textCtrlEng2Min = new wxTextCtrl( sbSizer3->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_textCtrlEng2Min, 0, wxALL, 5 );
+
+	m_textCtrlEng2Max = new wxTextCtrl( sbSizer3->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_textCtrlEng2Max, 0, wxALL, 5 );
+
+	m_staticText24311 = new wxStaticText( sbSizer3->GetStaticBox(), wxID_ANY, wxT("SPD BRK"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText24311->Wrap( -1 );
+	m_staticText24311->SetFont( wxFont( 12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Arial") ) );
+
+	fgSizer31->Add( m_staticText24311, 0, wxALL, 5 );
+
+	m_textCtrlSpdBrkValue = new wxTextCtrl( sbSizer3->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_textCtrlSpdBrkValue, 0, wxALL, 5 );
+
+	m_textCtrlSpdfBrkMin = new wxTextCtrl( sbSizer3->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_textCtrlSpdfBrkMin, 0, wxALL, 5 );
+
+	m_textCtrlSpdBrkMax = new wxTextCtrl( sbSizer3->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_textCtrlSpdBrkMax, 0, wxALL, 5 );
+
+	m_staticText243111 = new wxStaticText( sbSizer3->GetStaticBox(), wxID_ANY, wxT("REV 1"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText243111->Wrap( -1 );
+	m_staticText243111->SetFont( wxFont( 12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Arial") ) );
+
+	fgSizer31->Add( m_staticText243111, 0, wxALL, 5 );
+
+	m_textCtrlRev1Value = new wxTextCtrl( sbSizer3->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_textCtrlRev1Value, 0, wxALL, 5 );
+
+	m_textCtrlRev1Min = new wxTextCtrl( sbSizer3->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_textCtrlRev1Min, 0, wxALL, 5 );
+
+	m_textCtrlRev1Max = new wxTextCtrl( sbSizer3->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_textCtrlRev1Max, 0, wxALL, 5 );
+
+	m_staticText243112 = new wxStaticText( sbSizer3->GetStaticBox(), wxID_ANY, wxT("REV 2"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText243112->Wrap( -1 );
+	m_staticText243112->SetFont( wxFont( 12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Arial") ) );
+
+	fgSizer31->Add( m_staticText243112, 0, wxALL, 5 );
+
+	m_textCtrlRev2Value = new wxTextCtrl( sbSizer3->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_textCtrlRev2Value, 0, wxALL, 5 );
+
+	m_textCtrlRev2Min = new wxTextCtrl( sbSizer3->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_textCtrlRev2Min, 0, wxALL, 5 );
+
+	m_textCtrlRev2Max = new wxTextCtrl( sbSizer3->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_textCtrlRev2Max, 0, wxALL, 5 );
+
+
+	sbSizer3->Add( fgSizer31, 1, wxALL|wxEXPAND, 5 );
+
+	wxFlexGridSizer* fgSizer5;
+	fgSizer5 = new wxFlexGridSizer( 0, 3, 0, 0 );
+	fgSizer5->SetFlexibleDirection( wxBOTH );
+	fgSizer5->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+
+	wxStaticBoxSizer* sbSizer4;
+	sbSizer4 = new wxStaticBoxSizer( new wxStaticBox( sbSizer3->GetStaticBox(), wxID_ANY, wxT("CALIBRATE") ), wxVERTICAL );
+
+	wxBoxSizer* bSizer131;
+	bSizer131 = new wxBoxSizer( wxVERTICAL );
+
+	m_buttonStartCalibrate = new wxButton( sbSizer4->GetStaticBox(), wxID_ANY, wxT("START"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_buttonStartCalibrate->SetBackgroundColour( wxColour( 192, 192, 192 ) );
+
+	bSizer131->Add( m_buttonStartCalibrate, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+	m_buttonCancelCalibration = new wxButton( sbSizer4->GetStaticBox(), wxID_ANY, wxT("CANCEL"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_buttonCancelCalibration->Enable( false );
+
+	bSizer131->Add( m_buttonCancelCalibration, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+	m_buttonSaveCalibration = new wxButton( sbSizer4->GetStaticBox(), wxID_ANY, wxT("SAVE"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_buttonSaveCalibration->Enable( false );
+
+	bSizer131->Add( m_buttonSaveCalibration, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+
+	sbSizer4->Add( bSizer131, 1, wxEXPAND, 5 );
+
+
+	fgSizer5->Add( sbSizer4, 1, wxEXPAND|wxLEFT, 20 );
+
+	wxStaticBoxSizer* sbSizer5;
+	sbSizer5 = new wxStaticBoxSizer( new wxStaticBox( sbSizer3->GetStaticBox(), wxID_ANY, wxT("TEST") ), wxVERTICAL );
+
+	wxBoxSizer* bSizer14;
+	bSizer14 = new wxBoxSizer( wxVERTICAL );
+
+	m_buttonStartTest = new wxButton( sbSizer5->GetStaticBox(), wxID_ANY, wxT("START"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_buttonStartTest->SetBackgroundColour( wxColour( 192, 192, 192 ) );
+
+	bSizer14->Add( m_buttonStartTest, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+	m_buttonStopTest = new wxButton( sbSizer5->GetStaticBox(), wxID_ANY, wxT("STOP"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_buttonStopTest->Enable( false );
+
+	bSizer14->Add( m_buttonStopTest, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+
+	sbSizer5->Add( bSizer14, 1, wxEXPAND, 5 );
+
+
+	fgSizer5->Add( sbSizer5, 1, wxEXPAND|wxLEFT|wxRIGHT, 20 );
+
+	wxStaticBoxSizer* sbSizer6;
+	sbSizer6 = new wxStaticBoxSizer( new wxStaticBox( sbSizer3->GetStaticBox(), wxID_ANY, wxT("STEPPER TEST") ), wxVERTICAL );
+
+	wxBoxSizer* bSizer15;
+	bSizer15 = new wxBoxSizer( wxVERTICAL );
+
+	m_buttonIncrementStepper = new wxButton( sbSizer6->GetStaticBox(), wxID_ANY, wxT("Increment"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer15->Add( m_buttonIncrementStepper, 0, wxALIGN_CENTER_HORIZONTAL|wxALL|wxLEFT|wxRIGHT, 5 );
+
+	m_buttonDecrementSteppper = new wxButton( sbSizer6->GetStaticBox(), wxID_ANY, wxT("Decrement"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer15->Add( m_buttonDecrementSteppper, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+
+	sbSizer6->Add( bSizer15, 1, wxEXPAND, 5 );
+
+
+	fgSizer5->Add( sbSizer6, 1, wxALIGN_RIGHT|wxEXPAND|wxLEFT, 20 );
+
+
+	sbSizer3->Add( fgSizer5, 1, wxEXPAND, 5 );
+
+
+	bSizer11->Add( sbSizer3, 1, wxALL|wxEXPAND, 5 );
+
+	wxBoxSizer* bSizer13;
+	bSizer13 = new wxBoxSizer( wxVERTICAL );
+
+
+	bSizer13->Add( 0, 0, 1, wxEXPAND, 5 );
+
+
+	bSizer11->Add( bSizer13, 1, wxEXPAND, 5 );
+
+
+	m_panelThrottle->SetSizer( bSizer11 );
+	m_panelThrottle->Layout();
+	bSizer11->Fit( m_panelThrottle );
+	bSizer101->Add( m_panelThrottle, 1, wxALL|wxEXPAND|wxLEFT, 8 );
+
+
+	bSizer9->Add( bSizer101, 1, wxEXPAND, 5 );
+
+
+	bSizerFrameMain->Add( bSizer9, 1, wxEXPAND, 5 );
 
 
 	this->SetSizer( bSizerFrameMain );
@@ -271,8 +487,26 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 
 
 	this->Centre( wxBOTH );
+
+	// Connect Events
+	m_buttonStartCalibrate->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onCalibrate ), NULL, this );
+	m_buttonCancelCalibration->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onCancelCalibration ), NULL, this );
+	m_buttonSaveCalibration->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onSaveCalibration ), NULL, this );
+	m_buttonStartTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onTest ), NULL, this );
+	m_buttonStopTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onStopTest ), NULL, this );
+	m_buttonIncrementStepper->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onIncrementStepper ), NULL, this );
+	m_buttonDecrementSteppper->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onDecrementStepper ), NULL, this );
 }
 
 frameMain::~frameMain()
 {
+	// Disconnect Events
+	m_buttonStartCalibrate->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onCalibrate ), NULL, this );
+	m_buttonCancelCalibration->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onCancelCalibration ), NULL, this );
+	m_buttonSaveCalibration->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onSaveCalibration ), NULL, this );
+	m_buttonStartTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onTest ), NULL, this );
+	m_buttonStopTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onStopTest ), NULL, this );
+	m_buttonIncrementStepper->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onIncrementStepper ), NULL, this );
+	m_buttonDecrementSteppper->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onDecrementStepper ), NULL, this );
+
 }

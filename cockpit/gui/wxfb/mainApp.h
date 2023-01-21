@@ -68,6 +68,37 @@ class frameMain : public wxFrame
 		wxStaticText* m_staticText22;
 		wxTextCtrl* m_textCtrIocardRearOverhead;
 		wxStaticText* m_staticTextIocardRearOverheadStatus;
+		wxPanel* m_panelThrottle;
+		wxStaticText* m_staticText24;
+		wxStaticText* m_staticText241;
+		wxStaticText* m_staticText242;
+		wxStaticText* m_staticText243;
+		wxTextCtrl* m_textCtrlEng1Value;
+		wxTextCtrl* m_textCtrlEng1Min;
+		wxTextCtrl* m_textCtrlEng1Max;
+		wxStaticText* m_staticText2431;
+		wxTextCtrl* m_textCtrlEng2Value;
+		wxTextCtrl* m_textCtrlEng2Min;
+		wxTextCtrl* m_textCtrlEng2Max;
+		wxStaticText* m_staticText24311;
+		wxTextCtrl* m_textCtrlSpdBrkValue;
+		wxTextCtrl* m_textCtrlSpdfBrkMin;
+		wxTextCtrl* m_textCtrlSpdBrkMax;
+		wxStaticText* m_staticText243111;
+		wxTextCtrl* m_textCtrlRev1Value;
+		wxTextCtrl* m_textCtrlRev1Min;
+		wxTextCtrl* m_textCtrlRev1Max;
+		wxStaticText* m_staticText243112;
+		wxTextCtrl* m_textCtrlRev2Value;
+		wxTextCtrl* m_textCtrlRev2Min;
+		wxTextCtrl* m_textCtrlRev2Max;
+		wxButton* m_buttonStartCalibrate;
+		wxButton* m_buttonCancelCalibration;
+		wxButton* m_buttonSaveCalibration;
+		wxButton* m_buttonStartTest;
+		wxButton* m_buttonStopTest;
+		wxButton* m_buttonIncrementStepper;
+		wxButton* m_buttonDecrementSteppper;
 		wxMenuBar* m_menubarMain;
 		wxMenu* m_menuFile;
 		wxMenu* m_menuFileNew;
@@ -76,9 +107,19 @@ class frameMain : public wxFrame
 		wxMenu* m_menuFileExcit;
 		wxMenu* m_menuEdit;
 
+		// Virtual event handlers, override them in your derived class
+		virtual void onCalibrate( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onCancelCalibration( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onSaveCalibration( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onTest( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onStopTest( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onIncrementStepper( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onDecrementStepper( wxCommandEvent& event ) { event.Skip(); }
+
+
 	public:
 
-		frameMain( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Zcockpit "), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 810,582 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		frameMain( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Zcockpit "), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 880,585 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 
 		~frameMain();
 

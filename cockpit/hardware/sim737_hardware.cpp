@@ -324,6 +324,17 @@ namespace zcockpit::cockpit::hardware
 
 	void Sim737Hardware::checkConnections()
 	{
+		//
+		// Throttle
+		//
+		auto current_throttle_status = Health::FAILED_STATUS;
+		if(throttle->available()) {
+			current_throttle_status = Health::HEALTHY_STATUS;
+		}
+		if(current_throttle_status != throttle_status) {
+			throttle_status = current_throttle_status;
+		}
+
 
 		//
 		// InterfaceIT MIP
@@ -478,6 +489,9 @@ namespace zcockpit::cockpit::hardware
 		}
 	}
 
+	bool Sim737Hardware::throttleStatus() const
+	{return Sim737Hardware::throttle_status == Health::HEALTHY_STATUS;}
+
 	bool Sim737Hardware::interfaceitMipStatus() const
 	{return interfaceIT_MIP_status == Health::HEALTHY_STATUS;}
 
@@ -506,6 +520,7 @@ namespace zcockpit::cockpit::hardware
 	{
 		return transponder_status == Health::HEALTHY_STATUS;
 	}
+
 
 
 	void Sim737Hardware::build_mip_gauges() const

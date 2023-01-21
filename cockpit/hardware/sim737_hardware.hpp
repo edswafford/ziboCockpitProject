@@ -38,6 +38,7 @@ namespace zcockpit::cockpit::hardware
 		[[nodiscard]] bool get_flight_illusion_overhead_status() const;
 		[[nodiscard]] bool get_flight_illusion_mip_status() const;
 		[[nodiscard]] bool get_transponder_status() const;
+		[[nodiscard]] bool throttleStatus() const;
 
 		static bool has_run_for_one_second(){return has_run_for_one_second_;}
 	private:
@@ -74,7 +75,7 @@ namespace zcockpit::cockpit::hardware
 		std::mutex event_thread_done_mutex;
 		std::thread event_thread;
 
-
+		Health throttle_status{Health::UNKNOWN_STATUS};
 		Health interfaceIT_MIP_status{Health::UNKNOWN_STATUS};
 		Health interfaceIT_overhead_status{Health::UNKNOWN_STATUS};
 		Health iocard_mip_status{Health::UNKNOWN_STATUS};
