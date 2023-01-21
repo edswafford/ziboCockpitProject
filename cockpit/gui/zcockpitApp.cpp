@@ -1,5 +1,5 @@
 
-#include "zcockpitApp.h"
+#include "zcockpitApp.hpp"
 #include <wx/log.h> 
 #include "../websocket/websocket_client.hpp"
 #include <chrono>

@@ -1,5 +1,4 @@
-#ifndef __MainWindow__
-#define __MainWindow__
+#pragma once
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
@@ -13,8 +12,7 @@
 
 #include <xlocmon>
 
-#include "zcockpitApp.h"
-#include "zcockpitApp.h"
+#include "zcockpitApp.hpp"
 #include "wxfb/mainApp.h"
 #include "../hardware/throttle/throttle_joystick.hpp"
 
@@ -433,5 +431,3 @@ private:
 //	static constexpr wchar_t [] = wxT("");
 
 };
-
-#endif // __MainWindow__

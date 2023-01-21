@@ -1,9 +1,8 @@
-#ifndef __ZCockpitApp__
-#define __ZCockpitApp__
+#pragma once
 #include <mutex>
 #include <thread>
 
-#include "mainWindow.h"
+#include "mainWindow.hpp"
 
 
 //
@@ -71,4 +70,3 @@ namespace zcockpit::cockpit::gui
 		std::chrono::duration<double, std::milli> elapsed{0};
 	};
 }
-#endif

@@ -6,7 +6,7 @@ cmake_minimum_required (VERSION 3.24 FATAL_ERROR)
 add_executable (client WIN32
 	"gui/zcockpitApp.cpp"
 	"gui/wxfb/mainApp.cpp"
-	"gui/zcockpitApp.h"
+	"gui/zcockpitApp.hpp"
 
 
 	"client.h"
@@ -71,7 +71,7 @@ add_executable (client WIN32
 	 "${CMAKE_SOURCE_DIR}/third_party/iir_lib/iir/Custom.cpp"
 
 	 "sim_configuration.cpp"
-	
+	"gui/mainWindow.cpp"
 )
 
 
