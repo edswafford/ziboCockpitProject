@@ -53,7 +53,6 @@ namespace zcockpit::cockpit::gui
 		twenty_hz_counter = TWENTY_HZ;
 		five_second_counter = FIVE_SECONDS;
 
-
 	}
 	ZcockpitApp::~ZcockpitApp() {
 		LOG() << "Deleting ZcockpitApp";
@@ -73,6 +72,12 @@ namespace zcockpit::cockpit::gui
 		
 		main_window = new MainWindow(nullptr);
 		main_window->Show(true);
+		auto cb_close = [this]()
+		{
+			this->drop();
+		};
+		main_window->add_callback(CallbackTypes::Close, cb_close);
+
 
 		//
 		// Simple Ini
@@ -118,15 +123,8 @@ namespace zcockpit::cockpit::gui
 		});
 		return true;
 	}
-
-	int ZcockpitApp::OnExit() {
-		// Any custom deletion here
-		// DON'T call delete m_frame or m_frame->Destroy() m_frame here
-		// As it is null at this point.
-
-		// now we can stop the update
-		LOG() << "Exiting Main Window";
-
+	void ZcockpitApp::drop()
+	{
 		std::unique_lock<std::mutex> lk(timer_done_mutex);
 		{
 			std::lock_guard<std::mutex> lock(sim737_timer_mutex);
@@ -141,7 +139,10 @@ namespace zcockpit::cockpit::gui
 		}
 
 		LibUsbInterface::exit();
+	}
 
+	int ZcockpitApp::OnExit() {
+		LOG() << "Exiting Main Window";
 		return 0;
 	}
 

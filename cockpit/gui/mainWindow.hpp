@@ -20,6 +20,7 @@ class wxWindow;
 
 enum class CallbackTypes
 {
+	Close,
 	Calibrate,
 	SaveCalibration,
 	CancelCalibration,
@@ -37,6 +38,10 @@ class MainWindow : public frameMain
 	using TCallbackMap = std::map<CallbackTypes, TCallback>;
 
 	MainWindow( wxWindow* parent );
+
+	void onClose(wxCloseEvent& event) override;
+
+	void m_menuItemFileExitOnMenuSelection(wxCommandEvent& event) override;
 
 	void add_callback(const CallbackTypes cb_type, const TCallback cb);
 

@@ -57,6 +57,7 @@
             <property name="window_name"></property>
             <property name="window_style">wxTAB_TRAVERSAL</property>
             <property name="xrc_skip_sizer">1</property>
+            <event name="OnClose">onClose</event>
             <object class="wxBoxSizer" expanded="1">
                 <property name="minimum_size"></property>
                 <property name="name">bSizerFrameMain</property>
@@ -4210,39 +4211,39 @@
                     <property name="label">File</property>
                     <property name="name">m_menuFile</property>
                     <property name="permission">protected</property>
-                    <object class="submenu" expanded="0">
+                    <object class="wxMenuItem" expanded="1">
                         <property name="bitmap"></property>
-                        <property name="label">New</property>
-                        <property name="name">m_menuFileNew</property>
-                        <property name="permission">protected</property>
-                    </object>
-                    <object class="submenu" expanded="0">
-                        <property name="bitmap"></property>
-                        <property name="label">Open</property>
-                        <property name="name">m_menuFileOpen</property>
-                        <property name="permission">protected</property>
-                        <object class="separator" expanded="0">
-                            <property name="name">m_separator1</property>
-                            <property name="permission">none</property>
-                        </object>
-                    </object>
-                    <object class="submenu" expanded="0">
-                        <property name="bitmap"></property>
-                        <property name="label">Save</property>
-                        <property name="name">m_menuFileSave</property>
-                        <property name="permission">protected</property>
-                    </object>
-                    <object class="submenu" expanded="0">
-                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">1</property>
+                        <property name="help"></property>
+                        <property name="id">wxID_ANY</property>
+                        <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">Exit</property>
-                        <property name="name">m_menuFileExcit</property>
-                        <property name="permission">protected</property>
+                        <property name="name">m_menuItemFileExit</property>
+                        <property name="permission">none</property>
+                        <property name="shortcut"></property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">m_menuItemFileExitOnMenuSelection</event>
                     </object>
                 </object>
                 <object class="wxMenu" expanded="0">
-                    <property name="label">Edit</property>
-                    <property name="name">m_menuEdit</property>
+                    <property name="label">Help</property>
+                    <property name="name">m_menuHelp</property>
                     <property name="permission">protected</property>
+                    <object class="wxMenuItem" expanded="1">
+                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">1</property>
+                        <property name="help"></property>
+                        <property name="id">wxID_ANY</property>
+                        <property name="kind">wxITEM_NORMAL</property>
+                        <property name="label">About</property>
+                        <property name="name">m_menuItemHelpAbout</property>
+                        <property name="permission">none</property>
+                        <property name="shortcut"></property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">m_menuItemHelpAboutOnMenuSelection</event>
+                    </object>
                 </object>
             </object>
         </object>

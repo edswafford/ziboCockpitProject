@@ -101,13 +101,10 @@ class frameMain : public wxFrame
 		wxButton* m_buttonDecrementSteppper;
 		wxMenuBar* m_menubarMain;
 		wxMenu* m_menuFile;
-		wxMenu* m_menuFileNew;
-		wxMenu* m_menuFileOpen;
-		wxMenu* m_menuFileSave;
-		wxMenu* m_menuFileExcit;
-		wxMenu* m_menuEdit;
+		wxMenu* m_menuHelp;
 
 		// Virtual event handlers, override them in your derived class
+		virtual void onClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void onCalibrate( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onCancelCalibration( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onSaveCalibration( wxCommandEvent& event ) { event.Skip(); }
@@ -115,6 +112,8 @@ class frameMain : public wxFrame
 		virtual void onStopTest( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onIncrementStepper( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onDecrementStepper( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_menuItemFileExitOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_menuItemHelpAboutOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 
 
 	public:

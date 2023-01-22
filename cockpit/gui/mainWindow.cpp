@@ -6,6 +6,19 @@ MainWindow::MainWindow(wxWindow* parent): frameMain( parent )
 	sbsizerStatusBox->GetStaticBox()->Refresh();
 }
 
+void MainWindow::onClose(wxCloseEvent& event)
+{
+	if(callbacks.contains(CallbackTypes::Close)) {
+		callbacks[CallbackTypes::Close]();
+	}
+	event.Skip();
+}
+
+void MainWindow::m_menuItemFileExitOnMenuSelection(wxCommandEvent& event)
+{
+	Close(true);		
+}
+
 void MainWindow::add_callback(const CallbackTypes cb_type, const TCallback cb)
 {
 	callbacks[cb_type] = cb;	

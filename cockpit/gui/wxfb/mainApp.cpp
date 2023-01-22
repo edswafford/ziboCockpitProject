@@ -460,28 +460,18 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Layout();
 	m_menubarMain = new wxMenuBar( 0 );
 	m_menuFile = new wxMenu();
-	m_menuFileNew = new wxMenu();
-	wxMenuItem* m_menuFileNewItem = new wxMenuItem( m_menuFile, wxID_ANY, wxT("New"), wxEmptyString, wxITEM_NORMAL, m_menuFileNew );
-	m_menuFile->Append( m_menuFileNewItem );
-
-	m_menuFileOpen = new wxMenu();
-	wxMenuItem* m_menuFileOpenItem = new wxMenuItem( m_menuFile, wxID_ANY, wxT("Open"), wxEmptyString, wxITEM_NORMAL, m_menuFileOpen );
-	m_menuFileOpen->AppendSeparator();
-
-	m_menuFile->Append( m_menuFileOpenItem );
-
-	m_menuFileSave = new wxMenu();
-	wxMenuItem* m_menuFileSaveItem = new wxMenuItem( m_menuFile, wxID_ANY, wxT("Save"), wxEmptyString, wxITEM_NORMAL, m_menuFileSave );
-	m_menuFile->Append( m_menuFileSaveItem );
-
-	m_menuFileExcit = new wxMenu();
-	wxMenuItem* m_menuFileExcitItem = new wxMenuItem( m_menuFile, wxID_ANY, wxT("Exit"), wxEmptyString, wxITEM_NORMAL, m_menuFileExcit );
-	m_menuFile->Append( m_menuFileExcitItem );
+	wxMenuItem* m_menuItemFileExit;
+	m_menuItemFileExit = new wxMenuItem( m_menuFile, wxID_ANY, wxString( wxT("Exit") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menuFile->Append( m_menuItemFileExit );
 
 	m_menubarMain->Append( m_menuFile, wxT("File") );
 
-	m_menuEdit = new wxMenu();
-	m_menubarMain->Append( m_menuEdit, wxT("Edit") );
+	m_menuHelp = new wxMenu();
+	wxMenuItem* m_menuItemHelpAbout;
+	m_menuItemHelpAbout = new wxMenuItem( m_menuHelp, wxID_ANY, wxString( wxT("About") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menuHelp->Append( m_menuItemHelpAbout );
+
+	m_menubarMain->Append( m_menuHelp, wxT("Help") );
 
 	this->SetMenuBar( m_menubarMain );
 
@@ -489,6 +479,7 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Centre( wxBOTH );
 
 	// Connect Events
+	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( frameMain::onClose ) );
 	m_buttonStartCalibrate->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onCalibrate ), NULL, this );
 	m_buttonCancelCalibration->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onCancelCalibration ), NULL, this );
 	m_buttonSaveCalibration->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onSaveCalibration ), NULL, this );
@@ -496,11 +487,14 @@ frameMain::frameMain( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_buttonStopTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onStopTest ), NULL, this );
 	m_buttonIncrementStepper->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onIncrementStepper ), NULL, this );
 	m_buttonDecrementSteppper->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onDecrementStepper ), NULL, this );
+	m_menuFile->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( frameMain::m_menuItemFileExitOnMenuSelection ), this, m_menuItemFileExit->GetId());
+	m_menuHelp->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( frameMain::m_menuItemHelpAboutOnMenuSelection ), this, m_menuItemHelpAbout->GetId());
 }
 
 frameMain::~frameMain()
 {
 	// Disconnect Events
+	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( frameMain::onClose ) );
 	m_buttonStartCalibrate->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onCalibrate ), NULL, this );
 	m_buttonCancelCalibration->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onCancelCalibration ), NULL, this );
 	m_buttonSaveCalibration->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( frameMain::onSaveCalibration ), NULL, this );
