@@ -1478,7 +1478,8 @@ namespace zcockpit::cockpit::hardware
 		{
 			set_save_calibration(true);		
 			set_enable_realtime_display(false);
-			set_enable_calibration(false);			
+			set_enable_calibration(false);
+			main_window->clear_all_throttle_value_displays();
 		};
 		main_window->add_callback(CallbackTypes::SaveCalibration, cb_save_calibration);
 
@@ -1486,8 +1487,10 @@ namespace zcockpit::cockpit::hardware
 		{
 			set_enable_realtime_display(false);
 			set_enable_calibration(false);
-			set_cancel_calibration(true);			
+			set_cancel_calibration(true);
+			main_window->clear_all_throttle_value_displays();
 		};
+		main_window->add_callback(CallbackTypes::CancelCalibration, cb_cancel_calibration);
 
 		auto cb_test_throttle = [this]()
 		{
@@ -1497,7 +1500,8 @@ namespace zcockpit::cockpit::hardware
 
 		auto cb_stop_throttle_test = [this]()
 		{
-			set_enable_realtime_display(false);			
+			set_enable_realtime_display(false);
+			main_window->clear_all_throttle_value_displays();
 		};
 		main_window->add_callback(CallbackTypes::StopThrottleTest, cb_stop_throttle_test);
 	}

@@ -83,6 +83,9 @@ class MainWindow : public frameMain
 	void set_iocard_fwd_overhead_addr(std::string message);
 
 	void set_iocard_rear_overhead_addr(std::string message);
+	void clear_all_throttle_displays();
+	void clear_all_throttle_value_displays();
+	void clear_all_throttle_limit_displays();
 
 	void set_eng1_min(unsigned long min);
 

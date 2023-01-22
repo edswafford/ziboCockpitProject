@@ -53,7 +53,7 @@ void MainWindow::onSaveCalibration(wxCommandEvent& event)
 		m_buttonStartCalibrate->Enable(true);
 		m_buttonStartTest->Enable(true);
 		if(callbacks.contains(CallbackTypes::SaveCalibration)) {
-			callbacks[CallbackTypes::Calibrate]();
+			callbacks[CallbackTypes::SaveCalibration]();
 		}
 	}
 }
@@ -70,7 +70,7 @@ void MainWindow::onCancelCalibration(wxCommandEvent& event)
 		m_buttonStartCalibrate->Enable(true);
 		m_buttonStartTest->Enable(true);
 		if(callbacks.contains(CallbackTypes::CancelCalibration)) {
-			callbacks[CallbackTypes::Calibrate]();
+			callbacks[CallbackTypes::CancelCalibration]();
 		}
 	}
 }
@@ -86,7 +86,7 @@ void MainWindow::onTest(wxCommandEvent& event)
 		m_buttonStartTest->Enable(false);
 		m_buttonStartCalibrate->Enable(false);
 		if(callbacks.contains(CallbackTypes::ThrottleTest)) {
-			callbacks[CallbackTypes::Calibrate]();
+			callbacks[CallbackTypes::ThrottleTest]();
 		}
 	}
 }
@@ -102,7 +102,7 @@ void MainWindow::onStopTest(wxCommandEvent& event)
 		m_buttonStartTest->Enable(true);
 		m_buttonStartCalibrate->Enable(true);
 		if(callbacks.contains(CallbackTypes::StopThrottleTest)) {
-			callbacks[CallbackTypes::Calibrate]();
+			callbacks[CallbackTypes::StopThrottleTest]();
 		}
 	}		
 }
@@ -308,6 +308,57 @@ void MainWindow::set_iocard_rear_overhead_addr(std::string message)
 	stream << message;
 	stream.flush();
 }
+
+
+void MainWindow::clear_all_throttle_displays()
+{
+	m_textCtrlEng1Min->Clear();
+	m_textCtrlEng1Max->Clear();
+	m_textCtrlEng1Value->Clear();
+
+	m_textCtrlEng2Min->Clear();
+	m_textCtrlEng2Max->Clear();
+	m_textCtrlEng2Value->Clear();
+
+	m_textCtrlSpdfBrkMin->Clear();
+	m_textCtrlSpdBrkMax->Clear();
+	m_textCtrlSpdBrkValue->Clear();
+
+	m_textCtrlRev1Min->Clear();
+	m_textCtrlRev1Max->Clear();
+	m_textCtrlRev1Value->Clear();
+
+	m_textCtrlRev2Min->Clear();
+	m_textCtrlRev2Max->Clear();
+	m_textCtrlRev2Value->Clear();
+
+}
+void MainWindow::clear_all_throttle_value_displays()
+{
+	m_textCtrlEng1Value->Clear();
+	m_textCtrlEng2Value->Clear();
+	m_textCtrlSpdBrkValue->Clear();
+	m_textCtrlRev1Value->Clear();
+	m_textCtrlRev2Value->Clear();
+}
+void MainWindow::clear_all_throttle_limit_displays()
+{
+	m_textCtrlEng1Min->Clear();
+	m_textCtrlEng1Max->Clear();
+
+	m_textCtrlEng2Min->Clear();
+	m_textCtrlEng2Max->Clear();
+
+	m_textCtrlSpdfBrkMin->Clear();
+	m_textCtrlSpdBrkMax->Clear();
+
+	m_textCtrlRev1Min->Clear();
+	m_textCtrlRev1Max->Clear();
+
+	m_textCtrlRev2Min->Clear();
+	m_textCtrlRev2Max->Clear();
+}
+
 
 void MainWindow::set_eng1_min(unsigned long min)
 {
