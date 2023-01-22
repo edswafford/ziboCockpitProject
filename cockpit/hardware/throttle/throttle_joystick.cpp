@@ -706,8 +706,8 @@ namespace zcockpit::cockpit::hardware
 	#pragma warning(enable:4996)
 	*/
 	
-//			process_reverser(eng_1_reverser_analog_input, REV_1, EVT_CONTROL_STAND_REV_THRUST1_LEVER);
-//			process_reverser(eng_2_reverser_analog_input, REV_2, EVT_CONTROL_STAND_REV_THRUST2_LEVER);
+			process_reverser(eng_1_reverser_analog_input, REV_1);
+			process_reverser(eng_2_reverser_analog_input, REV_2);
 	
 			filter_analogs(eng_1_thrust_analog_input, ENG_1);
 			if (rev_deployed[0])
@@ -833,7 +833,7 @@ namespace zcockpit::cockpit::hardware
 	//
 	//  Revised Reverser Processing
 	//
-	void ThrottleAndJoystick::process_reverser(const int analog_pin, const int side, const unsigned thrust_lever_event)
+	void ThrottleAndJoystick::process_reverser(const int analog_pin, const int side)
 	{
 		const auto DELAY_CLICK = 200; // milliseconds delay
 

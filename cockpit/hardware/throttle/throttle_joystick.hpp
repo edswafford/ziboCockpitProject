@@ -114,7 +114,7 @@ namespace zcockpit::cockpit::hardware
 		void process_throttle();
 		void timer();
 		void set_parking_brake_output(const bool on);
-		void process_reverser(const int analog_pin, const int side, const unsigned thrust_lever_event);
+		void process_reverser(const int analog_pin, const int side);
 		void filter_analogs(int analog_pin, int index);
 		void send_reverser_value(int side, double value) const;
 		void process_analogs();
