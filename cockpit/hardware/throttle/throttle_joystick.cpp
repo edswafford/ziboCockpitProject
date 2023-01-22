@@ -1446,6 +1446,8 @@ namespace zcockpit::cockpit::hardware
 		CockpitCfg::ptr->rev1_max = rev_max[LEFT];
 		CockpitCfg::ptr->rev2_max = rev_max[RIGHT];
 	
+		CockpitCfg::save();
+
 		calibration_save = false;
 		calibration_cancel = false;
 		adc_min[0] = rev_min[LEFT];
