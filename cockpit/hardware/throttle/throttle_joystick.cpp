@@ -104,6 +104,7 @@ namespace zcockpit::cockpit::hardware
 	{
 
 		init_callbacks();
+		initialize_switches();
 
 		pokey_alive = init_pokeys();
 		const auto joy_status = vjoy_feeder.init_vjoy(1);
@@ -472,12 +473,17 @@ namespace zcockpit::cockpit::hardware
 						//sendMessageInt(KEY_COMMAND_AUTOMATICFLIGHT_AUTOPILOT_DISCONNECT, 0);
 						//simconnect_send_event_data(EVT_YOKE_L_AP_DISC_SWITCH, MOUSE_FLAG_LEFTSINGLE);
 					}	
+
+					// TRIM UP
 					if (ThrottleAndJoystick::beagleBoneData.trim_up) {
-						//sendMessageInt(KEY_COMMAND_FLTCTRL_STAB_TRIM_UP, 0);
+						aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::pitch_trim_up_pb]);
 					}
-					else if (ThrottleAndJoystick::beagleBoneData.trim_dn) {
-						//sendMessageInt(KEY_COMMAND_FLTCTRL_STAB_TRIM_DOWN, 0);
+
+					// TRIM DOWN
+					if (ThrottleAndJoystick::beagleBoneData.trim_dn) {
+						aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::pitch_trim_down_pb]);
 					}
+
 					vjoy_available = vjoy_feeder.update(vjoy, ThrottleAndJoystick::beagleBoneData.lButtons);
 					ThrottleAndJoystick::beagleBoneFresh = false;
 				}
@@ -495,9 +501,9 @@ namespace zcockpit::cockpit::hardware
 
 				if (aircraft_model.z738_is_available())
 				{
-				//	if (at_mode != static_cast<Autothrottle_Modes>(Ifly737::shareMemSDK->Autothrottle_Mode))
+					if (at_mode != static_cast<Autothrottle_Modes>(aircraft_model.z737InData.pfd_spd_mode))
 					{
-				//		at_mode = static_cast<Autothrottle_Modes>(Ifly737::shareMemSDK->Autothrottle_Mode);
+						at_mode = static_cast<Autothrottle_Modes>(aircraft_model.z737InData.pfd_spd_mode);
 
 						enable_at_steppers = !(at_mode == Autothrottle_Modes::ARM || at_mode == Autothrottle_Modes::THR_HLD || at_mode ==
 							Autothrottle_Modes::BLANK || at_mode == Autothrottle_Modes::UNKNOWN);
@@ -511,24 +517,24 @@ namespace zcockpit::cockpit::hardware
 					}
 
 
-					//if (Ifly737::shareMemSDK->AT_Switches_Status && enable_at_steppers)
+					if (aircraft_model.z737InData.autothrottle_arm_pos && enable_at_steppers)
 					{
 						previous_enable_at_steppers = enable_at_steppers;
-						//auto scaler = (100 - FsxSimConnect::left_throttle_position) / 100 * 0.27;
-						//left_n1_commanded = 20.6 + (FsxSimConnect::left_throttle_position * (0.93 + scaler));
+						auto scaler = (100 - aircraft_model.z737InData.throttle_ratio[0]) / 100 * 0.27;
+						left_n1_commanded = 20.6 + (aircraft_model.z737InData.throttle_ratio[0] * (0.93 + scaler));
 						if (left_n1_commanded < 0.0)
 						{
 							left_n1_commanded = 0.0;
 						}
 
-						//scaler = (100 - FsxSimConnect::right_throttle_position) / 100 * 0.27;
-						//right_n1_commanded = 20.6 + (FsxSimConnect::right_throttle_position * (0.93 + scaler));
+						scaler = (100 - aircraft_model.z737InData.throttle_ratio[1]) / 100 * 0.27;
+						right_n1_commanded = 20.6 + (aircraft_model.z737InData.throttle_ratio[1] * (0.93 + scaler));
 						if (right_n1_commanded < 0.0)
 						{
 							right_n1_commanded = 0.0;
 						}
 					}
-					//else if (previous_enable_at_steppers && !auto_throttle_is_disengaged)
+					else if (previous_enable_at_steppers && !auto_throttle_is_disengaged)
 					{
 						// don't turn off steppers until they have caught up with the last commanded value
 						// Determine % throttle
@@ -563,63 +569,63 @@ namespace zcockpit::cockpit::hardware
 		case Flap_0:
 			if (previous_flaps != Flap_0 || sync_flaps)
 			{
-//				sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_0, 0);
+				aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::flaps_0]);
 				previous_flaps = Flap_0;
 			}
 			break;
 		case Flap_1:
 			if (previous_flaps != Flap_1 || sync_flaps)
 			{
-//				sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_1, 0);
+				aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::flaps_1]);
 				previous_flaps = Flap_1;
 			}
 			break;
 		case Flap_2:
 			if (previous_flaps != Flap_2 || sync_flaps)
 			{
-//				sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_2, 0);
+				aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::flaps_2]);
 				previous_flaps = Flap_2;
 			}
 			break;
 		case Flap_5:
 			if (previous_flaps != Flap_5 || sync_flaps)
 			{
-//				sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_5, 0);
+				aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::flaps_5]);
 				previous_flaps = Flap_5;
 			}
 			break;
 		case Flap_10:
 			if (previous_flaps != Flap_10 || sync_flaps)
 			{
-//				sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_10, 0);
+				aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::flaps_10]);
 				previous_flaps = Flap_10;
 			}
 			break;
 		case Flap_15:
 			if (previous_flaps != Flap_15 || sync_flaps)
 			{
-//				sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_15, 0);
+				aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::flaps_15]);
 				previous_flaps = Flap_15;
 			}
 			break;
 		case Flap_25:
 			if (previous_flaps != Flap_25 || sync_flaps)
 			{
-//				sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_25, 0);
+				aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::flaps_25]);
 				previous_flaps = Flap_25;
 			}
 			break;
 		case Flap_30:
 			if (previous_flaps != Flap_30 || sync_flaps)
 			{
-//				sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_30, 0);
+				aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::flaps_30]);
 				previous_flaps = Flap_30;
 			}
 			break;
 		case Flap_40:
 			if (previous_flaps != Flap_40 || sync_flaps)
 			{
-//				sendMessageInt(KEY_COMMAND_FLTCTRL_FLAP_LEVER_40, 0);
+				aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::flaps_40]);
 				previous_flaps = Flap_40;
 			}
 			break;
@@ -732,39 +738,28 @@ namespace zcockpit::cockpit::hardware
 			filter_analogs(spoiler_analog_input, SPBRK);
 			if (filter_has_settled) {
 				double spdbrk = (-adc_normalized[SPBRK] + 32768.0);
-	
-				speed_brake = static_cast<int>(spdbrk / 32768.0 * 208);
-					//previous_speed_brake = speed_brake;
+				auto current_speed_brake = static_cast<int>(spdbrk / 32768.0 * 208);
+				if (std::abs(current_speed_brake - speed_brake) > 5){
+					speed_brake = current_speed_brake;
+					auto sw = throttle_zcockpit_switches[ThrottleSwitchPosition::speedbrake_lever];
+
+					//
+					// Spoiler handle position [0.0: Retracted,  0.089: Armed, 0.67: Flight Detent  1.0: Fully Extended] 
 					if (speed_brake < 20) {
-						//vjoy.axisZ = 4000.0;
-//						sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_SPOILER_POS, 0);
-						//
-						// Spoiler handle position [0: Retracted, 1.0: Fully Extended] 
-//						simconnect_send_spoiler_position(0.0);
+						sw.float_hw_value = 0.0f;
 					}
 					else if(speed_brake < 30) {
-						//speed_brake = 25;
-//						sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_SPOILER_ARMED, 1);
+						sw.float_hw_value = 0.089f;
+					}
+					else if(speed_brake < 30) {
+						sw.float_hw_value = 0.089f;
 					}
 					else {
-						//vjoy.axisZ = spdbrk;
-//						sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_SPOILER_POS, speed_brake);
-						//
-						// Spoiler handle position [0: Retracted, 1.0: Fully Extended] 
-//						simconnect_send_spoiler_position(spdbrk / 32768.0);
+						sw.float_hw_value = spdbrk / 32768.0;
 					}
-	
-	
-	
-				if (send_speed_brake) {
-				//	LOG() << "SpeedBrake  " << speed_brake;
-//					sendMessageInt(KEY_COMMAND_FLTCTRL_FLIGHT_SPOILER_POS, speed_brake);
+					aircraft_model.push_switch_change(sw);
 				}
-				send_speed_brake = !send_speed_brake;
-	
-//				LOG() << "SpeedBrake Ifly Actual " << Ifly737::shareMemSDK->SpoilerPos << "     FSX Actual " << FsxSimConnect::spoiler_handle_position << "      Input Simconnect " << spdbrk/32768.0;
 			}
-
 	}
 
 
@@ -819,14 +814,20 @@ namespace zcockpit::cockpit::hardware
 		//
 		if (value <= 0.0) {
 			const int reverser = static_cast<int>(value * -16383.0/ REVRSER_FULLSCALE);
-			
+
+
 			if (side == LEFT) {
-//				sendMessageInt(KEY_COMMAND_ENGAPU_THROTTLE1_POS, reverser);
+				auto sw = throttle_zcockpit_switches[ThrottleSwitchPosition::reverse_lever1];
+				sw.float_hw_value = reverser;
+				aircraft_model.push_switch_change(sw);
 			}
 			else
 			{
-//				sendMessageInt(KEY_COMMAND_ENGAPU_THROTTLE2_POS, reverser);
+				auto sw = throttle_zcockpit_switches[ThrottleSwitchPosition::reverse_lever2];
+				sw.float_hw_value = reverser;
+				aircraft_model.push_switch_change(sw);
 			}
+
 		}
 	}
 
@@ -1007,7 +1008,7 @@ namespace zcockpit::cockpit::hardware
 		if (auto_throttle_toggle)
 		{
 			// Disengauge was press -- waiting for light to toggle off
-			if (aircraft_model.z738_is_available() && aircraft_model.z737InData.autothrottle_active)
+			if (aircraft_model.z738_is_available() && aircraft_model.z737InData.autothrottle_arm_pos)
 			{
 				// light is now off
 				auto_throttle_toggle = false;
@@ -1016,7 +1017,7 @@ namespace zcockpit::cockpit::hardware
 		}
 		else
 		{
-			if (aircraft_model.z738_is_available() && aircraft_model.z737InData.autothrottle_active)
+			if (aircraft_model.z738_is_available() && aircraft_model.z737InData.autothrottle_arm_pos)
 			{
 				// light is on --> AT is not disengaged
 				ThrottleAndJoystick::auto_throttle_is_disengaged = false;
@@ -1077,14 +1078,14 @@ namespace zcockpit::cockpit::hardware
 					{
 						ThrottleAndJoystick::auto_throttle_is_disengaged = true;
 						left_n1_commanded = right_n1_commanded = 0.0;
-						if (aircraft_model.z738_is_available() && aircraft_model.z737InData.autothrottle_active)
+						if (aircraft_model.z738_is_available() && aircraft_model.z737InData.autothrottle_arm_pos)
 						{
 							// light is on need to wait for toggle
 							auto_throttle_toggle = true;
 							LOG() << "AUTO_THROTTLE Toggle == true";
 						}
 						LOG() << "AUTO THROTTLE  process switches Disengage auto throttle";
-//						sendMessageInt(KEY_COMMAND_AUTOMATICFLIGHT_AUTOTHROTTLE_DISCONNECT, 0);
+						aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::left_at_dis_press_pb]);
 					}
 				}
 				break;
@@ -1092,14 +1093,12 @@ namespace zcockpit::cockpit::hardware
 				if (parking_brake != value || sync_switches)
 				{
 					parking_brake = value;
-					if (value == 0)
-					{
-//						sendMessageInt(KEY_COMMAND_GEAR_PARKING_BRAKE_LEVER_ON, 0);
+					if(parking_brake > 0) {
+						parking_brake = 1;
 					}
-					else
-					{
-//						sendMessageInt(KEY_COMMAND_GEAR_PARKING_BRAKE_LEVER_OFF, 0);
-					}
+					auto sw = throttle_zcockpit_switches[ThrottleSwitchPosition::parking_brake_pos];
+					sw.float_hw_value = parking_brake;
+					aircraft_model.push_switch_change(sw);
 				}
 				break;
 			case horn_cutout_sw:
@@ -1243,6 +1242,7 @@ namespace zcockpit::cockpit::hardware
 
 		return true;
 	}
+
 
 
 	void ThrottleAndJoystick::update_throttle_health()
@@ -1512,10 +1512,7 @@ namespace zcockpit::cockpit::hardware
 	//
 	// Messages to GUI
 	//
-//	void ThrottleAndJoystick::update_throttle_HEALTH_text(const char* text, const COLOR color)
-//	{
-//		SendMessage(mainHwnd, WM_THROTTLE_HEALTH, color, reinterpret_cast<LPARAM>(text));
-//	}
+
 
 	void ThrottleAndJoystick::update_eng1_min_text(const int val) const
 	{

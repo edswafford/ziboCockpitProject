@@ -20,6 +20,9 @@ namespace zcockpit::cockpit {
 		bool WARN_annunPSEU{false};
 
 		//
+		float pfd_spd_mode{0.0f};
+		float autothrottle_arm_pos{0.0f};
+		std::vector<float> throttle_ratio{0.0f};
 		float ac_volt_value{0.0f};
 		float dc_volt_value{0.0f};
 		float ac_freq_value{0.0f};
@@ -36,7 +39,7 @@ namespace zcockpit::cockpit {
 		float cabin_temp{0.0f};
 		float cabin_vvi{0.0f};
 
-		float autothrottle_active;
+//		float autothrottle_active;
 
 
 

@@ -39,6 +39,28 @@ namespace zcockpit::cockpit::hardware
 		Flap_40 = 7,
 	};
 
+	enum class ThrottleSwitchPosition : unsigned {
+		left_at_dis_press_pb,
+		pitch_trim_down_pb,
+		pitch_trim_up_pb,
+		flaps_0,
+		flaps_1,
+		flaps_2,
+		flaps_5,
+		flaps_15,
+		flaps_10,
+		flaps_25,
+		flaps_30,
+		flaps_40,
+		speedbrake_lever,
+		reverse_lever1,
+		reverse_lever2,
+		parking_brake_pos,
+
+		Switch_position_unused,
+		kMaxValue = Switch_position_unused,
+	};
+
 	//
 	// Butterworth filter constants
 	//
@@ -103,6 +125,44 @@ namespace zcockpit::cockpit::hardware
 		static sPoKeysDeviceStatus deviceStat_flaps;
 
 	private:
+		void initialize_switches()
+		{
+			constexpr int PRESSED = 1;
+			constexpr int RELEASED = 0;
+
+			constexpr int FLAP_0 = 0;
+			constexpr int FLAP_1 = 1;
+			constexpr int FLAP_2 = 2;
+			constexpr int FLAP_5 = 3;
+			constexpr int FLAP_10 = 4;
+			constexpr int FLAP_15 = 5;
+			constexpr int FLAP_25 = 6;
+			constexpr int FLAP_30 = 7;
+			constexpr int FLAP_40 = 8;
+
+			throttle_zcockpit_switches[ThrottleSwitchPosition::left_at_dis_press_pb] = ZcockpitSwitch(DataRefName::left_at_dis_press_pb, common::SwitchType::pushbutton, PRESSED);
+
+			throttle_zcockpit_switches[ThrottleSwitchPosition::pitch_trim_down_pb] = ZcockpitSwitch(DataRefName::pitch_trim_down_pb, common::SwitchType::pushbutton, PRESSED);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::pitch_trim_up_pb] = ZcockpitSwitch(DataRefName::pitch_trim_up_pb, common::SwitchType::pushbutton, PRESSED);
+
+			throttle_zcockpit_switches[ThrottleSwitchPosition::flaps_0] = ZcockpitSwitch(DataRefName::flap_fake_pos, common::SwitchType::rotary_multi_commands, FLAP_0);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::flaps_1] = ZcockpitSwitch(DataRefName::flap_fake_pos, common::SwitchType::rotary_multi_commands, FLAP_1);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::flaps_2] = ZcockpitSwitch(DataRefName::flap_fake_pos, common::SwitchType::rotary_multi_commands, FLAP_2);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::flaps_5] = ZcockpitSwitch(DataRefName::flap_fake_pos, common::SwitchType::rotary_multi_commands, FLAP_5);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::flaps_10] = ZcockpitSwitch(DataRefName::flap_fake_pos, common::SwitchType::rotary_multi_commands, FLAP_10);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::flaps_15] = ZcockpitSwitch(DataRefName::flap_fake_pos, common::SwitchType::rotary_multi_commands, FLAP_15);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::flaps_25] = ZcockpitSwitch(DataRefName::flap_fake_pos, common::SwitchType::rotary_multi_commands, FLAP_25);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::flaps_30] = ZcockpitSwitch(DataRefName::flap_fake_pos, common::SwitchType::rotary_multi_commands, FLAP_30);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::flaps_40] = ZcockpitSwitch(DataRefName::flap_fake_pos, common::SwitchType::rotary_multi_commands, FLAP_40);
+
+			throttle_zcockpit_switches[ThrottleSwitchPosition::speedbrake_lever] = ZcockpitSwitch(DataRefName::speedbrake_lever, common::SwitchType::raw_encoder, 0.0f);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::reverse_lever1] = ZcockpitSwitch(DataRefName::reverse_lever1, common::SwitchType::raw_encoder, 0.0f);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::reverse_lever2] = ZcockpitSwitch(DataRefName::reverse_lever2, common::SwitchType::raw_encoder, 0.0f);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::parking_brake_pos] = ZcockpitSwitch(DataRefName::parking_brake_pos, common::SwitchType::raw_encoder, 0.0f);
+			
+		}
+
+
 		void update_throttle_health();
 		void update_realtime_display() const;
 		void update_calibration_display() const;
@@ -196,7 +256,7 @@ namespace zcockpit::cockpit::hardware
 
 		int previous_speed_brake{ -100 };
 		int speed_brake{ -0 };
-		bool send_speed_brake{ false };
+
 	//	int rev_filtered[2]{ 0, 0 };
 	//	int previous_analog_rev[2]{ 0,0 };
 		bool rev_at_min[2]{ true, true };
@@ -255,6 +315,8 @@ namespace zcockpit::cockpit::hardware
 		bool filter_has_settled{ false };
 
 		static constexpr int MAX_EVOLUTIONS = 100;
+
+		common::EnumArray<ThrottleSwitchPosition, ZcockpitSwitch> throttle_zcockpit_switches;
 
 	public:
 

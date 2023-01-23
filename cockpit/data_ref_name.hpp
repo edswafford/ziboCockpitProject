@@ -186,6 +186,11 @@ namespace zcockpit::cockpit {
 		cabin_temp,
 		cabin_vvi,
 
+		pfd_spd_mode,
+		autothrottle_arm_pos,
+		throttle_ratio,
+
+
 		//
 		// end of DataRef names
 		//
@@ -303,6 +308,8 @@ namespace zcockpit::cockpit {
 		fire_bell_light2_pb,
 
 		bleed_trip_reset_pb,
+		flap_fake_pos,
+
 
 		gpws_test,
 
@@ -359,7 +366,22 @@ namespace zcockpit::cockpit {
 		stall_test1,
 		stall_test2,
 
+		speedbrake_lever,
+		reverse_lever1,
+		reverse_lever2,
+		parking_brake_pos,
 
+		left_at_dis_press_pb,
+		pitch_trim_down_pb,
+		pitch_trim_up_pb,
+		left_toga_pos,
+		gear_horn_cutout_pos,
+		ap_trim_pos,
+		ap_trim_lock_pos,
+		el_trim_pos,
+		el_trim_lock_pos,
+		mixture_ratio1,
+		mixture_ratio2,
 
 
 		//
@@ -502,6 +524,22 @@ namespace zcockpit::cockpit {
 		DataRefName::mach_warn2_pos,
 		DataRefName::stall_test1,
 		DataRefName::stall_test2,
+
+		DataRefName::speedbrake_lever,
+		DataRefName::reverse_lever1,
+		DataRefName::reverse_lever2,
+		DataRefName::parking_brake_pos,
+
+
+
+		DataRefName::left_toga_pos,
+		DataRefName::gear_horn_cutout_pos,
+		DataRefName::ap_trim_pos,
+		DataRefName::ap_trim_lock_pos,
+		DataRefName::el_trim_pos,
+		DataRefName::el_trim_lock_pos,
+		DataRefName::mixture_ratio1,
+		DataRefName::mixture_ratio2,
 
 	};
 

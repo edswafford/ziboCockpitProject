@@ -160,9 +160,35 @@ namespace zcockpit::cockpit {
 		data_ref_strings[DataRefName::stall_test1] = {"laminar/B738/push_button/stall_test1", XplaneType::type_Float, !round_up};
 		data_ref_strings[DataRefName::stall_test2] = {"laminar/B738/push_button/stall_test2", XplaneType::type_Float, !round_up};
 
+		// NEW
+		data_ref_strings[DataRefName::left_toga_pos] = {"laminar/B738/autopilot/left_toga_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::gear_horn_cutout_pos] = {"laminar/B738/push_button/gear_horn_cutout_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::ap_trim_pos] = {"laminar/B738/toggle_switch/ap_trim_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::ap_trim_lock_pos] = {"laminar/B738/toggle_switch/ap_trim_lock_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::el_trim_pos] = {"laminar/B738/toggle_switch/el_trim_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::el_trim_lock_pos] = {"laminar/B738/toggle_switch/el_trim_lock_pos", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::mixture_ratio1] = {"laminar/B738/engine/mixture_ratio1", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::mixture_ratio2] = {"laminar/B738/engine/mixture_ratio2", XplaneType::type_Float, !round_up};
+
+
+
+		// command value Spoiler handle position [0.0: Retracted,  0.089: Armed, 0.67: Flight Detent  1.0: Fully Extended] 
+		data_ref_strings[DataRefName::speedbrake_lever] = {"laminar/B738/flt_ctrls/speedbrake_lever", XplaneType::type_Float, !round_up};
+		// command value reverser 0.0 -- 1.0
+		data_ref_strings[DataRefName::reverse_lever1] = {"laminar/B738/flt_ctrls/reverse_lever1", XplaneType::type_Float, !round_up};
+		data_ref_strings[DataRefName::reverse_lever2] = {"laminar/B738/flt_ctrls/reverse_lever2", XplaneType::type_Float, !round_up};
+		// command value
+		data_ref_strings[DataRefName::parking_brake_pos] = {"laminar/B738/parking_brake_pos", XplaneType::type_Float, !round_up};
+
+
+
+
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
 		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
+		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
+		//data_ref_strings[DataRefName::] = {"", XplaneType::type_Float, !round_up};
+
 
 
 		//command_ref_strings[CommandRefName::] = { "" };
@@ -198,6 +224,14 @@ namespace zcockpit::cockpit {
 		//data_ref_strings[DataRefName::MFD_SYS_pb] = {"MFD_SYS_pb", XplaneType::type_Float, !round_up};
 
 		// INPUTS
+		// BLANK=0, ARM=1, N1=2, MCP SPD=3, FMC SPD=4 GA=5, THR HLD=6, RETARD=7
+		data_ref_strings[DataRefName::pfd_spd_mode] = {"laminar/B738/autopilot/pfd_spd_mode", XplaneType::type_Float, round_up};
+		data_ref_strings[DataRefName::autothrottle_arm_pos] = {"laminar/B738/autopilot/autothrottle_arm_pos", XplaneType::type_Float, !round_up};
+		// float[8]
+		data_ref_strings[DataRefName::throttle_ratio] = {"sim/cockpit2/engine/actuators/throttle_ratio", XplaneType::type_FloatArray, !round_up};
+
+
+
 		data_ref_strings[DataRefName::ac_volt_value] = {"laminar/B738/ac_volt_value", XplaneType::type_Float, round_up};
 		data_ref_strings[DataRefName::dc_volt_value] = {"laminar/B738/dc_volt_value", XplaneType::type_Float, round_up};
 		data_ref_strings[DataRefName::ac_freq_value] = {"laminar/B738/ac_freq_value", XplaneType::type_Float, round_up};
@@ -631,6 +665,37 @@ namespace zcockpit::cockpit {
 		command_ref_strings[CommandRefName::mach_warn2_test] = { "laminar/B738/push_button/mach_warn2_test" };
 		command_ref_strings[CommandRefName::stall_test1_press] = { "laminar/B738/push_button/stall_test1_press" };
 		command_ref_strings[CommandRefName::stall_test2_press] = { "laminar/B738/push_button/stall_test2_press" };
+
+
+		command_ref_strings[CommandRefName::left_at_dis_press] = {"laminar/B738/autopilot/left_at_dis_press"};
+		command_ref_strings[CommandRefName::pitch_trim_down] = {"laminar/B738/flight_controls/pitch_trim_down"};
+		command_ref_strings[CommandRefName::pitch_trim_up] = {"laminar/B738/flight_controls/pitch_trim_up"};
+
+		command_ref_strings[CommandRefName::flaps_0] = {"laminar/B738/push_button/flaps_0"};
+		command_ref_strings[CommandRefName::flaps_1] = {"laminar/B738/push_button/flaps_1"};
+		command_ref_strings[CommandRefName::flaps_2] = {"laminar/B738/push_button/flaps_2"};
+		command_ref_strings[CommandRefName::flaps_5] = {"laminar/B738/push_button/flaps_5"};
+		command_ref_strings[CommandRefName::flaps_10] = {"laminar/B738/push_button/flaps_10"};
+		command_ref_strings[CommandRefName::flaps_15] = {"laminar/B738/push_button/flaps_15"};
+		command_ref_strings[CommandRefName::flaps_25] = {"laminar/B738/push_button/flaps_25"};
+		command_ref_strings[CommandRefName::flaps_30] = {"laminar/B738/push_button/flaps_30"};
+		command_ref_strings[CommandRefName::flaps_40] = {"laminar/B738/push_button/flaps_40"};
+
+
+		command_ref_strings[CommandRefName::mixture1_idle] = {"laminar/B738/engine/mixture1_idle"};
+		command_ref_strings[CommandRefName::mixture1_cutoff] = {"laminar/B738/engine/mixture2_cutoff"};
+		command_ref_strings[CommandRefName::mixture2_idle] = {"laminar/B738/engine/mixture2_idle"};
+		command_ref_strings[CommandRefName::mixture2_cutoff] = {"laminar/B738/engine/mixture2_cutoff"};
+		// command press
+		command_ref_strings[CommandRefName::left_toga_press] = {"laminar/B738/autopilot/left_toga_press"};
+		// command press
+		command_ref_strings[CommandRefName::gear_horn_cutout] = {"laminar/B738/alert/gear_horn_cutout"};
+		command_ref_strings[CommandRefName::ap_trim] = {"laminar/B738/toggle_switch/ap_trim"};
+		command_ref_strings[CommandRefName::ap_trim_lock] = {"laminar/B738/toggle_switch/ap_trim_lock"};
+
+		command_ref_strings[CommandRefName::el_trim] = {"laminar/B738/toggle_switch/el_trim"};
+		command_ref_strings[CommandRefName::el_trim_lock] = {"laminar/B738/toggle_switch/el_trim_lock"};
+
 
 		//command_ref_strings[CommandRefName::] = { "" };
 		//command_ref_strings[CommandRefName::] = { "" };

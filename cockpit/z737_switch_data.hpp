@@ -143,6 +143,19 @@ namespace zcockpit::cockpit {
 		int stall_test1{0};
 		int stall_test2{0};
 
+		int speedbrake_lever{0};
+		int reverse_lever1{0};
+		int reverse_lever2{0};
+		int parking_brake_pos{0};
+		int mixture_ratio1{0};
+		int mixture_ratio2{0};
+		int left_toga_pos{0};
+		int gear_horn_cutout{0};
+		int ap_trim_lock_pos{0};
+		int el_trim_lock_pos{0};
+		int ap_trim_pos{0};
+		int el_trim_pos{0};
+	   
 		int always_0{ 0 };
 	};
 
@@ -319,6 +332,30 @@ namespace zcockpit::cockpit {
 		SwitchCommands mach_warn2_pos{2, std::vector<CommandRefName>{CommandRefName::mach_warn2_test, CommandRefName::mach_warn2_test}};
 		SwitchCommands stall_test1{2, std::vector<CommandRefName>{CommandRefName::stall_test1_press, CommandRefName::stall_test1_press}};
 		SwitchCommands stall_test2{2, std::vector<CommandRefName>{CommandRefName::stall_test2_press, CommandRefName::stall_test2_press}};
+
+		SwitchCommands left_at_dis_press_pb{1, std::vector<CommandRefName>{CommandRefName::left_at_dis_press}};
+
+
+
+
+
+
+		SwitchCommands pitch_trim_down{2,   std::vector<CommandRefName>{CommandRefName::pitch_trim_down,    CommandRefName::pitch_trim_down,   }};
+		SwitchCommands pitch_trim_up{2,     std::vector<CommandRefName>{CommandRefName::pitch_trim_up,      CommandRefName::pitch_trim_up,     }};
+		SwitchCommands flap_pos{9, std::vector<CommandRefName>{CommandRefName::flaps_0, CommandRefName::flaps_1, CommandRefName::flaps_2,
+			CommandRefName::flaps_5, CommandRefName::flaps_10, CommandRefName::flaps_15, CommandRefName::flaps_25, CommandRefName::flaps_30,CommandRefName::flaps_40 }};
+
+		SwitchCommands mixture_ratio1{2,     std::vector<CommandRefName>{CommandRefName::mixture1_idle,      CommandRefName::mixture1_cutoff,     }};
+		SwitchCommands mixture_ratio2{2,     std::vector<CommandRefName>{CommandRefName::mixture2_idle,      CommandRefName::mixture2_cutoff,     }};
+		SwitchCommands left_toga_pos{2,   std::vector<CommandRefName>{CommandRefName::left_toga_press,    CommandRefName::left_toga_press,   }};
+		SwitchCommands gear_horn_cutout_pos{2,  std::vector<CommandRefName>{CommandRefName::gear_horn_cutout,   CommandRefName::gear_horn_cutout,  }};
+		SwitchCommands ap_trim_pos{2,           std::vector<CommandRefName>{CommandRefName::ap_trim,            CommandRefName::ap_trim,           }};
+		SwitchCommands el_trim_pos{2,           std::vector<CommandRefName>{CommandRefName::el_trim,            CommandRefName::el_trim,           }};
+		SwitchCommands ap_trim_lock_pos{2,           std::vector<CommandRefName>{CommandRefName::ap_trim_lock,            CommandRefName::ap_trim_lock,           }};
+		SwitchCommands el_trim_lock_pos{2,           std::vector<CommandRefName>{CommandRefName::el_trim_lock,            CommandRefName::el_trim_lock,           }};
+
+
+
 	};
 
 
@@ -340,5 +377,10 @@ namespace zcockpit::cockpit {
 
 		SwitchValues max_allowable_altitude{42000.0f, -1000.0f, 1};
 		SwitchValues landing_alt{13600.0f, -1000.0f, 1};
+
+		SwitchValues speedbrake_lever{1.0f, 0.0f, 1};
+		SwitchValues reverse_lever1{1.0f, 0.0f, 1};
+		SwitchValues reverse_lever2{1.0f, 0.0f, 1};
+		SwitchValues parking_brake_pos{1.0f, 0.0f, 1};
 	};				
 }

@@ -142,10 +142,40 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::stall_test1] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.stall_test1,				&z737SwitchCmd.stall_test1);
 		z_cockpit_data[DataRefName::stall_test2] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.stall_test2,				&z737SwitchCmd.stall_test2);
 
+		z_cockpit_data[DataRefName::left_at_dis_press_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, &xplane_switch_data.always_0, &z737SwitchCmd.left_at_dis_press_pb);  
+		z_cockpit_data[DataRefName::pitch_trim_down_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, &xplane_switch_data.always_0, &z737SwitchCmd.pitch_trim_down);
+		z_cockpit_data[DataRefName::pitch_trim_up_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, &xplane_switch_data.always_0, &z737SwitchCmd.pitch_trim_up);
+
+		z_cockpit_data[DataRefName::speedbrake_lever ] = ZCockpitSwitchData(ZCockpitType::ZFloat, &xplane_switch_data.speedbrake_lever, &z737SwitchValue.speedbrake_lever, OperationType::Value);
+		z_cockpit_data[DataRefName::reverse_lever1   ] = ZCockpitSwitchData(ZCockpitType::ZFloat, &xplane_switch_data.reverse_lever1,   &z737SwitchValue.reverse_lever1, OperationType::Value);
+		z_cockpit_data[DataRefName::reverse_lever2   ] = ZCockpitSwitchData(ZCockpitType::ZFloat, &xplane_switch_data.reverse_lever2,   &z737SwitchValue.reverse_lever2, OperationType::Value);
+		z_cockpit_data[DataRefName::parking_brake_pos] = ZCockpitSwitchData(ZCockpitType::ZFloat, &xplane_switch_data.parking_brake_pos, &z737SwitchValue.parking_brake_pos, OperationType::Value);
+
+
+		z_cockpit_data[DataRefName::mixture_ratio1      ] = ZCockpitSwitchData(ZCockpitType::ZInt, &xplane_switch_data.mixture_ratio1, &z737SwitchCmd.mixture_ratio1);
+		z_cockpit_data[DataRefName::mixture_ratio2      ] = ZCockpitSwitchData(ZCockpitType::ZInt, &xplane_switch_data.mixture_ratio2, &z737SwitchCmd.mixture_ratio2);
+		z_cockpit_data[DataRefName::left_toga_pos       ] = ZCockpitSwitchData(ZCockpitType::ZInt, &xplane_switch_data.left_toga_pos, &z737SwitchCmd.left_toga_pos);
+		z_cockpit_data[DataRefName::gear_horn_cutout_pos] = ZCockpitSwitchData(ZCockpitType::ZInt, &xplane_switch_data.gear_horn_cutout, &z737SwitchCmd.gear_horn_cutout_pos);
+		z_cockpit_data[DataRefName::ap_trim_lock_pos    ] = ZCockpitSwitchData(ZCockpitType::ZInt, &xplane_switch_data.ap_trim_lock_pos, &z737SwitchCmd.ap_trim_lock_pos);
+		z_cockpit_data[DataRefName::el_trim_lock_pos    ] = ZCockpitSwitchData(ZCockpitType::ZInt, &xplane_switch_data.el_trim_lock_pos, &z737SwitchCmd.el_trim_lock_pos);
+		z_cockpit_data[DataRefName::ap_trim_pos         ] = ZCockpitSwitchData(ZCockpitType::ZInt, &xplane_switch_data.ap_trim_pos, &z737SwitchCmd.ap_trim_pos );
+		z_cockpit_data[DataRefName::el_trim_pos         ] = ZCockpitSwitchData(ZCockpitType::ZInt, &xplane_switch_data.el_trim_pos,	&z737SwitchCmd.el_trim_pos );
+                                                                                                                                                        
+
 		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
 		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
 		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
 		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
+		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
+		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
+		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
+		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
+		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
+		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
+		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
+		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
+		//z_cockpit_data[DataRefName::] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.,				&z737SwitchCmd.);
+
 
 
 		// PUSHBUTTONS	 -- we don't need a switch value to compare
@@ -192,6 +222,10 @@ namespace zcockpit::cockpit {
 
 		//
 		// IN Data
+		z_cockpit_data[DataRefName::pfd_spd_mode] = ZCockpitInData(&z737InData.pfd_spd_mode, ZCockpitType::ZFloat);
+		z_cockpit_data[DataRefName::autothrottle_arm_pos] = ZCockpitInData(&z737InData.autothrottle_arm_pos, ZCockpitType::ZFloat);
+		z_cockpit_data[DataRefName::throttle_ratio] =  ZCockpitInData(&z737InData.throttle_ratio, ZCockpitType::ZVectorFloat);
+
 
 		z_cockpit_data[DataRefName::ac_volt_value] = ZCockpitInData(&z737InData.ac_volt_value, ZCockpitType::ZFloat);
 		z_cockpit_data[DataRefName::dc_volt_value] = ZCockpitInData(&z737InData.dc_volt_value, ZCockpitType::ZFloat);
