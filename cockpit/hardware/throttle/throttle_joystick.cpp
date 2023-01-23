@@ -470,7 +470,7 @@ namespace zcockpit::cockpit::hardware
 
 					if (ThrottleAndJoystick::beagleBoneData.ap_disconnect)
 					{
-						aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::ap_disconnect]);
+//						aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::ap_disconnect]);
 					}	
 
 					// TRIM UP
@@ -859,15 +859,29 @@ namespace zcockpit::cockpit::hardware
 			rev_waiting_for_click_response[side] = false;
 		}
 
-		if (aircraft_model.z738_is_available()) {
-
+		if (aircraft_model.z738_is_available()) 
+		{
 			// The code will step once per cycle at 20 Hz.  It is possible we could out run xplane
 			// So we should step then wait for the response before steping again -- unless we time out then will try again
 			//
 			//
 			double thrust_and_reverser_lever = 0.0;
-			thrust_and_reverser_lever = side == LEFT ? aircraft_model.z737SwitchValue.reverse_lever1 :
- 				aircraft_model.z737SwitchValue.reverse_lever2;
+			float* reverser = nullptr;
+			if(side == LEFT) 
+			{
+				if(reverser = static_cast<float*>(aircraft_model.get_z_cockpit_switch_data(DataRefName::reverse_lever1))) 
+				{
+					thrust_and_reverser_lever = *reverser;
+				}
+			}
+			else
+			{
+				if(reverser = static_cast<float*>(aircraft_model.get_z_cockpit_switch_data(DataRefName::reverse_lever2))) 
+				{
+					thrust_and_reverser_lever = *reverser;
+				}
+			}
+
 
 			// Check if PMDG Thrust Lever slightly above idle
 			if (thrust_and_reverser_lever > 0)
@@ -884,7 +898,8 @@ namespace zcockpit::cockpit::hardware
 			//
 			// Normalize joystick value
 			double rev = adc_filtered[side] - adc_min[side];
-			if (rev < 100.0) {
+			if (rev < 100.0)
+			{
 				rev = 0.0;
 			}
 			//	LOG() << "Reverser side " << side << " adc value " << rev;
@@ -938,9 +953,10 @@ namespace zcockpit::cockpit::hardware
 				expected_rev_nozzle_position[side] = 0.0;
 				previous_rev_deployed[side] = rev_deployed[side];
 			}
-			else {
-				if (!rev_waiting_for_click_response[side]) {
-
+			else 
+			{
+				if (!rev_waiting_for_click_response[side]) 
+				{
 					if (rev < thrust_and_reverser_lever)
 					{
 						// we need to increse Reverser
@@ -977,9 +993,11 @@ namespace zcockpit::cockpit::hardware
 					}
 
 				}
-				else {
+				else 
+				{
 					// has PMDG responded -- lever == expecte lever posioion
-					if (abs(thrust_and_reverser_lever - expected_rev_nozzle_position[side]) < 0.01) {
+					if (abs(thrust_and_reverser_lever - expected_rev_nozzle_position[side]) < 0.01)
+					{
 						rev_waiting_for_click_response[side] = false;
 						//LOG() << "Responded lever == " << thrust_and_reverser_lever;
 					}
