@@ -56,6 +56,23 @@ namespace zcockpit::cockpit::hardware
 		reverse_lever1,
 		reverse_lever2,
 		parking_brake_pos,
+		mixture_ratio1_idle,      
+		mixture_ratio1_cutoff,      
+		mixture_ratio2_idle,
+		mixture_ratio2_cutoff,
+		left_toga_pos,       
+		gear_horn_cutout_pos,
+		ap_trim_lock_pos_open,    
+		ap_trim_lock_pos_close,
+		el_trim_lock_pos_open,    
+		el_trim_lock_pos_close,
+		ap_trim_pos_normal,         
+		ap_trim_pos_cutoff,    
+		el_trim_pos_normal,         
+		el_trim_pos_cutoff,    
+
+
+
 
 		Switch_position_unused,
 		kMaxValue = Switch_position_unused,
@@ -159,7 +176,28 @@ namespace zcockpit::cockpit::hardware
 			throttle_zcockpit_switches[ThrottleSwitchPosition::reverse_lever1] = ZcockpitSwitch(DataRefName::reverse_lever1, common::SwitchType::raw_encoder, 0.0f);
 			throttle_zcockpit_switches[ThrottleSwitchPosition::reverse_lever2] = ZcockpitSwitch(DataRefName::reverse_lever2, common::SwitchType::raw_encoder, 0.0f);
 			throttle_zcockpit_switches[ThrottleSwitchPosition::parking_brake_pos] = ZcockpitSwitch(DataRefName::parking_brake_pos, common::SwitchType::raw_encoder, 0.0f);
-			
+
+			throttle_zcockpit_switches[ThrottleSwitchPosition::mixture_ratio1_idle      ] = ZcockpitSwitch(DataRefName::mixture_ratio1      , common::SwitchType::toggle, 1);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::mixture_ratio1_cutoff      ] = ZcockpitSwitch(DataRefName::mixture_ratio1      , common::SwitchType::toggle, 0);
+
+			throttle_zcockpit_switches[ThrottleSwitchPosition::mixture_ratio2_idle      ] = ZcockpitSwitch(DataRefName::mixture_ratio2      , common::SwitchType::toggle, 1);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::mixture_ratio2_cutoff     ] = ZcockpitSwitch(DataRefName::mixture_ratio2      , common::SwitchType::toggle, 0);
+
+			throttle_zcockpit_switches[ThrottleSwitchPosition::left_toga_pos       ] = ZcockpitSwitch(DataRefName::left_toga_pos       , common::SwitchType::spring_loaded, 0);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::gear_horn_cutout_pos] = ZcockpitSwitch(DataRefName::gear_horn_cutout_pos, common::SwitchType::spring_loaded, 0);
+
+			throttle_zcockpit_switches[ThrottleSwitchPosition::ap_trim_lock_pos_open    ] = ZcockpitSwitch(DataRefName::ap_trim_lock_pos    , common::SwitchType::toggle, 0);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::el_trim_lock_pos_open    ] = ZcockpitSwitch(DataRefName::el_trim_lock_pos    , common::SwitchType::toggle, 0);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::ap_trim_pos_normal         ] = ZcockpitSwitch(DataRefName::ap_trim_pos         , common::SwitchType::toggle, 0);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::el_trim_pos_normal         ] = ZcockpitSwitch(DataRefName::el_trim_pos         , common::SwitchType::toggle, 0);
+																																		 
+			throttle_zcockpit_switches[ThrottleSwitchPosition::ap_trim_lock_pos_close    ] = ZcockpitSwitch(DataRefName::ap_trim_lock_pos    , common::SwitchType::toggle, 0);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::el_trim_lock_pos_close    ] = ZcockpitSwitch(DataRefName::el_trim_lock_pos    , common::SwitchType::toggle, 0);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::ap_trim_pos_cutoff        ] = ZcockpitSwitch(DataRefName::ap_trim_pos         , common::SwitchType::toggle, 0);
+			throttle_zcockpit_switches[ThrottleSwitchPosition::el_trim_pos_cutoff         ] = ZcockpitSwitch(DataRefName::el_trim_pos         , common::SwitchType::toggle, 0);
+
+
+
 		}
 
 

@@ -470,8 +470,7 @@ namespace zcockpit::cockpit::hardware
 
 					if (ThrottleAndJoystick::beagleBoneData.ap_disconnect)
 					{
-						//sendMessageInt(KEY_COMMAND_AUTOMATICFLIGHT_AUTOPILOT_DISCONNECT, 0);
-						//simconnect_send_event_data(EVT_YOKE_L_AP_DISC_SWITCH, MOUSE_FLAG_LEFTSINGLE);
+						aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::ap_disconnect]);
 					}	
 
 					// TRIM UP
@@ -867,8 +866,8 @@ namespace zcockpit::cockpit::hardware
 			//
 			//
 			double thrust_and_reverser_lever = 0.0;
-//			thrust_and_reverser_lever = side == LEFT ? Ifly737::shareMemSDK->Throttle1Pos :
- //				Ifly737::shareMemSDK->Throttle2Pos;
+			thrust_and_reverser_lever = side == LEFT ? aircraft_model.z737SwitchValue.reverse_lever1 :
+ 				aircraft_model.z737SwitchValue.reverse_lever2;
 
 			// Check if PMDG Thrust Lever slightly above idle
 			if (thrust_and_reverser_lever > 0)
@@ -1038,11 +1037,11 @@ namespace zcockpit::cockpit::hardware
 					eng_1_idle_cutoff = value;
 					if (value == 1)
 					{
-//						sendMessageInt(KEY_COMMAND_ENGAPU_ENG_1_START_LEVER_IDLE, 0);
+						aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::mixture_ratio1_idle]);
 					}
 					else
 					{
-//						sendMessageInt(KEY_COMMAND_ENGAPU_ENG_1_START_LEVER_CUTOFF, 0);
+						aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::mixture_ratio1_cutoff]);
 					}
 				}
 				break;
@@ -1052,11 +1051,11 @@ namespace zcockpit::cockpit::hardware
 					eng_2_idle_cutoff = value;
 					if (value == 1)
 					{
-//						sendMessageInt(KEY_COMMAND_ENGAPU_ENG_2_START_LEVER_IDLE, 0);
+						aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::mixture_ratio2_idle]);
 					}
 					else
 					{
-//						sendMessageInt(KEY_COMMAND_ENGAPU_ENG_2_START_LEVER_CUTOFF, 0);
+						aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::mixture_ratio2_cutoff]);
 					}
 				}
 				break;
@@ -1066,7 +1065,7 @@ namespace zcockpit::cockpit::hardware
 					toga = value;
 					if (value == 0)
 					{
-//						sendMessageInt(KEY_COMMAND_AUTOMATICFLIGHT_TOGA, 0);
+						aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::left_toga_pos]);
 					}
 				}
 				break;
@@ -1107,7 +1106,7 @@ namespace zcockpit::cockpit::hardware
 					horn_cutout = value;
 					if (value == 0)
 					{
-//						sendMessageInt(KEY_COMMAND_WARNING_LDG_GEAR_WARNING_CUTOUT, 0);
+						aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::gear_horn_cutout_pos]);
 					}
 				}
 				break;
@@ -1117,12 +1116,12 @@ namespace zcockpit::cockpit::hardware
 					stab_trim_man_cutout = value;
 					if (value == 0)
 					{
-//						sendMessageInt(KEY_COMMAND_FLTCTRL_STAB_TRIM_MAIN_ELECT_CUTOUT_NORMAL, 0);
+						aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::el_trim_pos_normal]);
 					}
 					else
 					{
 						// open guard
-//						sendMessageInt(KEY_COMMAND_FLTCTRL_STAB_TRIM_MAIN_ELECT_CUTOUT_CUTOUT, 0);
+						aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::el_trim_pos_cutoff]);
 					}
 				}
 				break;
@@ -1132,12 +1131,13 @@ namespace zcockpit::cockpit::hardware
 					stab_trim_auto_cutout = value;
 					if (value == 0)
 					{
-//						sendMessageInt(KEY_COMMAND_FLTCTRL_STAB_TRIM_AUTOPILOT_CUTOUT_NORMAL, 0);
+						aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::ap_trim_pos_normal]);
 					}
 					else
 					{
 						// open guard
-//						sendMessageInt(KEY_COMMAND_FLTCTRL_STAB_TRIM_AUTOPILOT_CUTOUT_CUTOUT, 0);
+						
+						aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::ap_trim_pos_cutoff]);
 					}
 				}
 				break;
