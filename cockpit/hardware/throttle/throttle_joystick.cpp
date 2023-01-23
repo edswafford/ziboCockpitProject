@@ -470,7 +470,7 @@ namespace zcockpit::cockpit::hardware
 
 					if (ThrottleAndJoystick::beagleBoneData.ap_disconnect)
 					{
-//						aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::ap_disconnect]);
+						aircraft_model.push_switch_change(throttle_zcockpit_switches[ThrottleSwitchPosition::ap_disconnect_toggle]);
 					}	
 
 					// TRIM UP

@@ -333,6 +333,7 @@ namespace zcockpit::cockpit {
 		SwitchCommands stall_test1{2, std::vector<CommandRefName>{CommandRefName::stall_test1_press, CommandRefName::stall_test1_press}};
 		SwitchCommands stall_test2{2, std::vector<CommandRefName>{CommandRefName::stall_test2_press, CommandRefName::stall_test2_press}};
 
+		SwitchCommands ap_disconnect_toggle {1, std::vector<CommandRefName>{CommandRefName::disconnect_toggle}};
 		SwitchCommands left_at_dis_press_pb{1, std::vector<CommandRefName>{CommandRefName::left_at_dis_press}};
 
 

@@ -220,6 +220,7 @@ namespace zcockpit::cockpit {
 		stall_test1_press,
 		stall_test2_press,
 
+		disconnect_toggle,
 		left_at_dis_press,
 		pitch_trim_down,
 		pitch_trim_up,
@@ -455,6 +456,7 @@ namespace zcockpit::cockpit {
 		CommandRefName::stall_test1_press,
 		CommandRefName::stall_test2_press,
 
+		CommandRefName::disconnect_toggle,
 		CommandRefName::left_at_dis_press,
 		CommandRefName::pitch_trim_down,
 		CommandRefName::pitch_trim_up,

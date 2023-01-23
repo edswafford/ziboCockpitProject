@@ -371,6 +371,7 @@ namespace zcockpit::cockpit {
 		reverse_lever2,
 		parking_brake_pos,
 
+		ap_disconnect_toggle,
 		left_at_dis_press_pb,
 		pitch_trim_down_pb,
 		pitch_trim_up_pb,

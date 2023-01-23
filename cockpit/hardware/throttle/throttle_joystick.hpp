@@ -40,6 +40,7 @@ namespace zcockpit::cockpit::hardware
 	};
 
 	enum class ThrottleSwitchPosition : unsigned {
+		ap_disconnect_toggle,
 		left_at_dis_press_pb,
 		pitch_trim_down_pb,
 		pitch_trim_up_pb,
@@ -157,6 +158,7 @@ namespace zcockpit::cockpit::hardware
 			constexpr int FLAP_30 = 7;
 			constexpr int FLAP_40 = 8;
 
+			throttle_zcockpit_switches[ThrottleSwitchPosition::ap_disconnect_toggle] = ZcockpitSwitch(DataRefName::ap_disconnect_toggle, common::SwitchType::pushbutton, PRESSED);
 			throttle_zcockpit_switches[ThrottleSwitchPosition::left_at_dis_press_pb] = ZcockpitSwitch(DataRefName::left_at_dis_press_pb, common::SwitchType::pushbutton, PRESSED);
 
 			throttle_zcockpit_switches[ThrottleSwitchPosition::pitch_trim_down_pb] = ZcockpitSwitch(DataRefName::pitch_trim_down_pb, common::SwitchType::pushbutton, PRESSED);

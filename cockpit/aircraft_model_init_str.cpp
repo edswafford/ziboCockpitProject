@@ -666,7 +666,7 @@ namespace zcockpit::cockpit {
 		command_ref_strings[CommandRefName::stall_test1_press] = { "laminar/B738/push_button/stall_test1_press" };
 		command_ref_strings[CommandRefName::stall_test2_press] = { "laminar/B738/push_button/stall_test2_press" };
 
-
+		command_ref_strings[CommandRefName::disconnect_toggle] = {"laminar/B738/autopilot/disconnect_toggle"};
 		command_ref_strings[CommandRefName::left_at_dis_press] = {"laminar/B738/autopilot/left_at_dis_press"};
 		command_ref_strings[CommandRefName::pitch_trim_down] = {"laminar/B738/flight_controls/pitch_trim_down"};
 		command_ref_strings[CommandRefName::pitch_trim_up] = {"laminar/B738/flight_controls/pitch_trim_up"};

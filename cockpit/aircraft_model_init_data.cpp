@@ -142,6 +142,7 @@ namespace zcockpit::cockpit {
 		z_cockpit_data[DataRefName::stall_test1] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.stall_test1,				&z737SwitchCmd.stall_test1);
 		z_cockpit_data[DataRefName::stall_test2] = ZCockpitSwitchData(ZCockpitType::ZInt,				&xplane_switch_data.stall_test2,				&z737SwitchCmd.stall_test2);
 
+		z_cockpit_data[DataRefName::ap_disconnect_toggle] = ZCockpitSwitchData(ZCockpitType::ZBool, &xplane_switch_data.always_0, &z737SwitchCmd.ap_disconnect_toggle);  
 		z_cockpit_data[DataRefName::left_at_dis_press_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, &xplane_switch_data.always_0, &z737SwitchCmd.left_at_dis_press_pb);  
 		z_cockpit_data[DataRefName::pitch_trim_down_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, &xplane_switch_data.always_0, &z737SwitchCmd.pitch_trim_down);
 		z_cockpit_data[DataRefName::pitch_trim_up_pb] = ZCockpitSwitchData(ZCockpitType::ZBool, &xplane_switch_data.always_0, &z737SwitchCmd.pitch_trim_up);
