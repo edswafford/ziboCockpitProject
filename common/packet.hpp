@@ -27,6 +27,7 @@ namespace zcockpit::common
 		unknown = 0,
 		hardware,
 		du_displays,
+		beagle_bone_joystick,
 	};
 	constexpr const char* ClientTypeToString(const ClientType ct) noexcept
 	{
@@ -34,6 +35,7 @@ namespace zcockpit::common
 		case ClientType::unknown: return "Unknown Client";
 		case ClientType::hardware: return "Hardware Client, Switches and Annunciators";
 		case ClientType::du_displays: return "DU Displays Client";
+			case ClientType::beagle_bone_joystick: return "BeagleBone Joystick and CDU keyboard";
 		}
 		return "ClentType to string conversion failed";
 	}
